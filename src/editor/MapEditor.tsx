@@ -53,6 +53,7 @@ import {
 import { modKey } from "./components/TopBar";
 import { MapDebugDialog } from "./components/debug";
 import { BackgroundImageDialog } from "./components/panels/BackgroundImageDialog";
+import { DxfImportDialog, type DxfImportResult } from "./components/panels/DxfImportDialog";
 import { GridSettingsDialog } from "./components/panels/GridSettingsDialog";
 import { HelpDialog } from "./components/panels/HelpDialog";
 import { CanvasResizeDialog } from "./components/panels/CanvasResizeDialog";
@@ -70,6 +71,7 @@ import type {
   Geometry,
   LayerId,
   LayerDefinition,
+  Dimensions,
 } from "../types";
 import type { PlacementCategory } from "./placement/types";
 import {
@@ -153,6 +155,7 @@ export function MapEditor({
     updateLegend,
     updateTypeStyles,
     setBackgroundImage,
+    setDxfDrawing,
     setBackgroundColor,
     reorderElement,
     updateDimensions,
@@ -249,6 +252,7 @@ export function MapEditor({
   const [defaults, setDefaults] = useState<DrawingDefaults>(INITIAL_DEFAULTS);
   const [showMapDebug, setShowMapDebug] = useState(false);
   const [showBgDialog, setShowBgDialog] = useState(false);
+  const [showDxfDialog, setShowDxfDialog] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
   const [activeIconName, setActiveIconName] = useState<string | null>(null);
 
@@ -829,6 +833,30 @@ export function MapEditor({
     setBackgroundImage(undefined);
     void onRemoveBackgroundImage?.().catch(() => {});
   }, [setBackgroundImage, onRemoveBackgroundImage]);
+
+  const handleDxfImport = useCallback(
+    (result: DxfImportResult) => {
+      // "Resize" mode grows the canvas to the drawing; scale calibration (when
+      // the DXF declared units) makes booths drawn on top come out real-sized.
+      const dims: Partial<Dimensions> = {};
+      if (result.resizeCanvasTo) {
+        dims.width = result.resizeCanvasTo.width;
+        dims.height = result.resizeCanvasTo.height;
+      }
+      if (result.calibration) {
+        dims.pixelsPerUnit = result.calibration.pixelsPerUnit;
+        dims.unit = result.calibration.unit;
+      }
+      if (Object.keys(dims).length > 0) updateDimensions(dims);
+      setDxfDrawing(result.drawing);
+      setShowDxfDialog(false);
+    },
+    [setDxfDrawing, updateDimensions],
+  );
+
+  const handleRemoveDxf = useCallback(() => {
+    setDxfDrawing(undefined);
+  }, [setDxfDrawing]);
 
   const handleElementContextMenu = useCallback(
     (elementId: string, screenX: number, screenY: number) => {
@@ -1917,6 +1945,13 @@ export function MapEditor({
                 if (featureMap.backgroundImage !== "enabled") return;
                 setShowBgDialog(true);
               }}
+              dxfDrawing={data.dxfDrawing}
+              onImportDxf={() => setShowDxfDialog(true)}
+              onRemoveDxf={handleRemoveDxf}
+              onDxfOpacityChange={(opacity) =>
+                data.dxfDrawing &&
+                setDxfDrawing({ ...data.dxfDrawing, opacity })
+              }
               onBackgroundColorChange={setBackgroundColor}
             />
           </div>
@@ -1932,6 +1967,14 @@ export function MapEditor({
           onUpload={onUploadBackgroundImage}
           onConfirm={handleBackgroundImage}
           onClose={() => setShowBgDialog(false)}
+        />
+      )}
+      {showDxfDialog && (
+        <DxfImportDialog
+          canvasWidth={data.dimensions.width}
+          canvasHeight={data.dimensions.height}
+          onConfirm={handleDxfImport}
+          onClose={() => setShowDxfDialog(false)}
         />
       )}
       {showGridDialog && (

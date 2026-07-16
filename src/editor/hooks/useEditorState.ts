@@ -1,5 +1,5 @@
 import { useCallback, useEffect } from "react";
-import type { FloorPlanData, FloorPlanElement, ElementType, Geometry, ElementProperties, BackgroundImage, Dimensions, WalkableGrid, ScaleCalibration, Unit, ElementTypeDefaults, Legend, ViewerAppearance, GroupDefinition } from "../../types";
+import type { FloorPlanData, FloorPlanElement, ElementType, Geometry, ElementProperties, BackgroundImage, DxfDrawing, Dimensions, WalkableGrid, ScaleCalibration, Unit, ElementTypeDefaults, Legend, ViewerAppearance, GroupDefinition } from "../../types";
 import { ELEMENT_TYPE_TO_LAYER, DEFAULT_TYPE_STYLES, DEFAULT_VIEWER_APPEARANCE } from "../../types";
 import { createWalkableGrid } from "../utils/walkableGrid";
 import { derivePixelsPerUnit } from "../../utils/unitConversion";
@@ -264,6 +264,10 @@ export function useEditorState(
     setData((prev) => ({ ...prev, backgroundImage: bg }));
   }, [setData]);
 
+  const setDxfDrawing = useCallback((drawing: DxfDrawing | undefined) => {
+    setData((prev) => ({ ...prev, dxfDrawing: drawing }));
+  }, [setData]);
+
   const updateDimensions = useCallback((dims: Partial<Dimensions>) => {
     setData((prev) => ({
       ...prev,
@@ -520,6 +524,7 @@ export function useEditorState(
     dissolveGroup,
     updateElementType,
     setBackgroundImage,
+    setDxfDrawing,
     reorderElement,
     setBackgroundColor,
     updateDimensions,

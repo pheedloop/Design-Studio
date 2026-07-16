@@ -9,6 +9,7 @@ import { isEmptySpaceClick, getCanvasPoint } from "../../utils/canvas";
 import { ElementShape } from "./ElementShape";
 import { SelectionTransformer } from "./SelectionTransformer";
 import { BackgroundImage } from "./BackgroundImage";
+import { DxfDrawing } from "./DxfDrawing";
 import { AlignmentGuides } from "./AlignmentGuides";
 import { SelectionRect } from "./SelectionRect";
 import { MultiSelectBounds } from "./MultiSelectBounds";
@@ -698,6 +699,9 @@ export function Canvas({
           />
           {data.backgroundImage && layerVisibility.get("background") !== false && (
             <BackgroundImage config={data.backgroundImage} />
+          )}
+          {data.dxfDrawing && layerVisibility.get("background") !== false && (
+            <DxfDrawing config={data.dxfDrawing} />
           )}
           {gridSettings.showGrid && !isPathingMode && (
             <GridLayer

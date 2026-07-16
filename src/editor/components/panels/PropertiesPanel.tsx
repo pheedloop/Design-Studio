@@ -4,6 +4,7 @@ import type {
   ElementProperties,
   Geometry,
   BackgroundImage,
+  DxfDrawing,
   LayerId,
   Dimensions,
   ElementTypeDefaults,
@@ -32,6 +33,7 @@ interface PropertiesPanelProps {
   isSelectedUnlinked: boolean;
   dimensions: Dimensions;
   backgroundImage?: BackgroundImage;
+  dxfDrawing?: DxfDrawing;
   backgroundColor?: string;
   activeLayerId: LayerId;
   debug: boolean;
@@ -46,6 +48,9 @@ interface PropertiesPanelProps {
   onBackgroundOpacityChange?: (opacity: number) => void;
   onRemoveBackground?: () => void;
   onUploadBackground?: () => void;
+  onImportDxf?: () => void;
+  onRemoveDxf?: () => void;
+  onDxfOpacityChange?: (opacity: number) => void;
   onBackgroundColorChange?: (color: string) => void;
   onUpdateTypeStyles: (
     key: string,
@@ -140,6 +145,7 @@ export function PropertiesPanel({
   isSelectedUnlinked,
   dimensions,
   backgroundImage,
+  dxfDrawing,
   backgroundColor,
   activeLayerId,
   debug,
@@ -151,6 +157,9 @@ export function PropertiesPanel({
   onBackgroundOpacityChange,
   onRemoveBackground,
   onUploadBackground,
+  onImportDxf,
+  onRemoveDxf,
+  onDxfOpacityChange,
   onBackgroundColorChange,
   onUpdateTypeStyles,
 }: PropertiesPanelProps) {
@@ -369,6 +378,59 @@ export function PropertiesPanel({
                   className="w-full text-xs text-gray-600 border border-gray-200 border-dashed rounded px-2 py-3 hover:bg-gray-50 cursor-pointer transition-colors"
                 >
                   Upload Image
+                </button>
+              )}
+            </div>
+
+            <div className="flex flex-col gap-1.5">
+              <SectionLabel>DXF Drawing</SectionLabel>
+              {dxfDrawing ? (
+                <div className="flex flex-col gap-2">
+                  <div className="text-[11px] text-gray-500 truncate">
+                    {dxfDrawing.sourceFileName ?? "Imported drawing"}
+                  </div>
+                  <div className="flex flex-col gap-1.5">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[11px] text-gray-500">Opacity</span>
+                      <span className="text-[11px] text-gray-400">
+                        {Math.round(dxfDrawing.opacity * 100)}%
+                      </span>
+                    </div>
+                    <Slider
+                      min={0}
+                      max={100}
+                      value={Math.round(dxfDrawing.opacity * 100)}
+                      onChange={(e) =>
+                        onDxfOpacityChange?.(Number(e.target.value) / 100)
+                      }
+                      className="w-full"
+                    />
+                  </div>
+                  <div className="flex gap-2">
+                    <Button
+                      variant="outline"
+                      color="neutral"
+                      className="flex-1"
+                      onClick={onImportDxf}
+                    >
+                      Replace
+                    </Button>
+                    <Button
+                      variant="outline"
+                      color="negative"
+                      className="flex-1"
+                      onClick={onRemoveDxf}
+                    >
+                      Remove
+                    </Button>
+                  </div>
+                </div>
+              ) : (
+                <button
+                  onClick={onImportDxf}
+                  className="w-full text-xs text-gray-600 border border-gray-200 border-dashed rounded px-2 py-3 hover:bg-gray-50 cursor-pointer transition-colors"
+                >
+                  Import DXF
                 </button>
               )}
             </div>

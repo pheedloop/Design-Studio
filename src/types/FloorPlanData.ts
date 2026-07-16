@@ -253,6 +253,49 @@ export interface BackgroundImage {
   opacity: number;
 }
 
+// --- DXF import (CAD floor plans) ---
+
+/** A single renderable primitive parsed from a DXF entity. Coordinates are in
+ *  canvas pixels — the fit transform and Y-flip are baked in at import time, so
+ *  neither the editor nor the viewer needs the DXF parser to render.
+ *
+ *  Curved entities (arc, ellipse, spline) are sampled into polylines at parse
+ *  time; only full circles are kept native (compact and flip-safe). This keeps
+ *  the shared renderer trivial. */
+export interface DxfPrimitive {
+  kind: "line" | "polyline" | "circle" | "text";
+  /** Source DXF layer name. Retained so a future cleanup pass can filter by layer. */
+  layer: string;
+  // line / polyline: flat [x1, y1, x2, y2, ...]
+  points?: number[];
+  closed?: boolean; // polyline
+  // circle
+  cx?: number;
+  cy?: number;
+  r?: number;
+  // text
+  text?: string;
+  x?: number;
+  y?: number;
+  height?: number; // text height in canvas px
+  rotation?: number; // text baseline rotation, radians (Y-flip already applied)
+}
+
+/** An imported DXF drawing rendered as one locked, non-interactive group on the
+ *  background layer. Primitives are pre-baked to canvas space; `bounds` and
+ *  `sourceUnits` are kept in original DXF space for scale seeding / future re-fit. */
+export interface DxfDrawing {
+  primitives: DxfPrimitive[];
+  /** Layer names present in the import (all imported == visible in v1). */
+  layers: string[];
+  /** Original DXF-space extent, before the fit transform was baked in. */
+  bounds: { minX: number; minY: number; maxX: number; maxY: number };
+  /** Real-world unit derived from the DXF $INSUNITS header, if present. */
+  sourceUnits?: Unit;
+  opacity: number;
+  sourceFileName?: string;
+}
+
 export interface Dimensions {
   width: number;
   height: number;
@@ -299,6 +342,7 @@ export interface FloorPlanData {
   typeStyles?: TypeStyles;
   viewerAppearance?: ViewerAppearance;
   backgroundImage?: BackgroundImage;
+  dxfDrawing?: DxfDrawing;
   backgroundColor?: string;
   walkableLayer?: WalkableGrid;
   scaleCalibration?: ScaleCalibration;

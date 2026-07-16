@@ -3,6 +3,7 @@ import { Stage, Layer, Rect } from "react-konva";
 import type { FloorPlanData } from "../../types";
 import { useCanvasControls } from "../../editor/hooks/useCanvasControls";
 import { BackgroundImage } from "../../editor/components/canvas/BackgroundImage";
+import { DxfDrawing } from "../../editor/components/canvas/DxfDrawing";
 import type { ViewerMode, HoveredItem } from "../types";
 import { ViewerElement } from "./ViewerElement";
 import { RouteOverlay } from "./RouteOverlay";
@@ -80,6 +81,7 @@ export function ViewerCanvas({ data, mode, occupiedBoothSlugs, highlightedElemen
           {data.backgroundImage && (
             <BackgroundImage config={data.backgroundImage} />
           )}
+          {data.dxfDrawing && <DxfDrawing config={data.dxfDrawing} />}
         </Layer>
 
         <Layer>
