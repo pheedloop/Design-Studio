@@ -1,0 +1,463 @@
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Button, Dialog } from "../ui";
+import type { Background, DxfPrimitive, Unit } from "../../../types";
+import { parseDxf, type ParsedDxf } from "../../utils/dxf/parseDxf";
+import { bakeDrawing, type FitMode } from "../../utils/dxf/bakeDrawing";
+import { drawPrimitives, type DrawContext } from "../../utils/dxf/drawPrimitives";
+
+/** Serialized-size budget for the imported DXF primitives. pikachu caps the
+ *  whole PATCH body (floor_plan_data) at 10 MB, so keep the payload well
+ *  under it. Images don't hit this — they're a hosted URL, not inline data. */
+const WARN_BYTES = 4_000_000;
+const MAX_BYTES = 8_000_000;
+
+const PREVIEW_W = 432;
+const PREVIEW_H = 220;
+
+type Kind = "image" | "dxf";
+
+function detectKind(file: File): Kind {
+  return file.name.toLowerCase().endsWith(".dxf") ? "dxf" : "image";
+  // Future: ".pdf" → "pdf"
+}
+
+export interface BackgroundUploadResult {
+  background: Background;
+  /** Present when the user chose "resize canvas to file". */
+  resizeCanvasTo?: { width: number; height: number };
+  /** Present when a DXF declared real-world units — seeds scale calibration. */
+  calibration?: { pixelsPerUnit: number; unit: Unit };
+}
+
+interface BackgroundUploadDialogProps {
+  canvasWidth: number;
+  canvasHeight: number;
+  /** Current background's opacity, if replacing one — only applied to a new
+   *  image upload's default (DXF always starts its own slider at 70%, matching
+   *  prior behavior). */
+  existingOpacity?: number;
+  /**
+   * Delegates the raw file to the host (e.g. uploads to the backend's single
+   * background_image FileField) instead of inlining a data URL. Used for both
+   * images and DXFs — one upload path regardless of file type. `width`/`height`
+   * may be null (e.g. dimension-less SVGs, or a DXF where they're meaningless);
+   * the dialog measures/bakes locally when needed.
+   */
+  onUpload?: (file: File) => Promise<{
+    url: string;
+    width: number | null;
+    height: number | null;
+  }>;
+  onConfirm: (result: BackgroundUploadResult) => void;
+  onClose: () => void;
+}
+
+/** Load a URL into an Image and read its intrinsic pixel dimensions. */
+function measureImage(url: string): Promise<{ width: number; height: number }> {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.crossOrigin = "anonymous";
+    img.onload = () => resolve({ width: img.naturalWidth, height: img.naturalHeight });
+    img.onerror = () => reject(new Error("Could not load image"));
+    img.src = url;
+  });
+}
+
+export function BackgroundUploadDialog({
+  canvasWidth,
+  canvasHeight,
+  existingOpacity,
+  onUpload,
+  onConfirm,
+  onClose,
+}: BackgroundUploadDialogProps) {
+  const [file, setFile] = useState<File | null>(null);
+  const [kind, setKind] = useState<Kind | null>(null);
+  const [mode, setMode] = useState<FitMode>("fit");
+  const [opacity, setOpacity] = useState(1);
+  const [pending, setPending] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const fileRef = useRef<HTMLInputElement>(null);
+
+  // Image-specific
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [imageSize, setImageSize] = useState<{ width: number; height: number } | null>(null);
+
+  // DXF-specific
+  const [parsed, setParsed] = useState<ParsedDxf | null>(null);
+  const [selectedLayers, setSelectedLayers] = useState<Set<string>>(new Set());
+  const previewRef = useRef<HTMLCanvasElement>(null);
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const chosen = e.target.files?.[0];
+    if (!chosen) return;
+    const detected = detectKind(chosen);
+    setFile(chosen);
+    setKind(detected);
+    setError(null);
+    setOpacity(detected === "dxf" ? 0.7 : (existingOpacity ?? 1));
+
+    if (detected === "dxf") {
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          const result = parseDxf(reader.result as string);
+          if (result.primitives.length === 0) {
+            setError("No supported geometry found in this DXF.");
+            setParsed(null);
+            return;
+          }
+          setParsed(result);
+          setSelectedLayers(new Set(result.layers));
+        } catch {
+          setError("Could not read this file as DXF.");
+          setParsed(null);
+        }
+      };
+      reader.onerror = () => setError("Could not read the file.");
+      reader.readAsText(chosen);
+    } else {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const dataUrl = reader.result as string;
+        const img = new Image();
+        img.onload = () => {
+          setImagePreview(dataUrl);
+          setImageSize({ width: img.width, height: img.height });
+        };
+        img.src = dataUrl;
+      };
+      reader.readAsDataURL(chosen);
+    }
+  };
+
+  const reset = () => {
+    setFile(null);
+    setKind(null);
+    setError(null);
+    setImagePreview(null);
+    setImageSize(null);
+    setParsed(null);
+    setSelectedLayers(new Set());
+  };
+
+  // --- DXF-only derived state ---
+
+  const layerCounts = useMemo(() => {
+    const counts = new Map<string, number>();
+    parsed?.primitives.forEach((p) => counts.set(p.layer, (counts.get(p.layer) ?? 0) + 1));
+    return counts;
+  }, [parsed]);
+
+  const selectedPrimitives = useMemo<DxfPrimitive[]>(
+    () => parsed?.primitives.filter((p) => selectedLayers.has(p.layer)) ?? [],
+    [parsed, selectedLayers]
+  );
+
+  const estimatedBytes = useMemo(
+    () => (selectedPrimitives.length ? JSON.stringify(selectedPrimitives).length : 0),
+    [selectedPrimitives]
+  );
+  const tooLarge = estimatedBytes > MAX_BYTES;
+
+  // Live DXF preview: always fit-with-margin into the preview canvas.
+  useEffect(() => {
+    if (kind !== "dxf") return;
+    const canvas = previewRef.current;
+    if (!canvas || !parsed) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    if (selectedPrimitives.length === 0) return;
+    const baked = bakeDrawing(selectedPrimitives, {
+      box: { width: PREVIEW_W, height: PREVIEW_H },
+      bounds: parsed.bounds,
+      mode: "fit",
+      fill: 0.9,
+    });
+    ctx.globalAlpha = opacity;
+    drawPrimitives(ctx as unknown as DrawContext, baked.primitives);
+    ctx.globalAlpha = 1;
+  }, [kind, parsed, selectedPrimitives, opacity]);
+
+  const toggleLayer = (layer: string) => {
+    setSelectedLayers((prev) => {
+      const next = new Set(prev);
+      if (next.has(layer)) next.delete(layer);
+      else next.add(layer);
+      return next;
+    });
+  };
+
+  const canConfirm =
+    kind === "dxf"
+      ? !!parsed && selectedLayers.size > 0 && !tooLarge
+      : kind === "image"
+        ? onUpload
+          ? !!file
+          : !!imagePreview && !!imageSize
+        : false;
+
+  const handleConfirm = async () => {
+    if (!canConfirm || !file || !kind) return;
+    setPending(true);
+    setError(null);
+
+    try {
+      if (kind === "image") {
+        let url: string;
+        let width: number;
+        let height: number;
+        if (onUpload) {
+          const uploaded = await onUpload(file);
+          url = uploaded.url;
+          if (uploaded.width == null || uploaded.height == null) {
+            const measured = await measureImage(uploaded.url);
+            width = measured.width;
+            height = measured.height;
+          } else {
+            width = uploaded.width;
+            height = uploaded.height;
+          }
+        } else {
+          if (!imagePreview || !imageSize) throw new Error("No image preview");
+          url = imagePreview;
+          width = imageSize.width;
+          height = imageSize.height;
+        }
+        const targetWidth = mode === "resize" ? width : canvasWidth;
+        const targetHeight = mode === "resize" ? height : canvasHeight;
+        onConfirm({
+          background: { kind: "image", url, width: targetWidth, height: targetHeight, opacity },
+          resizeCanvasTo: mode === "resize" ? { width, height } : undefined,
+        });
+      } else {
+        if (!parsed) throw new Error("No parsed DXF");
+        const baked = bakeDrawing(selectedPrimitives, {
+          box: { width: canvasWidth, height: canvasHeight },
+          bounds: parsed.bounds,
+          mode,
+        });
+        // Same upload path as images — one background_image FileField either
+        // way. Without a host callback (e.g. the standalone demo), fall back
+        // to a client-side object URL: fine for this session, but it won't
+        // survive a reload without a real backend storing the file.
+        const url = onUpload ? (await onUpload(file)).url : URL.createObjectURL(file);
+        const result: BackgroundUploadResult = {
+          background: {
+            kind: "dxf",
+            url,
+            sourceFileName: file.name,
+            primitives: baked.primitives,
+            layers: [...selectedLayers].sort(),
+            bounds: parsed.bounds,
+            sourceUnits: parsed.sourceUnits,
+            opacity,
+          },
+        };
+        if (mode === "resize") {
+          result.resizeCanvasTo = { width: baked.width, height: baked.height };
+        }
+        if (parsed.sourceUnits) {
+          result.calibration = {
+            pixelsPerUnit: baked.scale * parsed.unitsPerRealUnit,
+            unit: parsed.sourceUnits,
+          };
+        }
+        onConfirm(result);
+      }
+    } catch {
+      setError("Upload failed. Please try again.");
+      setPending(false);
+    }
+  };
+
+  return (
+    <Dialog
+      title="Background"
+      onClose={onClose}
+      width="480px"
+      footer={
+        <>
+          <Button variant="outline" color="neutral" onClick={onClose} disabled={pending}>
+            Cancel
+          </Button>
+          <Button variant="solid" color="primary" onClick={handleConfirm} disabled={!canConfirm || pending}>
+            {pending ? "Uploading…" : "Upload"}
+          </Button>
+        </>
+      }
+    >
+      <div className="p-4 flex flex-col gap-4">
+        {!file ? (
+          <div
+            onClick={() => fileRef.current?.click()}
+            className="flex flex-col items-center justify-center h-40 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-primary-400 hover:bg-gray-50 transition-colors"
+          >
+            <span className="text-sm text-gray-500">Click to select a file</span>
+            <span className="text-xs text-gray-400 mt-1">PNG, JPG, SVG, AutoCAD DXF</span>
+            <input
+              ref={fileRef}
+              type="file"
+              accept="image/*,.dxf"
+              onChange={handleFileChange}
+              className="hidden"
+            />
+            {error && <p className="text-xs text-red-600 mt-3">{error}</p>}
+          </div>
+        ) : kind === "dxf" ? (
+          !parsed ? (
+            <>
+              <div className="flex items-center justify-center h-40 bg-gray-100 rounded-lg">
+                <span className="text-xs text-gray-500 px-4 text-center truncate">{file.name}</span>
+              </div>
+              {error && <p className="text-xs text-red-600">{error}</p>}
+              <Button variant="ghost" color="neutral" className="px-0 self-start" onClick={reset}>
+                Choose different file
+              </Button>
+            </>
+          ) : (
+            <>
+              <canvas
+                ref={previewRef}
+                width={PREVIEW_W}
+                height={PREVIEW_H}
+                className="w-full bg-gray-100 rounded-lg border border-gray-200"
+              />
+
+              <div className="flex flex-col gap-1">
+                <span className="text-xs font-medium text-gray-700">Layers to import</span>
+                <div className="max-h-40 overflow-y-auto flex flex-col gap-1 border border-gray-200 rounded-md p-2">
+                  {parsed.layers.map((layer) => (
+                    <label key={layer} className="flex items-center gap-2 cursor-pointer text-xs">
+                      <input
+                        type="checkbox"
+                        checked={selectedLayers.has(layer)}
+                        onChange={() => toggleLayer(layer)}
+                        className="accent-primary-600"
+                      />
+                      <span className="flex-1 text-gray-700 truncate">{layer}</span>
+                      <span className="text-gray-400">{layerCounts.get(layer) ?? 0}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-medium text-gray-700 w-16">Opacity</span>
+                <input
+                  type="range"
+                  min={0.1}
+                  max={1}
+                  step={0.05}
+                  value={opacity}
+                  onChange={(e) => setOpacity(Number(e.target.value))}
+                  className="accent-primary-600 cursor-pointer flex-1"
+                />
+                <span className="text-xs text-gray-500 w-8 text-right">{Math.round(opacity * 100)}%</span>
+              </div>
+
+              <FitModeRadios mode={mode} onChange={setMode} />
+
+              <div className="text-xs text-gray-500 flex flex-col gap-1">
+                {parsed.unsupportedCount > 0 && (
+                  <span>{parsed.unsupportedCount} unsupported entities were skipped.</span>
+                )}
+                {parsed.sourceUnits && <span>Scale detected from DXF units ({parsed.sourceUnits}).</span>}
+                {tooLarge ? (
+                  <span className="text-red-600">
+                    Selection is too large ({Math.round(estimatedBytes / 1_000_000)} MB). Deselect some layers.
+                  </span>
+                ) : estimatedBytes > WARN_BYTES ? (
+                  <span className="text-amber-600">
+                    Large selection ({Math.round(estimatedBytes / 1_000_000)} MB) — may slow saving.
+                  </span>
+                ) : null}
+              </div>
+
+              {error && <p className="text-xs text-red-600">{error}</p>}
+
+              <Button variant="ghost" color="neutral" className="px-0 self-start" onClick={reset} disabled={pending}>
+                Choose different file
+              </Button>
+            </>
+          )
+        ) : (
+          <>
+            <div className="flex items-center justify-center h-40 bg-gray-100 rounded-lg overflow-hidden">
+              {imagePreview ? (
+                <img src={imagePreview} alt="Preview" className="max-h-full max-w-full object-contain" />
+              ) : (
+                <span className="text-xs text-gray-500 px-4 text-center truncate">{file.name}</span>
+              )}
+            </div>
+
+            <div className="text-xs text-gray-500">
+              {imageSize ? (
+                <>
+                  Image: {imageSize.width} &times; {imageSize.height}px&nbsp;&middot;&nbsp;
+                </>
+              ) : null}
+              Canvas: {canvasWidth} &times; {canvasHeight}px
+            </div>
+
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-medium text-gray-700 w-16">Opacity</span>
+              <input
+                type="range"
+                min={0.1}
+                max={1}
+                step={0.05}
+                value={opacity}
+                onChange={(e) => setOpacity(Number(e.target.value))}
+                className="accent-primary-600 cursor-pointer flex-1"
+              />
+              <span className="text-xs text-gray-500 w-8 text-right">{Math.round(opacity * 100)}%</span>
+            </div>
+
+            <FitModeRadios mode={mode} onChange={setMode} />
+
+            {error && <p className="text-xs text-red-600">{error}</p>}
+
+            <Button variant="ghost" color="neutral" className="px-0 self-start" onClick={reset} disabled={pending}>
+              Choose different file
+            </Button>
+          </>
+        )}
+      </div>
+    </Dialog>
+  );
+}
+
+function FitModeRadios({ mode, onChange }: { mode: FitMode; onChange: (mode: FitMode) => void }) {
+  return (
+    <div className="flex flex-col gap-2">
+      <label className="flex items-center gap-2 cursor-pointer">
+        <input
+          type="radio"
+          name="bgSizeMode"
+          checked={mode === "fit"}
+          onChange={() => onChange("fit")}
+          className="accent-primary-600"
+        />
+        <div>
+          <span className="text-xs font-medium text-gray-700">Fit to canvas</span>
+          <p className="text-[11px] text-gray-400">Scale the file to match the current canvas size</p>
+        </div>
+      </label>
+      <label className="flex items-center gap-2 cursor-pointer">
+        <input
+          type="radio"
+          name="bgSizeMode"
+          checked={mode === "resize"}
+          onChange={() => onChange("resize")}
+          className="accent-primary-600"
+        />
+        <div>
+          <span className="text-xs font-medium text-gray-700">Resize canvas to file</span>
+          <p className="text-[11px] text-gray-400">Match the floor plan dimensions to the file</p>
+        </div>
+      </label>
+    </div>
+  );
+}

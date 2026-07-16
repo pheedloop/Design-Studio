@@ -52,8 +52,7 @@ import {
 } from "./components/canvas/ContextMenu";
 import { modKey } from "./components/TopBar";
 import { MapDebugDialog } from "./components/debug";
-import { BackgroundImageDialog } from "./components/panels/BackgroundImageDialog";
-import { DxfImportDialog, type DxfImportResult } from "./components/panels/DxfImportDialog";
+import { BackgroundUploadDialog, type BackgroundUploadResult } from "./components/panels/BackgroundUploadDialog";
 import { GridSettingsDialog } from "./components/panels/GridSettingsDialog";
 import { HelpDialog } from "./components/panels/HelpDialog";
 import { CanvasResizeDialog } from "./components/panels/CanvasResizeDialog";
@@ -94,12 +93,15 @@ interface MapEditorProps {
   placementCategories?: PlacementCategory[];
   onSave?: (data: FloorPlanData) => Promise<void>;
   onDirtyChange?: (isDirty: boolean) => void;
-  onUploadBackgroundImage?: (file: File) => Promise<{
+  /** Delegates the raw background file (image or DXF — PDF later) to the host,
+   *  e.g. uploading it to the single `background_image` FileField on the
+   *  backend. One upload path for every background kind. */
+  onUploadBackground?: (file: File) => Promise<{
     url: string;
     width: number | null;
     height: number | null;
   }>;
-  onRemoveBackgroundImage?: () => Promise<void>;
+  onRemoveBackground?: () => Promise<void>;
   onEditProperties?: () => void;
   name?: string;
   onNameChange?: (name: string) => void;
@@ -118,8 +120,8 @@ export function MapEditor({
   placementCategories = [],
   onSave,
   onDirtyChange,
-  onUploadBackgroundImage,
-  onRemoveBackgroundImage,
+  onUploadBackground,
+  onRemoveBackground,
   onEditProperties,
   name: controlledName,
   onNameChange,
@@ -154,8 +156,8 @@ export function MapEditor({
     setMapName,
     updateLegend,
     updateTypeStyles,
-    setBackgroundImage,
-    setDxfDrawing,
+    setBackground,
+    toggleBackgroundDxfLayer,
     setBackgroundColor,
     reorderElement,
     updateDimensions,
@@ -251,8 +253,7 @@ export function MapEditor({
   const [activeGroupId, setActiveGroupId] = useState<string | null>(null);
   const [defaults, setDefaults] = useState<DrawingDefaults>(INITIAL_DEFAULTS);
   const [showMapDebug, setShowMapDebug] = useState(false);
-  const [showBgDialog, setShowBgDialog] = useState(false);
-  const [showDxfDialog, setShowDxfDialog] = useState(false);
+  const [showBackgroundDialog, setShowBackgroundDialog] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
   const [activeIconName, setActiveIconName] = useState<string | null>(null);
 
@@ -790,54 +791,10 @@ export function MapEditor({
     [data.dimensions, data.elements, updateElement, updateDimensions],
   );
 
-  const handleBackgroundImage = useCallback(
-    (
-      url: string,
-      imageWidth: number,
-      imageHeight: number,
-      mode: "resize-canvas" | "fit-image",
-    ) => {
-      // New uploads default to 1; replacing an existing background keeps the
-      // user's current opacity.
-      const opacity = data.backgroundImage?.opacity ?? 1;
-      if (mode === "resize-canvas") {
-        updateDimensions({ width: imageWidth, height: imageHeight });
-        setBackgroundImage({
-          url,
-          width: imageWidth,
-          height: imageHeight,
-          opacity,
-        });
-      } else {
-        setBackgroundImage({
-          url,
-          width: data.dimensions.width,
-          height: data.dimensions.height,
-          opacity,
-        });
-      }
-      setShowBgDialog(false);
-    },
-    [
-      data.dimensions,
-      data.backgroundImage,
-      setBackgroundImage,
-      updateDimensions,
-    ],
-  );
-
-  const handleRemoveBackground = useCallback(() => {
-    // Clear local state immediately (marks dirty; next save drops it). Notify
-    // the host fire-and-forget — a rejection must not restore the image, since
-    // the host surfaces its own errors and retains old files server-side.
-    setBackgroundImage(undefined);
-    void onRemoveBackgroundImage?.().catch(() => {});
-  }, [setBackgroundImage, onRemoveBackgroundImage]);
-
-  const handleDxfImport = useCallback(
-    (result: DxfImportResult) => {
-      // "Resize" mode grows the canvas to the drawing; scale calibration (when
-      // the DXF declared units) makes booths drawn on top come out real-sized.
+  const handleBackgroundUpload = useCallback(
+    (result: BackgroundUploadResult) => {
+      // "Resize" mode grows the canvas to the file; scale calibration (when a
+      // DXF declared units) makes booths drawn on top come out real-sized.
       const dims: Partial<Dimensions> = {};
       if (result.resizeCanvasTo) {
         dims.width = result.resizeCanvasTo.width;
@@ -848,15 +805,19 @@ export function MapEditor({
         dims.unit = result.calibration.unit;
       }
       if (Object.keys(dims).length > 0) updateDimensions(dims);
-      setDxfDrawing(result.drawing);
-      setShowDxfDialog(false);
+      setBackground(result.background);
+      setShowBackgroundDialog(false);
     },
-    [setDxfDrawing, updateDimensions],
+    [setBackground, updateDimensions],
   );
 
-  const handleRemoveDxf = useCallback(() => {
-    setDxfDrawing(undefined);
-  }, [setDxfDrawing]);
+  const handleRemoveBackground = useCallback(() => {
+    // Clear local state immediately (marks dirty; next save drops it). Notify
+    // the host fire-and-forget — a rejection must not restore the file, since
+    // the host surfaces its own errors and retains old files server-side.
+    setBackground(undefined);
+    void onRemoveBackground?.().catch(() => {});
+  }, [setBackground, onRemoveBackground]);
 
   const handleElementContextMenu = useCallback(
     (elementId: string, screenX: number, screenY: number) => {
@@ -1906,7 +1867,7 @@ export function MapEditor({
                   : false
               }
               dimensions={data.dimensions}
-              backgroundImage={data.backgroundImage}
+              background={data.background}
               backgroundColor={data.backgroundColor}
               activeLayerId={activeLayerId}
               debug={debug}
@@ -1936,22 +1897,15 @@ export function MapEditor({
                 selectNone();
               }}
               onBackgroundOpacityChange={(opacity) =>
-                data.backgroundImage &&
-                setBackgroundImage({ ...data.backgroundImage, opacity })
+                data.background && setBackground({ ...data.background, opacity })
               }
               onRemoveBackground={handleRemoveBackground}
               onUploadBackground={() => {
-                // Background image is gated by the usage tier.
+                // Background is gated by the usage tier.
                 if (featureMap.backgroundImage !== "enabled") return;
-                setShowBgDialog(true);
+                setShowBackgroundDialog(true);
               }}
-              dxfDrawing={data.dxfDrawing}
-              onImportDxf={() => setShowDxfDialog(true)}
-              onRemoveDxf={handleRemoveDxf}
-              onDxfOpacityChange={(opacity) =>
-                data.dxfDrawing &&
-                setDxfDrawing({ ...data.dxfDrawing, opacity })
-              }
+              onToggleDxfLayer={toggleBackgroundDxfLayer}
               onBackgroundColorChange={setBackgroundColor}
             />
           </div>
@@ -1960,21 +1914,14 @@ export function MapEditor({
       {showMapDebug && (
         <MapDebugDialog data={data} onClose={() => setShowMapDebug(false)} />
       )}
-      {showBgDialog && (
-        <BackgroundImageDialog
+      {showBackgroundDialog && (
+        <BackgroundUploadDialog
           canvasWidth={data.dimensions.width}
           canvasHeight={data.dimensions.height}
-          onUpload={onUploadBackgroundImage}
-          onConfirm={handleBackgroundImage}
-          onClose={() => setShowBgDialog(false)}
-        />
-      )}
-      {showDxfDialog && (
-        <DxfImportDialog
-          canvasWidth={data.dimensions.width}
-          canvasHeight={data.dimensions.height}
-          onConfirm={handleDxfImport}
-          onClose={() => setShowDxfDialog(false)}
+          existingOpacity={data.background?.opacity}
+          onUpload={onUploadBackground}
+          onConfirm={handleBackgroundUpload}
+          onClose={() => setShowBackgroundDialog(false)}
         />
       )}
       {showGridDialog && (

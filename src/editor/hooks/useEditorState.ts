@@ -1,5 +1,5 @@
 import { useCallback, useEffect } from "react";
-import type { FloorPlanData, FloorPlanElement, ElementType, Geometry, ElementProperties, BackgroundImage, DxfDrawing, Dimensions, WalkableGrid, ScaleCalibration, Unit, ElementTypeDefaults, Legend, ViewerAppearance, GroupDefinition } from "../../types";
+import type { FloorPlanData, FloorPlanElement, ElementType, Geometry, ElementProperties, Background, Dimensions, WalkableGrid, ScaleCalibration, Unit, ElementTypeDefaults, Legend, ViewerAppearance, GroupDefinition } from "../../types";
 import { ELEMENT_TYPE_TO_LAYER, DEFAULT_TYPE_STYLES, DEFAULT_VIEWER_APPEARANCE } from "../../types";
 import { createWalkableGrid } from "../utils/walkableGrid";
 import { derivePixelsPerUnit } from "../../utils/unitConversion";
@@ -260,12 +260,23 @@ export function useEditorState(
     }));
   }, [setData]);
 
-  const setBackgroundImage = useCallback((bg: BackgroundImage | undefined) => {
-    setData((prev) => ({ ...prev, backgroundImage: bg }));
+  const setBackground = useCallback((bg: Background | undefined) => {
+    setData((prev) => ({ ...prev, background: bg }));
   }, [setData]);
 
-  const setDxfDrawing = useCallback((drawing: DxfDrawing | undefined) => {
-    setData((prev) => ({ ...prev, dxfDrawing: drawing }));
+  /** Toggle one DXF layer's visibility. No-op if the current background isn't
+   *  a DXF — filters at render time only, doesn't touch `primitives`. */
+  const toggleBackgroundDxfLayer = useCallback((layer: string) => {
+    setData((prev) => {
+      if (prev.background?.kind !== "dxf") return prev;
+      const hidden = new Set(prev.background.hiddenLayers ?? []);
+      if (hidden.has(layer)) hidden.delete(layer);
+      else hidden.add(layer);
+      return {
+        ...prev,
+        background: { ...prev.background, hiddenLayers: [...hidden] },
+      };
+    });
   }, [setData]);
 
   const updateDimensions = useCallback((dims: Partial<Dimensions>) => {
@@ -523,8 +534,8 @@ export function useEditorState(
     createGroup,
     dissolveGroup,
     updateElementType,
-    setBackgroundImage,
-    setDxfDrawing,
+    setBackground,
+    toggleBackgroundDxfLayer,
     reorderElement,
     setBackgroundColor,
     updateDimensions,

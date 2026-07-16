@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { Image as KonvaImage } from "react-konva";
-import type { BackgroundImage as BackgroundImageType } from "../../../types";
+import type { BackgroundImageData } from "../../../types";
 
 interface BackgroundImageProps {
-  config: BackgroundImageType;
+  config: BackgroundImageData;
 }
 
 export function BackgroundImage({ config }: BackgroundImageProps) {

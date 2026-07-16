@@ -78,10 +78,10 @@ export function ViewerCanvas({ data, mode, occupiedBoothSlugs, highlightedElemen
             stroke="#d1d5db"
             strokeWidth={1}
           />
-          {data.backgroundImage && (
-            <BackgroundImage config={data.backgroundImage} />
+          {data.background?.kind === "image" && (
+            <BackgroundImage config={data.background} />
           )}
-          {data.dxfDrawing && <DxfDrawing config={data.dxfDrawing} />}
+          {data.background?.kind === "dxf" && <DxfDrawing config={data.background} />}
         </Layer>
 
         <Layer>

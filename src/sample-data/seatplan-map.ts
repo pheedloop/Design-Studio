@@ -354,7 +354,8 @@ export const seatPlanMap: FloorPlanData = {
     "position": "bottom-right",
     "visible": true
   },
-  "backgroundImage": {
+  "background": {
+    "kind": "image",
     "url": bgImage,
     "width": BG_WIDTH,
     "height": BG_HEIGHT,

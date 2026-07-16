@@ -246,14 +246,21 @@ export interface Legend {
   visible: boolean;
 }
 
-export interface BackgroundImage {
+// --- Background (one upload slot: image, DXF, or — later — PDF) ---
+//
+// A floor plan has exactly one background source at a time, mirroring the
+// single `background_image` FileField on the backend record: one upload path,
+// one Replace/Remove, one place a host `onUploadBackground` callback stores
+// the raw file. `kind` determines which type-specific fields are populated
+// and which controls the Properties panel shows.
+
+export interface BackgroundImageData {
+  kind: "image";
   url: string;
   width: number;
   height: number;
   opacity: number;
 }
-
-// --- DXF import (CAD floor plans) ---
 
 /** A single renderable primitive parsed from a DXF entity. Coordinates are in
  *  canvas pixels — the fit transform and Y-flip are baked in at import time, so
@@ -284,17 +291,32 @@ export interface DxfPrimitive {
 /** An imported DXF drawing rendered as one locked, non-interactive group on the
  *  background layer. Primitives are pre-baked to canvas space; `bounds` and
  *  `sourceUnits` are kept in original DXF space for scale seeding / future re-fit. */
-export interface DxfDrawing {
+export interface BackgroundDxfData {
+  kind: "dxf";
+  /** Hosted URL of the original uploaded .dxf file — same upload path as
+   *  images (one backend FileField). Not read for rendering (that's what
+   *  `primitives` is for); kept for backend bookkeeping / a future re-parse.
+   *  Falls back to a client-side object URL when no `onUpload` host callback
+   *  is configured (e.g. the standalone demo) — fine for the current session,
+   *  won't survive a reload without a real backend. */
+  url: string;
+  sourceFileName: string;
   primitives: DxfPrimitive[];
-  /** Layer names present in the import (all imported == visible in v1). */
+  /** Layer names brought in at import time (unchecked layers were excluded
+   *  entirely, for payload-size budget reasons — see DxfImportSection). */
   layers: string[];
+  /** Layers toggled off afterward in the Properties panel — a subset of
+   *  `layers`, filtered at render time. Nothing is re-parsed to change this. */
+  hiddenLayers?: string[];
   /** Original DXF-space extent, before the fit transform was baked in. */
   bounds: { minX: number; minY: number; maxX: number; maxY: number };
   /** Real-world unit derived from the DXF $INSUNITS header, if present. */
   sourceUnits?: Unit;
   opacity: number;
-  sourceFileName?: string;
 }
+
+// Future: | BackgroundPdfData (kind: "pdf")
+export type Background = BackgroundImageData | BackgroundDxfData;
 
 export interface Dimensions {
   width: number;
@@ -341,8 +363,7 @@ export interface FloorPlanData {
   legend: Legend;
   typeStyles?: TypeStyles;
   viewerAppearance?: ViewerAppearance;
-  backgroundImage?: BackgroundImage;
-  dxfDrawing?: DxfDrawing;
+  background?: Background;
   backgroundColor?: string;
   walkableLayer?: WalkableGrid;
   scaleCalibration?: ScaleCalibration;

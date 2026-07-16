@@ -730,11 +730,11 @@ export function Canvas({
             stroke="#d1d5db"
             strokeWidth={1}
           />
-          {data.backgroundImage && layerVisibility.get("background") !== false && (
-            <BackgroundImage config={data.backgroundImage} />
+          {data.background?.kind === "image" && layerVisibility.get("background") !== false && (
+            <BackgroundImage config={data.background} />
           )}
-          {data.dxfDrawing && layerVisibility.get("background") !== false && (
-            <DxfDrawing config={data.dxfDrawing} />
+          {data.background?.kind === "dxf" && layerVisibility.get("background") !== false && (
+            <DxfDrawing config={data.background} />
           )}
           {gridSettings.showGrid && !isPathingMode && (
             <GridLayer
