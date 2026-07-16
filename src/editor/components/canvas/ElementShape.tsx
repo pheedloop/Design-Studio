@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { Group } from "react-konva";
 import type { FloorPlanElement } from "../../../types";
 import { RectShape } from "./elements/RectShape";
@@ -25,8 +26,12 @@ interface ElementShapeProps {
   onDragMove: (id: string, x: number, y: number) => void;
   onDragEnd: (id: string, x: number, y: number) => void;
   onContextMenu: (elementId: string, screenX: number, screenY: number) => void;
-  onMouseEnter?: () => void;
-  onMouseLeave?: () => void;
+  // Take the id as an argument (rather than the caller closing over it) so
+  // Canvas can pass the *same* function reference for every element — a
+  // fresh per-element closure would defeat this component's React.memo on
+  // every zoom/pan-triggered re-render of the parent.
+  onMouseEnter?: (id: string) => void;
+  onMouseLeave?: (id: string) => void;
   isDimmed?: boolean;
   onDoubleClick?: (id: string) => void;
 }
@@ -35,7 +40,7 @@ function getLabel(element: FloorPlanElement): string {
   return element.properties.name || "";
 }
 
-export function ElementShape({
+function ElementShapeImpl({
   element,
   isSelectMode,
   isSelected: _isSelected,
@@ -101,8 +106,8 @@ export function ElementShape({
         e.cancelBubble = true;
         onContextMenu(element.id, e.evt.clientX, e.evt.clientY);
       }}
-      onMouseEnter={onMouseEnter}
-      onMouseLeave={onMouseLeave}
+      onMouseEnter={onMouseEnter ? () => onMouseEnter(element.id) : undefined}
+      onMouseLeave={onMouseLeave ? () => onMouseLeave(element.id) : undefined}
     >
       {element.type === "booth" && (geo.shape === "rect" || geo.shape === "polygon" || geo.shape === "ellipse" || geo.shape === "circle") && (
         <BoothShape
@@ -185,3 +190,11 @@ export function ElementShape({
     </Group>
   );
 }
+
+// Memoized: on a zoom/pan-only re-render of Canvas, every ElementShape's
+// props are unchanged (element/selection/handlers are all stable or
+// primitive — see Canvas.tsx), so this skips re-rendering (and Konva
+// re-diffing) every element on the map for what is purely a Stage-level
+// scale/position change. Large maps were re-rendering every element on
+// every wheel tick without this.
+export const ElementShape = memo(ElementShapeImpl);

@@ -12,23 +12,23 @@ export interface Exhibitor {
  * Note: no dedicated MeetingRoom model currently exists in pikachu — the map
  * references meeting rooms by ID in the GeoJSON but the backend model is not
  * yet implemented. This type is forward-looking, modelled on SessionLocation.
- * id       → integer primary key
+ * id       → string code (e.g. "MTLOC42")
  * name     → room name (unique per event)
  * capacity → max occupancy
  */
 export interface MeetingRoom {
-  id: number;
+  id: string;
   name: string;
   capacity?: number;
 }
 
 /**
  * Mirrors the PheedLoop SessionLocation DB record.
- * id    → SessionLocation.id  (integer primary key, used as map sessionId reference)
+ * id    → SessionLocation.id  (string code, e.g. "LOCA8CU831" — used as map sessionId reference)
  * title → SessionLocation.title  (unique per event)
  */
 export interface SessionLocation {
-  id: number;
+  id: string;
   title: string;
   capacity: number;
 }
