@@ -3,9 +3,6 @@ import { PiMapTrifold, PiBug, PiQuestion } from "react-icons/pi";
 import { DropdownMenu, MenuButton } from "./ui";
 import type { MenuEntry } from "./ui";
 
-const isMac = navigator.platform.toUpperCase().includes("MAC");
-const mod = isMac ? "⌘" : "Ctrl+";
-
 interface TopBarProps {
   debug?: boolean;
   onDebugClick?: () => void;
@@ -82,5 +79,3 @@ export function TopBar({
     </div>
   );
 }
-
-export { mod as modKey };

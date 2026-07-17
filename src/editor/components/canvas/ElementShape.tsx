@@ -17,7 +17,6 @@ import { IconShape } from "./elements/IconShape";
 interface ElementShapeProps {
   element: FloorPlanElement;
   isSelectMode: boolean;
-  isSelected: boolean;
   isLinked: boolean;
   isHovered?: boolean;
   isOverlapping?: boolean;
@@ -43,7 +42,6 @@ function getLabel(element: FloorPlanElement): string {
 function ElementShapeImpl({
   element,
   isSelectMode,
-  isSelected: _isSelected,
   isLinked,
   isHovered = false,
   isOverlapping = false,

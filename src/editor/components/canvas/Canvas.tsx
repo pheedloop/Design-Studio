@@ -704,7 +704,7 @@ export function Canvas({
         scaleY={scale}
         x={position.x}
         y={position.y}
-        draggable={isPanMode || (!isPathingMode && isSelectMode && !dragSelectOrigin.current)}
+        draggable={isPanMode || (!isPathingMode && isSelectMode && !dragSelectRect)}
         onWheel={onWheel}
         onDragStart={(e) => {
           if (e.target === stageRef.current) setIsStageDragging(true);
@@ -772,7 +772,6 @@ export function Canvas({
                     key={element.id}
                     element={element}
                     isSelectMode={isSelectMode && isActiveLayer}
-                    isSelected={selectedIds.has(element.id)}
                     isLinked={!unlinkedElementIds?.has(element.id)}
                     isHovered={isSelectMode && hoveredElementId === element.id}
                     isOverlapping={overlappingElementIds?.has(element.id) ?? false}

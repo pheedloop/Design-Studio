@@ -1,6 +1,6 @@
 import type { InputHTMLAttributes } from "react";
 
-interface SliderProps extends InputHTMLAttributes<HTMLInputElement> {}
+type SliderProps = InputHTMLAttributes<HTMLInputElement>;
 
 export function Slider({ className, ...props }: SliderProps) {
   return (

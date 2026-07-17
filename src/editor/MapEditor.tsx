@@ -50,7 +50,7 @@ import {
   ContextMenu,
   type ContextMenuItem,
 } from "./components/canvas/ContextMenu";
-import { modKey } from "./components/TopBar";
+import { modKey } from "./utils/platform";
 import { MapDebugDialog } from "./components/debug";
 import { BackgroundUploadDialog, type BackgroundUploadResult } from "./components/panels/BackgroundUploadDialog";
 import { GridSettingsDialog } from "./components/panels/GridSettingsDialog";

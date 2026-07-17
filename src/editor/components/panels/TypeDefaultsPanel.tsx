@@ -12,7 +12,7 @@ const TYPE_DISPLAY_NAMES: Record<string, string> = {
   meeting_room: "Meeting Room",
 };
 
-export function formatTypeDisplayName(key: string): string {
+function formatTypeDisplayName(key: string): string {
   if (TYPE_DISPLAY_NAMES[key]) return TYPE_DISPLAY_NAMES[key];
   return key
     .split(/[_-]/)
