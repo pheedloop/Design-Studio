@@ -24,11 +24,11 @@ export interface MeetingRoom {
 
 /**
  * Mirrors the PheedLoop SessionLocation DB record.
- * id    → SessionLocation.id  (string code, e.g. "LOCA8CU831" — used as map sessionId reference)
+ * id    → SessionLocation.id  (integer PK — stringified when used as the map sessionId reference)
  * title → SessionLocation.title  (unique per event)
  */
 export interface SessionLocation {
-  id: string;
+  id: number;
   title: string;
   capacity: number;
 }

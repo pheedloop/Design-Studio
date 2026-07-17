@@ -34,6 +34,7 @@ import type { ToolContext } from "./tools/types";
 import { TOOL_MAP } from "./tools/registry";
 import { useCanvasControls } from "./hooks/useCanvasControls";
 import { useEditorState, DEFAULT_PERSIST_KEY } from "./hooks/useEditorState";
+import { useDxfBackgroundHydration } from "./hooks/useDxfBackgroundHydration";
 import { useKeyboardShortcuts } from "./hooks/useKeyboardShortcuts";
 import { useClipboard } from "./hooks/useClipboard";
 import { usePathingTool } from "./hooks/usePathingTool";
@@ -357,6 +358,16 @@ export function MapEditor({
     handleDragEnd,
     zoomReset,
   } = useCanvasControls(containerRef);
+
+  // A DXF chosen at map-creation time opens as a URL-only stub; parse it into
+  // renderable geometry once, here in the editor (never the viewer).
+  useDxfBackgroundHydration({
+    background: data.background,
+    canvasWidth: data.dimensions.width,
+    canvasHeight: data.dimensions.height,
+    setBackground,
+    updateDimensions,
+  });
 
   // On first load, fit the whole map in the viewport (centered, with a margin)
   // rather than pinning it to the top-left, scaling large maps down to fit.

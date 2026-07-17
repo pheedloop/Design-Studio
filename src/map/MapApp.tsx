@@ -111,7 +111,8 @@ export function MapApp() {
         iconColor: "#8b5cf6",
         iconShape: "oval",
         defaultShape: "rect",
-        getRecordId: (r) => r.id,
+        // SessionLocation.id is an integer PK; element sessionId refs are strings.
+        getRecordId: (r) => String(r.id),
         getPrimaryLabel: (r) => r.title,
       }),
       definePlacementCategory<MeetingRoom>({
