@@ -33,8 +33,9 @@ import type { DrawingDefaults } from "./components/panels/OptionsBar";
 import type { ToolContext } from "./tools/types";
 import { TOOL_MAP } from "./tools/registry";
 import { useCanvasControls } from "./hooks/useCanvasControls";
-import { useEditorState, DEFAULT_PERSIST_KEY } from "./hooks/useEditorState";
+import { useEditorState, DEFAULT_PERSIST_KEY, type ResizeMode, type ResizeAnchor } from "./hooks/useEditorState";
 import { useDxfBackgroundHydration } from "./hooks/useDxfBackgroundHydration";
+import { useCrop } from "./hooks/useCrop";
 import { useKeyboardShortcuts } from "./hooks/useKeyboardShortcuts";
 import { useClipboard } from "./hooks/useClipboard";
 import { usePathingTool } from "./hooks/usePathingTool";
@@ -159,6 +160,8 @@ export function MapEditor({
     updateTypeStyles,
     setBackground,
     toggleBackgroundDxfLayer,
+    applyCrop,
+    resizeCanvas,
     setBackgroundColor,
     reorderElement,
     updateDimensions,
@@ -329,6 +332,7 @@ export function MapEditor({
   const [showGridDialog, setShowGridDialog] = useState(false);
   const [showResizeDialog, setShowResizeDialog] = useState(false);
   const [isCalibrating, setIsCalibrating] = useState(false);
+  const [isCropping, setIsCropping] = useState(false);
   const [showTypeDefaultsDialog, setShowTypeDefaultsDialog] = useState(false);
   const [showLegendDialog, setShowLegendDialog] = useState(false);
   const [showArrangeGridDialog, setShowArrangeGridDialog] = useState(false);
@@ -521,6 +525,32 @@ export function MapEditor({
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isCalibrating, handleCancelCalibration]);
+
+  // Crop mode
+  const crop = useCrop({
+    canvasWidth: data.dimensions.width,
+    canvasHeight: data.dimensions.height,
+    onComplete: (rect) => {
+      applyCrop(rect);
+      setIsCropping(false);
+    },
+  });
+
+  const handleStartCrop = useCallback(() => {
+    crop.start();
+    setIsCropping(true);
+  }, [crop]);
+  const handleCancelCrop = useCallback(() => setIsCropping(false), []);
+
+  // Escape key cancels crop mode
+  useEffect(() => {
+    if (!isCropping) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") handleCancelCrop();
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isCropping, handleCancelCrop]);
 
   const handleCopy = useCallback(() => {
     if (selectedElements.length > 0) copy(selectedElements);
@@ -771,35 +801,10 @@ export function MapEditor({
   );
 
   const handleCanvasResize = useCallback(
-    (newWidth: number, newHeight: number, mode: "preserve" | "scale") => {
-      if (mode === "scale") {
-        const scaleX = newWidth / data.dimensions.width;
-        const scaleY = newHeight / data.dimensions.height;
-        for (const el of data.elements) {
-          const geo = el.geometry;
-          if ("x" in geo && "y" in geo) {
-            const updates: Record<string, number | number[]> = {
-              x: geo.x * scaleX,
-              y: geo.y * scaleY,
-            };
-            if ("width" in geo) updates.width = geo.width * scaleX;
-            if ("height" in geo) updates.height = geo.height * scaleY;
-            if ("radiusX" in geo) updates.radiusX = geo.radiusX * scaleX;
-            if ("radiusY" in geo) updates.radiusY = geo.radiusY * scaleY;
-            if ("radius" in geo)
-              updates.radius = geo.radius * Math.min(scaleX, scaleY);
-            if ("points" in geo && Array.isArray(geo.points)) {
-              updates.points = geo.points.map((v: number, i: number) =>
-                i % 2 === 0 ? v * scaleX : v * scaleY,
-              );
-            }
-            updateElement(el.id, updates);
-          }
-        }
-      }
-      updateDimensions({ width: newWidth, height: newHeight });
+    (newWidth: number, newHeight: number, mode: ResizeMode, anchor: ResizeAnchor) => {
+      resizeCanvas({ width: newWidth, height: newHeight, mode, anchor });
     },
-    [data.dimensions, data.elements, updateElement, updateDimensions],
+    [resizeCanvas],
   );
 
   const handleBackgroundUpload = useCallback(
@@ -1796,6 +1801,9 @@ export function MapEditor({
                   pendingCells={pathingTool.pendingCells}
                   pendingValue={pathingTool.pendingValue}
                   isCalibrating={isCalibrating}
+                  isCropping={isCropping}
+                  cropRect={crop.rect}
+                  onCropChange={crop.setRect}
                   calibrationState={calibration.state}
                   existingCalibration={data.scaleCalibration}
                   onCalibrationClick={calibration.handleMouseDown}
@@ -1942,6 +1950,23 @@ export function MapEditor({
           onClose={() => setShowGridDialog(false)}
         />
       )}
+      {isCropping && (
+        <div className="fixed top-4 left-1/2 -translate-x-1/2 z-[60] flex items-center gap-2 bg-white border border-gray-200 shadow-lg rounded-lg px-3 py-2">
+          <span className="text-xs text-gray-600">Drag to frame the area to keep</span>
+          <button
+            onClick={crop.confirm}
+            className="text-xs font-medium text-white bg-primary-600 hover:bg-primary-700 rounded px-3 py-1.5 cursor-pointer transition-colors"
+          >
+            Apply crop
+          </button>
+          <button
+            onClick={handleCancelCrop}
+            className="text-xs text-gray-600 border border-gray-200 rounded px-3 py-1.5 hover:bg-gray-50 cursor-pointer transition-colors"
+          >
+            Cancel
+          </button>
+        </div>
+      )}
       {showResizeDialog && (
         <CanvasResizeDialog
           width={data.dimensions.width}
@@ -1949,6 +1974,7 @@ export function MapEditor({
           dimensions={data.dimensions}
           elements={data.elements}
           onConfirm={handleCanvasResize}
+          onStartCrop={handleStartCrop}
           onClose={() => setShowResizeDialog(false)}
         />
       )}

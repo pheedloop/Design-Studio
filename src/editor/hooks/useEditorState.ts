@@ -1,5 +1,5 @@
 import { useCallback, useEffect } from "react";
-import type { FloorPlanData, FloorPlanElement, ElementType, Geometry, ElementProperties, Background, Dimensions, WalkableGrid, ScaleCalibration, Unit, ElementTypeDefaults, Legend, ViewerAppearance, GroupDefinition } from "../../types";
+import type { FloorPlanData, FloorPlanElement, ElementType, Geometry, ElementProperties, Background, DxfPrimitive, Dimensions, WalkableGrid, ScaleCalibration, Unit, ElementTypeDefaults, Legend, ViewerAppearance, GroupDefinition } from "../../types";
 import { ELEMENT_TYPE_TO_LAYER, DEFAULT_TYPE_STYLES, DEFAULT_VIEWER_APPEARANCE } from "../../types";
 import { createWalkableGrid } from "../utils/walkableGrid";
 import { derivePixelsPerUnit } from "../../utils/unitConversion";
@@ -53,6 +53,74 @@ function backfillLayers(data: FloorPlanData): FloorPlanData {
     elements: data.elements.map((el) =>
       el.layer ? el : { ...el, layer: ELEMENT_TYPE_TO_LAYER[el.type] }
     ),
+  };
+}
+
+// --- Canvas resize / reframe ---
+
+export type ResizeMode = "preserve" | "scale";
+
+/** Where existing content stays when the canvas grows/shrinks in "preserve"
+ *  mode (the classic image-editor canvas-size anchor). New space is added on
+ *  the side opposite the anchor; e.g. `bottom-right` sticks content to the
+ *  bottom-right and opens blank space on the top-left. */
+export type ResizeAnchor =
+  | "top-left" | "top" | "top-right"
+  | "left" | "center" | "right"
+  | "bottom-left" | "bottom" | "bottom-right";
+
+/** Content translation for an anchored resize: dW/dH are (new − old) size deltas. */
+export function anchorOffset(anchor: ResizeAnchor, dW: number, dH: number): { dx: number; dy: number } {
+  const dx = anchor.includes("left") ? 0 : anchor.includes("right") ? dW : dW / 2;
+  const dy = anchor.includes("top") ? 0 : anchor.includes("bottom") ? dH : dH / 2;
+  return { dx, dy };
+}
+
+/** Translate an element's geometry. `points` are anchor-relative, so a
+ *  translate only moves the anchor (x/y) — no per-shape point rewriting. */
+function offsetGeometry(geo: Geometry, dx: number, dy: number): Geometry {
+  return { ...geo, x: geo.x + dx, y: geo.y + dy } as Geometry;
+}
+
+/** Uniformly (or per-axis) scale an element's geometry about the canvas origin. */
+function scaleGeometry(geo: Geometry, sx: number, sy: number): Geometry {
+  const g: Record<string, unknown> = { ...geo, x: geo.x * sx, y: geo.y * sy };
+  if ("width" in geo) g.width = geo.width * sx;
+  if ("height" in geo) g.height = geo.height * sy;
+  if ("radiusX" in geo) g.radiusX = geo.radiusX * sx;
+  if ("radiusY" in geo) g.radiusY = geo.radiusY * sy;
+  if ("radius" in geo) g.radius = geo.radius * Math.min(sx, sy);
+  if ("points" in geo && Array.isArray(geo.points)) {
+    g.points = geo.points.map((v: number, i: number) => (i % 2 === 0 ? v * sx : v * sy));
+  }
+  return g as unknown as Geometry;
+}
+
+/** Translate a baked DXF primitive (canvas-space coords). */
+function offsetPrimitive(p: DxfPrimitive, dx: number, dy: number): DxfPrimitive {
+  return {
+    ...p,
+    points: p.points?.map((v, i) => (i % 2 === 0 ? v + dx : v + dy)),
+    cx: p.cx != null ? p.cx + dx : undefined,
+    cy: p.cy != null ? p.cy + dy : undefined,
+    x: p.x != null ? p.x + dx : undefined,
+    y: p.y != null ? p.y + dy : undefined,
+  };
+}
+
+/** Scale a baked DXF primitive about the canvas origin. Radii/text-height use
+ *  the smaller factor (uniform in practice — the dialog aspect-locks scaling). */
+function scalePrimitive(p: DxfPrimitive, sx: number, sy: number): DxfPrimitive {
+  const s = Math.min(sx, sy);
+  return {
+    ...p,
+    points: p.points?.map((v, i) => (i % 2 === 0 ? v * sx : v * sy)),
+    cx: p.cx != null ? p.cx * sx : undefined,
+    cy: p.cy != null ? p.cy * sy : undefined,
+    r: p.r != null ? p.r * s : undefined,
+    x: p.x != null ? p.x * sx : undefined,
+    y: p.y != null ? p.y * sy : undefined,
+    height: p.height != null ? p.height * s : undefined,
   };
 }
 
@@ -285,6 +353,161 @@ export function useEditorState(
       dimensions: { ...prev.dimensions, ...dims },
     }));
   }, [setData]);
+
+  /** Crop the canvas to `rect` (canvas-space): shift all content by the crop
+   *  origin so it stays aligned, resize the canvas, and drop DXF geometry that
+   *  falls outside. One undoable mutation; Ctrl+Z restores the full drawing.
+   *  Background-agnostic — image backgrounds shift via x/y, DXF via primitives. */
+  const applyCrop = useCallback(
+    (rect: { x: number; y: number; width: number; height: number }) => {
+      const { x: cx, y: cy, width, height } = rect;
+      setData((prev) => {
+        // points are anchor-relative, so a translate only moves each element's x/y.
+        const elements = prev.elements.map((el) => ({
+          ...el,
+          geometry: offsetGeometry(el.geometry, -cx, -cy),
+        }));
+
+        let background = prev.background;
+        if (background?.kind === "image") {
+          background = { ...background, x: (background.x ?? 0) - cx, y: (background.y ?? 0) - cy };
+        } else if (background?.kind === "dxf") {
+          const offset = (p: DxfPrimitive): DxfPrimitive => offsetPrimitive(p, -cx, -cy);
+          // Keep primitives that intersect the new [0,0,width,height] canvas.
+          const inside = (p: DxfPrimitive): boolean => {
+            if (p.points) {
+              for (let i = 0; i < p.points.length; i += 2) {
+                if (p.points[i] >= 0 && p.points[i] <= width && p.points[i + 1] >= 0 && p.points[i + 1] <= height)
+                  return true;
+              }
+              return false;
+            }
+            if (p.kind === "circle" && p.cx != null && p.cy != null && p.r != null)
+              return p.cx + p.r >= 0 && p.cx - p.r <= width && p.cy + p.r >= 0 && p.cy - p.r <= height;
+            if (p.kind === "text" && p.x != null && p.y != null)
+              return p.x >= 0 && p.x <= width && p.y >= 0 && p.y <= height;
+            return true;
+          };
+          const primitives = background.primitives.map(offset).filter(inside);
+          const layers = [...new Set(primitives.map((p) => p.layer))];
+          background = {
+            ...background,
+            primitives,
+            layers,
+            hiddenLayers: background.hiddenLayers?.filter((l) => layers.includes(l)),
+          };
+        }
+
+        const scaleCalibration = prev.scaleCalibration
+          ? {
+              ...prev.scaleCalibration,
+              p1: { x: prev.scaleCalibration.p1.x - cx, y: prev.scaleCalibration.p1.y - cy },
+              p2: { x: prev.scaleCalibration.p2.x - cx, y: prev.scaleCalibration.p2.y - cy },
+            }
+          : undefined;
+
+        return {
+          ...prev,
+          elements,
+          background,
+          scaleCalibration,
+          dimensions: { ...prev.dimensions, width, height },
+        };
+      });
+    },
+    [setData],
+  );
+
+  /** Resize the canvas as one undoable mutation, transforming the background
+   *  and scale calibration along with the elements — the two things the old
+   *  per-element loop silently ignored.
+   *  - `preserve`: translate all content by the anchor offset and grow/shrink
+   *    the canvas; real-world scale (pixelsPerUnit) is untouched.
+   *  - `scale`: multiply every coordinate (elements, background, calibration)
+   *    by the size factor and scale pixelsPerUnit to match, so a measured
+   *    distance keeps its real-world value. The dialog aspect-locks this mode,
+   *    so sx ≈ sy (no DXF distortion, single valid scale). */
+  const resizeCanvas = useCallback(
+    (opts: { width: number; height: number; mode: ResizeMode; anchor?: ResizeAnchor }) => {
+      const { width, height, mode, anchor = "top-left" } = opts;
+      setData((prev) => {
+        const oldW = prev.dimensions.width;
+        const oldH = prev.dimensions.height;
+        if (oldW === width && oldH === height) return prev;
+
+        if (mode === "scale") {
+          const sx = width / oldW;
+          const sy = height / oldH;
+          const elements = prev.elements.map((el) => ({
+            ...el,
+            geometry: scaleGeometry(el.geometry, sx, sy),
+          }));
+
+          let background = prev.background;
+          if (background?.kind === "image") {
+            background = {
+              ...background,
+              x: (background.x ?? 0) * sx,
+              y: (background.y ?? 0) * sy,
+              width: background.width * sx,
+              height: background.height * sy,
+            };
+          } else if (background?.kind === "dxf") {
+            background = { ...background, primitives: background.primitives.map((p) => scalePrimitive(p, sx, sy)) };
+          }
+
+          const scaleCalibration = prev.scaleCalibration
+            ? {
+                ...prev.scaleCalibration,
+                p1: { x: prev.scaleCalibration.p1.x * sx, y: prev.scaleCalibration.p1.y * sy },
+                p2: { x: prev.scaleCalibration.p2.x * sx, y: prev.scaleCalibration.p2.y * sy },
+              }
+            : undefined;
+
+          return {
+            ...prev,
+            elements,
+            background,
+            scaleCalibration,
+            // Uniform scale (dialog aspect-locks) → pixels scale, real world unchanged → ppu scales too.
+            dimensions: { ...prev.dimensions, width, height, pixelsPerUnit: prev.dimensions.pixelsPerUnit * sx },
+          };
+        }
+
+        // preserve: translate content to the anchor, grow/shrink the canvas.
+        const { dx, dy } = anchorOffset(anchor, width - oldW, height - oldH);
+        const moved = dx !== 0 || dy !== 0;
+        const elements = moved
+          ? prev.elements.map((el) => ({ ...el, geometry: offsetGeometry(el.geometry, dx, dy) }))
+          : prev.elements;
+
+        let background = prev.background;
+        if (moved && background?.kind === "image") {
+          background = { ...background, x: (background.x ?? 0) + dx, y: (background.y ?? 0) + dy };
+        } else if (moved && background?.kind === "dxf") {
+          background = { ...background, primitives: background.primitives.map((p) => offsetPrimitive(p, dx, dy)) };
+        }
+
+        const scaleCalibration =
+          moved && prev.scaleCalibration
+            ? {
+                ...prev.scaleCalibration,
+                p1: { x: prev.scaleCalibration.p1.x + dx, y: prev.scaleCalibration.p1.y + dy },
+                p2: { x: prev.scaleCalibration.p2.x + dx, y: prev.scaleCalibration.p2.y + dy },
+              }
+            : prev.scaleCalibration;
+
+        return {
+          ...prev,
+          elements,
+          background,
+          scaleCalibration,
+          dimensions: { ...prev.dimensions, width, height },
+        };
+      });
+    },
+    [setData],
+  );
 
   const reorderElement = useCallback(
     (id: string, direction: "forward" | "backward" | "front" | "back") => {
@@ -536,6 +759,8 @@ export function useEditorState(
     updateElementType,
     setBackground,
     toggleBackgroundDxfLayer,
+    applyCrop,
+    resizeCanvas,
     reorderElement,
     setBackgroundColor,
     updateDimensions,

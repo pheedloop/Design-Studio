@@ -18,6 +18,8 @@ import { GridLayer } from "./GridLayer";
 import { WalkableGridOverlay } from "./WalkableGridOverlay";
 import { CalibrationPreview } from "./CalibrationPreview";
 import type { CalibrationState } from "../../hooks/useCalibration";
+import { CropOverlay } from "./CropOverlay";
+import type { CropRect } from "../../hooks/useCrop";
 import { useAlignmentGuides } from "../../hooks/useAlignmentGuides";
 import { getElementBounds, lineIntersectsRect } from "../../utils/bounds";
 import { PolygonVertexHandles } from "../../tools/handles/PolygonVertexHandles";
@@ -124,6 +126,10 @@ interface CanvasProps {
   existingCalibration?: FloorPlanData["scaleCalibration"];
   onCalibrationClick?: (e: Konva.KonvaEventObject<MouseEvent>) => void;
   onCalibrationMouseMove?: (e: Konva.KonvaEventObject<MouseEvent>) => void;
+  // Crop mode
+  isCropping?: boolean;
+  cropRect?: CropRect;
+  onCropChange?: (rect: CropRect) => void;
   unlinkedElementIds?: Set<string>;
   showTransformControls?: boolean;
   overlappingElementIds?: Set<string>;
@@ -167,6 +173,9 @@ export function Canvas({
   pendingCells,
   pendingValue,
   isCalibrating,
+  isCropping,
+  cropRect,
+  onCropChange,
   calibrationState,
   existingCalibration,
   onCalibrationClick,
@@ -704,7 +713,7 @@ export function Canvas({
         scaleY={scale}
         x={position.x}
         y={position.y}
-        draggable={isPanMode || (!isPathingMode && isSelectMode && !dragSelectRect)}
+        draggable={!isCropping && (isPanMode || (!isPathingMode && isSelectMode && !dragSelectRect))}
         onWheel={onWheel}
         onDragStart={(e) => {
           if (e.target === stageRef.current) setIsStageDragging(true);
@@ -719,7 +728,9 @@ export function Canvas({
         onDblClick={handleDoubleClick}
       >
         {/* Background layer: color fill, image, grid */}
-        <Layer>
+        <Layer
+          clip={{ x: 0, y: 0, width: data.dimensions.width, height: data.dimensions.height }}
+        >
           <Rect
             id="background"
             x={0}
@@ -864,6 +875,14 @@ export function Canvas({
               calibrationState={calibrationState}
               existingCalibration={existingCalibration}
               scale={scale}
+            />
+          )}
+          {isCropping && cropRect && onCropChange && (
+            <CropOverlay
+              rect={cropRect}
+              canvasWidth={data.dimensions.width}
+              canvasHeight={data.dimensions.height}
+              onChange={onCropChange}
             />
           )}
           {pathingRectPreview && data.walkableLayer && (

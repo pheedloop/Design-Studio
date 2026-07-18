@@ -259,6 +259,10 @@ export interface BackgroundImageData {
   url: string;
   width: number;
   height: number;
+  /** Canvas-space offset of the image's top-left. Default 0,0; set negative by
+   *  a crop so the image shifts with the rest of the content. */
+  x?: number;
+  y?: number;
   opacity: number;
 }
 

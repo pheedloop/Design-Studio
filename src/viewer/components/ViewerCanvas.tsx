@@ -68,7 +68,9 @@ export function ViewerCanvas({ data, mode, occupiedBoothSlugs, highlightedElemen
         onWheel={handleWheel}
         onDragEnd={handleDragEnd}
       >
-        <Layer>
+        <Layer
+          clip={{ x: 0, y: 0, width: data.dimensions.width, height: data.dimensions.height }}
+        >
           <Rect
             x={0}
             y={0}

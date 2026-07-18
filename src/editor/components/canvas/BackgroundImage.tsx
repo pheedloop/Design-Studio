@@ -25,8 +25,8 @@ export function BackgroundImage({ config }: BackgroundImageProps) {
   return (
     <KonvaImage
       image={image}
-      x={0}
-      y={0}
+      x={config.x ?? 0}
+      y={config.y ?? 0}
       width={config.width}
       height={config.height}
       opacity={config.opacity}
