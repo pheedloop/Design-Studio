@@ -4,6 +4,7 @@ import type { FloorPlanData } from "../types";
 import type { Exhibitor, HoveredItem, ViewerMode } from "./types";
 import type { SearchResult } from "./hooks/useSearch";
 import { useSearch } from "./hooks/useSearch";
+import { buildSearchPlaceholder } from "./utils/searchPlaceholder";
 import { useDirections } from "./hooks/useDirections";
 import { ViewerCanvas } from "./components/ViewerCanvas";
 import { SearchBar } from "./components/SearchBar";
@@ -11,6 +12,7 @@ import { MapSidebar } from "./components/MapSidebar";
 import { MapSheet } from "./components/MapSheet";
 import { BoothPopover } from "./components/BoothPopover";
 import { LocationPopover } from "./components/LocationPopover";
+import { HoverTooltip } from "./components/HoverTooltip";
 import { DirectionsPanel } from "./components/DirectionsPanel";
 import { resolveFeatures } from "../tiers";
 import type { Tier, FeatureKey, FeatureOverride } from "../tiers";
@@ -39,10 +41,16 @@ export function MapViewer({ data, exhibitors, mode = "attendee", tier, features,
   const [isMobile, setIsMobile] = useState(false);
   const [selectedItem, setSelectedItem] = useState<HoveredItem | null>(null);
   const [popover, setPopover] = useState<{ item: HoveredItem; name: string; x: number; y: number } | null>(null);
+  const [hover, setHover] = useState<{ item: HoveredItem; name: string; x: number; y: number } | null>(null);
 
   const { query, setQuery, results, matchedElementIds, isSearching } = useSearch(
     data.elements,
     exhibitors
+  );
+
+  const searchPlaceholder = useMemo(
+    () => buildSearchPlaceholder(data.elements),
+    [data.elements]
   );
 
   const directions = useDirections(data, exhibitors);
@@ -140,6 +148,7 @@ export function MapViewer({ data, exhibitors, mode = "attendee", tier, features,
           <SearchBar
             query={query}
             results={results}
+            placeholder={searchPlaceholder}
             onQueryChange={setQuery}
             onResultSelect={handleResultSelect}
           />
@@ -163,6 +172,14 @@ export function MapViewer({ data, exhibitors, mode = "attendee", tier, features,
           searchMatchIds={isSearching ? matchedElementIds : null}
           routePath={directions.routePath}
           onElementClick={handleElementClick}
+          onElementHover={(item, x, y) => {
+            if (!item) {
+              setHover(null);
+              return;
+            }
+            const el = data.elements.find((e) => e.id === item.elementId);
+            setHover({ item, name: el?.properties.name || "", x, y });
+          }}
         />
         {!isMobile && directions.active && (
           <div className="w-64 shrink-0 bg-white border-l border-gray-200 flex flex-col">
@@ -212,7 +229,7 @@ export function MapViewer({ data, exhibitors, mode = "attendee", tier, features,
             />
           </div>
         )}
-        {popover && !isMobile && popover.item.type === "booth" && (
+        {popover && popover.item.type === "booth" && (
           <BoothPopover
             boothCode={popover.name}
             exhibitor={exhibitorsByBooth.get(popover.item.boothSlug) ?? null}
@@ -227,7 +244,7 @@ export function MapViewer({ data, exhibitors, mode = "attendee", tier, features,
             }
           />
         )}
-        {popover && !isMobile && popover.item.type !== "booth" && (
+        {popover && popover.item.type !== "booth" && (
           <LocationPopover
             name={popover.name}
             type={popover.item.type}
@@ -239,6 +256,19 @@ export function MapViewer({ data, exhibitors, mode = "attendee", tier, features,
                 ? () => handleGetDirections(popover.item.elementId)
                 : undefined
             }
+          />
+        )}
+        {hover && !popover && !isMobile && (
+          <HoverTooltip
+            item={hover.item}
+            name={hover.name}
+            exhibitor={
+              hover.item.type === "booth"
+                ? (exhibitorsByBooth.get(hover.item.boothSlug) ?? null)
+                : null
+            }
+            x={hover.x}
+            y={hover.y}
           />
         )}
       </div>

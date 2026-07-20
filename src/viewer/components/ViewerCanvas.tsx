@@ -17,9 +17,14 @@ interface ViewerCanvasProps {
   searchMatchIds: Set<string> | null;
   routePath: { x: number; y: number }[] | null;
   onElementClick: (item: HoveredItem, screenX: number, screenY: number) => void;
+  onElementHover?: (
+    item: HoveredItem | null,
+    screenX: number,
+    screenY: number,
+  ) => void;
 }
 
-export function ViewerCanvas({ data, mode, occupiedBoothSlugs, highlightedElementId, searchMatchIds, routePath, onElementClick }: ViewerCanvasProps) {
+export function ViewerCanvas({ data, mode, occupiedBoothSlugs, highlightedElementId, searchMatchIds, routePath, onElementClick, onElementHover }: ViewerCanvasProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [hoveredElementId, setHoveredElementId] = useState<string | null>(null);
   const isSearching = !!searchMatchIds && searchMatchIds.size > 0;
@@ -125,8 +130,15 @@ export function ViewerCanvas({ data, mode, occupiedBoothSlugs, highlightedElemen
                 isDimmed={dimmed}
                 isHovered={isHovered && !highlighted && !isInert}
 
-                onMouseEnter={!isInert && isInteractive ? () => setHoveredElementId(element.id) : undefined}
-                onMouseLeave={!isInert && isInteractive ? () => setHoveredElementId(null) : undefined}
+                onMouseEnter={!isInert && isInteractive ? (e) => {
+                  setHoveredElementId(element.id);
+                  const item = buildClickItem();
+                  if (item) onElementHover?.(item, e.screenX, e.screenY);
+                } : undefined}
+                onMouseLeave={!isInert && isInteractive ? () => {
+                  setHoveredElementId(null);
+                  onElementHover?.(null, 0, 0);
+                } : undefined}
                 onClick={!isInert && isInteractive ? (e) => {
                   const item = buildClickItem();
                   if (item) onElementClick(item, e.screenX, e.screenY);

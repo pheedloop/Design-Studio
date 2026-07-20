@@ -1,5 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Group, Rect, Text, Ellipse, Line, Arrow, Shape, Image as KonvaImage } from "react-konva";
+import type Konva from "konva";
 import type {
   FloorPlanElement,
   RectGeometry,
@@ -51,10 +52,29 @@ export function ViewerElement({
   isDimmed: boolean;
   isHovered: boolean;
   overrideColor?: string;
-  onMouseEnter?: () => void;
+  onMouseEnter?: (e: { screenX: number; screenY: number }) => void;
   onMouseLeave?: () => void;
   onClick?: (e: { screenX: number; screenY: number }) => void;
 }) {
+  // Konva fires `tap` on touch and `click` on mouse (never both for one
+  // gesture), but browsers can also emit a ghost `click` ~300ms after a touch.
+  // Dedupe so a single tap doesn't double-fire the (toggling) click handler.
+  const lastActivate = useRef(0);
+  const handleActivate = (
+    e: Konva.KonvaEventObject<MouseEvent | TouchEvent>,
+  ) => {
+    if (!onClick) return;
+    e.cancelBubble = true;
+    const now = Date.now();
+    if (now - lastActivate.current < 350) return;
+    lastActivate.current = now;
+    const evt = e.evt as MouseEvent & TouchEvent;
+    const touch = evt.changedTouches?.[0] ?? evt.touches?.[0];
+    const screenX = touch ? touch.clientX : evt.clientX;
+    const screenY = touch ? touch.clientY : evt.clientY;
+    onClick({ screenX: screenX ?? 0, screenY: screenY ?? 0 });
+  };
+
   const geo = element.geometry;
   const label = getLabel(element);
   const color = overrideColor || element.properties.color;
@@ -80,7 +100,7 @@ export function ViewerElement({
         if (onMouseEnter) {
           const stage = e.target.getStage();
           if (stage) stage.container().style.cursor = "pointer";
-          onMouseEnter();
+          onMouseEnter({ screenX: e.evt.clientX, screenY: e.evt.clientY });
         }
       }}
       onMouseLeave={(e) => {
@@ -90,12 +110,8 @@ export function ViewerElement({
           onMouseLeave();
         }
       }}
-      onClick={(e) => {
-        if (onClick) {
-          e.cancelBubble = true;
-          onClick({ screenX: e.evt.clientX, screenY: e.evt.clientY });
-        }
-      }}
+      onClick={handleActivate}
+      onTap={handleActivate}
     >
       {geo.shape === "rect" && element.type !== "icon" && element.type !== "label" && (
         <>

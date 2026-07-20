@@ -28,12 +28,15 @@ function namespaceCssLayers() {
     name: "pl-namespace-css-layers",
     // Run after Vite's core css-post plugin has emitted the final CSS asset.
     enforce: "post" as const,
-    generateBundle(_options: unknown, bundle: Record<string, any>) {
+    generateBundle(
+      _options: unknown,
+      bundle: Record<
+        string,
+        { type: string; fileName: string; source?: string | Uint8Array }
+      >,
+    ) {
       for (const file of Object.values(bundle)) {
-        if (
-          file.type === "asset" &&
-          file.fileName.endsWith(".css")
-        ) {
+        if (file.type === "asset" && file.fileName.endsWith(".css")) {
           const source =
             typeof file.source === "string"
               ? file.source

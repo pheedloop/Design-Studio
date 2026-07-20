@@ -5,6 +5,7 @@ import type { SearchResult } from "../hooks/useSearch";
 interface SearchBarProps {
   query: string;
   results: SearchResult[];
+  placeholder: string;
   onQueryChange: (query: string) => void;
   onResultSelect: (result: SearchResult) => void;
 }
@@ -15,7 +16,7 @@ const TYPE_BADGE: Record<SearchResult["elementType"], { label: string; className
   meeting_room: { label: "Room", className: "bg-orange-100 text-orange-700" },
 };
 
-export function SearchBar({ query, results, onQueryChange, onResultSelect }: SearchBarProps) {
+export function SearchBar({ query, results, placeholder, onQueryChange, onResultSelect }: SearchBarProps) {
   const [focused, setFocused] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const showDropdown = focused && query.trim().length > 0;
@@ -34,7 +35,7 @@ export function SearchBar({ query, results, onQueryChange, onResultSelect }: Sea
             // Delay to allow dropdown click to register
             setTimeout(() => setFocused(false), 150);
           }}
-          placeholder="Search booths, sessions, or rooms..."
+          placeholder={placeholder}
           className="flex-1 text-sm text-gray-800 placeholder:text-gray-400 outline-none bg-transparent"
         />
         {query && (
