@@ -23,11 +23,14 @@ interface MapViewerProps {
   tier?: Tier;
   /** Per-feature overrides applied on top of the tier preset. */
   features?: Partial<Record<FeatureKey, FeatureOverride>>;
+  /** Called when the user clicks an exhibitor in a booth popover. The host app
+   *  typically navigates to that exhibitor's profile page. */
+  onExhibitorClick?: (exhibitor: Exhibitor) => void;
 }
 
 const MOBILE_BREAKPOINT = 640;
 
-export function MapViewer({ data, exhibitors, mode = "attendee", tier, features }: MapViewerProps) {
+export function MapViewer({ data, exhibitors, mode = "attendee", tier, features, onExhibitorClick }: MapViewerProps) {
   // Wayfinding (Directions) is gated by the usage tier. The viewer hides the
   // feature entirely when it is not enabled (no disabled/trophy state here).
   const featureMap = useMemo(() => resolveFeatures(tier, features), [tier, features]);
@@ -216,6 +219,7 @@ export function MapViewer({ data, exhibitors, mode = "attendee", tier, features 
             x={popover.x}
             y={popover.y}
             onClose={handlePopoverClose}
+            onExhibitorClick={onExhibitorClick}
             onGetDirections={
               wayfindingEnabled && mode === "attendee" && directions.hasGrid
                 ? () => handleGetDirections(popover.item.elementId)

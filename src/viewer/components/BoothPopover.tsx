@@ -8,6 +8,9 @@ interface BoothPopoverProps {
   y: number;
   onClose: () => void;
   onGetDirections?: () => void;
+  /** When provided, the exhibitor card becomes a clickable link to the
+   *  exhibitor (e.g. the host app navigates to the exhibitor profile). */
+  onExhibitorClick?: (exhibitor: Exhibitor) => void;
 }
 
 export function BoothPopover({
@@ -17,6 +20,7 @@ export function BoothPopover({
   y,
   onClose,
   onGetDirections,
+  onExhibitorClick,
 }: BoothPopoverProps) {
   const ref = useRef<HTMLDivElement>(null);
 
@@ -45,18 +49,37 @@ export function BoothPopover({
     >
       <div className="text-xs font-semibold text-gray-800">{boothCode}</div>
       {exhibitor ? (
-        <div className="flex items-center gap-2 mt-1.5">
-          {exhibitor.logo && (
-            <img
-              src={exhibitor.logo}
-              alt=""
-              className="w-8 h-8 rounded shrink-0"
-            />
-          )}
-          <div className="text-sm font-medium text-gray-900">
-            {exhibitor.name}
+        onExhibitorClick ? (
+          <button
+            type="button"
+            onClick={() => onExhibitorClick(exhibitor)}
+            className="flex items-center gap-2 mt-1.5 w-full text-left rounded px-1 py-0.5 -mx-1 hover:bg-gray-50 cursor-pointer transition-colors"
+          >
+            {exhibitor.logo && (
+              <img
+                src={exhibitor.logo}
+                alt=""
+                className="w-8 h-8 rounded shrink-0"
+              />
+            )}
+            <div className="text-sm font-medium text-gray-900">
+              {exhibitor.name}
+            </div>
+          </button>
+        ) : (
+          <div className="flex items-center gap-2 mt-1.5">
+            {exhibitor.logo && (
+              <img
+                src={exhibitor.logo}
+                alt=""
+                className="w-8 h-8 rounded shrink-0"
+              />
+            )}
+            <div className="text-sm font-medium text-gray-900">
+              {exhibitor.name}
+            </div>
           </div>
-        </div>
+        )
       ) : (
         <div className="mt-1 text-[11px] text-gray-400">
           No exhibitor assigned
