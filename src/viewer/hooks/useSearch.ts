@@ -6,7 +6,7 @@ export interface SearchResult {
   elementId: string;           // element.id UUID — use as React key and for canvas highlight lookup
   elementType: "booth" | "session_area" | "meeting_room";
   name: string;                // primary display name
-  code?: string | null;        // boothCode (EXHBOT...) / meetingRoomId (MEL...) / sessionId (numeric)
+  code?: string | null;        // boothCode (EXHBOT...) / meetingRoomId (MEL...) / sessionId (numeric — coerced at read sites)
   exhibitorName?: string | null;
 }
 
@@ -66,7 +66,8 @@ export function useSearch(
     return allEntries.filter(
       (entry) =>
         entry.name.toLowerCase().includes(q) ||
-        (entry.code && entry.code.toLowerCase().includes(q)) ||
+        // code may be a number in real data (session/meeting-room ids) — coerce.
+        (entry.code != null && String(entry.code).toLowerCase().includes(q)) ||
         (entry.exhibitorName && entry.exhibitorName.toLowerCase().includes(q))
     );
   }, [query, allEntries]);

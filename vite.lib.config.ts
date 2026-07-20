@@ -7,10 +7,59 @@ import { fileURLToPath } from "url";
 
 const __dirname = fileURLToPath(new URL(".", import.meta.url));
 
+/**
+ * Namespace the compiled CSS layers (`@layer utilities` → `@layer pl-utilities`).
+ *
+ * Vite + Tailwind v4 emits native `@layer` at-rules. Host apps that still run
+ * Tailwind v3 in their PostCSS pipeline re-process any imported CSS and
+ * HARD-ERROR on `@layer utilities` ("no matching @tailwind utilities
+ * directive"). We ship pre-compiled CSS, so it must survive any consumer
+ * pipeline untouched. Renaming to `pl-*` makes the file inert to Tailwind's
+ * PostCSS plugin (it ignores unknown layer names) while preserving native CSS
+ * cascade layering — and named layers rank below the host app's unlayered
+ * utilities, so the host always wins on a global class-name collision.
+ *
+ * This runs as a build plugin (not a post-build script) so it also applies to
+ * `dev:lib`'s watch rebuilds — otherwise `npm link`/`link:` consumers would get
+ * un-namespaced CSS on every incremental rebuild.
+ */
+function namespaceCssLayers() {
+  return {
+    name: "pl-namespace-css-layers",
+    // Run after Vite's core css-post plugin has emitted the final CSS asset.
+    enforce: "post" as const,
+    generateBundle(_options: unknown, bundle: Record<string, any>) {
+      for (const file of Object.values(bundle)) {
+        if (
+          file.type === "asset" &&
+          file.fileName.endsWith(".css")
+        ) {
+          const source =
+            typeof file.source === "string"
+              ? file.source
+              : new TextDecoder().decode(file.source);
+          file.source = source.replace(
+            /@layer(\s+)([a-z][a-z0-9, ]*)([{;])/gi,
+            (_m, ws, names, term) =>
+              "@layer" +
+              ws +
+              names
+                .split(",")
+                .map((n: string) => "pl-" + n.trim())
+                .join(",") +
+              term,
+          );
+        }
+      }
+    },
+  };
+}
+
 export default defineConfig({
   plugins: [
     react(),
     tailwindcss(),
+    namespaceCssLayers(),
     dts({
       tsconfigPath: "./tsconfig.lib.json",
       include: ["src/editor", "src/viewer", "src/seatviewer", "src/types"],
