@@ -20,10 +20,11 @@ export function AttendeePicker({ provider, value, onChange }: AttendeePickerProp
   const [loading, setLoading] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
 
-  // Debounced search while open.
+  // Debounced search while open. `loading` flips true the moment a new search
+  // cycle starts — in the event handlers below, not here — since an effect
+  // body should only run the deferred fetch, not set state synchronously.
   useEffect(() => {
     if (!open) return;
-    setLoading(true);
     const t = setTimeout(() => {
       provider
         .search(query)
@@ -55,7 +56,13 @@ export function AttendeePicker({ provider, value, onChange }: AttendeePickerProp
         <PiMagnifyingGlass size={13} className="text-gray-400 shrink-0" />
         <button
           type="button"
-          onClick={() => setOpen((o) => !o)}
+          onClick={() =>
+            setOpen((o) => {
+              const next = !o;
+              if (next) setLoading(true);
+              return next;
+            })
+          }
           className="min-w-[9rem] max-w-[14rem] truncate text-left text-gray-700"
         >
           {value ? value.name : <span className="text-gray-400">Preview data…</span>}
@@ -80,7 +87,10 @@ export function AttendeePicker({ provider, value, onChange }: AttendeePickerProp
             <input
               autoFocus
               value={query}
-              onChange={(e) => setQuery(e.target.value)}
+              onChange={(e) => {
+                setQuery(e.target.value);
+                setLoading(true);
+              }}
               placeholder="Search attendee…"
               className="w-full px-2 py-1 text-xs border border-gray-200 rounded outline-none focus:border-primary-400"
             />

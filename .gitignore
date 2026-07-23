@@ -29,3 +29,5 @@ dist-ssr
 
 # Local packed tarball for file: installs during integration
 map-editor.local.tgz
+# Claude Code agent runtime memory (not product content)
+.claude/agent-memory/

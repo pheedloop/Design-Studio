@@ -15,7 +15,8 @@ import {
   TabBar,
   type MenuEntry,
 } from "../editor/components/ui";
-import { BadgeTopBar, modKey } from "./BadgeTopBar";
+import { BadgeTopBar } from "./BadgeTopBar";
+import { modKey } from "../editor/utils/platform";
 import { BadgeCanvas } from "./BadgeCanvas";
 import { BadgeRulers } from "./BadgeRulers";
 import { AlignmentControls } from "../editor/components/panels/AlignmentControls";
@@ -127,6 +128,11 @@ export function BadgeEditor({
   );
   const [previewData, setPreviewData] = useState<BadgeData | null>(null);
   const clipboard = useRef<BadgeField[]>([]);
+  // Mirrors `clipboard.current.length > 0` as real state — the ref itself is
+  // only readable in event handlers/effects, never during render (the "Paste"
+  // menu item's `disabled` needs to react to a copy immediately, not wait for
+  // some unrelated re-render to catch up).
+  const [hasClipboard, setHasClipboard] = useState(false);
 
   // Resolve the selected attendee's badge data (or clear it).
   const selectAttendee = useCallback(
@@ -282,7 +288,10 @@ export function BadgeEditor({
 
   const copySelected = useCallback(() => {
     const picked = activePage.fields.filter((f) => selectedIds.has(f.id));
-    if (picked.length) clipboard.current = picked.map((f) => ({ ...f }));
+    if (picked.length) {
+      clipboard.current = picked.map((f) => ({ ...f }));
+      setHasClipboard(true);
+    }
   }, [activePage, selectedIds]);
 
   const pasteClipboard = useCallback(() => {
@@ -444,7 +453,7 @@ export function BadgeEditor({
     {
       label: "Paste",
       shortcut: `${modKey}V`,
-      disabled: clipboard.current.length === 0,
+      disabled: !hasClipboard,
       onClick: pasteClipboard,
     },
     {

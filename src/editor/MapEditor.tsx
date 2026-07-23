@@ -33,7 +33,9 @@ import type { DrawingDefaults } from "./components/panels/OptionsBar";
 import type { ToolContext } from "./tools/types";
 import { TOOL_MAP } from "./tools/registry";
 import { useCanvasControls } from "./hooks/useCanvasControls";
-import { useEditorState, DEFAULT_PERSIST_KEY } from "./hooks/useEditorState";
+import { useEditorState, DEFAULT_PERSIST_KEY, type ResizeMode, type ResizeAnchor } from "./hooks/useEditorState";
+import { useDxfBackgroundHydration } from "./hooks/useDxfBackgroundHydration";
+import { useCrop } from "./hooks/useCrop";
 import { useKeyboardShortcuts } from "./hooks/useKeyboardShortcuts";
 import { useClipboard } from "./hooks/useClipboard";
 import { usePathingTool } from "./hooks/usePathingTool";
@@ -50,9 +52,9 @@ import {
   ContextMenu,
   type ContextMenuItem,
 } from "./components/canvas/ContextMenu";
-import { modKey } from "./components/TopBar";
+import { modKey } from "./utils/platform";
 import { MapDebugDialog } from "./components/debug";
-import { BackgroundImageDialog } from "./components/panels/BackgroundImageDialog";
+import { BackgroundUploadDialog, type BackgroundUploadResult } from "./components/panels/BackgroundUploadDialog";
 import { GridSettingsDialog } from "./components/panels/GridSettingsDialog";
 import { HelpDialog } from "./components/panels/HelpDialog";
 import { CanvasResizeDialog } from "./components/panels/CanvasResizeDialog";
@@ -70,6 +72,7 @@ import type {
   Geometry,
   LayerId,
   LayerDefinition,
+  Dimensions,
 } from "../types";
 import type { PlacementCategory } from "./placement/types";
 import {
@@ -92,12 +95,15 @@ interface MapEditorProps {
   placementCategories?: PlacementCategory[];
   onSave?: (data: FloorPlanData) => Promise<void>;
   onDirtyChange?: (isDirty: boolean) => void;
-  onUploadBackgroundImage?: (file: File) => Promise<{
+  /** Delegates the raw background file (image or DXF — PDF later) to the host,
+   *  e.g. uploading it to the single `background_image` FileField on the
+   *  backend. One upload path for every background kind. */
+  onUploadBackground?: (file: File) => Promise<{
     url: string;
     width: number | null;
     height: number | null;
   }>;
-  onRemoveBackgroundImage?: () => Promise<void>;
+  onRemoveBackground?: () => Promise<void>;
   onEditProperties?: () => void;
   name?: string;
   onNameChange?: (name: string) => void;
@@ -116,8 +122,8 @@ export function MapEditor({
   placementCategories = [],
   onSave,
   onDirtyChange,
-  onUploadBackgroundImage,
-  onRemoveBackgroundImage,
+  onUploadBackground,
+  onRemoveBackground,
   onEditProperties,
   name: controlledName,
   onNameChange,
@@ -152,7 +158,10 @@ export function MapEditor({
     setMapName,
     updateLegend,
     updateTypeStyles,
-    setBackgroundImage,
+    setBackground,
+    toggleBackgroundDxfLayer,
+    applyCrop,
+    resizeCanvas,
     setBackgroundColor,
     reorderElement,
     updateDimensions,
@@ -248,9 +257,10 @@ export function MapEditor({
   const [activeGroupId, setActiveGroupId] = useState<string | null>(null);
   const [defaults, setDefaults] = useState<DrawingDefaults>(INITIAL_DEFAULTS);
   const [showMapDebug, setShowMapDebug] = useState(false);
-  const [showBgDialog, setShowBgDialog] = useState(false);
+  const [showBackgroundDialog, setShowBackgroundDialog] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
   const [activeIconName, setActiveIconName] = useState<string | null>(null);
+  const [dxfHydrationError, setDxfHydrationError] = useState<string | null>(null);
 
   const setActiveLayerId = useCallback(
     (id: LayerId) => {
@@ -323,6 +333,7 @@ export function MapEditor({
   const [showGridDialog, setShowGridDialog] = useState(false);
   const [showResizeDialog, setShowResizeDialog] = useState(false);
   const [isCalibrating, setIsCalibrating] = useState(false);
+  const [isCropping, setIsCropping] = useState(false);
   const [showTypeDefaultsDialog, setShowTypeDefaultsDialog] = useState(false);
   const [showLegendDialog, setShowLegendDialog] = useState(false);
   const [showArrangeGridDialog, setShowArrangeGridDialog] = useState(false);
@@ -352,6 +363,17 @@ export function MapEditor({
     handleDragEnd,
     zoomReset,
   } = useCanvasControls(containerRef);
+
+  // A DXF chosen at map-creation time opens as a URL-only stub; parse it into
+  // renderable geometry once, here in the editor (never the viewer).
+  useDxfBackgroundHydration({
+    background: data.background,
+    canvasWidth: data.dimensions.width,
+    canvasHeight: data.dimensions.height,
+    setBackground,
+    updateDimensions,
+    onError: setDxfHydrationError,
+  });
 
   // On first load, fit the whole map in the viewport (centered, with a margin)
   // rather than pinning it to the top-left, scaling large maps down to fit.
@@ -505,6 +527,32 @@ export function MapEditor({
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isCalibrating, handleCancelCalibration]);
+
+  // Crop mode
+  const crop = useCrop({
+    canvasWidth: data.dimensions.width,
+    canvasHeight: data.dimensions.height,
+    onComplete: (rect) => {
+      applyCrop(rect);
+      setIsCropping(false);
+    },
+  });
+
+  const handleStartCrop = useCallback(() => {
+    crop.start();
+    setIsCropping(true);
+  }, [crop]);
+  const handleCancelCrop = useCallback(() => setIsCropping(false), []);
+
+  // Escape key cancels crop mode
+  useEffect(() => {
+    if (!isCropping) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") handleCancelCrop();
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isCropping, handleCancelCrop]);
 
   const handleCopy = useCallback(() => {
     if (selectedElements.length > 0) copy(selectedElements);
@@ -755,80 +803,39 @@ export function MapEditor({
   );
 
   const handleCanvasResize = useCallback(
-    (newWidth: number, newHeight: number, mode: "preserve" | "scale") => {
-      if (mode === "scale") {
-        const scaleX = newWidth / data.dimensions.width;
-        const scaleY = newHeight / data.dimensions.height;
-        for (const el of data.elements) {
-          const geo = el.geometry;
-          if ("x" in geo && "y" in geo) {
-            const updates: Record<string, number | number[]> = {
-              x: geo.x * scaleX,
-              y: geo.y * scaleY,
-            };
-            if ("width" in geo) updates.width = geo.width * scaleX;
-            if ("height" in geo) updates.height = geo.height * scaleY;
-            if ("radiusX" in geo) updates.radiusX = geo.radiusX * scaleX;
-            if ("radiusY" in geo) updates.radiusY = geo.radiusY * scaleY;
-            if ("radius" in geo)
-              updates.radius = geo.radius * Math.min(scaleX, scaleY);
-            if ("points" in geo && Array.isArray(geo.points)) {
-              updates.points = geo.points.map((v: number, i: number) =>
-                i % 2 === 0 ? v * scaleX : v * scaleY,
-              );
-            }
-            updateElement(el.id, updates);
-          }
-        }
-      }
-      updateDimensions({ width: newWidth, height: newHeight });
+    (newWidth: number, newHeight: number, mode: ResizeMode, anchor: ResizeAnchor) => {
+      resizeCanvas({ width: newWidth, height: newHeight, mode, anchor });
     },
-    [data.dimensions, data.elements, updateElement, updateDimensions],
+    [resizeCanvas],
   );
 
-  const handleBackgroundImage = useCallback(
-    (
-      url: string,
-      imageWidth: number,
-      imageHeight: number,
-      mode: "resize-canvas" | "fit-image",
-    ) => {
-      // New uploads default to 1; replacing an existing background keeps the
-      // user's current opacity.
-      const opacity = data.backgroundImage?.opacity ?? 1;
-      if (mode === "resize-canvas") {
-        updateDimensions({ width: imageWidth, height: imageHeight });
-        setBackgroundImage({
-          url,
-          width: imageWidth,
-          height: imageHeight,
-          opacity,
-        });
-      } else {
-        setBackgroundImage({
-          url,
-          width: data.dimensions.width,
-          height: data.dimensions.height,
-          opacity,
-        });
+  const handleBackgroundUpload = useCallback(
+    (result: BackgroundUploadResult) => {
+      // "Resize" mode grows the canvas to the file; scale calibration (when a
+      // DXF declared units) makes booths drawn on top come out real-sized.
+      const dims: Partial<Dimensions> = {};
+      if (result.resizeCanvasTo) {
+        dims.width = result.resizeCanvasTo.width;
+        dims.height = result.resizeCanvasTo.height;
       }
-      setShowBgDialog(false);
+      if (result.calibration) {
+        dims.pixelsPerUnit = result.calibration.pixelsPerUnit;
+        dims.unit = result.calibration.unit;
+      }
+      if (Object.keys(dims).length > 0) updateDimensions(dims);
+      setBackground(result.background);
+      setShowBackgroundDialog(false);
     },
-    [
-      data.dimensions,
-      data.backgroundImage,
-      setBackgroundImage,
-      updateDimensions,
-    ],
+    [setBackground, updateDimensions],
   );
 
   const handleRemoveBackground = useCallback(() => {
     // Clear local state immediately (marks dirty; next save drops it). Notify
-    // the host fire-and-forget — a rejection must not restore the image, since
+    // the host fire-and-forget — a rejection must not restore the file, since
     // the host surfaces its own errors and retains old files server-side.
-    setBackgroundImage(undefined);
-    void onRemoveBackgroundImage?.().catch(() => {});
-  }, [setBackgroundImage, onRemoveBackgroundImage]);
+    setBackground(undefined);
+    void onRemoveBackground?.().catch(() => {});
+  }, [setBackground, onRemoveBackground]);
 
   const handleElementContextMenu = useCallback(
     (elementId: string, screenX: number, screenY: number) => {
@@ -1619,6 +1626,19 @@ export function MapEditor({
               ]),
         ]}
       />
+      {dxfHydrationError && (
+        <div className="flex items-center justify-between gap-3 bg-red-50 border-b border-red-200 px-4 py-2 text-xs text-red-700">
+          <span>{dxfHydrationError}</span>
+          <button
+            type="button"
+            className="text-red-500 hover:text-red-700"
+            aria-label="Dismiss"
+            onClick={() => setDxfHydrationError(null)}
+          >
+            ✕
+          </button>
+        </div>
+      )}
       <div className="flex flex-1 overflow-hidden">
         <ToolSidebar
           activeTool={activeTool}
@@ -1796,6 +1816,9 @@ export function MapEditor({
                   pendingCells={pathingTool.pendingCells}
                   pendingValue={pathingTool.pendingValue}
                   isCalibrating={isCalibrating}
+                  isCropping={isCropping}
+                  cropRect={crop.rect}
+                  onCropChange={crop.setRect}
                   calibrationState={calibration.state}
                   existingCalibration={data.scaleCalibration}
                   onCalibrationClick={calibration.handleMouseDown}
@@ -1878,7 +1901,7 @@ export function MapEditor({
                   : false
               }
               dimensions={data.dimensions}
-              backgroundImage={data.backgroundImage}
+              background={data.background}
               backgroundColor={data.backgroundColor}
               activeLayerId={activeLayerId}
               debug={debug}
@@ -1908,15 +1931,15 @@ export function MapEditor({
                 selectNone();
               }}
               onBackgroundOpacityChange={(opacity) =>
-                data.backgroundImage &&
-                setBackgroundImage({ ...data.backgroundImage, opacity })
+                data.background && setBackground({ ...data.background, opacity })
               }
               onRemoveBackground={handleRemoveBackground}
               onUploadBackground={() => {
-                // Background image is gated by the usage tier.
+                // Background is gated by the usage tier.
                 if (featureMap.backgroundImage !== "enabled") return;
-                setShowBgDialog(true);
+                setShowBackgroundDialog(true);
               }}
+              onToggleDxfLayer={toggleBackgroundDxfLayer}
               onBackgroundColorChange={setBackgroundColor}
             />
           </div>
@@ -1925,13 +1948,14 @@ export function MapEditor({
       {showMapDebug && (
         <MapDebugDialog data={data} onClose={() => setShowMapDebug(false)} />
       )}
-      {showBgDialog && (
-        <BackgroundImageDialog
+      {showBackgroundDialog && (
+        <BackgroundUploadDialog
           canvasWidth={data.dimensions.width}
           canvasHeight={data.dimensions.height}
-          onUpload={onUploadBackgroundImage}
-          onConfirm={handleBackgroundImage}
-          onClose={() => setShowBgDialog(false)}
+          existingOpacity={data.background?.opacity}
+          onUpload={onUploadBackground}
+          onConfirm={handleBackgroundUpload}
+          onClose={() => setShowBackgroundDialog(false)}
         />
       )}
       {showGridDialog && (
@@ -1941,6 +1965,23 @@ export function MapEditor({
           onClose={() => setShowGridDialog(false)}
         />
       )}
+      {isCropping && (
+        <div className="fixed top-4 left-1/2 -translate-x-1/2 z-[60] flex items-center gap-2 bg-white border border-gray-200 shadow-lg rounded-lg px-3 py-2">
+          <span className="text-xs text-gray-600">Drag to frame the area to keep</span>
+          <button
+            onClick={crop.confirm}
+            className="text-xs font-medium text-white bg-primary-600 hover:bg-primary-700 rounded px-3 py-1.5 cursor-pointer transition-colors"
+          >
+            Apply crop
+          </button>
+          <button
+            onClick={handleCancelCrop}
+            className="text-xs text-gray-600 border border-gray-200 rounded px-3 py-1.5 hover:bg-gray-50 cursor-pointer transition-colors"
+          >
+            Cancel
+          </button>
+        </div>
+      )}
       {showResizeDialog && (
         <CanvasResizeDialog
           width={data.dimensions.width}
@@ -1948,6 +1989,7 @@ export function MapEditor({
           dimensions={data.dimensions}
           elements={data.elements}
           onConfirm={handleCanvasResize}
+          onStartCrop={handleStartCrop}
           onClose={() => setShowResizeDialog(false)}
         />
       )}

@@ -108,5 +108,5 @@ export interface ToolDefinition<TState = unknown> {
    * Build a FloorPlanElement from raw tool output + current drawing defaults.
    * Tools that don't create elements (measure) omit this.
    */
-  createElement?: (rawResult: any, defaults: DrawingDefaults) => FloorPlanElement;
+  createElement?: (rawResult: unknown, defaults: DrawingDefaults) => FloorPlanElement;
 }

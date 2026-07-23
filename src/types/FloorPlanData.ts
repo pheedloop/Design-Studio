@@ -246,12 +246,102 @@ export interface Legend {
   visible: boolean;
 }
 
-export interface BackgroundImage {
+// --- Background (one upload slot: image, DXF, or — later — PDF) ---
+//
+// A floor plan has exactly one background source at a time, mirroring the
+// single `background_image` FileField on the backend record: one upload path,
+// one Replace/Remove, one place a host `onUploadBackground` callback stores
+// the raw file. `kind` determines which type-specific fields are populated
+// and which controls the Properties panel shows.
+
+export interface BackgroundImageData {
+  kind: "image";
   url: string;
   width: number;
   height: number;
+  /** Canvas-space offset of the image's top-left. Default 0,0; set negative by
+   *  a crop so the image shifts with the rest of the content. */
+  x?: number;
+  y?: number;
   opacity: number;
 }
+
+/** Source DXF layer name, shared by every primitive. Drives the per-layer
+ *  visibility toggle in the Properties panel (hidden layers are skipped at
+ *  render time). */
+interface DxfPrimitiveBase {
+  layer: string;
+}
+
+/** An open line segment chain: flat [x1, y1, x2, y2, ...]. */
+export interface DxfLine extends DxfPrimitiveBase {
+  kind: "line";
+  points: number[];
+}
+
+/** A polyline: flat [x1, y1, x2, y2, ...], optionally closed. */
+export interface DxfPolyline extends DxfPrimitiveBase {
+  kind: "polyline";
+  points: number[];
+  closed?: boolean;
+}
+
+/** A native full circle (curves are sampled to polylines; only circles stay native). */
+export interface DxfCircle extends DxfPrimitiveBase {
+  kind: "circle";
+  cx: number;
+  cy: number;
+  r: number;
+}
+
+/** A single text label. */
+export interface DxfText extends DxfPrimitiveBase {
+  kind: "text";
+  text: string;
+  x: number;
+  y: number;
+  height: number; // text height in canvas px
+  rotation: number; // text baseline rotation, radians (Y-flip already applied)
+}
+
+/** A single renderable primitive parsed from a DXF entity. Coordinates are in
+ *  canvas pixels — the fit transform and Y-flip are baked in at import time, so
+ *  neither the editor nor the viewer needs the DXF parser to render.
+ *
+ *  Curved entities (arc, ellipse, spline) are sampled into polylines at parse
+ *  time; only full circles are kept native (compact and flip-safe). This keeps
+ *  the shared renderer trivial. Discriminate on `kind` to narrow to a variant. */
+export type DxfPrimitive = DxfLine | DxfPolyline | DxfCircle | DxfText;
+
+/** An imported DXF drawing rendered as one locked, non-interactive group on the
+ *  background layer. Primitives are pre-baked to canvas space; `bounds` and
+ *  `sourceUnits` are kept in original DXF space for scale seeding / future re-fit. */
+export interface BackgroundDxfData {
+  kind: "dxf";
+  /** Hosted URL of the original uploaded .dxf file — same upload path as
+   *  images (one backend FileField). Not read for rendering (that's what
+   *  `primitives` is for); kept for backend bookkeeping / a future re-parse.
+   *  Falls back to a client-side object URL when no `onUpload` host callback
+   *  is configured (e.g. the standalone demo) — fine for the current session,
+   *  won't survive a reload without a real backend. */
+  url: string;
+  sourceFileName: string;
+  primitives: DxfPrimitive[];
+  /** Layer names brought in at import time (unchecked layers were excluded
+   *  entirely, for payload-size budget reasons — see DxfImportSection). */
+  layers: string[];
+  /** Layers toggled off afterward in the Properties panel — a subset of
+   *  `layers`, filtered at render time. Nothing is re-parsed to change this. */
+  hiddenLayers?: string[];
+  /** Original DXF-space extent, before the fit transform was baked in. */
+  bounds: { minX: number; minY: number; maxX: number; maxY: number };
+  /** Real-world unit derived from the DXF $INSUNITS header, if present. */
+  sourceUnits?: Unit;
+  opacity: number;
+}
+
+// Future: | BackgroundPdfData (kind: "pdf")
+export type Background = BackgroundImageData | BackgroundDxfData;
 
 export interface Dimensions {
   width: number;
@@ -298,7 +388,7 @@ export interface FloorPlanData {
   legend: Legend;
   typeStyles?: TypeStyles;
   viewerAppearance?: ViewerAppearance;
-  backgroundImage?: BackgroundImage;
+  background?: Background;
   backgroundColor?: string;
   walkableLayer?: WalkableGrid;
   scaleCalibration?: ScaleCalibration;

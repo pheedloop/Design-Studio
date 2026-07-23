@@ -37,9 +37,14 @@ export function useCalibration({
   const [state, setState] = useState<CalibrationState>(INITIAL_STATE);
   const mousePosRef = useRef<Point | null>(null);
 
-  // Reset when deactivated
+  // Reset when deactivated. Every current caller already resets this hook's
+  // state itself when it turns calibration off (see handleCancel/handleConfirm
+  // below and MapEditor's handleCancelCalibration), so this is redundant
+  // today — but it's the hook's own defensive guarantee for any future
+  // caller that flips `isActive` off without also calling handleCancel.
   useEffect(() => {
     if (!isActive) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setState(INITIAL_STATE);
       mousePosRef.current = null;
     }

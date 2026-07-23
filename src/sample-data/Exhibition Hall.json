@@ -2597,12 +2597,6 @@
     "position": "bottom-right",
     "visible": true
   },
-  "backgroundImage": {
-    "url": "/src/sample-data/Floor%20Plan.png",
-    "width": 1819,
-    "height": 1301,
-    "opacity": 0.3
-  },
   "metadata": {
     "createdAt": "2026-03-29T12:00:00Z",
     "updatedAt": "2026-03-29T12:00:00Z",
@@ -26778,5 +26772,12 @@
     },
     "distance": 6,
     "unit": "ft"
+  },
+  "background": {
+    "kind": "image",
+    "url": "/src/sample-data/Floor%20Plan.png",
+    "width": 1819,
+    "height": 1301,
+    "opacity": 0.3
   }
 }

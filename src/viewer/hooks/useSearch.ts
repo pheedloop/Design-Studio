@@ -6,7 +6,7 @@ export interface SearchResult {
   elementId: string;           // element.id UUID — use as React key and for canvas highlight lookup
   elementType: "booth" | "session_area" | "meeting_room";
   name: string;                // primary display name
-  code?: string | null;        // boothCode (EXHBOT...) / meetingRoomId (MEL...) / sessionId (numeric — coerced at read sites)
+  code?: string | null;        // boothCode (EXHBOT...) / meetingRoomId (MEL...) / sessionId (LOCA...)
   exhibitorName?: string | null;
 }
 

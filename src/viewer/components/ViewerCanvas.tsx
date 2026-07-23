@@ -3,6 +3,7 @@ import { Stage, Layer, Rect } from "react-konva";
 import type { FloorPlanData } from "../../types";
 import { useCanvasControls } from "../../editor/hooks/useCanvasControls";
 import { BackgroundImage } from "../../editor/components/canvas/BackgroundImage";
+import { DxfDrawing } from "../../editor/components/canvas/DxfDrawing";
 import type { ViewerMode, HoveredItem } from "../types";
 import { ViewerElement } from "./ViewerElement";
 import { RouteOverlay } from "./RouteOverlay";
@@ -72,7 +73,9 @@ export function ViewerCanvas({ data, mode, occupiedBoothSlugs, highlightedElemen
         onWheel={handleWheel}
         onDragEnd={handleDragEnd}
       >
-        <Layer>
+        <Layer
+          clip={{ x: 0, y: 0, width: data.dimensions.width, height: data.dimensions.height }}
+        >
           <Rect
             x={0}
             y={0}
@@ -82,9 +85,10 @@ export function ViewerCanvas({ data, mode, occupiedBoothSlugs, highlightedElemen
             stroke="#d1d5db"
             strokeWidth={1}
           />
-          {data.backgroundImage && (
-            <BackgroundImage config={data.backgroundImage} />
+          {data.background?.kind === "image" && (
+            <BackgroundImage config={data.background} />
           )}
+          {data.background?.kind === "dxf" && <DxfDrawing config={data.background} />}
         </Layer>
 
         <Layer>

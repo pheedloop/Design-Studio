@@ -3,6 +3,7 @@ import { Stage, Layer, Rect } from "react-konva";
 import type { FloorPlanData } from "../../types";
 import { useCanvasControls } from "../../editor/hooks/useCanvasControls";
 import { BackgroundImage } from "../../editor/components/canvas/BackgroundImage";
+import { DxfDrawing } from "../../editor/components/canvas/DxfDrawing";
 import { ViewerElement } from "../../viewer/components/ViewerElement";
 
 export interface SeatPlanCanvasProps {
@@ -94,7 +95,8 @@ export function SeatPlanCanvas({
             stroke="#d1d5db"
             strokeWidth={1}
           />
-          {data.backgroundImage && <BackgroundImage config={data.backgroundImage} />}
+          {data.background?.kind === "image" && <BackgroundImage config={data.background} />}
+          {data.background?.kind === "dxf" && <DxfDrawing config={data.background} />}
         </Layer>
 
         <Layer>

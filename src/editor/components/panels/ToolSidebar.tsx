@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useLayoutEffect } from "react";
 import { createPortal } from "react-dom";
 import {
   PiCursorFill,
@@ -312,6 +312,19 @@ export function ToolSidebar({
   const iconRowRef = useRef<HTMLDivElement>(null);
   const showIconPicker = activeTool === "icon" && !!onIconSelect;
 
+  // The picker anchors to the icon row's DOM rect — a live measurement, not
+  // state, so it has to be read after layout (useLayoutEffect), never during
+  // render (refs, and the DOM they point to, aren't render-safe to read). A
+  // stale rect while hidden is harmless — rendering is gated on
+  // `showIconPicker` regardless, so there's nothing to reset here.
+  const [iconAnchorRect, setIconAnchorRect] = useState<DOMRect | null>(null);
+  useLayoutEffect(() => {
+    if (!showIconPicker) return;
+    const el = iconRowRef.current;
+    if (!el) return;
+    setIconAnchorRect(el.getBoundingClientRect());
+  }, [showIconPicker]);
+
   // Pathing mode overrides the normal sidebar
   if (isPathingMode && onPathingToolChange && activePathingTool) {
     return (
@@ -436,9 +449,9 @@ export function ToolSidebar({
         </div>
       )}
     </div>
-    {showIconPicker && iconRowRef.current && createPortal(
+    {showIconPicker && iconAnchorRect && createPortal(
       <IconPicker
-        anchorRect={iconRowRef.current.getBoundingClientRect()}
+        anchorRect={iconAnchorRect}
         selectedId={activeIconName}
         onSelect={(iconId) => onIconSelect!(iconId)}
         onClose={() => onToolChange("select")}

@@ -2,11 +2,13 @@ import type { SessionLocation } from "../viewer/types";
 
 /**
  * Sample SessionLocation records mirroring the PheedLoop DB.
- * id    → SessionLocation.id  (integer primary key)
+ * id    → SessionLocation.id  (integer PK)
  * title → SessionLocation.title  (unique per event)
  *
- * IDs are consistent across maps — if two maps reference sessionId: 1,
- * they both refer to the Keynote Stage.
+ * IDs are consistent across maps and with the sample floor plans' element
+ * `sessionId` references (see e.g. Exhibition Hall.json) — if two maps
+ * reference sessionId: "1", they both refer to the Keynote Stage. Element
+ * `sessionId`s are strings, so the id is stringified at the placement layer.
  */
 export const sampleSessionLocations: SessionLocation[] = [
   { id: 1, title: "Keynote Stage", capacity: 500 },

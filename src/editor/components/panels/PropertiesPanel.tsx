@@ -3,7 +3,7 @@ import type {
   FloorPlanElement,
   ElementProperties,
   Geometry,
-  BackgroundImage,
+  Background,
   LayerId,
   Dimensions,
   ElementTypeDefaults,
@@ -31,7 +31,7 @@ interface PropertiesPanelProps {
   selectedCount: number;
   isSelectedUnlinked: boolean;
   dimensions: Dimensions;
-  backgroundImage?: BackgroundImage;
+  background?: Background;
   backgroundColor?: string;
   activeLayerId: LayerId;
   debug: boolean;
@@ -46,6 +46,8 @@ interface PropertiesPanelProps {
   onBackgroundOpacityChange?: (opacity: number) => void;
   onRemoveBackground?: () => void;
   onUploadBackground?: () => void;
+  /** Toggle one DXF layer's visibility — only meaningful when background.kind === "dxf". */
+  onToggleDxfLayer?: (layer: string) => void;
   onBackgroundColorChange?: (color: string) => void;
   onUpdateTypeStyles: (
     key: string,
@@ -139,7 +141,7 @@ export function PropertiesPanel({
   selectedCount,
   isSelectedUnlinked,
   dimensions,
-  backgroundImage,
+  background,
   backgroundColor,
   activeLayerId,
   debug,
@@ -151,6 +153,7 @@ export function PropertiesPanel({
   onBackgroundOpacityChange,
   onRemoveBackground,
   onUploadBackground,
+  onToggleDxfLayer,
   onBackgroundColorChange,
   onUpdateTypeStyles,
 }: PropertiesPanelProps) {
@@ -313,29 +316,35 @@ export function PropertiesPanel({
             </div>
 
             <div className="flex flex-col gap-1.5">
-              <SectionLabel>Background Image</SectionLabel>
-              {backgroundImage ? (
+              <SectionLabel>Background File</SectionLabel>
+              {background ? (
                 <div className="flex flex-col gap-2">
-                  <div
-                    className="w-full h-20 rounded border border-gray-200 bg-gray-50"
-                    style={{
-                      backgroundImage: `url(${backgroundImage.url})`,
-                      backgroundSize: "contain",
-                      backgroundRepeat: "no-repeat",
-                      backgroundPosition: "center",
-                    }}
-                  />
+                  {background.kind === "image" ? (
+                    <div
+                      className="w-full h-20 rounded border border-gray-200 bg-gray-50"
+                      style={{
+                        backgroundImage: `url(${background.url})`,
+                        backgroundSize: "contain",
+                        backgroundRepeat: "no-repeat",
+                        backgroundPosition: "center",
+                      }}
+                    />
+                  ) : (
+                    <div className="text-[11px] text-gray-500 truncate">
+                      {background.sourceFileName}
+                    </div>
+                  )}
                   <div className="flex flex-col gap-1.5">
                     <div className="flex items-center justify-between">
                       <span className="text-[11px] text-gray-500">Opacity</span>
                       <span className="text-[11px] text-gray-400">
-                        {Math.round(backgroundImage.opacity * 100)}%
+                        {Math.round(background.opacity * 100)}%
                       </span>
                     </div>
                     <Slider
                       min={0}
                       max={100}
-                      value={Math.round(backgroundImage.opacity * 100)}
+                      value={Math.round(background.opacity * 100)}
                       onChange={(e) =>
                         onBackgroundOpacityChange?.(
                           Number(e.target.value) / 100,
@@ -344,6 +353,26 @@ export function PropertiesPanel({
                       className="w-full"
                     />
                   </div>
+
+                  {background.kind === "dxf" && (
+                    <div className="flex flex-col gap-1">
+                      <span className="text-[11px] text-gray-500">Layers</span>
+                      <div className="max-h-32 overflow-y-auto flex flex-col gap-1 border border-gray-200 rounded-md p-2">
+                        {background.layers.map((layer) => (
+                          <label key={layer} className="flex items-center gap-2 cursor-pointer text-[11px]">
+                            <input
+                              type="checkbox"
+                              checked={!background.hiddenLayers?.includes(layer)}
+                              onChange={() => onToggleDxfLayer?.(layer)}
+                              className="accent-primary-600"
+                            />
+                            <span className="flex-1 text-gray-700 truncate">{layer}</span>
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
                   <div className="flex gap-2">
                     <Button
                       variant="outline"
@@ -368,7 +397,7 @@ export function PropertiesPanel({
                   onClick={onUploadBackground}
                   className="w-full text-xs text-gray-600 border border-gray-200 border-dashed rounded px-2 py-3 hover:bg-gray-50 cursor-pointer transition-colors"
                 >
-                  Upload Image
+                  Upload Background
                 </button>
               )}
             </div>
