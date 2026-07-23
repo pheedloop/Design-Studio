@@ -287,12 +287,12 @@ function computeBounds(primitives: DxfPrimitive[]): {
     if (y > maxY) maxY = y;
   };
   for (const p of primitives) {
-    if (p.points) {
+    if (p.kind === "line" || p.kind === "polyline") {
       for (let i = 0; i < p.points.length; i += 2) acc(p.points[i], p.points[i + 1]);
-    } else if (p.kind === "circle" && p.cx != null && p.cy != null && p.r != null) {
+    } else if (p.kind === "circle") {
       acc(p.cx - p.r, p.cy - p.r);
       acc(p.cx + p.r, p.cy + p.r);
-    } else if (p.kind === "text" && p.x != null && p.y != null) {
+    } else if (p.kind === "text") {
       acc(p.x, p.y);
     }
   }

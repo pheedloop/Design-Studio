@@ -98,30 +98,30 @@ function scaleGeometry(geo: Geometry, sx: number, sy: number): Geometry {
 
 /** Translate a baked DXF primitive (canvas-space coords). */
 function offsetPrimitive(p: DxfPrimitive, dx: number, dy: number): DxfPrimitive {
-  return {
-    ...p,
-    points: p.points?.map((v, i) => (i % 2 === 0 ? v + dx : v + dy)),
-    cx: p.cx != null ? p.cx + dx : undefined,
-    cy: p.cy != null ? p.cy + dy : undefined,
-    x: p.x != null ? p.x + dx : undefined,
-    y: p.y != null ? p.y + dy : undefined,
-  };
+  switch (p.kind) {
+    case "line":
+    case "polyline":
+      return { ...p, points: p.points.map((v, i) => (i % 2 === 0 ? v + dx : v + dy)) };
+    case "circle":
+      return { ...p, cx: p.cx + dx, cy: p.cy + dy };
+    case "text":
+      return { ...p, x: p.x + dx, y: p.y + dy };
+  }
 }
 
 /** Scale a baked DXF primitive about the canvas origin. Radii/text-height use
  *  the smaller factor (uniform in practice — the dialog aspect-locks scaling). */
 function scalePrimitive(p: DxfPrimitive, sx: number, sy: number): DxfPrimitive {
   const s = Math.min(sx, sy);
-  return {
-    ...p,
-    points: p.points?.map((v, i) => (i % 2 === 0 ? v * sx : v * sy)),
-    cx: p.cx != null ? p.cx * sx : undefined,
-    cy: p.cy != null ? p.cy * sy : undefined,
-    r: p.r != null ? p.r * s : undefined,
-    x: p.x != null ? p.x * sx : undefined,
-    y: p.y != null ? p.y * sy : undefined,
-    height: p.height != null ? p.height * s : undefined,
-  };
+  switch (p.kind) {
+    case "line":
+    case "polyline":
+      return { ...p, points: p.points.map((v, i) => (i % 2 === 0 ? v * sx : v * sy)) };
+    case "circle":
+      return { ...p, cx: p.cx * sx, cy: p.cy * sy, r: p.r * s };
+    case "text":
+      return { ...p, x: p.x * sx, y: p.y * sy, height: p.height * s };
+  }
 }
 
 interface UseEditorStateOptions {
@@ -375,18 +375,16 @@ export function useEditorState(
           const offset = (p: DxfPrimitive): DxfPrimitive => offsetPrimitive(p, -cx, -cy);
           // Keep primitives that intersect the new [0,0,width,height] canvas.
           const inside = (p: DxfPrimitive): boolean => {
-            if (p.points) {
+            if (p.kind === "line" || p.kind === "polyline") {
               for (let i = 0; i < p.points.length; i += 2) {
                 if (p.points[i] >= 0 && p.points[i] <= width && p.points[i + 1] >= 0 && p.points[i + 1] <= height)
                   return true;
               }
               return false;
             }
-            if (p.kind === "circle" && p.cx != null && p.cy != null && p.r != null)
+            if (p.kind === "circle")
               return p.cx + p.r >= 0 && p.cx - p.r <= width && p.cy + p.r >= 0 && p.cy - p.r <= height;
-            if (p.kind === "text" && p.x != null && p.y != null)
-              return p.x >= 0 && p.x <= width && p.y >= 0 && p.y <= height;
-            return true;
+            return p.x >= 0 && p.x <= width && p.y >= 0 && p.y <= height;
           };
           const primitives = background.primitives.map(offset).filter(inside);
           const layers = [...new Set(primitives.map((p) => p.layer))];

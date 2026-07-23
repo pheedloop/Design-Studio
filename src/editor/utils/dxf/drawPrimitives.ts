@@ -54,17 +54,17 @@ export function drawPrimitives(
 
     if (p.kind === "line" || p.kind === "polyline") {
       const pts = p.points;
-      if (!pts || pts.length < 4) continue;
+      if (pts.length < 4) continue;
       ctx.beginPath();
       ctx.moveTo(pts[0], pts[1]);
       for (let i = 2; i < pts.length; i += 2) ctx.lineTo(pts[i], pts[i + 1]);
-      if (p.closed) ctx.closePath();
+      if (p.kind === "polyline" && p.closed) ctx.closePath();
       ctx.stroke();
-    } else if (p.kind === "circle" && p.cx != null && p.cy != null && p.r != null) {
+    } else if (p.kind === "circle") {
       ctx.beginPath();
       ctx.arc(p.cx, p.cy, p.r, 0, Math.PI * 2);
       ctx.stroke();
-    } else if (p.kind === "text" && p.text && p.x != null && p.y != null && p.height) {
+    } else if (p.kind === "text" && p.text && p.height) {
       ctx.save();
       ctx.font = `${Math.max(1, p.height)}px sans-serif`;
       ctx.textBaseline = "alphabetic";

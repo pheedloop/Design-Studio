@@ -266,31 +266,51 @@ export interface BackgroundImageData {
   opacity: number;
 }
 
+/** Source DXF layer name, shared by every primitive. Retained so a future
+ *  cleanup pass can filter by layer. */
+interface DxfPrimitiveBase {
+  layer: string;
+}
+
+/** An open line segment chain: flat [x1, y1, x2, y2, ...]. */
+export interface DxfLine extends DxfPrimitiveBase {
+  kind: "line";
+  points: number[];
+}
+
+/** A polyline: flat [x1, y1, x2, y2, ...], optionally closed. */
+export interface DxfPolyline extends DxfPrimitiveBase {
+  kind: "polyline";
+  points: number[];
+  closed?: boolean;
+}
+
+/** A native full circle (curves are sampled to polylines; only circles stay native). */
+export interface DxfCircle extends DxfPrimitiveBase {
+  kind: "circle";
+  cx: number;
+  cy: number;
+  r: number;
+}
+
+/** A single text label. */
+export interface DxfText extends DxfPrimitiveBase {
+  kind: "text";
+  text: string;
+  x: number;
+  y: number;
+  height: number; // text height in canvas px
+  rotation: number; // text baseline rotation, radians (Y-flip already applied)
+}
+
 /** A single renderable primitive parsed from a DXF entity. Coordinates are in
  *  canvas pixels — the fit transform and Y-flip are baked in at import time, so
  *  neither the editor nor the viewer needs the DXF parser to render.
  *
  *  Curved entities (arc, ellipse, spline) are sampled into polylines at parse
  *  time; only full circles are kept native (compact and flip-safe). This keeps
- *  the shared renderer trivial. */
-export interface DxfPrimitive {
-  kind: "line" | "polyline" | "circle" | "text";
-  /** Source DXF layer name. Retained so a future cleanup pass can filter by layer. */
-  layer: string;
-  // line / polyline: flat [x1, y1, x2, y2, ...]
-  points?: number[];
-  closed?: boolean; // polyline
-  // circle
-  cx?: number;
-  cy?: number;
-  r?: number;
-  // text
-  text?: string;
-  x?: number;
-  y?: number;
-  height?: number; // text height in canvas px
-  rotation?: number; // text baseline rotation, radians (Y-flip already applied)
-}
+ *  the shared renderer trivial. Discriminate on `kind` to narrow to a variant. */
+export type DxfPrimitive = DxfLine | DxfPolyline | DxfCircle | DxfText;
 
 /** An imported DXF drawing rendered as one locked, non-interactive group on the
  *  background layer. Primitives are pre-baked to canvas space; `bounds` and

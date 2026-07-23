@@ -44,26 +44,26 @@ export function bakeDrawing(primitives: DxfPrimitive[], opts: BakeOptions): Bake
   const mapY = (y: number) => (bounds.maxY - y) * scale + offsetY; // Y-flip
 
   const baked = primitives.map((p): DxfPrimitive => {
-    if (p.points) {
-      const out: number[] = [];
-      for (let i = 0; i < p.points.length; i += 2) {
-        out.push(mapX(p.points[i]), mapY(p.points[i + 1]));
+    switch (p.kind) {
+      case "line":
+      case "polyline": {
+        const out: number[] = [];
+        for (let i = 0; i < p.points.length; i += 2) {
+          out.push(mapX(p.points[i]), mapY(p.points[i + 1]));
+        }
+        return { ...p, points: out };
       }
-      return { ...p, points: out };
+      case "circle":
+        return { ...p, cx: mapX(p.cx), cy: mapY(p.cy), r: p.r * scale };
+      case "text":
+        return {
+          ...p,
+          x: mapX(p.x),
+          y: mapY(p.y),
+          height: p.height * scale,
+          rotation: -p.rotation, // Y-flip mirrors the baseline angle
+        };
     }
-    if (p.kind === "circle" && p.cx != null && p.cy != null && p.r != null) {
-      return { ...p, cx: mapX(p.cx), cy: mapY(p.cy), r: p.r * scale };
-    }
-    if (p.kind === "text" && p.x != null && p.y != null) {
-      return {
-        ...p,
-        x: mapX(p.x),
-        y: mapY(p.y),
-        height: (p.height ?? 0) * scale,
-        rotation: -(p.rotation ?? 0), // Y-flip mirrors the baseline angle
-      };
-    }
-    return { ...p };
   });
 
   return { primitives: baked, width, height, scale };
