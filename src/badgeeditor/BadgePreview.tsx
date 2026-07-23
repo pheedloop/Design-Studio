@@ -27,7 +27,19 @@ export function BadgePreview({
   unit?: Unit;
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const c = useCanvasControls(containerRef);
+  // Destructured individually (not kept as one bundled object) — accessing a
+  // property off an object that also holds a ref (stageRef) gets conservatively
+  // treated as a ref read by the linter even for non-ref fields like `scale`.
+  const {
+    stageRef,
+    scale,
+    position,
+    stageSize,
+    hasMeasured,
+    fitToBounds,
+    handleWheel,
+    handleDragEnd,
+  } = useCanvasControls(containerRef);
 
   const panelW = doc.panelSize.width * PPI;
   const panelH = doc.panelSize.height * PPI;
@@ -36,7 +48,6 @@ export function BadgePreview({
 
   // On open, fit the full sheet in the viewport (centered, with a margin) rather
   // than pinning it to the top-left — matching the editors and viewers.
-  const { fitToBounds, hasMeasured } = c;
   const didFit = useRef(false);
   useLayoutEffect(() => {
     if (didFit.current || !hasMeasured) return;
@@ -50,16 +61,16 @@ export function BadgePreview({
       className="relative w-full h-full overflow-hidden bg-gray-100"
     >
       <Stage
-        ref={c.stageRef}
-        width={c.stageSize.width}
-        height={c.stageSize.height}
-        scaleX={c.scale}
-        scaleY={c.scale}
-        x={c.position.x}
-        y={c.position.y}
+        ref={stageRef}
+        width={stageSize.width}
+        height={stageSize.height}
+        scaleX={scale}
+        scaleY={scale}
+        x={position.x}
+        y={position.y}
         draggable
-        onWheel={c.handleWheel}
-        onDragEnd={c.handleDragEnd}
+        onWheel={handleWheel}
+        onDragEnd={handleDragEnd}
       >
         <Layer>
           {/* The full unfolded sheet */}
@@ -135,9 +146,9 @@ export function BadgePreview({
       </Stage>
       <BadgeRulers
         visible={showRulers}
-        scale={c.scale}
-        position={c.position}
-        stageSize={c.stageSize}
+        scale={scale}
+        position={position}
+        stageSize={stageSize}
         ppi={DPI}
         unit={unit}
       />

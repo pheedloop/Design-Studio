@@ -76,7 +76,7 @@ export function SelectionTransformer({
       tr.nodes([node]);
       tr.getLayer()?.batchDraw();
     }
-  }, [selectedIds, stageRef, geoKey, isLine, isArrow, isArc, isPolygon, isSingle, elements]);
+  }, [selectedIds, selectedId, stageRef, geoKey, isLine, isArrow, isArc, isPolygon, isSingle, elements]);
 
   const handleTransformEnd = useCallback(() => {
     const tr = trRef.current;

@@ -22,7 +22,7 @@ export function ViewerIcon({ iconName, color, width, height }: { iconName: strin
   return <KonvaImage image={image} width={width} height={height} />;
 }
 
-export function getLabel(element: FloorPlanElement): string {
+function getLabel(element: FloorPlanElement): string {
   return element.properties.name || "";
 }
 

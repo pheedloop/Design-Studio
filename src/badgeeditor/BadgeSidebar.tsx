@@ -83,10 +83,10 @@ function SidebarHeader({
     }
   }, [editing]);
 
-  useEffect(() => {
-    if (!editing) setDraft(name);
-  }, [name, editing]);
-
+  // No effect syncing `draft` from `name` while not editing: `draft` is only
+  // ever read while `editing` is true, and both places that flip it on
+  // (the rename button below, and Escape-to-cancel) already reinitialize
+  // `draft` from the current `name` at that exact moment.
   const commit = () => {
     const trimmed = draft.trim();
     if (trimmed) onNameChange(trimmed);

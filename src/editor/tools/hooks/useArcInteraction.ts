@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback, useRef, useLayoutEffect } from "react";
 import type Konva from "konva";
 import type { ToolContext, ToolInteraction, ToolResult } from "../types";
 import { getCanvasPoint, isEmptySpaceClick } from "../../utils/canvas";
@@ -31,7 +31,12 @@ export function useArcInteraction(
 ): ToolInteraction<ArcToolState> {
   const [state, setState] = useState<ArcToolState>(INITIAL_STATE);
   const stateRef = useRef(state);
-  stateRef.current = state;
+  // Mirror state into a ref so event handlers (useCallback'd, so they'd
+  // otherwise close over a stale `state`) can read the latest value. Synced in
+  // an effect, not during render — refs must not be written while rendering.
+  useLayoutEffect(() => {
+    stateRef.current = state;
+  }, [state]);
 
   const cancel = useCallback(() => {
     setState(INITIAL_STATE);
@@ -86,7 +91,7 @@ export function useArcInteraction(
   );
 
   const handleMouseMove = useCallback(
-    (_e: Konva.KonvaEventObject<MouseEvent>) => {
+    () => {
       const stage = ctx.stageRef.current;
       if (!stage) return;
       const point = getCanvasPoint(stage, ctx.position, ctx.scale);

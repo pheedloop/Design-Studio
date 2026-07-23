@@ -111,6 +111,7 @@ export function MapApp() {
         iconColor: "#8b5cf6",
         iconShape: "oval",
         defaultShape: "rect",
+        // SessionLocation.id is an integer PK; element sessionId refs are strings.
         getRecordId: (r) => String(r.id),
         getPrimaryLabel: (r) => r.title,
       }),
@@ -123,7 +124,7 @@ export function MapApp() {
         iconColor: "#f59e0b",
         iconShape: "rect",
         defaultShape: "rect",
-        getRecordId: (r) => String(r.id),
+        getRecordId: (r) => r.id,
         getPrimaryLabel: (r) => r.name,
         getSecondaryLabel: (r) =>
           r.capacity != null ? `${r.capacity} cap.` : null,

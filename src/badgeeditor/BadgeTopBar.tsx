@@ -3,9 +3,6 @@ import { PiIdentificationBadge, PiBug } from "react-icons/pi";
 import { DropdownMenu, MenuButton } from "../editor/components/ui";
 import type { MenuEntry } from "../editor/components/ui";
 
-const isMac = navigator.platform.toUpperCase().includes("MAC");
-export const modKey = isMac ? "⌘" : "Ctrl+";
-
 interface BadgeTopBarProps {
   fileMenuItems?: MenuEntry[];
   editMenuItems?: MenuEntry[];

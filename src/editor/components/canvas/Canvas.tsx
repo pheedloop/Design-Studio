@@ -1,5 +1,5 @@
-import { useCallback, useState, useRef, useEffect } from "react";
-import { Stage, Layer, Rect } from "react-konva";
+import { useCallback, useMemo, useState, useRef, useEffect } from "react";
+import { Stage, Layer, Group, Rect } from "react-konva";
 import type Konva from "konva";
 import type { FloorPlanData, LayerDefinition, LayerId } from "../../../types";
 import { ELEMENT_TYPE_TO_LAYER } from "../../../types";
@@ -9,6 +9,7 @@ import { isEmptySpaceClick, getCanvasPoint } from "../../utils/canvas";
 import { ElementShape } from "./ElementShape";
 import { SelectionTransformer } from "./SelectionTransformer";
 import { BackgroundImage } from "./BackgroundImage";
+import { DxfDrawing } from "./DxfDrawing";
 import { AlignmentGuides } from "./AlignmentGuides";
 import { SelectionRect } from "./SelectionRect";
 import { MultiSelectBounds } from "./MultiSelectBounds";
@@ -17,6 +18,8 @@ import { GridLayer } from "./GridLayer";
 import { WalkableGridOverlay } from "./WalkableGridOverlay";
 import { CalibrationPreview } from "./CalibrationPreview";
 import type { CalibrationState } from "../../hooks/useCalibration";
+import { CropOverlay } from "./CropOverlay";
+import type { CropRect } from "../../hooks/useCrop";
 import { useAlignmentGuides } from "../../hooks/useAlignmentGuides";
 import { getElementBounds, lineIntersectsRect } from "../../utils/bounds";
 import { PolygonVertexHandles } from "../../tools/handles/PolygonVertexHandles";
@@ -62,6 +65,11 @@ function ToolHost({
 // ---------------------------------------------------------------------------
 // Canvas
 // ---------------------------------------------------------------------------
+
+// Ordered layer IDs for rendering (excluding background — handled separately).
+// Module-level so it's a stable reference across renders, not reallocated on
+// every render (e.g. every wheel-driven zoom/pan tick).
+const elementLayerOrder: LayerId[] = ["content", "pathing", "markup"];
 
 interface CanvasProps {
   data: FloorPlanData;
@@ -118,6 +126,10 @@ interface CanvasProps {
   existingCalibration?: FloorPlanData["scaleCalibration"];
   onCalibrationClick?: (e: Konva.KonvaEventObject<MouseEvent>) => void;
   onCalibrationMouseMove?: (e: Konva.KonvaEventObject<MouseEvent>) => void;
+  // Crop mode
+  isCropping?: boolean;
+  cropRect?: CropRect;
+  onCropChange?: (rect: CropRect) => void;
   unlinkedElementIds?: Set<string>;
   showTransformControls?: boolean;
   overlappingElementIds?: Set<string>;
@@ -161,6 +173,9 @@ export function Canvas({
   pendingCells,
   pendingValue,
   isCalibrating,
+  isCropping,
+  cropRect,
+  onCropChange,
   calibrationState,
   existingCalibration,
   onCalibrationClick,
@@ -204,6 +219,15 @@ export function Canvas({
 
   // Hover state (select mode only)
   const [hoveredElementId, setHoveredElementId] = useState<string | null>(null);
+  // Stable identity (unlike an inline `() => setHoveredElementId(element.id)`
+  // per element per render) so ElementShape's React.memo isn't defeated by a
+  // fresh closure on every zoom/pan-triggered re-render.
+  const handleElementMouseEnter = useCallback((id: string) => {
+    setHoveredElementId(id);
+  }, []);
+  const handleElementMouseLeave = useCallback(() => {
+    setHoveredElementId(null);
+  }, []);
 
   // Middle-click pan state
   const [isMiddlePanning, setIsMiddlePanning] = useState(false);
@@ -249,27 +273,38 @@ export function Canvas({
 
   const { activeGuides, startDrag, endDrag, snapPosition } = useAlignmentGuides(data.elements);
 
-  const sortedElements = [...data.elements].sort(
-    (a, b) => (a.properties.zIndex ?? 0) - (b.properties.zIndex ?? 0)
+  // These derived views only depend on the floor-plan data/layer config, never
+  // on scale/position — memoized so panning and zooming (which re-render this
+  // component on every wheel tick) don't re-sort/re-group every element in the
+  // map each frame. Without this, large maps visibly stutter while zooming.
+  const sortedElements = useMemo(
+    () =>
+      [...data.elements].sort(
+        (a, b) => (a.properties.zIndex ?? 0) - (b.properties.zIndex ?? 0)
+      ),
+    [data.elements]
   );
 
   // Build a visibility lookup from layers prop
-  const layerVisibility = new Map(layers.map((l) => [l.id, l.visible]));
+  const layerVisibility = useMemo(
+    () => new Map(layers.map((l) => [l.id, l.visible])),
+    [layers]
+  );
 
   // Group sorted elements by layer
-  const elementsByLayer = new Map<LayerId, typeof sortedElements>();
-  for (const el of sortedElements) {
-    const lid = el.layer ?? ELEMENT_TYPE_TO_LAYER[el.type];
-    const group = elementsByLayer.get(lid);
-    if (group) {
-      group.push(el);
-    } else {
-      elementsByLayer.set(lid, [el]);
+  const elementsByLayer = useMemo(() => {
+    const map = new Map<LayerId, typeof sortedElements>();
+    for (const el of sortedElements) {
+      const lid = el.layer ?? ELEMENT_TYPE_TO_LAYER[el.type];
+      const group = map.get(lid);
+      if (group) {
+        group.push(el);
+      } else {
+        map.set(lid, [el]);
+      }
     }
-  }
-
-  // Ordered layer IDs for rendering (excluding background — handled separately)
-  const elementLayerOrder: LayerId[] = ["content", "pathing", "markup"];
+    return map;
+  }, [sortedElements]);
 
   // Selected element + handle lookup from registry
   const selectedElement = selectedIds.size === 1
@@ -286,7 +321,7 @@ export function Canvas({
       : handleDef?.HandleComponent;
 
   // Group selection: all selectedIds share the same groupId and we're not inside the group
-  const groupSelectionGroupId = (() => {
+  const groupSelectionGroupId = useMemo(() => {
     if (selectedIds.size < 2 || activeGroupId) return null;
     const firstId = [...selectedIds][0];
     const gid = data.elements.find((el) => el.id === firstId)?.properties.groupId;
@@ -294,16 +329,24 @@ export function Canvas({
     return [...selectedIds].every(
       (id) => data.elements.find((el) => el.id === id)?.properties.groupId === gid
     ) ? gid : null;
-  })();
+  }, [selectedIds, activeGroupId, data.elements]);
 
-  const groupMemberElements = groupSelectionGroupId
-    ? data.elements.filter((el) => el.properties.groupId === groupSelectionGroupId)
-    : null;
+  const groupMemberElements = useMemo(
+    () =>
+      groupSelectionGroupId
+        ? data.elements.filter((el) => el.properties.groupId === groupSelectionGroupId)
+        : null,
+    [groupSelectionGroupId, data.elements]
+  );
 
   // Elements in the active group (for boundary overlay)
-  const activeGroupElements = activeGroupId
-    ? data.elements.filter((el) => el.properties.groupId === activeGroupId)
-    : null;
+  const activeGroupElements = useMemo(
+    () =>
+      activeGroupId
+        ? data.elements.filter((el) => el.properties.groupId === activeGroupId)
+        : null,
+    [activeGroupId, data.elements]
+  );
 
   // --- Mouse event handlers ---
 
@@ -670,7 +713,7 @@ export function Canvas({
         scaleY={scale}
         x={position.x}
         y={position.y}
-        draggable={isPanMode || (!isPathingMode && isSelectMode && !dragSelectOrigin.current)}
+        draggable={!isCropping && (isPanMode || (!isPathingMode && isSelectMode && !dragSelectRect))}
         onWheel={onWheel}
         onDragStart={(e) => {
           if (e.target === stageRef.current) setIsStageDragging(true);
@@ -685,7 +728,9 @@ export function Canvas({
         onDblClick={handleDoubleClick}
       >
         {/* Background layer: color fill, image, grid */}
-        <Layer>
+        <Layer
+          clip={{ x: 0, y: 0, width: data.dimensions.width, height: data.dimensions.height }}
+        >
           <Rect
             id="background"
             x={0}
@@ -696,8 +741,11 @@ export function Canvas({
             stroke="#d1d5db"
             strokeWidth={1}
           />
-          {data.backgroundImage && layerVisibility.get("background") !== false && (
-            <BackgroundImage config={data.backgroundImage} />
+          {data.background?.kind === "image" && layerVisibility.get("background") !== false && (
+            <BackgroundImage config={data.background} />
+          )}
+          {data.background?.kind === "dxf" && layerVisibility.get("background") !== false && (
+            <DxfDrawing config={data.background} />
           )}
           {gridSettings.showGrid && !isPathingMode && (
             <GridLayer
@@ -710,44 +758,49 @@ export function Canvas({
           )}
         </Layer>
 
-        {/* Element layers: one Konva Layer per floor plan layer */}
-        {elementLayerOrder.map((layerId) => {
-          const isActiveLayer = layerId === activeLayerId;
-          return (
-            <Layer key={layerId} visible={layerVisibility.get(layerId) !== false} listening={isActiveLayer}>
-              {layerId === "pathing" && data.walkableLayer && (
-                <WalkableGridOverlay
-                  grid={data.walkableLayer}
-                  showGridLines={activeLayerId === "pathing"}
-                  opacity={walkableGridOpacity}
-                  hoverCell={activeLayerId === "pathing" ? walkableHoverCell : null}
-                  pendingCells={pendingCells}
-                  pendingValue={pendingValue}
-                />
-              )}
-              {(elementsByLayer.get(layerId) ?? []).map((element) => (
-                <ElementShape
-                  key={element.id}
-                  element={element}
-                  isSelectMode={isSelectMode && isActiveLayer}
-                  isSelected={selectedIds.has(element.id)}
-                  isLinked={!unlinkedElementIds?.has(element.id)}
-                  isHovered={isSelectMode && hoveredElementId === element.id}
-                  isOverlapping={overlappingElementIds?.has(element.id) ?? false}
-                  isDimmed={activeGroupId != null && element.properties.groupId !== activeGroupId}
-                  onSelect={onSelect}
-                  onDoubleClick={onDoubleClick}
-                  onDragStart={handleElementDragStart}
-                  onDragMove={handleElementDragMove}
-                  onDragEnd={handleElementDragEnd}
-                  onContextMenu={onElementContextMenu}
-                  onMouseEnter={isSelectMode ? () => setHoveredElementId(element.id) : undefined}
-                  onMouseLeave={isSelectMode ? () => setHoveredElementId(null) : undefined}
-                />
-              ))}
-            </Layer>
-          );
-        })}
+        {/* Element layers: content/pathing/markup live as Konva.Group nodes
+         *  inside a single shared Layer (previously one Layer each). Visibility
+         *  and hit-listening are per-group, same semantics as before — this
+         *  just keeps the stage's total layer count within Konva's recommended
+         *  3-5 (see the "stage has N layers" perf warning). */}
+        <Layer>
+          {elementLayerOrder.map((layerId) => {
+            const isActiveLayer = layerId === activeLayerId;
+            return (
+              <Group key={layerId} visible={layerVisibility.get(layerId) !== false} listening={isActiveLayer}>
+                {layerId === "pathing" && data.walkableLayer && (
+                  <WalkableGridOverlay
+                    grid={data.walkableLayer}
+                    showGridLines={activeLayerId === "pathing"}
+                    opacity={walkableGridOpacity}
+                    hoverCell={activeLayerId === "pathing" ? walkableHoverCell : null}
+                    pendingCells={pendingCells}
+                    pendingValue={pendingValue}
+                  />
+                )}
+                {(elementsByLayer.get(layerId) ?? []).map((element) => (
+                  <ElementShape
+                    key={element.id}
+                    element={element}
+                    isSelectMode={isSelectMode && isActiveLayer}
+                    isLinked={!unlinkedElementIds?.has(element.id)}
+                    isHovered={isSelectMode && hoveredElementId === element.id}
+                    isOverlapping={overlappingElementIds?.has(element.id) ?? false}
+                    isDimmed={activeGroupId != null && element.properties.groupId !== activeGroupId}
+                    onSelect={onSelect}
+                    onDoubleClick={onDoubleClick}
+                    onDragStart={handleElementDragStart}
+                    onDragMove={handleElementDragMove}
+                    onDragEnd={handleElementDragEnd}
+                    onContextMenu={onElementContextMenu}
+                    onMouseEnter={isSelectMode ? handleElementMouseEnter : undefined}
+                    onMouseLeave={isSelectMode ? handleElementMouseLeave : undefined}
+                  />
+                ))}
+              </Group>
+            );
+          })}
+        </Layer>
 
         {/* Selection overlay: transformer, multi-select bounds, handles */}
         <Layer>
@@ -822,6 +875,14 @@ export function Canvas({
               calibrationState={calibrationState}
               existingCalibration={existingCalibration}
               scale={scale}
+            />
+          )}
+          {isCropping && cropRect && onCropChange && (
+            <CropOverlay
+              rect={cropRect}
+              canvasWidth={data.dimensions.width}
+              canvasHeight={data.dimensions.height}
+              onChange={onCropChange}
             />
           )}
           {pathingRectPreview && data.walkableLayer && (
