@@ -260,6 +260,7 @@ export function MapEditor({
   const [showBackgroundDialog, setShowBackgroundDialog] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
   const [activeIconName, setActiveIconName] = useState<string | null>(null);
+  const [dxfHydrationError, setDxfHydrationError] = useState<string | null>(null);
 
   const setActiveLayerId = useCallback(
     (id: LayerId) => {
@@ -371,6 +372,7 @@ export function MapEditor({
     canvasHeight: data.dimensions.height,
     setBackground,
     updateDimensions,
+    onError: setDxfHydrationError,
   });
 
   // On first load, fit the whole map in the viewport (centered, with a margin)
@@ -1624,6 +1626,19 @@ export function MapEditor({
               ]),
         ]}
       />
+      {dxfHydrationError && (
+        <div className="flex items-center justify-between gap-3 bg-red-50 border-b border-red-200 px-4 py-2 text-xs text-red-700">
+          <span>{dxfHydrationError}</span>
+          <button
+            type="button"
+            className="text-red-500 hover:text-red-700"
+            aria-label="Dismiss"
+            onClick={() => setDxfHydrationError(null)}
+          >
+            ✕
+          </button>
+        </div>
+      )}
       <div className="flex flex-1 overflow-hidden">
         <ToolSidebar
           activeTool={activeTool}

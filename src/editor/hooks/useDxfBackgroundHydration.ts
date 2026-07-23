@@ -9,6 +9,9 @@ interface UseDxfBackgroundHydrationArgs {
   canvasHeight: number;
   setBackground: (bg: Background) => void;
   updateDimensions: (dims: Partial<Dimensions>) => void;
+  /** Surface a hydration failure to the user (the editor has no toast system;
+   *  the caller renders the message as a dismissible banner). */
+  onError?: (message: string) => void;
 }
 
 /**
@@ -37,6 +40,7 @@ export function useDxfBackgroundHydration({
   canvasHeight,
   setBackground,
   updateDimensions,
+  onError,
 }: UseDxfBackgroundHydrationArgs) {
   const attemptedUrl = useRef<string | null>(null);
 
@@ -56,7 +60,12 @@ export function useDxfBackgroundHydration({
         const text = await res.text();
 
         const parsed = parseDxf(text);
-        if (parsed.primitives.length === 0) return;
+        if (parsed.primitives.length === 0) {
+          // Parsed cleanly but nothing renderable — retrying the same file
+          // won't help, so leave the guard set and surface it once.
+          onError?.("No supported geometry found in this DXF.");
+          return;
+        }
 
         // "resize" reshapes the canvas to the DXF's own aspect ratio (scaled to
         // fit within the created dimensions), so a wide/tall drawing fills the
@@ -91,7 +100,8 @@ export function useDxfBackgroundHydration({
         // Allow a retry on the next open; surface the reason (was silent before).
         attemptedUrl.current = null;
         console.error("DXF background hydration failed:", err);
+        onError?.("Couldn't load the DXF background. Reopen the map to retry.");
       }
     })();
-  }, [background, canvasWidth, canvasHeight, setBackground, updateDimensions]);
+  }, [background, canvasWidth, canvasHeight, setBackground, updateDimensions, onError]);
 }

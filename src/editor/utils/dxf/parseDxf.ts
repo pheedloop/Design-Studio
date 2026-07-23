@@ -14,6 +14,7 @@ import type {
   ITextEntity,
 } from "dxf-parser";
 import type { DxfPrimitive, Unit } from "../../../types";
+import { forEachPoint } from "./primitiveOps";
 
 /** Number of segments used to sample a full circle; arcs/ellipses use a
  *  proportional slice. Higher = smoother but heavier. */
@@ -286,16 +287,7 @@ function computeBounds(primitives: DxfPrimitive[]): {
     if (x > maxX) maxX = x;
     if (y > maxY) maxY = y;
   };
-  for (const p of primitives) {
-    if (p.kind === "line" || p.kind === "polyline") {
-      for (let i = 0; i < p.points.length; i += 2) acc(p.points[i], p.points[i + 1]);
-    } else if (p.kind === "circle") {
-      acc(p.cx - p.r, p.cy - p.r);
-      acc(p.cx + p.r, p.cy + p.r);
-    } else if (p.kind === "text") {
-      acc(p.x, p.y);
-    }
-  }
+  for (const p of primitives) forEachPoint(p, acc);
   if (!Number.isFinite(minX)) return { minX: 0, minY: 0, maxX: 0, maxY: 0 };
   return { minX, minY, maxX, maxY };
 }

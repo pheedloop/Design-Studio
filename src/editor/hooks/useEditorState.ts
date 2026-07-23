@@ -2,6 +2,7 @@ import { useCallback, useEffect } from "react";
 import type { FloorPlanData, FloorPlanElement, ElementType, Geometry, ElementProperties, Background, DxfPrimitive, Dimensions, WalkableGrid, ScaleCalibration, Unit, ElementTypeDefaults, Legend, ViewerAppearance, GroupDefinition } from "../../types";
 import { ELEMENT_TYPE_TO_LAYER, DEFAULT_TYPE_STYLES, DEFAULT_VIEWER_APPEARANCE } from "../../types";
 import { createWalkableGrid } from "../utils/walkableGrid";
+import { mapPrimitive, primitiveBounds } from "../utils/dxf/primitiveOps";
 import { derivePixelsPerUnit } from "../../utils/unitConversion";
 import { useHistory } from "./useHistory";
 
@@ -98,30 +99,13 @@ function scaleGeometry(geo: Geometry, sx: number, sy: number): Geometry {
 
 /** Translate a baked DXF primitive (canvas-space coords). */
 function offsetPrimitive(p: DxfPrimitive, dx: number, dy: number): DxfPrimitive {
-  switch (p.kind) {
-    case "line":
-    case "polyline":
-      return { ...p, points: p.points.map((v, i) => (i % 2 === 0 ? v + dx : v + dy)) };
-    case "circle":
-      return { ...p, cx: p.cx + dx, cy: p.cy + dy };
-    case "text":
-      return { ...p, x: p.x + dx, y: p.y + dy };
-  }
+  return mapPrimitive(p, (x, y) => [x + dx, y + dy]);
 }
 
 /** Scale a baked DXF primitive about the canvas origin. Radii/text-height use
  *  the smaller factor (uniform in practice — the dialog aspect-locks scaling). */
 function scalePrimitive(p: DxfPrimitive, sx: number, sy: number): DxfPrimitive {
-  const s = Math.min(sx, sy);
-  switch (p.kind) {
-    case "line":
-    case "polyline":
-      return { ...p, points: p.points.map((v, i) => (i % 2 === 0 ? v * sx : v * sy)) };
-    case "circle":
-      return { ...p, cx: p.cx * sx, cy: p.cy * sy, r: p.r * s };
-    case "text":
-      return { ...p, x: p.x * sx, y: p.y * sy, height: p.height * s };
-  }
+  return mapPrimitive(p, (x, y) => [x * sx, y * sy], Math.min(sx, sy));
 }
 
 interface UseEditorStateOptions {
@@ -373,18 +357,12 @@ export function useEditorState(
           background = { ...background, x: (background.x ?? 0) - cx, y: (background.y ?? 0) - cy };
         } else if (background?.kind === "dxf") {
           const offset = (p: DxfPrimitive): DxfPrimitive => offsetPrimitive(p, -cx, -cy);
-          // Keep primitives that intersect the new [0,0,width,height] canvas.
+          // Keep primitives whose bounding box intersects the new
+          // [0,0,width,height] canvas. Bounding-box (not vertex-inside) so a
+          // wall spanning the canvas with both endpoints cropped out is kept.
           const inside = (p: DxfPrimitive): boolean => {
-            if (p.kind === "line" || p.kind === "polyline") {
-              for (let i = 0; i < p.points.length; i += 2) {
-                if (p.points[i] >= 0 && p.points[i] <= width && p.points[i + 1] >= 0 && p.points[i + 1] <= height)
-                  return true;
-              }
-              return false;
-            }
-            if (p.kind === "circle")
-              return p.cx + p.r >= 0 && p.cx - p.r <= width && p.cy + p.r >= 0 && p.cy - p.r <= height;
-            return p.x >= 0 && p.x <= width && p.y >= 0 && p.y <= height;
+            const b = primitiveBounds(p);
+            return b.maxX >= 0 && b.minX <= width && b.maxY >= 0 && b.minY <= height;
           };
           const primitives = background.primitives.map(offset).filter(inside);
           const layers = [...new Set(primitives.map((p) => p.layer))];

@@ -266,8 +266,9 @@ export interface BackgroundImageData {
   opacity: number;
 }
 
-/** Source DXF layer name, shared by every primitive. Retained so a future
- *  cleanup pass can filter by layer. */
+/** Source DXF layer name, shared by every primitive. Drives the per-layer
+ *  visibility toggle in the Properties panel (hidden layers are skipped at
+ *  render time). */
 interface DxfPrimitiveBase {
   layer: string;
 }

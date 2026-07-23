@@ -30,8 +30,8 @@ export const DEFAULT_DXF_STROKE = "#475569";
 export interface DrawOptions {
   stroke?: string;
   lineWidth?: number;
-  /** DXF layer names to skip. Unused in v1 (all layers imported); wired so a
-   *  future cleanup pass can hide layers without re-importing. */
+  /** DXF layer names to skip at render time. Populated by the per-layer
+   *  visibility toggle in the Properties panel. */
   hiddenLayers?: Set<string>;
 }
 
