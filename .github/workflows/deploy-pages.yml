@@ -2,7 +2,7 @@ name: Deploy Demo to Pages
 
 on:
   push:
-    branches: [main]
+    branches: [develop]
   workflow_dispatch:
 
 permissions:
@@ -23,7 +23,7 @@ jobs:
         with:
           node-version-file: '.nvmrc'
       - run: npm ci
-      - run: npm run build -- --base=/Map-Editor/
+      - run: npm run build -- --base=/Design-Studio/
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist

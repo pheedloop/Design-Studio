@@ -1,10 +1,10 @@
 {
-  "name": "@pheedloop/map-editor",
+  "name": "@pheedloop/design-studio",
   "version": "0.1.7",
   "type": "module",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/pheedloop/Map-Editor.git"
+    "url": "git+https://github.com/pheedloop/Design-Studio.git"
   },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com"
@@ -45,7 +45,7 @@
     "dev:lib": "vite build --config vite.lib.config.ts --watch",
     "build": "tsc -b && vite build",
     "build:lib": "vite build --config vite.lib.config.ts",
-    "pack:local": "npm run build:lib && npm pack --pack-destination . && mv -f pheedloop-map-editor-*.tgz map-editor.local.tgz",
+    "pack:local": "npm run build:lib && npm pack --pack-destination . && mv -f pheedloop-design-studio-*.tgz design-studio.local.tgz",
     "prepublishOnly": "npm run build:lib",
     "lint": "eslint .",
     "preview": "vite preview",

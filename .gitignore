@@ -28,6 +28,6 @@ dist-ssr
 *.sw?
 
 # Local packed tarball for file: installs during integration
-map-editor.local.tgz
+design-studio.local.tgz
 # Claude Code agent runtime memory (not product content)
 .claude/agent-memory/

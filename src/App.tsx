@@ -10,7 +10,7 @@ function App() {
   // Normalize the bare root to the default product so the URL always reflects
   // which product is active (preserving any hash/mode already present).
   useEffect(() => {
-    // Normalize the bare base ("/" in dev, "/Map-Editor/" on Pages) to the
+    // Normalize the bare base ("/" in dev, "/Design-Studio/" on Pages) to the
     // default product so the URL always reflects the active product.
     const { pathname, hash } = window.location;
     if (pathname === "/" || pathname === BASE_URL) {
