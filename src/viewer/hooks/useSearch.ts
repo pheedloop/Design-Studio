@@ -66,7 +66,8 @@ export function useSearch(
     return allEntries.filter(
       (entry) =>
         entry.name.toLowerCase().includes(q) ||
-        (entry.code && entry.code.toLowerCase().includes(q)) ||
+        // code may be a number in real data (session/meeting-room ids) — coerce.
+        (entry.code != null && String(entry.code).toLowerCase().includes(q)) ||
         (entry.exhibitorName && entry.exhibitorName.toLowerCase().includes(q))
     );
   }, [query, allEntries]);

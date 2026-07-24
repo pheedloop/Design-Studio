@@ -24,6 +24,13 @@
     },
     "./style.css": "./dist/style.css"
   },
+  "typesVersions": {
+    "*": {
+      "editor": ["./dist/editor/index.d.ts"],
+      "viewer": ["./dist/viewer/index.d.ts"],
+      "seatviewer": ["./dist/seatviewer/index.d.ts"]
+    }
+  },
   "files": [
     "dist"
   ],
@@ -32,6 +39,7 @@
     "dev:lib": "vite build --config vite.lib.config.ts --watch",
     "build": "tsc -b && vite build",
     "build:lib": "vite build --config vite.lib.config.ts",
+    "pack:local": "npm run build:lib && npm pack --pack-destination . && mv -f pheedloop-map-editor-*.tgz map-editor.local.tgz",
     "prepublishOnly": "npm run build:lib",
     "lint": "eslint .",
     "preview": "vite preview",
@@ -39,9 +47,9 @@
   },
   "peerDependencies": {
     "konva": ">=10.0.0",
-    "react": ">=19.0.0",
-    "react-dom": ">=19.0.0",
-    "react-konva": ">=19.0.0"
+    "react": ">=18.0.0",
+    "react-dom": ">=18.0.0",
+    "react-konva": ">=18.0.0"
   },
   "dependencies": {
     "dxf-parser": "^1.1.2",

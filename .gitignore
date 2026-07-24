@@ -14,6 +14,7 @@ dist-ssr
 
 # Planning
 /.planning
+/.claude
 
 # Editor directories and files
 .vscode/*
@@ -26,5 +27,7 @@ dist-ssr
 *.sln
 *.sw?
 
+# Local packed tarball for file: installs during integration
+map-editor.local.tgz
 # Claude Code agent runtime memory (not product content)
 .claude/agent-memory/
