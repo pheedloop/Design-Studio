@@ -1,4 +1,4 @@
-# Map-Editor — Makefile
+# Design-Studio — Makefile
 #
 # All Node-running targets go through scripts/with-node.sh, which installs and
 # uses the version pinned in .nvmrc — so you don't have to `nvm use` yourself.
@@ -42,23 +42,23 @@ release: ## Bump version, push tag, trigger publish [BUMP=patch|minor|major]
 	@set -e; \
 	current=$$($(WITH_NODE) node -p "require('./package.json').version"); \
 	branch=$$(git rev-parse --abbrev-ref HEAD); \
-	if [ "$$branch" != "main" ]; then \
-		echo "✗ You are on '$$branch', not 'main'. Releases must be cut from main."; \
+	if [ "$$branch" != "develop" ]; then \
+		echo "✗ You are on '$$branch', not 'develop'. Releases must be cut from develop."; \
 		exit 1; \
 	fi; \
 	if [ -n "$$(git status --porcelain)" ]; then \
 		echo "✗ Working tree is not clean. Commit, stash, or discard changes first."; \
 		exit 1; \
 	fi; \
-	echo "→ Fetching latest main..."; \
-	git pull --ff-only origin main; \
+	echo "→ Fetching latest develop..."; \
+	git pull --ff-only origin develop; \
 	echo ""; \
 	echo "  Current version : $$current"; \
 	echo "  Bump type       : $(BUMP)"; \
 	echo ""; \
 	echo "  This will:"; \
 	echo "    1. npm version $(BUMP)  — bump package.json + create a git tag"; \
-	echo "    2. push main and the new tag to origin"; \
+	echo "    2. push develop and the new tag to origin"; \
 	echo "    3. trigger the Publish Package workflow → publishes to GitHub Packages"; \
 	echo ""; \
 	printf "  Type 'yes' to proceed: "; \
@@ -69,8 +69,8 @@ release: ## Bump version, push tag, trigger publish [BUMP=patch|minor|major]
 	fi; \
 	new=$$($(WITH_NODE) npm version $(BUMP) -m "release: v%s"); \
 	echo "→ Bumped to $$new"; \
-	git push origin main; \
+	git push origin develop; \
 	git push origin "$$new"; \
 	echo ""; \
 	echo "✓ Pushed $$new. Watch the Publish Package workflow in the Actions tab:"; \
-	echo "  https://github.com/pheedloop/Map-Editor/actions"
+	echo "  https://github.com/pheedloop/Design-Studio/actions"

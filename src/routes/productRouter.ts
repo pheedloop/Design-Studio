@@ -11,7 +11,7 @@ export type Product = "maps" | "seatplans" | "badges";
 
 export const DEFAULT_PRODUCT: Product = "maps";
 
-/** Deploy base path — "/" in dev, "/Map-Editor/" on GitHub Pages. */
+/** Deploy base path — "/" in dev, "/Design-Studio/" on GitHub Pages. */
 export const BASE_URL = import.meta.env.BASE_URL;
 
 /** Resolve the active product from the first path segment AFTER the base path. */
