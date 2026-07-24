@@ -1,6 +1,6 @@
 {
   "name": "@pheedloop/map-editor",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "type": "module",
   "repository": {
     "type": "git",
@@ -26,9 +26,15 @@
   },
   "typesVersions": {
     "*": {
-      "editor": ["./dist/editor/index.d.ts"],
-      "viewer": ["./dist/viewer/index.d.ts"],
-      "seatviewer": ["./dist/seatviewer/index.d.ts"]
+      "editor": [
+        "./dist/editor/index.d.ts"
+      ],
+      "viewer": [
+        "./dist/viewer/index.d.ts"
+      ],
+      "seatviewer": [
+        "./dist/seatviewer/index.d.ts"
+      ]
     }
   },
   "files": [
