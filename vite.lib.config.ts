@@ -7,22 +7,10 @@ import { fileURLToPath } from "url";
 
 const __dirname = fileURLToPath(new URL(".", import.meta.url));
 
-/**
- * Namespace the compiled CSS layers (`@layer utilities` → `@layer pl-utilities`).
- *
- * Vite + Tailwind v4 emits native `@layer` at-rules. Host apps that still run
- * Tailwind v3 in their PostCSS pipeline re-process any imported CSS and
- * HARD-ERROR on `@layer utilities` ("no matching @tailwind utilities
- * directive"). We ship pre-compiled CSS, so it must survive any consumer
- * pipeline untouched. Renaming to `pl-*` makes the file inert to Tailwind's
- * PostCSS plugin (it ignores unknown layer names) while preserving native CSS
- * cascade layering — and named layers rank below the host app's unlayered
- * utilities, so the host always wins on a global class-name collision.
- *
- * This runs as a build plugin (not a post-build script) so it also applies to
- * `dev:lib`'s watch rebuilds — otherwise `npm link`/`link:` consumers would get
- * un-namespaced CSS on every incremental rebuild.
- */
+// Prefix compiled CSS layers (`@layer utilities` → `@layer pl-utilities`) so our
+// precompiled Tailwind-v4 CSS survives a Tailwind-v3 host's PostCSS pipeline, which
+// otherwise hard-errors on unclaimed `@layer utilities`. Runs in the build (not a
+// post-build script) so it covers `dev:lib` watch rebuilds too.
 function namespaceCssLayers() {
   return {
     name: "pl-namespace-css-layers",
