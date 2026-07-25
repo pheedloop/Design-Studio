@@ -122,7 +122,7 @@ export function MapSheet({ elements, exhibitors, selectedItem, onSelect }: MapSh
                 >
                   <div className="flex items-center gap-2">
                     {exhibitor.logo && (
-                      <img src={exhibitor.logo} alt="" className="w-7 h-7 rounded shrink-0" />
+                      <img src={exhibitor.logo} alt="" className="w-7 h-7 shrink-0 rounded-md border border-gray-200 bg-white object-contain p-0.5" />
                     )}
                     <div>
                       <div className="text-xs font-medium text-gray-800">{exhibitor.name}</div>
