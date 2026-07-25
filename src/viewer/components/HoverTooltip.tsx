@@ -7,6 +7,9 @@ interface HoverTooltipProps {
   name: string;
   /** Exhibitor occupying the booth, if any (booths only). */
   exhibitor: Exhibitor | null;
+  /** Booth is reserved for another exhibitor (booth picker) — shown so the user
+   *  knows it's unavailable without having to click it. */
+  reserved?: boolean;
   x: number;
   y: number;
 }
@@ -18,7 +21,7 @@ interface HoverTooltipProps {
  * never captures the mouse and never triggers a flicker on the underlying
  * shape. The interactive card lives in the click popovers.
  */
-export function HoverTooltip({ item, name, exhibitor, x, y }: HoverTooltipProps) {
+export function HoverTooltip({ item, name, exhibitor, reserved, x, y }: HoverTooltipProps) {
   const { ref, pos } = usePopoverPosition(x, y);
 
   return (
@@ -45,6 +48,10 @@ export function HoverTooltip({ item, name, exhibitor, x, y }: HoverTooltipProps)
             <span className="text-xs text-gray-600 truncate">
               {exhibitor.name}
             </span>
+          </div>
+        ) : reserved ? (
+          <div className="mt-0.5 text-[11px] font-medium text-amber-600">
+            Reserved
           </div>
         ) : (
           <div className="mt-0.5 text-[11px] text-gray-400">Unoccupied</div>

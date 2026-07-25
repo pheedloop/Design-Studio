@@ -86,12 +86,14 @@ export function MapViewer({
     y: number;
   } | null>(null);
 
+  const isPicker = mode === "exhibitor";
+
   const { query, setQuery, results, matchedElementIds, isSearching } =
-    useSearch(data.elements, exhibitors);
+    useSearch(data.elements, exhibitors, { boothsOnly: isPicker });
 
   const searchPlaceholder = useMemo(
-    () => buildSearchPlaceholder(data.elements),
-    [data.elements],
+    () => (isPicker ? "Search booths" : buildSearchPlaceholder(data.elements)),
+    [data.elements, isPicker],
   );
 
   const directions = useDirections(data, exhibitors);
@@ -271,7 +273,7 @@ export function MapViewer({
               />
             </div>
           )}
-          {!isMobile && !directions.active && (
+          {!isPicker && !isMobile && !directions.active && (
             <MapSidebar
               elements={data.elements}
               exhibitors={exhibitors}
@@ -279,7 +281,7 @@ export function MapViewer({
               onSelect={handleSidebarSelect}
             />
           )}
-          {isMobile && !directions.active && (
+          {!isPicker && isMobile && !directions.active && (
             <MapSheet
               elements={data.elements}
               exhibitors={exhibitors}
@@ -340,6 +342,10 @@ export function MapViewer({
                 hover.item.type === "booth"
                   ? (exhibitorsByBooth.get(hover.item.boothSlug) ?? null)
                   : null
+              }
+              reserved={
+                hover.item.type === "booth" &&
+                !!reservedBoothSlugs?.has(hover.item.boothSlug)
               }
               x={hover.x}
               y={hover.y}
