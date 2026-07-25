@@ -23,6 +23,9 @@ function spa404Fallback(): Plugin {
   }
 }
 
+const isGitHubActions = process.env.GITHUB_ACTIONS === 'true'
+
 export default defineConfig({
+  base: isGitHubActions ? '/Design-Studio/' : '/',
   plugins: [react(), tailwindcss(), spa404Fallback()],
 })
