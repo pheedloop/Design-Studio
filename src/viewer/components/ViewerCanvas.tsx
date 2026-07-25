@@ -10,10 +10,17 @@ import { RouteOverlay } from "./RouteOverlay";
 import { ScaleBar } from "./ScaleBar";
 import { ViewerLegend } from "./ViewerLegend";
 
+// Booth-picker fills. Held-by-active-exhibitor booths read as "yours" (green);
+// booths reserved for someone else read as unavailable-to-claim (amber).
+const SELECTED_BOOTH_COLOR = "#16a34a";
+const RESERVED_BOOTH_COLOR = "#f59e0b";
+
 interface ViewerCanvasProps {
   data: FloorPlanData;
   mode: ViewerMode;
   occupiedBoothSlugs: Set<string>;
+  selectedBoothSlugs?: Set<string>;
+  reservedBoothSlugs?: Set<string>;
   highlightedElementId: string | null;
   searchMatchIds: Set<string> | null;
   routePath: { x: number; y: number }[] | null;
@@ -25,7 +32,7 @@ interface ViewerCanvasProps {
   ) => void;
 }
 
-export function ViewerCanvas({ data, mode, occupiedBoothSlugs, highlightedElementId, searchMatchIds, routePath, onElementClick, onElementHover }: ViewerCanvasProps) {
+export function ViewerCanvas({ data, mode, occupiedBoothSlugs, selectedBoothSlugs, reservedBoothSlugs, highlightedElementId, searchMatchIds, routePath, onElementClick, onElementHover }: ViewerCanvasProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [hoveredElementId, setHoveredElementId] = useState<string | null>(null);
   const isSearching = !!searchMatchIds && searchMatchIds.size > 0;
@@ -103,15 +110,25 @@ export function ViewerCanvas({ data, mode, occupiedBoothSlugs, highlightedElemen
             // In attendee mode, unoccupied booths are faded and non-interactive
             const isInert = mode === "attendee" && isBooth && !isOccupied;
 
+            const isSelectedBooth = isBooth && !!boothSlug && !!selectedBoothSlugs?.has(boothSlug);
+            const isReservedBooth = isBooth && !!boothSlug && !!reservedBoothSlugs?.has(boothSlug);
+
             const isSelected = element.id === highlightedElementId;
             const isSearchMatch = isInteractive && isSearching && searchMatchIds!.has(element.id);
             const isHovered = element.id === hoveredElementId;
             const highlighted = isSelected || !!isSearchMatch;
+            // A booth held by the active exhibitor always reads clearly (never dimmed).
             const dimmed =
-              isInert ||
-              (mode === "exhibitor" && isBooth && isOccupied && !highlighted) ||
-              (hasHighlight && !isSelected) ||
-              (isSearching && !isSearchMatch && !isSelected);
+              !isSelectedBooth &&
+              (isInert ||
+                (mode === "exhibitor" && isBooth && isOccupied && !highlighted) ||
+                (hasHighlight && !isSelected) ||
+                (isSearching && !isSearchMatch && !isSelected));
+            const overrideColor = isSelectedBooth
+              ? SELECTED_BOOTH_COLOR
+              : isReservedBooth
+                ? RESERVED_BOOTH_COLOR
+                : undefined;
 
             const buildClickItem = (): HoveredItem | null => {
               if (isBooth && boothSlug) {
@@ -132,6 +149,7 @@ export function ViewerCanvas({ data, mode, occupiedBoothSlugs, highlightedElemen
                 element={element}
                 isHighlighted={highlighted}
                 isDimmed={dimmed}
+                overrideColor={overrideColor}
                 isHovered={isHovered && !highlighted && !isInert}
 
                 onMouseEnter={!isInert && isInteractive ? (e) => {

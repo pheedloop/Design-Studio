@@ -1,4 +1,11 @@
-import { useState, useCallback, useMemo, useRef, useEffect } from "react";
+import {
+  useState,
+  useCallback,
+  useMemo,
+  useRef,
+  useEffect,
+  type ReactNode,
+} from "react";
 import { PiPath } from "react-icons/pi";
 import type { FloorPlanData } from "../types";
 import type { Exhibitor, HoveredItem, ViewerMode } from "./types";
@@ -28,29 +35,63 @@ interface MapViewerProps {
   /** Called when the user clicks an exhibitor in a booth popover. The host app
    *  typically navigates to that exhibitor's profile page. */
   onExhibitorClick?: (exhibitor: Exhibitor) => void;
+  /** Booth-picker hook. When provided, clicking a booth calls this instead of
+   *  opening the internal booth popover — the host owns the picking flow
+   *  (staging, confirm, claim). Non-booth elements are unaffected. */
+  onBoothClick?: (boothSlug: string, elementId: string) => void;
+  /** Booths held by the active exhibitor — rendered highlighted and never dimmed. */
+  selectedBoothSlugs?: Set<string>;
+  /** Booths reserved for another exhibitor — rendered with a distinct fill. */
+  reservedBoothSlugs?: Set<string>;
+  /** Arbitrary host-owned content floated over the top-left of the map. The
+   *  viewer is agnostic about what this is (e.g. a booth-selection summary) and
+   *  renders it OUTSIDE the `.pl-map-editor` scope so the host's own styles win. */
+  overlay?: ReactNode;
 }
 
 const MOBILE_BREAKPOINT = 640;
 
-export function MapViewer({ data, exhibitors, mode = "attendee", tier, features, onExhibitorClick }: MapViewerProps) {
+export function MapViewer({
+  data,
+  exhibitors,
+  mode = "attendee",
+  tier,
+  features,
+  onExhibitorClick,
+  onBoothClick,
+  selectedBoothSlugs,
+  reservedBoothSlugs,
+  overlay,
+}: MapViewerProps) {
   // Wayfinding (Directions) is gated by the usage tier. The viewer hides the
   // feature entirely when it is not enabled (no disabled/trophy state here).
-  const featureMap = useMemo(() => resolveFeatures(tier, features), [tier, features]);
+  const featureMap = useMemo(
+    () => resolveFeatures(tier, features),
+    [tier, features],
+  );
   const wayfindingEnabled = featureMap.wayfinding === "enabled";
   const containerRef = useRef<HTMLDivElement>(null);
   const [isMobile, setIsMobile] = useState(false);
   const [selectedItem, setSelectedItem] = useState<HoveredItem | null>(null);
-  const [popover, setPopover] = useState<{ item: HoveredItem; name: string; x: number; y: number } | null>(null);
-  const [hover, setHover] = useState<{ item: HoveredItem; name: string; x: number; y: number } | null>(null);
+  const [popover, setPopover] = useState<{
+    item: HoveredItem;
+    name: string;
+    x: number;
+    y: number;
+  } | null>(null);
+  const [hover, setHover] = useState<{
+    item: HoveredItem;
+    name: string;
+    x: number;
+    y: number;
+  } | null>(null);
 
-  const { query, setQuery, results, matchedElementIds, isSearching } = useSearch(
-    data.elements,
-    exhibitors
-  );
+  const { query, setQuery, results, matchedElementIds, isSearching } =
+    useSearch(data.elements, exhibitors);
 
   const searchPlaceholder = useMemo(
     () => buildSearchPlaceholder(data.elements),
-    [data.elements]
+    [data.elements],
   );
 
   const directions = useDirections(data, exhibitors);
@@ -68,7 +109,7 @@ export function MapViewer({ data, exhibitors, mode = "attendee", tier, features,
 
   const occupiedBoothSlugs = useMemo(
     () => new Set(exhibitors.map((ex) => ex.boothSlug)),
-    [exhibitors]
+    [exhibitors],
   );
 
   const exhibitorsByBooth = useMemo(() => {
@@ -80,32 +121,52 @@ export function MapViewer({ data, exhibitors, mode = "attendee", tier, features,
   }, [exhibitors]);
 
   const handleSidebarSelect = useCallback((item: HoveredItem) => {
-    setSelectedItem((prev) => (prev?.elementId === item.elementId ? null : item));
+    setSelectedItem((prev) =>
+      prev?.elementId === item.elementId ? null : item,
+    );
     setPopover(null);
   }, []);
 
   const handleElementClick = useCallback(
     (item: HoveredItem, screenX: number, screenY: number) => {
-      setSelectedItem((prev) => (prev?.elementId === item.elementId ? null : item));
+      if (item.type === "booth" && onBoothClick) {
+        onBoothClick(item.boothSlug, item.elementId);
+        return;
+      }
+      setSelectedItem((prev) =>
+        prev?.elementId === item.elementId ? null : item,
+      );
       const el = data.elements.find((e) => e.id === item.elementId);
       const name = el?.properties.name || "";
       setPopover((prev) =>
         prev?.item.elementId === item.elementId
           ? null
-          : { item, name, x: screenX, y: screenY }
+          : { item, name, x: screenX, y: screenY },
       );
     },
-    [data.elements]
+    [data.elements, onBoothClick],
   );
 
   const handleResultSelect = useCallback((result: SearchResult) => {
     let item: HoveredItem;
     if (result.elementType === "booth") {
-      item = { type: "booth", elementId: result.elementId, boothSlug: result.code! };
+      item = {
+        type: "booth",
+        elementId: result.elementId,
+        boothSlug: result.code!,
+      };
     } else if (result.elementType === "session_area") {
-      item = { type: "session_area", elementId: result.elementId, sessionId: result.code };
+      item = {
+        type: "session_area",
+        elementId: result.elementId,
+        sessionId: result.code,
+      };
     } else {
-      item = { type: "meeting_room", elementId: result.elementId, meetingRoomId: result.code };
+      item = {
+        type: "meeting_room",
+        elementId: result.elementId,
+        meetingRoomId: result.code,
+      };
     }
     setSelectedItem(item);
     setPopover(null);
@@ -118,16 +179,20 @@ export function MapViewer({ data, exhibitors, mode = "attendee", tier, features,
 
   const handleDirectionsStart = useCallback(
     (result: SearchResult | null) => {
-      directions.setStartLocation(result ? directions.locationFromResult(result) : null);
+      directions.setStartLocation(
+        result ? directions.locationFromResult(result) : null,
+      );
     },
-    [directions]
+    [directions],
   );
 
   const handleDirectionsEnd = useCallback(
     (result: SearchResult | null) => {
-      directions.setEndLocation(result ? directions.locationFromResult(result) : null);
+      directions.setEndLocation(
+        result ? directions.locationFromResult(result) : null,
+      );
     },
-    [directions]
+    [directions],
   );
 
   const handleGetDirections = useCallback(
@@ -135,143 +200,158 @@ export function MapViewer({ data, exhibitors, mode = "attendee", tier, features,
       directions.navigateTo(elementId);
       setPopover(null);
     },
-    [directions]
+    [directions],
   );
 
   const showDirectionsButton =
-    wayfindingEnabled && mode === "attendee" && directions.hasGrid && !directions.active;
+    wayfindingEnabled &&
+    mode === "attendee" &&
+    directions.hasGrid &&
+    !directions.active;
 
   return (
-    <div ref={containerRef} className="pl-map-editor flex flex-col h-full relative">
-      <div className="flex items-center gap-0 bg-white">
-        <div className="flex-1 min-w-0">
-          <SearchBar
-            query={query}
-            results={results}
-            placeholder={searchPlaceholder}
-            onQueryChange={setQuery}
-            onResultSelect={handleResultSelect}
-          />
+    <div style={{ position: "relative", width: "100%", height: "100%" }}>
+      <div
+        ref={containerRef}
+        className="pl-map-editor flex flex-col h-full relative"
+      >
+        <div className="flex items-center gap-0 bg-white">
+          <div className="flex-1 min-w-0">
+            <SearchBar
+              query={query}
+              results={results}
+              placeholder={searchPlaceholder}
+              onQueryChange={setQuery}
+              onResultSelect={handleResultSelect}
+            />
+          </div>
+          {showDirectionsButton && (
+            <button
+              onClick={directions.open}
+              className="flex items-center gap-1.5 px-3 py-2 text-xs font-medium text-blue-600 hover:bg-blue-50 cursor-pointer transition-colors shrink-0 border-l border-gray-200"
+            >
+              <PiPath size={16} />
+              <span className="hidden sm:inline">Directions</span>
+            </button>
+          )}
         </div>
-        {showDirectionsButton && (
-          <button
-            onClick={directions.open}
-            className="flex items-center gap-1.5 px-3 py-2 text-xs font-medium text-blue-600 hover:bg-blue-50 cursor-pointer transition-colors shrink-0 border-l border-gray-200"
-          >
-            <PiPath size={16} />
-            <span className="hidden sm:inline">Directions</span>
-          </button>
-        )}
-      </div>
-      <div className="flex flex-1 overflow-hidden relative">
-        <ViewerCanvas
-          data={data}
-          mode={mode}
-          occupiedBoothSlugs={occupiedBoothSlugs}
-          highlightedElementId={selectedItem?.elementId ?? null}
-          searchMatchIds={isSearching ? matchedElementIds : null}
-          routePath={directions.routePath}
-          onElementClick={handleElementClick}
-          onElementHover={(item, x, y) => {
-            if (!item) {
-              setHover(null);
-              return;
-            }
-            const el = data.elements.find((e) => e.id === item.elementId);
-            setHover({ item, name: el?.properties.name || "", x, y });
-          }}
-        />
-        {!isMobile && directions.active && (
-          <div className="w-64 shrink-0 bg-white border-l border-gray-200 flex flex-col">
-            <DirectionsPanel
-              startLocation={directions.startLocation}
-              endLocation={directions.endLocation}
-              routeStatus={directions.routeStatus}
-              routePath={directions.routePath}
-              dimensions={data.dimensions}
-              onSearch={directions.searchLocations}
-              onSelectStart={handleDirectionsStart}
-              onSelectEnd={handleDirectionsEnd}
-              onSwap={directions.swap}
-              onClose={directions.close}
+        <div className="flex flex-1 overflow-hidden relative">
+          <ViewerCanvas
+            data={data}
+            mode={mode}
+            occupiedBoothSlugs={occupiedBoothSlugs}
+            selectedBoothSlugs={selectedBoothSlugs}
+            reservedBoothSlugs={reservedBoothSlugs}
+            highlightedElementId={selectedItem?.elementId ?? null}
+            searchMatchIds={isSearching ? matchedElementIds : null}
+            routePath={directions.routePath}
+            onElementClick={handleElementClick}
+            onElementHover={(item, x, y) => {
+              if (!item) {
+                setHover(null);
+                return;
+              }
+              const el = data.elements.find((e) => e.id === item.elementId);
+              setHover({ item, name: el?.properties.name || "", x, y });
+            }}
+          />
+          {!isMobile && directions.active && (
+            <div className="w-64 shrink-0 bg-white border-l border-gray-200 flex flex-col">
+              <DirectionsPanel
+                startLocation={directions.startLocation}
+                endLocation={directions.endLocation}
+                routeStatus={directions.routeStatus}
+                routePath={directions.routePath}
+                dimensions={data.dimensions}
+                onSearch={directions.searchLocations}
+                onSelectStart={handleDirectionsStart}
+                onSelectEnd={handleDirectionsEnd}
+                onSwap={directions.swap}
+                onClose={directions.close}
+              />
+            </div>
+          )}
+          {!isMobile && !directions.active && (
+            <MapSidebar
+              elements={data.elements}
+              exhibitors={exhibitors}
+              selectedItem={selectedItem}
+              onSelect={handleSidebarSelect}
             />
-          </div>
-        )}
-        {!isMobile && !directions.active && (
-          <MapSidebar
-            elements={data.elements}
-            exhibitors={exhibitors}
-            selectedItem={selectedItem}
-            onSelect={handleSidebarSelect}
-          />
-        )}
-        {isMobile && !directions.active && (
-          <MapSheet
-            elements={data.elements}
-            exhibitors={exhibitors}
-            selectedItem={selectedItem}
-            onSelect={handleSidebarSelect}
-          />
-        )}
-        {isMobile && directions.active && (
-          <div className="absolute bottom-0 left-0 right-0 bg-white rounded-t-xl shadow-[0_-4px_20px_rgba(0,0,0,0.15)] z-50">
-            <DirectionsPanel
-              startLocation={directions.startLocation}
-              endLocation={directions.endLocation}
-              routeStatus={directions.routeStatus}
-              routePath={directions.routePath}
-              dimensions={data.dimensions}
-              onSearch={directions.searchLocations}
-              onSelectStart={handleDirectionsStart}
-              onSelectEnd={handleDirectionsEnd}
-              onSwap={directions.swap}
-              onClose={directions.close}
+          )}
+          {isMobile && !directions.active && (
+            <MapSheet
+              elements={data.elements}
+              exhibitors={exhibitors}
+              selectedItem={selectedItem}
+              onSelect={handleSidebarSelect}
             />
-          </div>
-        )}
-        {popover && popover.item.type === "booth" && (
-          <BoothPopover
-            boothCode={popover.name}
-            exhibitor={exhibitorsByBooth.get(popover.item.boothSlug) ?? null}
-            x={popover.x}
-            y={popover.y}
-            onClose={handlePopoverClose}
-            onExhibitorClick={onExhibitorClick}
-            onGetDirections={
-              wayfindingEnabled && mode === "attendee" && directions.hasGrid
-                ? () => handleGetDirections(popover.item.elementId)
-                : undefined
-            }
-          />
-        )}
-        {popover && popover.item.type !== "booth" && (
-          <LocationPopover
-            name={popover.name}
-            type={popover.item.type}
-            x={popover.x}
-            y={popover.y}
-            onClose={handlePopoverClose}
-            onGetDirections={
-              wayfindingEnabled && mode === "attendee" && directions.hasGrid
-                ? () => handleGetDirections(popover.item.elementId)
-                : undefined
-            }
-          />
-        )}
-        {hover && !popover && !isMobile && (
-          <HoverTooltip
-            item={hover.item}
-            name={hover.name}
-            exhibitor={
-              hover.item.type === "booth"
-                ? (exhibitorsByBooth.get(hover.item.boothSlug) ?? null)
-                : null
-            }
-            x={hover.x}
-            y={hover.y}
-          />
-        )}
+          )}
+          {isMobile && directions.active && (
+            <div className="absolute bottom-0 left-0 right-0 bg-white rounded-t-xl shadow-[0_-4px_20px_rgba(0,0,0,0.15)] z-50">
+              <DirectionsPanel
+                startLocation={directions.startLocation}
+                endLocation={directions.endLocation}
+                routeStatus={directions.routeStatus}
+                routePath={directions.routePath}
+                dimensions={data.dimensions}
+                onSearch={directions.searchLocations}
+                onSelectStart={handleDirectionsStart}
+                onSelectEnd={handleDirectionsEnd}
+                onSwap={directions.swap}
+                onClose={directions.close}
+              />
+            </div>
+          )}
+          {popover && popover.item.type === "booth" && (
+            <BoothPopover
+              boothCode={popover.name}
+              exhibitor={exhibitorsByBooth.get(popover.item.boothSlug) ?? null}
+              x={popover.x}
+              y={popover.y}
+              onClose={handlePopoverClose}
+              onExhibitorClick={onExhibitorClick}
+              onGetDirections={
+                wayfindingEnabled && mode === "attendee" && directions.hasGrid
+                  ? () => handleGetDirections(popover.item.elementId)
+                  : undefined
+              }
+            />
+          )}
+          {popover && popover.item.type !== "booth" && (
+            <LocationPopover
+              name={popover.name}
+              type={popover.item.type}
+              x={popover.x}
+              y={popover.y}
+              onClose={handlePopoverClose}
+              onGetDirections={
+                wayfindingEnabled && mode === "attendee" && directions.hasGrid
+                  ? () => handleGetDirections(popover.item.elementId)
+                  : undefined
+              }
+            />
+          )}
+          {hover && !popover && !isMobile && (
+            <HoverTooltip
+              item={hover.item}
+              name={hover.name}
+              exhibitor={
+                hover.item.type === "booth"
+                  ? (exhibitorsByBooth.get(hover.item.boothSlug) ?? null)
+                  : null
+              }
+              x={hover.x}
+              y={hover.y}
+            />
+          )}
+        </div>
       </div>
+      {overlay ? (
+        <div style={{ position: "absolute", top: 52, left: 12, zIndex: 30 }}>
+          {overlay}
+        </div>
+      ) : null}
     </div>
   );
 }
