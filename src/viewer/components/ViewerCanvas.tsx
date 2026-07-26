@@ -10,8 +10,6 @@ import { RouteOverlay } from "./RouteOverlay";
 import { ScaleBar } from "./ScaleBar";
 import { ViewerLegend } from "./ViewerLegend";
 
-// Booth-picker fills. Held-by-active-exhibitor booths read as "yours" (green);
-// booths reserved for someone else read as unavailable-to-claim (amber).
 const SELECTED_BOOTH_COLOR = "#16a34a";
 const RESERVED_BOOTH_COLOR = "#f59e0b";
 
@@ -117,7 +115,6 @@ export function ViewerCanvas({ data, mode, occupiedBoothSlugs, selectedBoothSlug
             const isSearchMatch = isInteractive && isSearching && searchMatchIds!.has(element.id);
             const isHovered = element.id === hoveredElementId;
             const highlighted = isSelected || !!isSearchMatch;
-            // A booth held by the active exhibitor always reads clearly (never dimmed).
             const dimmed =
               !isSelectedBooth &&
               (isInert ||

@@ -35,17 +35,13 @@ interface MapViewerProps {
   /** Called when the user clicks an exhibitor in a booth popover. The host app
    *  typically navigates to that exhibitor's profile page. */
   onExhibitorClick?: (exhibitor: Exhibitor) => void;
-  /** Booth-picker hook. When provided, clicking a booth calls this instead of
-   *  opening the internal booth popover — the host owns the picking flow
-   *  (staging, confirm, claim). Non-booth elements are unaffected. */
+  /** Host-driven booth picking: called on booth click instead of opening the internal popover. */
   onBoothClick?: (boothSlug: string, elementId: string) => void;
-  /** Booths held by the active exhibitor — rendered highlighted and never dimmed. */
+  /** Booths held by the active exhibitor — highlighted and never dimmed. */
   selectedBoothSlugs?: Set<string>;
-  /** Booths reserved for another exhibitor — rendered with a distinct fill. */
+  /** Booths reserved for another exhibitor — distinct fill. */
   reservedBoothSlugs?: Set<string>;
-  /** Arbitrary host-owned content floated over the top-left of the map. The
-   *  viewer is agnostic about what this is (e.g. a booth-selection summary) and
-   *  renders it OUTSIDE the `.pl-map-editor` scope so the host's own styles win. */
+  /** Host content floated over the map, rendered outside `.pl-map-editor` so host styles win. */
   overlay?: ReactNode;
 }
 

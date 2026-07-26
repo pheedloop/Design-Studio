@@ -8,8 +8,7 @@ interface HoverTooltipProps {
   name: string;
   /** Exhibitor occupying the booth, if any (booths only). */
   exhibitor: Exhibitor | null;
-  /** Booth is reserved for another exhibitor (booth picker) — shown so the user
-   *  knows it's unavailable without having to click it. */
+  /** Booth is reserved for another exhibitor — shown as unavailable. */
   reserved?: boolean;
   x: number;
   y: number;

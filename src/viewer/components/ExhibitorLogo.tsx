@@ -1,10 +1,5 @@
 import type { Exhibitor } from "../types";
 
-/**
- * Exhibitor logo as a square chip. Non-square logos are contained (never
- * squished). Renders nothing when the exhibitor has no logo — the card falls
- * back to a name-only layout.
- */
 export function ExhibitorLogo({
   exhibitor,
   size = "md",

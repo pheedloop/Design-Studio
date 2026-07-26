@@ -15,8 +15,6 @@ export function useSearch(
   exhibitors: Exhibitor[],
   options?: { boothsOnly?: boolean }
 ) {
-  // Booth-picker contexts search booths only — the exhibitor/session directory
-  // is attendee-facing and irrelevant when an exhibitor is choosing a booth.
   const boothsOnly = options?.boothsOnly ?? false;
   const [query, setQuery] = useState("");
 
@@ -28,7 +26,6 @@ export function useSearch(
     return map;
   }, [exhibitors]);
 
-  // Build searchable entries from all interactive element types
   const allEntries = useMemo(() => {
     const entries: SearchResult[] = [];
 
@@ -68,16 +65,13 @@ export function useSearch(
     if (!q) return [];
 
     return allEntries.filter((entry) => {
-      // The visible label (booth number / area name) is always searchable.
       if (entry.name.toLowerCase().includes(q)) return true;
-      // Booth pickers match the booth number only — not exhibitor names.
       if (boothsOnly) return false;
       if (entry.exhibitorName && entry.exhibitorName.toLowerCase().includes(q)) {
         return true;
       }
-      // A booth's `code` is its internal boothSlug (EXHBOT…), never shown to
-      // users, so it must not be searchable. Session/meeting-room codes are
-      // user-facing identifiers, so they stay searchable.
+      // Booth `code` is the internal boothSlug (EXHBOT…), never shown to users,
+      // so it stays unsearchable; session/meeting-room codes are user-facing.
       return (
         entry.elementType !== "booth" &&
         entry.code != null &&
@@ -86,7 +80,6 @@ export function useSearch(
     });
   }, [query, allEntries, boothsOnly]);
 
-  // Set of element IDs that match the search (for canvas highlighting)
   const matchedElementIds = useMemo(
     () => new Set(results.map((r) => r.elementId)),
     [results]

@@ -10,36 +10,24 @@ const __dirname = fileURLToPath(new URL(".", import.meta.url));
 
 const WRAPPER = ".pl-map-editor";
 
-// Rewrite a single compiled selector so it only matches inside the library's
-// `.pl-map-editor` root — as the wrapper element itself AND/OR its descendants.
-// Emitting both forms means a root like `<div class="pl-map-editor flex ...">`
-// still gets its own utilities, while nested elements get theirs.
+// Rewrite a compiled selector to match only inside `.pl-map-editor` — as both the
+// wrapper element and its descendants (so the root div gets its own utilities too).
 function scopeSelector(sel: string): string[] {
   const s = sel.trim();
   if (!s) return [];
-  // Already library-scoped (e.g. lib.css's own `.pl-map-editor { --tokens }`).
   if (s.startsWith(WRAPPER)) return [s];
-  // Theme tokens land on the wrapper (not global :root), so they can't collide
-  // with the host app's own :root variables of the same name.
+  // Map :root/html/body → wrapper so theme tokens can't collide with the host's :root.
   if (s === ":root" || s === ":host" || s === "html" || s === "body") {
     return [WRAPPER];
   }
-  // Universal reset (Tailwind's `--tw-*` defaults): wrapper + every descendant.
   if (s === "*") return [WRAPPER, `${WRAPPER} *`];
-  // Class/id/attr/pseudo-leading: match the wrapper-with-that-class and descendants.
   if (/^[.#[:]/.test(s)) return [`${WRAPPER}${s}`, `${WRAPPER} ${s}`];
-  // Bare element/other selectors: descendants only.
   return [`${WRAPPER} ${s}`];
 }
 
-// A component library must not leak its Tailwind utilities or theme tokens into the
-// host app, nor lose the cascade to the host's preflight. This transform:
-//   1. Unwraps all @layer blocks → the library's rules become UNLAYERED, which
-//      outrank the host's layered preflight (unlayered beats any cascade layer),
-//      so `border-*`/`px-*` win again — and it removes the `@layer utilities` a
-//      Tailwind-v3 host's PostCSS chokes on.
-//   2. Prefixes every selector with `.pl-map-editor` so the (now high-priority)
-//      rules only apply inside the library's own subtree — no host collisions.
+// Unwrap every @layer so the library's rules go UNLAYERED — unlayered beats any
+// host cascade layer, so utilities win again and a Tailwind-v3 host's PostCSS
+// won't choke on `@layer utilities` — then scope every selector under .pl-map-editor.
 const scopeCssPlugin: postcss.PluginCreator<undefined> = () => ({
   postcssPlugin: "pl-scope-css",
   Once(root) {
