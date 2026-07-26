@@ -53,6 +53,7 @@ import {
   type ContextMenuItem,
 } from "./components/canvas/ContextMenu";
 import { modKey } from "./utils/platform";
+import { captureFloorPlanThumbnail } from "./utils/captureThumbnail";
 import { MapDebugDialog } from "./components/debug";
 import { BackgroundUploadDialog, type BackgroundUploadResult } from "./components/panels/BackgroundUploadDialog";
 import { GridSettingsDialog } from "./components/panels/GridSettingsDialog";
@@ -93,7 +94,10 @@ interface MapEditorProps {
   initialData: FloorPlanData;
   /** Records-backed object categories available for placement (booths, tables, …). */
   placementCategories?: PlacementCategory[];
-  onSave?: (data: FloorPlanData) => Promise<void>;
+  onSave?: (
+    data: FloorPlanData,
+    thumbnail: Blob | null,
+  ) => Promise<void>;
   onDirtyChange?: (isDirty: boolean) => void;
   /** Delegates the raw background file (image or DXF — PDF later) to the host,
    *  e.g. uploading it to the single `background_image` FileField on the
@@ -204,32 +208,6 @@ export function MapEditor({
   useEffect(() => {
     onDirtyChange?.(isDirty);
   }, [isDirty, onDirtyChange]);
-
-  const handleSaveRef = useRef<(() => Promise<void>) | undefined>(undefined);
-  const handleSave = useCallback(async () => {
-    if (!onSave || isSaving) return;
-    setIsSaving(true);
-    try {
-      await onSave(data);
-      cleanDataRef.current = data;
-      setIsDirty(false);
-    } finally {
-      setIsSaving(false);
-    }
-  }, [onSave, isSaving, data]);
-  handleSaveRef.current = handleSave;
-
-  useEffect(() => {
-    if (!onSave) return;
-    const handler = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key === "s") {
-        e.preventDefault();
-        handleSaveRef.current?.();
-      }
-    };
-    window.addEventListener("keydown", handler);
-    return () => window.removeEventListener("keydown", handler);
-  }, [onSave]);
 
   // Index categories by their element type for O(1) lookup during unlinked
   // detection and placement drops.
@@ -363,6 +341,33 @@ export function MapEditor({
     handleDragEnd,
     zoomReset,
   } = useCanvasControls(containerRef);
+
+  const handleSaveRef = useRef<(() => Promise<void>) | undefined>(undefined);
+  const handleSave = useCallback(async () => {
+    if (!onSave || isSaving) return;
+    setIsSaving(true);
+    try {
+      const thumbnail = await captureFloorPlanThumbnail(stageRef.current, data);
+      await onSave(data, thumbnail);
+      cleanDataRef.current = data;
+      setIsDirty(false);
+    } finally {
+      setIsSaving(false);
+    }
+  }, [onSave, isSaving, data, stageRef]);
+  handleSaveRef.current = handleSave;
+
+  useEffect(() => {
+    if (!onSave) return;
+    const handler = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === "s") {
+        e.preventDefault();
+        handleSaveRef.current?.();
+      }
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [onSave]);
 
   // A DXF chosen at map-creation time opens as a URL-only stub; parse it into
   // renderable geometry once, here in the editor (never the viewer).
@@ -1473,14 +1478,17 @@ export function MapEditor({
             : []),
           {
             label: "Export as PNG",
-            onClick: () => {
-              const stage = stageRef.current;
-              if (!stage) return;
-              const dataUrl = stage.toDataURL({ pixelRatio: 2 });
+            onClick: async () => {
+              const blob = await captureFloorPlanThumbnail(stageRef.current, data, {
+                maxWidth: data.dimensions.width * 2,
+              });
+              if (!blob) return;
+              const url = URL.createObjectURL(blob);
               const link = document.createElement("a");
               link.download = `${data.name || "map"}.png`;
-              link.href = dataUrl;
+              link.href = url;
               link.click();
+              URL.revokeObjectURL(url);
             },
           },
           {
