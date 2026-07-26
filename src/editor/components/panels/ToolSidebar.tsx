@@ -450,9 +450,6 @@ export function ToolSidebar({
       )}
     </div>
     {showIconPicker && iconAnchorRect && createPortal(
-      // Portaled to document.body, so it sits OUTSIDE the .pl-map-editor root.
-      // The wrapper re-establishes the scope so the library's (now scope-prefixed)
-      // styles and theme tokens still reach this subtree.
       <div className="pl-map-editor">
         <IconPicker
           anchorRect={iconAnchorRect}
