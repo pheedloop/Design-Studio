@@ -84,6 +84,10 @@ import {
 import { resolveFeatures } from "../tiers";
 import type { Tier, FeatureKey, FeatureOverride } from "../tiers";
 
+// Safari caps total canvas area near 16.7M px, so an unbounded 2x export of a
+// large plan silently produces no image at all.
+const EXPORT_MAX_EDGE = 4096;
+
 const INITIAL_DEFAULTS: DrawingDefaults = {
   fill: "#94a3b8",
   stroke: "#888888",
@@ -355,7 +359,13 @@ export function MapEditor({
       setIsSaving(false);
     }
   }, [onSave, isSaving, data, stageRef]);
-  handleSaveRef.current = handleSave;
+
+  // Kept in a ref so the keydown listener below reads the latest callback
+  // without re-binding on every edit. Assigned in an effect, not during
+  // render, which React forbids.
+  useEffect(() => {
+    handleSaveRef.current = handleSave;
+  }, [handleSave]);
 
   useEffect(() => {
     if (!onSave) return;
@@ -1480,7 +1490,10 @@ export function MapEditor({
             label: "Export as PNG",
             onClick: async () => {
               const blob = await captureFloorPlanThumbnail(stageRef.current, data, {
-                maxWidth: data.dimensions.width * 2,
+                maxEdge: Math.min(
+                  Math.max(data.dimensions.width, data.dimensions.height) * 2,
+                  EXPORT_MAX_EDGE,
+                ),
               });
               if (!blob) return;
               const url = URL.createObjectURL(blob);

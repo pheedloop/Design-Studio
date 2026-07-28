@@ -4,21 +4,24 @@ import type { FloorPlanData } from "../../types";
 
 export const CAPTURE_EXCLUDE_NAME = "pl-capture-exclude";
 
-export const THUMBNAIL_MAX_WIDTH = 480;
+export const THUMBNAIL_MAX_EDGE = 480;
 
 interface CaptureOptions {
-  maxWidth?: number;
+  /** Cap for the longest side; the other side follows the plan's aspect ratio. */
+  maxEdge?: number;
 }
 
 export async function captureFloorPlanThumbnail(
   stage: Konva.Stage | null | undefined,
   data: FloorPlanData,
-  { maxWidth = THUMBNAIL_MAX_WIDTH }: CaptureOptions = {},
+  { maxEdge = THUMBNAIL_MAX_EDGE }: CaptureOptions = {},
 ): Promise<Blob | null> {
   const { width, height } = data.dimensions;
   if (!stage || !width || !height) return null;
 
-  const ratio = maxWidth / width;
+  // Bound the longest side, not the width: a plan taller than ~4x its width
+  // would otherwise produce a PNG thousands of pixels tall.
+  const ratio = Math.min(maxEdge / width, maxEdge / height);
   const previous = { scale: stage.scaleX(), x: stage.x(), y: stage.y() };
   const chrome = stage
     .find(`.${CAPTURE_EXCLUDE_NAME}`)
@@ -33,7 +36,7 @@ export async function captureFloorPlanThumbnail(
     canvas = stage.toCanvas({
       x: 0,
       y: 0,
-      width: maxWidth,
+      width: Math.max(1, Math.round(width * ratio)),
       height: Math.max(1, Math.round(height * ratio)),
       pixelRatio: 1,
     });
