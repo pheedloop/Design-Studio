@@ -9,19 +9,24 @@ import { fileURLToPath } from "url";
 const __dirname = fileURLToPath(new URL(".", import.meta.url));
 
 const WRAPPER = ".pl-map-editor";
+// Matches the wrapper element and its descendants in one selector. :is() takes
+// the specificity of its most specific argument, both of which are a single
+// class here, so `SCOPE.foo` scores the same (0,2,0) as the `WRAPPERfoo,
+// WRAPPER foo` pair it replaces.
+const SCOPE = `:is(${WRAPPER}, ${WRAPPER} *)`;
 
 // Rewrite a compiled selector to match only inside `.pl-map-editor` — as both the
 // wrapper element and its descendants (so the root div gets its own utilities too).
 function scopeSelector(sel: string): string[] {
   const s = sel.trim();
   if (!s) return [];
-  if (s.startsWith(WRAPPER)) return [s];
+  if (s.includes(WRAPPER)) return [s];
   // Map :root/html/body → wrapper so theme tokens can't collide with the host's :root.
   if (s === ":root" || s === ":host" || s === "html" || s === "body") {
     return [WRAPPER];
   }
-  if (s === "*") return [WRAPPER, `${WRAPPER} *`];
-  if (/^[.#[:]/.test(s)) return [`${WRAPPER}${s}`, `${WRAPPER} ${s}`];
+  if (s === "*") return [SCOPE];
+  if (/^[.#[:]/.test(s)) return [`${SCOPE}${s}`];
   return [`${WRAPPER} ${s}`];
 }
 
