@@ -202,7 +202,7 @@ export type TypeStyles = Record<string, ElementTypeDefaults>;
 export const DEFAULT_TYPE_STYLES: TypeStyles = {
   booth:        { color: "#94a3b8", strokeColor: "#888888", strokeWidth: 1, defaultWidth: 120, defaultHeight: 80 },
   session_area: { color: "#27AE60", strokeColor: "#888888", strokeWidth: 1, defaultWidth: 200, defaultHeight: 150 },
-  meeting_room: { color: "#F39C12", strokeColor: "#888888", strokeWidth: 1, defaultWidth: 160, defaultHeight: 120 },
+  meeting_room: { color: "#7c3aed", strokeColor: "#888888", strokeWidth: 1, defaultWidth: 160, defaultHeight: 120 },
   table:        { color: "#14b8a6", strokeColor: "#888888", strokeWidth: 1, defaultWidth: 90,  defaultHeight: 90 },
 };
 
