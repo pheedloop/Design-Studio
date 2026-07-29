@@ -1,4 +1,8 @@
 export { MapEditor } from "./MapEditor";
+export {
+  captureFloorPlanThumbnail,
+  THUMBNAIL_MAX_EDGE,
+} from "./utils/captureThumbnail";
 export { definePlacementCategory } from "./placement/types";
 export type { PlacementCategory } from "./placement/types";
 export type { FloorPlanData, Background, BackgroundImageData, BackgroundDxfData } from "../types";

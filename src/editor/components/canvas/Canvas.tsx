@@ -22,6 +22,7 @@ import { CropOverlay } from "./CropOverlay";
 import type { CropRect } from "../../hooks/useCrop";
 import { useAlignmentGuides } from "../../hooks/useAlignmentGuides";
 import { getElementBounds, lineIntersectsRect } from "../../utils/bounds";
+import { CAPTURE_EXCLUDE_NAME } from "../../utils/captureThumbnail";
 import { PolygonVertexHandles } from "../../tools/handles/PolygonVertexHandles";
 
 // ---------------------------------------------------------------------------
@@ -748,13 +749,15 @@ export function Canvas({
             <DxfDrawing config={data.background} />
           )}
           {gridSettings.showGrid && !isPathingMode && (
-            <GridLayer
-              width={data.dimensions.width}
-              height={data.dimensions.height}
-              spacing={gridSettings.gridSpacing}
-              color={gridSettings.gridColor}
-              opacity={gridSettings.gridOpacity}
-            />
+            <Group name={CAPTURE_EXCLUDE_NAME}>
+              <GridLayer
+                width={data.dimensions.width}
+                height={data.dimensions.height}
+                spacing={gridSettings.gridSpacing}
+                color={gridSettings.gridColor}
+                opacity={gridSettings.gridOpacity}
+              />
+            </Group>
           )}
         </Layer>
 
@@ -769,14 +772,16 @@ export function Canvas({
             return (
               <Group key={layerId} visible={layerVisibility.get(layerId) !== false} listening={isActiveLayer}>
                 {layerId === "pathing" && data.walkableLayer && (
-                  <WalkableGridOverlay
-                    grid={data.walkableLayer}
-                    showGridLines={activeLayerId === "pathing"}
-                    opacity={walkableGridOpacity}
-                    hoverCell={activeLayerId === "pathing" ? walkableHoverCell : null}
-                    pendingCells={pendingCells}
-                    pendingValue={pendingValue}
-                  />
+                  <Group name={CAPTURE_EXCLUDE_NAME}>
+                    <WalkableGridOverlay
+                      grid={data.walkableLayer}
+                      showGridLines={activeLayerId === "pathing"}
+                      opacity={walkableGridOpacity}
+                      hoverCell={activeLayerId === "pathing" ? walkableHoverCell : null}
+                      pendingCells={pendingCells}
+                      pendingValue={pendingValue}
+                    />
+                  </Group>
                 )}
                 {(elementsByLayer.get(layerId) ?? []).map((element) => (
                   <ElementShape
@@ -803,7 +808,7 @@ export function Canvas({
         </Layer>
 
         {/* Selection overlay: transformer, multi-select bounds, handles */}
-        <Layer>
+        <Layer name={CAPTURE_EXCLUDE_NAME}>
           {groupSelectionGroupId && groupMemberElements && onGroupTransformEnd ? (
             <GroupTransformer
               groupId={groupSelectionGroupId}
@@ -854,7 +859,7 @@ export function Canvas({
         </Layer>
 
         {/* Drawing overlay: tool preview, guides, drag-select rect */}
-        <Layer>
+        <Layer name={CAPTURE_EXCLUDE_NAME}>
           {/* Tool preview is rendered inside ToolHost */}
           {activeTool && (
             <ToolHost
