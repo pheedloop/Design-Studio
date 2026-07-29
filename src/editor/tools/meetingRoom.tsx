@@ -26,7 +26,7 @@ export const meetingRoomTool: ToolDefinition<DrawingRect | null> = {
         },
         properties: {
           name: "Meeting Room",
-          color: "#F39C12",
+          color: "#7c3aed",
           strokeColor: defaults.stroke,
           strokeWidth: defaults.strokeWidth,
           zIndex: 1,

@@ -450,12 +450,14 @@ export function ToolSidebar({
       )}
     </div>
     {showIconPicker && iconAnchorRect && createPortal(
-      <IconPicker
-        anchorRect={iconAnchorRect}
-        selectedId={activeIconName}
-        onSelect={(iconId) => onIconSelect!(iconId)}
-        onClose={() => onToolChange("select")}
-      />,
+      <div className="pl-map-editor">
+        <IconPicker
+          anchorRect={iconAnchorRect}
+          selectedId={activeIconName}
+          onSelect={(iconId) => onIconSelect!(iconId)}
+          onClose={() => onToolChange("select")}
+        />
+      </div>,
       document.body
     )}
     </>

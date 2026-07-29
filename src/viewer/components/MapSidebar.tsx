@@ -137,7 +137,7 @@ export function MapSidebar({
                     <img
                       src={exhibitor.logo}
                       alt=""
-                      className="w-7 h-7 rounded shrink-0"
+                      className="w-7 h-7 shrink-0 rounded-md border border-gray-200 bg-white object-contain p-0.5"
                     />
                   )}
                   <div>

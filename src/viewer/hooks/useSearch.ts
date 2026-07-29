@@ -12,8 +12,10 @@ export interface SearchResult {
 
 export function useSearch(
   elements: FloorPlanElement[],
-  exhibitors: Exhibitor[]
+  exhibitors: Exhibitor[],
+  options?: { boothsOnly?: boolean }
 ) {
+  const boothsOnly = options?.boothsOnly ?? false;
   const [query, setQuery] = useState("");
 
   const exhibitorsByBooth = useMemo(() => {
@@ -24,7 +26,6 @@ export function useSearch(
     return map;
   }, [exhibitors]);
 
-  // Build searchable entries from all interactive element types
   const allEntries = useMemo(() => {
     const entries: SearchResult[] = [];
 
@@ -39,14 +40,14 @@ export function useSearch(
           code: el.properties.boothSlug ?? code,
           exhibitorName: exhibitor?.name ?? null,
         } satisfies SearchResult);
-      } else if (el.type === "session_area") {
+      } else if (!boothsOnly && el.type === "session_area") {
         entries.push({
           elementId: el.id,
           elementType: "session_area",
           name: el.properties.name || "Session Area",
           code: el.properties.sessionId ?? null,
         } satisfies SearchResult);
-      } else if (el.type === "meeting_room") {
+      } else if (!boothsOnly && el.type === "meeting_room") {
         entries.push({
           elementId: el.id,
           elementType: "meeting_room",
@@ -57,22 +58,28 @@ export function useSearch(
     }
 
     return entries;
-  }, [elements, exhibitorsByBooth]);
+  }, [elements, exhibitorsByBooth, boothsOnly]);
 
   const results = useMemo(() => {
     const q = query.trim().toLowerCase();
     if (!q) return [];
 
-    return allEntries.filter(
-      (entry) =>
-        entry.name.toLowerCase().includes(q) ||
-        // code may be a number in real data (session/meeting-room ids) — coerce.
-        (entry.code != null && String(entry.code).toLowerCase().includes(q)) ||
-        (entry.exhibitorName && entry.exhibitorName.toLowerCase().includes(q))
-    );
-  }, [query, allEntries]);
+    return allEntries.filter((entry) => {
+      if (entry.name.toLowerCase().includes(q)) return true;
+      if (boothsOnly) return false;
+      if (entry.exhibitorName && entry.exhibitorName.toLowerCase().includes(q)) {
+        return true;
+      }
+      // Booth `code` is the internal boothSlug (EXHBOT…), never shown to users,
+      // so it stays unsearchable; session/meeting-room codes are user-facing.
+      return (
+        entry.elementType !== "booth" &&
+        entry.code != null &&
+        String(entry.code).toLowerCase().includes(q)
+      );
+    });
+  }, [query, allEntries, boothsOnly]);
 
-  // Set of element IDs that match the search (for canvas highlighting)
   const matchedElementIds = useMemo(
     () => new Set(results.map((r) => r.elementId)),
     [results]
