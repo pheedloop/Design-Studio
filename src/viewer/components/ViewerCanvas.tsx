@@ -2,6 +2,7 @@ import { useLayoutEffect, useRef, useState } from "react";
 import { Stage, Layer, Rect } from "react-konva";
 import type { FloorPlanData } from "../../types";
 import { useCanvasControls } from "../../editor/hooks/useCanvasControls";
+import { isEmptySpaceClick } from "../../editor/utils/canvas";
 import { BackgroundImage } from "../../editor/components/canvas/BackgroundImage";
 import { DxfDrawing } from "../../editor/components/canvas/DxfDrawing";
 import type { ViewerMode, HoveredItem } from "../types";
@@ -23,6 +24,7 @@ interface ViewerCanvasProps {
   searchMatchIds: Set<string> | null;
   routePath: { x: number; y: number }[] | null;
   onElementClick: (item: HoveredItem, screenX: number, screenY: number) => void;
+  onEmptySpaceClick?: () => void;
   onElementHover?: (
     item: HoveredItem | null,
     screenX: number,
@@ -30,7 +32,7 @@ interface ViewerCanvasProps {
   ) => void;
 }
 
-export function ViewerCanvas({ data, mode, occupiedBoothSlugs, selectedBoothSlugs, reservedBoothSlugs, highlightedElementId, searchMatchIds, routePath, onElementClick, onElementHover }: ViewerCanvasProps) {
+export function ViewerCanvas({ data, mode, occupiedBoothSlugs, selectedBoothSlugs, reservedBoothSlugs, highlightedElementId, searchMatchIds, routePath, onElementClick, onEmptySpaceClick, onElementHover }: ViewerCanvasProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [hoveredElementId, setHoveredElementId] = useState<string | null>(null);
   const isSearching = !!searchMatchIds && searchMatchIds.size > 0;
@@ -77,11 +79,15 @@ export function ViewerCanvas({ data, mode, occupiedBoothSlugs, selectedBoothSlug
         draggable
         onWheel={handleWheel}
         onDragEnd={handleDragEnd}
+        onMouseDown={(e) => {
+          if (isEmptySpaceClick(e)) onEmptySpaceClick?.();
+        }}
       >
         <Layer
           clip={{ x: 0, y: 0, width: data.dimensions.width, height: data.dimensions.height }}
         >
           <Rect
+            id="background"
             x={0}
             y={0}
             width={data.dimensions.width}

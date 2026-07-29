@@ -125,9 +125,17 @@ export function MapViewer({
     setPopover(null);
   }, []);
 
+  const clearSelection = useCallback(() => {
+    setSelectedItem(null);
+    setPopover(null);
+  }, []);
+
   const handleElementClick = useCallback(
     (item: HoveredItem, screenX: number, screenY: number) => {
       if (item.type === "booth" && onBoothClick) {
+        // The host owns booth selection, but a highlight left over from a
+        // search result would keep every other element dimmed.
+        clearSelection();
         onBoothClick(item.boothSlug, item.elementId);
         return;
       }
@@ -142,7 +150,7 @@ export function MapViewer({
           : { item, name, x: screenX, y: screenY },
       );
     },
-    [data.elements, onBoothClick],
+    [data.elements, onBoothClick, clearSelection],
   );
 
   const handleResultSelect = useCallback((result: SearchResult) => {
@@ -170,10 +178,7 @@ export function MapViewer({
     setPopover(null);
   }, []);
 
-  const handlePopoverClose = useCallback(() => {
-    setPopover(null);
-    setSelectedItem(null);
-  }, []);
+  const handlePopoverClose = clearSelection;
 
   const handleDirectionsStart = useCallback(
     (result: SearchResult | null) => {
@@ -244,6 +249,7 @@ export function MapViewer({
             searchMatchIds={isSearching ? matchedElementIds : null}
             routePath={directions.routePath}
             onElementClick={handleElementClick}
+            onEmptySpaceClick={clearSelection}
             onElementHover={(item, x, y) => {
               if (!item) {
                 setHover(null);
