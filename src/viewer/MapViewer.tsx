@@ -8,7 +8,12 @@ import {
 } from "react";
 import { PiPath } from "react-icons/pi";
 import type { FloorPlanData } from "../types";
-import type { Exhibitor, HoveredItem, ViewerMode } from "./types";
+import type {
+  Exhibitor,
+  HoveredItem,
+  LocationClick,
+  ViewerMode,
+} from "./types";
 import type { SearchResult } from "./hooks/useSearch";
 import { useSearch } from "./hooks/useSearch";
 import { buildSearchPlaceholder } from "./utils/searchPlaceholder";
@@ -37,6 +42,12 @@ interface MapViewerProps {
   onExhibitorClick?: (exhibitor: Exhibitor) => void;
   /** Host-driven booth picking: called on booth click instead of opening the internal popover. */
   onBoothClick?: (boothSlug: string, elementId: string) => void;
+  /** Host-driven location handling: called on session-area / meeting-room click
+   *  instead of opening the internal popover. Hosts embedded in a native app use
+   *  this to hand the tap back to the app. */
+  onLocationClick?: (location: LocationClick) => void;
+  /** Highlights this booth on mount — used when the map is opened from a booth link. */
+  initialFocusBoothSlug?: string;
   /** Booths held by the active exhibitor — highlighted and never dimmed. */
   selectedBoothSlugs?: Set<string>;
   /** Booths reserved for another exhibitor — distinct fill. */
@@ -47,6 +58,15 @@ interface MapViewerProps {
 
 const MOBILE_BREAKPOINT = 640;
 
+function boothItemForSlug(
+  elements: FloorPlanData["elements"],
+  boothSlug?: string,
+): HoveredItem | null {
+  if (!boothSlug) return null;
+  const el = elements.find((e) => e.properties.boothSlug === boothSlug);
+  return el ? { type: "booth", elementId: el.id, boothSlug } : null;
+}
+
 export function MapViewer({
   data,
   exhibitors,
@@ -55,6 +75,8 @@ export function MapViewer({
   features,
   onExhibitorClick,
   onBoothClick,
+  onLocationClick,
+  initialFocusBoothSlug,
   selectedBoothSlugs,
   reservedBoothSlugs,
   overlay,
@@ -68,7 +90,9 @@ export function MapViewer({
   const wayfindingEnabled = featureMap.wayfinding === "enabled";
   const containerRef = useRef<HTMLDivElement>(null);
   const [isMobile, setIsMobile] = useState(false);
-  const [selectedItem, setSelectedItem] = useState<HoveredItem | null>(null);
+  const [selectedItem, setSelectedItem] = useState<HoveredItem | null>(() =>
+    boothItemForSlug(data.elements, initialFocusBoothSlug),
+  );
   const [popover, setPopover] = useState<{
     item: HoveredItem;
     name: string;
@@ -139,6 +163,20 @@ export function MapViewer({
         onBoothClick(item.boothSlug, item.elementId);
         return;
       }
+      if (item.type !== "booth" && onLocationClick) {
+        clearSelection();
+        const el = data.elements.find((e) => e.id === item.elementId);
+        onLocationClick({
+          type: item.type,
+          id:
+            item.type === "session_area"
+              ? item.sessionId ?? null
+              : item.meetingRoomId ?? null,
+          elementId: item.elementId,
+          name: el?.properties.name || "",
+        });
+        return;
+      }
       setSelectedItem((prev) =>
         prev?.elementId === item.elementId ? null : item,
       );
@@ -150,7 +188,7 @@ export function MapViewer({
           : { item, name, x: screenX, y: screenY },
       );
     },
-    [data.elements, onBoothClick, clearSelection],
+    [data.elements, onBoothClick, onLocationClick, clearSelection],
   );
 
   const handleResultSelect = useCallback((result: SearchResult) => {
