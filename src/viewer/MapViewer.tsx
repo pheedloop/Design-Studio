@@ -42,11 +42,9 @@ interface MapViewerProps {
   onExhibitorClick?: (exhibitor: Exhibitor) => void;
   /** Host-driven booth picking: called on booth click instead of opening the internal popover. */
   onBoothClick?: (boothSlug: string, elementId: string) => void;
-  /** Host-driven location handling: called on session-area / meeting-room click
-   *  instead of opening the internal popover. Hosts embedded in a native app use
-   *  this to hand the tap back to the app. */
+  /** Host-driven location handling: called on session-area / meeting-room click instead of opening the internal popover. */
   onLocationClick?: (location: LocationClick) => void;
-  /** Highlights this booth on mount — used when the map is opened from a booth link. */
+  /** Highlights this booth on mount. */
   initialFocusBoothSlug?: string;
   /** Booths held by the active exhibitor — highlighted and never dimmed. */
   selectedBoothSlugs?: Set<string>;
