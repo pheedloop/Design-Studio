@@ -31,7 +31,7 @@ function make(
     code,
     ticketCode,
     ticketName: TICKET_LABEL[ticketCode] ?? ticketCode,
-    attendee: { code: `ATT-${code}`, firstName: first, lastName: last, email: `${slug}@example.com`, organization: "—" },
+    attendee: { firstName: first, lastName: last, email: `${slug}@example.com`, organization: "—" },
     tableCode,
     seatSelectionCode,
     attendeeTags,

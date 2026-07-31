@@ -30,7 +30,6 @@ export interface SeatTicket {
   ticketCode: string;
   ticketName: string;
   attendee: {
-    code: string;
     firstName: string;
     lastName: string;
     email: string;

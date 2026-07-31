@@ -128,7 +128,9 @@ export function TicketPanel({
           );
           const capEl = (
             <span className="text-sm text-gray-500 leading-snug break-words">
-              <span className="text-gray-600 font-medium">{t.ticketName}</span> · {t.attendee.email}
+              <span className="text-gray-600 font-medium">{t.ticketName}</span>
+              {/* Guest tickets carry no email — don't leave the separator dangling. */}
+              {t.attendee.email ? ` · ${t.attendee.email}` : ""}
             </span>
           );
           const seatPill = (

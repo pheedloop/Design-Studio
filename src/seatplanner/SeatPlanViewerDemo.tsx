@@ -63,7 +63,7 @@ export function SeatPlanViewerDemo() {
     return tickets
       .filter((t) => t.tableCode === openCode)
       .map((t) => ({
-        code: t.attendee.code,
+        code: t.code,
         firstName: t.attendee.firstName,
         lastName: t.attendee.lastName,
         email: t.attendee.email,
