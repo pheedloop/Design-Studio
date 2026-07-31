@@ -10,6 +10,10 @@ export function useCanvasControls(containerRef: React.RefObject<HTMLDivElement |
   const [scale, setScale] = useState(1);
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [stageSize, setStageSize] = useState({ width: 800, height: 600 });
+  const lastPinch = useRef<{
+    distance: number;
+    center: { x: number; y: number };
+  } | null>(null);
   // True once the container has been measured at least once — lets callers run a
   // one-time "fit to content" against the real viewport rather than the default.
   const [hasMeasured, setHasMeasured] = useState(false);
@@ -111,6 +115,54 @@ export function useCanvasControls(containerRef: React.RefObject<HTMLDivElement |
     []
   );
 
+  const handleTouchMove = useCallback(
+    (e: Konva.KonvaEventObject<TouchEvent>) => {
+      const [touch1, touch2] = e.evt.touches;
+      if (!touch1 || !touch2) return;
+
+      e.evt.preventDefault();
+      const stage = stageRef.current;
+      if (!stage) return;
+
+      // Konva's own drag would fight the pinch and pan the stage as well.
+      if (stage.isDragging()) stage.stopDrag();
+
+      const box = stage.container().getBoundingClientRect();
+      const p1 = { x: touch1.clientX - box.left, y: touch1.clientY - box.top };
+      const p2 = { x: touch2.clientX - box.left, y: touch2.clientY - box.top };
+      const center = { x: (p1.x + p2.x) / 2, y: (p1.y + p2.y) / 2 };
+      const distance = Math.hypot(p2.x - p1.x, p2.y - p1.y);
+
+      if (!lastPinch.current) {
+        lastPinch.current = { distance, center };
+        return;
+      }
+
+      const clamped = Math.min(
+        Math.max((scale * distance) / lastPinch.current.distance, MIN_SCALE),
+        MAX_SCALE,
+      );
+
+      const centerPointTo = {
+        x: (center.x - position.x) / scale,
+        y: (center.y - position.y) / scale,
+      };
+
+      setScale(clamped);
+      setPosition({
+        x: center.x - centerPointTo.x * clamped,
+        y: center.y - centerPointTo.y * clamped,
+      });
+
+      lastPinch.current = { distance, center };
+    },
+    [scale, position],
+  );
+
+  const handleTouchEnd = useCallback(() => {
+    lastPinch.current = null;
+  }, []);
+
   const zoomIn = useCallback(() => {
     setScale((s) => Math.min(s * 1.2, MAX_SCALE));
   }, []);
@@ -135,6 +187,8 @@ export function useCanvasControls(containerRef: React.RefObject<HTMLDivElement |
     fitToBounds,
     handleWheel,
     handleDragEnd,
+    handleTouchMove,
+    handleTouchEnd,
     zoomIn,
     zoomOut,
     zoomReset,

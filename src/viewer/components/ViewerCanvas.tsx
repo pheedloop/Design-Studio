@@ -45,6 +45,8 @@ export function ViewerCanvas({ data, mode, occupiedBoothSlugs, selectedBoothSlug
     fitToBounds,
     handleWheel,
     handleDragEnd,
+    handleTouchMove,
+    handleTouchEnd,
   } = useCanvasControls(containerRef);
 
   // On first load, fit the whole plan in the viewport (centered, with a margin)
@@ -67,7 +69,12 @@ export function ViewerCanvas({ data, mode, occupiedBoothSlugs, selectedBoothSlug
   const hasHighlight = highlightedElementId !== null;
 
   return (
-    <div ref={containerRef} className="relative flex-1 min-w-0 bg-gray-200 overflow-hidden">
+    <div
+      ref={containerRef}
+      className="relative flex-1 min-w-0 bg-gray-200 overflow-hidden"
+      // Without this the browser claims the pinch and zooms the page instead.
+      style={{ touchAction: "none" }}
+    >
       <Stage
         ref={stageRef}
         width={stageSize.width}
@@ -79,6 +86,8 @@ export function ViewerCanvas({ data, mode, occupiedBoothSlugs, selectedBoothSlug
         draggable
         onWheel={handleWheel}
         onDragEnd={handleDragEnd}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
         onMouseDown={(e) => {
           if (isEmptySpaceClick(e)) onEmptySpaceClick?.();
         }}
