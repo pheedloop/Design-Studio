@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, useState } from "react";
+import { useCallback, useLayoutEffect, useRef, useState } from "react";
 import { Stage, Layer, Rect } from "react-konva";
 import type { FloorPlanData } from "../../types";
 import { useCanvasControls } from "../../editor/hooks/useCanvasControls";
@@ -49,18 +49,33 @@ export function ViewerCanvas({ data, mode, occupiedBoothSlugs, selectedBoothSlug
     handleTouchEnd,
   } = useCanvasControls(containerRef);
 
-  // On first load, fit the whole plan in the viewport (centered, with a margin)
-  // rather than pinning it to the top-left. useLayoutEffect so it's applied
-  // before the browser paints (no zoom/pan flash).
-  const didFit = useRef(false);
+  // Fit the whole plan in the viewport (centered, with a margin) rather than
+  // pinning it to the top-left. useLayoutEffect so it's applied before the
+  // browser paints (no zoom/pan flash).
+  //
+  // This re-runs while the stage is still resizing — inside a webview the
+  // viewport settles after first paint (safe-area insets, the mobile sheet
+  // mounting), and a fit computed against the earlier size leaves the plan
+  // off-centre. It stops as soon as the user moves the view themselves.
+  const hasMovedView = useRef(false);
+  const markViewMoved = useCallback(() => {
+    hasMovedView.current = true;
+  }, []);
+
   useLayoutEffect(() => {
-    if (didFit.current || !hasMeasured) return;
-    didFit.current = true;
+    if (!hasMeasured || hasMovedView.current) return;
     fitToBounds(
       { width: data.dimensions.width, height: data.dimensions.height },
       { padding: 48, maxScale: 1 },
     );
-  }, [hasMeasured, fitToBounds, data.dimensions.width, data.dimensions.height]);
+  }, [
+    hasMeasured,
+    stageSize.width,
+    stageSize.height,
+    fitToBounds,
+    data.dimensions.width,
+    data.dimensions.height,
+  ]);
 
   const sortedElements = [...data.elements].sort(
     (a, b) => (a.properties.zIndex ?? 0) - (b.properties.zIndex ?? 0)
@@ -84,9 +99,16 @@ export function ViewerCanvas({ data, mode, occupiedBoothSlugs, selectedBoothSlug
         x={position.x}
         y={position.y}
         draggable
-        onWheel={handleWheel}
+        onWheel={(e) => {
+          markViewMoved();
+          handleWheel(e);
+        }}
+        onDragStart={markViewMoved}
         onDragEnd={handleDragEnd}
-        onTouchMove={handleTouchMove}
+        onTouchMove={(e) => {
+          if (e.evt.touches.length > 1) markViewMoved();
+          handleTouchMove(e);
+        }}
         onTouchEnd={handleTouchEnd}
         onMouseDown={(e) => {
           if (isEmptySpaceClick(e)) onEmptySpaceClick?.();
