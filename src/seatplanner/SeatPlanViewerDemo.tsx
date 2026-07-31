@@ -129,6 +129,7 @@ export function SeatPlanViewerDemo() {
           data={seatPlanMap}
           tables={tables}
           tickets={visibleTickets}
+          totalTickets={visibleTickets.length}
           searchTerm={search}
           onSearchChange={setSearch}
           filterOptions={FILTER_OPTIONS}

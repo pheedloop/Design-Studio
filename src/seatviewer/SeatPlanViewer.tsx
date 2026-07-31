@@ -20,6 +20,7 @@ export function SeatPlanViewer(props: SeatPlanViewerProps) {
     data,
     tables,
     tickets,
+    totalTickets,
     ticketsLoading,
     hasMoreTickets,
     onLoadMoreTickets,
@@ -211,6 +212,7 @@ export function SeatPlanViewer(props: SeatPlanViewerProps) {
       <TicketPanel
         mode={mode}
         tickets={tickets}
+        totalTickets={totalTickets}
         selectedCodes={selectedCodes}
         onToggle={toggleTicket}
         openTable={openTable}

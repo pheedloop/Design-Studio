@@ -6,6 +6,8 @@ import { isEligible, seatEligibility, SEAT_FLAG_LABELS } from "../logic";
 interface TicketPanelProps {
   mode: SeatPlanMode;
   tickets: SeatTicket[];
+  /** Total across all pages; `tickets` is only what has loaded so far. */
+  totalTickets?: number;
   selectedCodes: ReadonlySet<string>;
   onToggle: (code: string) => void;
   /** When a table is open, tickets ineligible for it are disabled (table-first path). */
@@ -34,6 +36,7 @@ interface TicketPanelProps {
 export function TicketPanel({
   mode,
   tickets,
+  totalTickets,
   selectedCodes,
   onToggle,
   openTable,
@@ -66,7 +69,9 @@ export function TicketPanel({
             {isAdmin ? "Ticket holders" : "Your tickets"}
           </h2>
           <span className="text-sm text-gray-400 tabular-nums">
-            {isAdmin ? `${tickets.length} shown · ${selectedCodes.size} selected` : tickets.length}
+            {isAdmin
+              ? `${totalTickets ?? tickets.length} total · ${selectedCodes.size} selected`
+              : tickets.length}
           </span>
         </div>
         {isAdmin ? (
