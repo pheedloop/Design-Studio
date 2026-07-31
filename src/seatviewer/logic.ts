@@ -45,17 +45,50 @@ export const OCCUPANCY_LEGEND: OccupancyLegendItem[] = [
   { level: "full", label: "Full / locked", color: OCCUPANCY_FILL.full },
 ];
 
+/** Seating a ticket here is impossible, in either mode. */
+export type SeatBlockReason = "locked" | "full" | "seated";
+
+/** The table's own rules say no. Attendee mode refuses; admin mode warns. */
+export type SeatFlagReason = "ticketType" | "tag";
+
+export interface SeatEligibility {
+  block: SeatBlockReason | null;
+  flags: SeatFlagReason[];
+}
+
+export const SEAT_FLAG_LABELS: Record<SeatFlagReason, string> = {
+  ticketType: "Ticket type isn’t on this table’s list",
+  tag: "Missing a tag this table requires",
+};
+
 /**
- * Whether a ticket can be assigned to a table. Pure UI logic mirrored from both
- * Charmander tools: type allowlist + not full/locked + ticket unassigned, plus
- * the tag-match rule in attendee mode.
+ * Why a ticket may not belong at a table, split by severity. An empty
+ * allowlist (`eligibleTicketCodes` / `tags`) means the table is unrestricted —
+ * the same convention the backend uses on the attendee seat-selection path.
+ */
+export function seatEligibility(ticket: SeatTicket, table: SeatTableState): SeatEligibility {
+  const flags: SeatFlagReason[] = [];
+  if (table.eligibleTicketCodes.length > 0 && !table.eligibleTicketCodes.includes(ticket.ticketCode)) {
+    flags.push("ticketType");
+  }
+  if (table.tags.length > 0 && !ticket.attendeeTags.some((t) => table.tags.includes(t))) {
+    flags.push("tag");
+  }
+
+  let block: SeatBlockReason | null = null;
+  if (table.isLocked) block = "locked";
+  else if (table.occupancy >= table.seatCount) block = "full";
+  else if (ticket.tableCode) block = "seated";
+
+  return { block, flags };
+}
+
+/**
+ * Whether the assign path stays open. Admin assigns through a rule mismatch and
+ * carries the flag into the UI; attendee mode treats the same mismatch as a stop.
  */
 export function isEligible(ticket: SeatTicket, table: SeatTableState, mode: SeatPlanMode): boolean {
-  if (table.isLocked || table.occupancy >= table.seatCount) return false;
-  if (ticket.tableCode) return false;
-  if (!table.eligibleTicketCodes.includes(ticket.ticketCode)) return false;
-  if (mode === "attendee" && table.tags.length > 0) {
-    if (!ticket.attendeeTags.some((t) => table.tags.includes(t))) return false;
-  }
-  return true;
+  const { block, flags } = seatEligibility(ticket, table);
+  if (block) return false;
+  return mode === "admin" || flags.length === 0;
 }

@@ -1,7 +1,7 @@
 import { useRef } from "react";
-import { PiMagnifyingGlass, PiCheck } from "react-icons/pi";
+import { PiMagnifyingGlass, PiCheck, PiWarningCircle } from "react-icons/pi";
 import type { SeatFilterOption, SeatPlanMode, SeatTableState, SeatTicket } from "../types";
-import { isEligible } from "../logic";
+import { isEligible, seatEligibility, SEAT_FLAG_LABELS } from "../logic";
 
 interface TicketPanelProps {
   mode: SeatPlanMode;
@@ -161,6 +161,7 @@ export function TicketPanel({
           }
 
           const disabled = openTable ? !isEligible(t, openTable, mode) && !isSel : false;
+          const flags = openTable && isAdmin && !disabled ? seatEligibility(t, openTable).flags : [];
           return (
             <button
               key={t.code}
@@ -189,6 +190,19 @@ export function TicketPanel({
                   {isAdmin && assignedCode && <span className="shrink-0">{seatPill}</span>}
                 </span>
                 {capEl}
+                {flags.length > 0 && (
+                  <span className="mt-0.5 flex flex-wrap gap-1.5">
+                    {flags.map((f) => (
+                      <span
+                        key={f}
+                        className="inline-flex items-center gap-1.5 text-xs font-medium px-2 py-0.5 rounded-full text-[#8a5300] bg-[rgba(240,169,46,0.16)]"
+                      >
+                        <PiWarningCircle size={12} />
+                        {SEAT_FLAG_LABELS[f]}
+                      </span>
+                    ))}
+                  </span>
+                )}
                 {!isAdmin && (
                   <span className="mt-0.5">
                     <span className="inline-flex items-center gap-1.5 text-xs font-medium px-2 py-0.5 rounded-full text-gray-500 bg-gray-200">

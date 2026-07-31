@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import type { SeatPlanViewerProps } from "./types";
-import { isEligible, occupancyColor } from "./logic";
+import { isEligible, occupancyColor, seatEligibility } from "./logic";
 import { SeatPlanCanvas } from "./components/SeatPlanCanvas";
 import { TicketPanel } from "./components/TicketPanel";
 import { TableDetailPopover } from "./components/TableDetailPopover";
@@ -167,18 +167,23 @@ export function SeatPlanViewer(props: SeatPlanViewerProps) {
     if (openTable.occupancy >= openTable.seatCount) return { label: "Table full", disabled: true, hint: "No seats left at this table." };
 
     if (mode === "admin") {
-      if (assignableCodes.length > 0) {
-        const extra = selectedCodes.size - assignableCodes.length;
+      if (assignableCodes.length === 0) {
         return {
-          label: `Assign ${assignableCodes.length} selected`,
-          disabled: false,
-          hint: extra > 0 ? `${extra} of ${selectedCodes.size} selected aren’t eligible for this table.` : undefined,
+          label: "Select ticket holders",
+          disabled: true,
+          hint: selectedCodes.size > 0 ? "Everyone selected is already seated. Clear a seat to move them." : undefined,
         };
       }
+      const flagged = assignableCodes.filter((c) => {
+        const t = ticketByCode.get(c);
+        return t ? seatEligibility(t, openTable).flags.length > 0 : false;
+      }).length;
       return {
-        label: "Select eligible ticket holders",
-        disabled: true,
-        hint: selectedCodes.size > 0 ? "None of the selected are eligible for this table." : undefined,
+        label: `Assign ${assignableCodes.length} selected`,
+        disabled: false,
+        hint: flagged > 0
+          ? `${flagged} of ${assignableCodes.length} don’t meet this table’s rules — they’ll be seated anyway.`
+          : undefined,
       };
     }
 
@@ -186,14 +191,16 @@ export function SeatPlanViewer(props: SeatPlanViewerProps) {
     const code = [...selectedCodes][0];
     const ticket = code ? ticketByCode.get(code) : undefined;
     if (!ticket) return { label: "Select a ticket first", disabled: true, hint: "Choose one of your tickets on the left." };
-    if (ticket.tableCode) {
-      const at = tableNameByCode.get(ticket.tableCode) ?? ticket.tableCode;
+
+    const { block, flags } = seatEligibility(ticket, openTable);
+    if (block === "seated") {
+      const at = tableNameByCode.get(ticket.tableCode!) ?? ticket.tableCode;
       return { label: "Ticket already seated", disabled: true, hint: `${ticket.attendee.firstName} is at ${at}. Clear it to move.` };
     }
-    if (!openTable.eligibleTicketCodes.includes(ticket.ticketCode)) {
+    if (flags.includes("ticketType")) {
       return { label: "Not eligible", disabled: true, hint: `${ticket.ticketName} can’t be seated at this table.` };
     }
-    if (openTable.tags.length > 0 && !ticket.attendeeTags.some((t) => openTable.tags.includes(t))) {
+    if (flags.includes("tag")) {
       return { label: "Reserved table", disabled: true, hint: "This table is reserved for a specific group." };
     }
     return { label: `Assign ${ticket.attendee.firstName} here`, disabled: false };
