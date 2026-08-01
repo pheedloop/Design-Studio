@@ -62,12 +62,18 @@ export function ViewerCanvas({ data, mode, occupiedBoothSlugs, selectedBoothSlug
     hasMovedView.current = true;
   }, []);
 
+  // The canvas stays unmounted until the first fit has been applied, so the
+  // opening frame is already centred. Rendering it beforehand paints the plan
+  // at the default top-left origin and it visibly jumps into place.
+  const [isFitted, setIsFitted] = useState(false);
+
   useLayoutEffect(() => {
     if (!hasMeasured || hasMovedView.current) return;
     fitToBounds(
       { width: data.dimensions.width, height: data.dimensions.height },
       { padding: 48, maxScale: 1 },
     );
+    setIsFitted(true);
   }, [
     hasMeasured,
     stageSize.width,
@@ -90,6 +96,7 @@ export function ViewerCanvas({ data, mode, occupiedBoothSlugs, selectedBoothSlug
       // Without this the browser claims the pinch and zooms the page instead.
       style={{ touchAction: "none" }}
     >
+      {isFitted && (
       <Stage
         ref={stageRef}
         width={stageSize.width}
@@ -206,7 +213,8 @@ export function ViewerCanvas({ data, mode, occupiedBoothSlugs, selectedBoothSlug
 
         {routePath && <RouteOverlay path={routePath} />}
       </Stage>
-      <ScaleBar dimensions={data.dimensions} scale={scale} />
+      )}
+      {isFitted && <ScaleBar dimensions={data.dimensions} scale={scale} />}
       <ViewerLegend legend={data.legend} />
     </div>
   );
