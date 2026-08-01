@@ -66,9 +66,6 @@ export function MapSheet({ elements, exhibitors, selectedItem, onSelect }: MapSh
       className="absolute bottom-0 left-0 right-0 bg-white rounded-t-xl shadow-[0_-4px_20px_rgba(0,0,0,0.15)] transition-all duration-300 z-50"
       style={{ maxHeight: expanded ? "60%" : hasTabs ? 56 : 48 }}
     >
-      {/* The toggle is an underlay rather than a wrapper: a button inside a
-          button is invalid markup that iOS resolves unpredictably, and this
-          keeps the whole header tappable without nesting anything. */}
       <div className="relative">
         <button
           type="button"

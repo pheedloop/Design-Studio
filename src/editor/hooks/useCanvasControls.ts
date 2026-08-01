@@ -124,7 +124,6 @@ export function useCanvasControls(containerRef: React.RefObject<HTMLDivElement |
       const stage = stageRef.current;
       if (!stage) return;
 
-      // Konva's own drag would fight the pinch and pan the stage as well.
       if (stage.isDragging()) stage.stopDrag();
 
       const box = stage.container().getBoundingClientRect();

@@ -87,9 +87,6 @@ export function MapViewer({
   );
   const wayfindingEnabled = featureMap.wayfinding === "enabled";
   const containerRef = useRef<HTMLDivElement>(null);
-  // Seeded from the window: starting desktop-first paints the sidebar for a
-  // frame, and the canvas would fit itself to the box that leaves behind. The
-  // observer below still corrects containers narrower than the window.
   const [isMobile, setIsMobile] = useState(
     () =>
       typeof window !== "undefined" && window.innerWidth < MOBILE_BREAKPOINT,

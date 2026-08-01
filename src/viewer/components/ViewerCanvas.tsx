@@ -50,22 +50,16 @@ export function ViewerCanvas({ data, mode, occupiedBoothSlugs, selectedBoothSlug
     handleTouchEnd,
   } = useCanvasControls(containerRef);
 
-  // Fitting continues while the viewport settles, and stops for good once the
-  // user moves the view themselves.
   const hasMovedView = useRef(false);
   const markViewMoved = useCallback(() => {
     hasMovedView.current = true;
   }, []);
 
-  // Mounted only once fitted; otherwise the first frame paints at the top-left
-  // origin and the plan visibly jumps into place.
   const [isFitted, setIsFitted] = useState(false);
 
   useLayoutEffect(() => {
     if (!hasMeasured || hasMovedView.current) return;
 
-    // The stage is sized from `stageSize`, so fitting against anything else
-    // centres the plan for a box that is not the one being painted.
     const rect = containerRef.current?.getBoundingClientRect();
     if (rect && rect.width > 0 && rect.height > 0) {
       if (
@@ -103,7 +97,6 @@ export function ViewerCanvas({ data, mode, occupiedBoothSlugs, selectedBoothSlug
     <div
       ref={containerRef}
       className="relative flex-1 min-w-0 bg-gray-200 overflow-hidden"
-      // Without this the browser claims the pinch and zooms the page instead.
       style={{ touchAction: "none" }}
     >
       {isFitted && (
