@@ -87,11 +87,9 @@ export function MapViewer({
   );
   const wayfindingEnabled = featureMap.wayfinding === "enabled";
   const containerRef = useRef<HTMLDivElement>(null);
-  // Seeded from the window so the first render already picks the right layout.
-  // Starting desktop-first renders the sidebar for a frame, which squeezes the
-  // canvas — and the canvas fits itself to whatever box it is given, so the plan
-  // ends up sized and centred for a viewport that is about to disappear. The
-  // observer below still corrects this for containers narrower than the window.
+  // Seeded from the window: starting desktop-first paints the sidebar for a
+  // frame, and the canvas would fit itself to the box that leaves behind. The
+  // observer below still corrects containers narrower than the window.
   const [isMobile, setIsMobile] = useState(
     () =>
       typeof window !== "undefined" && window.innerWidth < MOBILE_BREAKPOINT,

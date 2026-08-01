@@ -10,7 +10,6 @@ import { ViewerElement } from "./ViewerElement";
 import { RouteOverlay } from "./RouteOverlay";
 import { ScaleBar } from "./ScaleBar";
 import { ViewerLegend } from "./ViewerLegend";
-import { isViewerDebugEnabled } from "../utils/debug";
 
 const SELECTED_BOOTH_COLOR = "#16a34a";
 const RESERVED_BOOTH_COLOR = "#f59e0b";
@@ -51,31 +50,22 @@ export function ViewerCanvas({ data, mode, occupiedBoothSlugs, selectedBoothSlug
     handleTouchEnd,
   } = useCanvasControls(containerRef);
 
-  // Fit the whole plan in the viewport (centered, with a margin) rather than
-  // pinning it to the top-left. useLayoutEffect so it's applied before the
-  // browser paints (no zoom/pan flash).
-  //
-  // This re-runs while the stage is still resizing — inside a webview the
-  // viewport settles after first paint (safe-area insets, the mobile sheet
-  // mounting), and a fit computed against the earlier size leaves the plan
-  // off-centre. It stops as soon as the user moves the view themselves.
+  // Fitting continues while the viewport settles, and stops for good once the
+  // user moves the view themselves.
   const hasMovedView = useRef(false);
   const markViewMoved = useCallback(() => {
     hasMovedView.current = true;
   }, []);
 
-  // The canvas stays unmounted until the first fit has been applied, so the
-  // opening frame is already centred. Rendering it beforehand paints the plan
-  // at the default top-left origin and it visibly jumps into place.
+  // Mounted only once fitted; otherwise the first frame paints at the top-left
+  // origin and the plan visibly jumps into place.
   const [isFitted, setIsFitted] = useState(false);
 
   useLayoutEffect(() => {
     if (!hasMeasured || hasMovedView.current) return;
 
-    // Re-measure here rather than trusting the observed size: the stage is sized
-    // from `stageSize`, so fitting against anything else centres the plan for a
-    // box that is not the one being painted. Sync the two first, then fit on the
-    // following pass — both run before paint, so nothing is visible in between.
+    // The stage is sized from `stageSize`, so fitting against anything else
+    // centres the plan for a box that is not the one being painted.
     const rect = containerRef.current?.getBoundingClientRect();
     if (rect && rect.width > 0 && rect.height > 0) {
       if (
@@ -93,13 +83,6 @@ export function ViewerCanvas({ data, mode, occupiedBoothSlugs, selectedBoothSlug
     );
     setIsFitted(true);
 
-    if (isViewerDebugEnabled()) {
-      console.debug(
-        `[viewerCanvas] fit into ${Math.round(stageSize.width)}x${Math.round(
-          stageSize.height,
-        )} for plan ${data.dimensions.width}x${data.dimensions.height}`,
-      );
-    }
   }, [
     hasMeasured,
     stageSize.width,
