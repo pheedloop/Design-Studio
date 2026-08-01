@@ -66,42 +66,53 @@ export function MapSheet({ elements, exhibitors, selectedItem, onSelect }: MapSh
       className="absolute bottom-0 left-0 right-0 bg-white rounded-t-xl shadow-[0_-4px_20px_rgba(0,0,0,0.15)] transition-all duration-300 z-50"
       style={{ maxHeight: expanded ? "60%" : hasTabs ? 56 : 48 }}
     >
-      {/* Header / toggle */}
-      <button
-        onClick={() => setExpanded(!expanded)}
-        className="flex items-center justify-between w-full px-4 py-3 cursor-pointer"
-      >
-        {hasTabs ? (
-          /* Tab bar inside the collapsed header */
-          <div className="flex gap-3" onClick={(e) => e.stopPropagation()}>
-            {visibleTabs.map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => {
-                  setActiveTab(tab.id);
-                  setExpanded(true);
-                }}
-                className={`text-xs font-medium pb-0.5 cursor-pointer transition-colors ${
-                  currentTab === tab.id
-                    ? "text-primary-600 border-b-2 border-primary-500"
-                    : "text-gray-400 hover:text-gray-600"
-                }`}
-              >
-                {tab.label}
-              </button>
-            ))}
-          </div>
-        ) : (
-          <span className="text-xs font-medium text-gray-600">
-            {visibleTabs[0]?.label} ({visibleTabs[0]?.count ?? 0})
-          </span>
-        )}
-        {expanded ? (
-          <PiCaretDown size={14} className="text-gray-400" />
-        ) : (
-          <PiCaretUp size={14} className="text-gray-400" />
-        )}
-      </button>
+      {/* Header / toggle.
+          The toggle is a sibling underlay rather than a wrapper: tabs are
+          buttons, and a button inside a button is invalid markup that iOS
+          resolves unpredictably — taps on a tab could toggle the sheet instead
+          of switching tab. The underlay keeps "tap anywhere in the header to
+          toggle" without nesting anything interactive. */}
+      <div className="relative">
+        <button
+          type="button"
+          onClick={() => setExpanded(!expanded)}
+          aria-expanded={expanded}
+          aria-label={expanded ? "Collapse list" : "Expand list"}
+          className="absolute inset-0 w-full cursor-pointer"
+        />
+        <div className="relative flex items-center justify-between w-full px-4 py-3 pointer-events-none">
+          {hasTabs ? (
+            <div className="flex gap-3 pointer-events-auto">
+              {visibleTabs.map((tab) => (
+                <button
+                  key={tab.id}
+                  type="button"
+                  onClick={() => {
+                    setActiveTab(tab.id);
+                    setExpanded(true);
+                  }}
+                  className={`text-xs font-medium pb-0.5 cursor-pointer transition-colors ${
+                    currentTab === tab.id
+                      ? "text-primary-600 border-b-2 border-primary-500"
+                      : "text-gray-400 hover:text-gray-600"
+                  }`}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
+          ) : (
+            <span className="text-xs font-medium text-gray-600">
+              {visibleTabs[0]?.label} ({visibleTabs[0]?.count ?? 0})
+            </span>
+          )}
+          {expanded ? (
+            <PiCaretDown size={14} className="text-gray-400" />
+          ) : (
+            <PiCaretUp size={14} className="text-gray-400" />
+          )}
+        </div>
+      </div>
 
       {expanded && (
         <div className="overflow-y-auto" style={{ maxHeight: "calc(60vh - 56px)" }}>
