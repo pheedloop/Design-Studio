@@ -10,6 +10,7 @@ import { ViewerElement } from "./ViewerElement";
 import { RouteOverlay } from "./RouteOverlay";
 import { ScaleBar } from "./ScaleBar";
 import { ViewerLegend } from "./ViewerLegend";
+import { isViewerDebugEnabled } from "../utils/debug";
 
 const SELECTED_BOOTH_COLOR = "#16a34a";
 const RESERVED_BOOTH_COLOR = "#f59e0b";
@@ -92,7 +93,7 @@ export function ViewerCanvas({ data, mode, occupiedBoothSlugs, selectedBoothSlug
     );
     setIsFitted(true);
 
-    if (import.meta.env.DEV) {
+    if (isViewerDebugEnabled()) {
       console.debug(
         `[viewerCanvas] fit into ${Math.round(stageSize.width)}x${Math.round(
           stageSize.height,
