@@ -183,6 +183,7 @@ export function useCanvasControls(containerRef: React.RefObject<HTMLDivElement |
     position,
     setPosition,
     stageSize,
+    setStageSize,
     hasMeasured,
     fitToBounds,
     handleWheel,

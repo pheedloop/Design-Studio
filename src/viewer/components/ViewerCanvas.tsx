@@ -41,6 +41,7 @@ export function ViewerCanvas({ data, mode, occupiedBoothSlugs, selectedBoothSlug
     scale,
     position,
     stageSize,
+    setStageSize,
     hasMeasured,
     fitToBounds,
     handleWheel,
@@ -69,15 +70,40 @@ export function ViewerCanvas({ data, mode, occupiedBoothSlugs, selectedBoothSlug
 
   useLayoutEffect(() => {
     if (!hasMeasured || hasMovedView.current) return;
+
+    // Re-measure here rather than trusting the observed size: the stage is sized
+    // from `stageSize`, so fitting against anything else centres the plan for a
+    // box that is not the one being painted. Sync the two first, then fit on the
+    // following pass — both run before paint, so nothing is visible in between.
+    const rect = containerRef.current?.getBoundingClientRect();
+    if (rect && rect.width > 0 && rect.height > 0) {
+      if (
+        Math.round(rect.width) !== Math.round(stageSize.width) ||
+        Math.round(rect.height) !== Math.round(stageSize.height)
+      ) {
+        setStageSize({ width: rect.width, height: rect.height });
+        return;
+      }
+    }
+
     fitToBounds(
       { width: data.dimensions.width, height: data.dimensions.height },
       { padding: 48, maxScale: 1 },
     );
     setIsFitted(true);
+
+    if (import.meta.env.DEV) {
+      console.debug(
+        `[viewerCanvas] fit into ${Math.round(stageSize.width)}x${Math.round(
+          stageSize.height,
+        )} for plan ${data.dimensions.width}x${data.dimensions.height}`,
+      );
+    }
   }, [
     hasMeasured,
     stageSize.width,
     stageSize.height,
+    setStageSize,
     fitToBounds,
     data.dimensions.width,
     data.dimensions.height,
