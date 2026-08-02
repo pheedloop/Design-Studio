@@ -182,7 +182,7 @@ export function SeatPlanViewer(props: SeatPlanViewerProps) {
     // attendee — single select
     const code = [...selectedCodes][0];
     const ticket = code ? ticketByCode.get(code) : undefined;
-    if (!ticket) return { label: "Select a ticket first", disabled: true, hint: "Choose one of your tickets on the left." };
+    if (!ticket) return { label: "Select a ticket first", disabled: true, hint: "Choose one of your tickets above." };
     if (ticket.tableCode) {
       const at = tableNameByCode.get(ticket.tableCode) ?? ticket.tableCode;
       return { label: "Ticket already seated", disabled: true, hint: `${ticket.attendee.firstName} is at ${at}. Clear it to move.` };
