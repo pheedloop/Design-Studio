@@ -197,7 +197,7 @@ export function TicketPanel({
 
         {expanded && (
           <div
-            className="max-h-64 overflow-y-auto scrollbar border-t border-gray-200"
+            className="max-h-56 overflow-y-auto scrollbar border-t border-gray-200"
             role="radiogroup"
           >
             {tickets.map(renderAttendeeRow)}
