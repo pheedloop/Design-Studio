@@ -71,7 +71,7 @@ export function SeatPlanCanvas({
   );
 
   return (
-    <div ref={containerRef} className="relative flex-1 min-w-0 bg-gray-200 overflow-hidden">
+    <div ref={containerRef} className="relative flex-1 min-w-0 min-h-0 bg-gray-200 overflow-hidden">
       <Stage
         ref={stageRef}
         width={stageSize.width}

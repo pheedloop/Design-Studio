@@ -200,7 +200,11 @@ export function SeatPlanViewer(props: SeatPlanViewerProps) {
   }, [openTable, mode, assignableCodes, selectedCodes, ticketByCode, tableNameByCode]);
 
   return (
-    <div className="pl-map-editor flex h-full min-h-0 bg-gray-100 relative">
+    <div
+      className={`pl-map-editor flex h-full min-h-0 bg-gray-100 relative ${
+        mode === "attendee" ? "flex-col" : ""
+      }`}
+    >
       <TicketPanel
         mode={mode}
         tickets={tickets}
