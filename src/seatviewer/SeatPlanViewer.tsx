@@ -10,9 +10,6 @@ import { OccupancyLegend } from "./components/OccupancyLegend";
  * Presentational seat plan viewer. Renders a FloorPlanData with per-table
  * assignment state and lets the operator assign ticket holders to tables.
  * The host owns all data + API calls; this component emits intent via callbacks.
- *
- * This step implements `mode="admin"` (multi-select). `mode="attendee"`
- * (single-select, tag eligibility, self-service flags) lands in the next step.
  */
 export function SeatPlanViewer(props: SeatPlanViewerProps) {
   const {

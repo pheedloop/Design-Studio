@@ -54,10 +54,7 @@ export function SeatPlanCanvas({
     handleDragEnd,
   } = useCanvasControls(containerRef);
 
-  // Centre and scale the plan to the viewport. useLayoutEffect so it lands
-  // before paint (no zoom/pan flash). `fitToBounds` changes identity with the
-  // stage size, so this also re-fits on resize — until the operator zooms or
-  // pans, after which refitting would fight them.
+  // useLayoutEffect so the fit lands before paint; useEffect flashes.
   const userAdjusted = useRef(false);
   useLayoutEffect(() => {
     if (!hasMeasured || userAdjusted.current) return;
@@ -65,7 +62,14 @@ export function SeatPlanCanvas({
       { width: data.dimensions.width, height: data.dimensions.height },
       { padding: 48, maxScale: 1 },
     );
-  }, [hasMeasured, fitToBounds, data.dimensions.width, data.dimensions.height]);
+  }, [
+    hasMeasured,
+    stageSize.width,
+    stageSize.height,
+    fitToBounds,
+    data.dimensions.width,
+    data.dimensions.height,
+  ]);
 
   const onWheel = useCallback(
     (e: Konva.KonvaEventObject<WheelEvent>) => {
@@ -88,23 +92,22 @@ export function SeatPlanCanvas({
   );
 
   return (
-    <div ref={containerRef} className="relative flex-1 min-w-0 min-h-0 bg-gray-200 overflow-hidden">
-      {/* Out of flow so the Stage's own pixel size can't feed back into the box
-          the ResizeObserver measures — in flow it can only ever grow it. */}
-      <div className="absolute inset-0">
-        <Stage
-          ref={stageRef}
-          width={stageSize.width}
-          height={stageSize.height}
-          scaleX={scale}
-          scaleY={scale}
-          x={position.x}
-          y={position.y}
-          draggable
-          onWheel={onWheel}
-          onDragEnd={onDragEnd}
-          onClick={() => onBackgroundClick?.()}
-        >
+    <div ref={containerRef} className="relative flex-1 min-w-0 bg-gray-200 overflow-hidden">
+      {/* Absolute so the Stage's own pixel size can't grow the box we measure. */}
+      <Stage
+        className="absolute inset-0"
+        ref={stageRef}
+        width={stageSize.width}
+        height={stageSize.height}
+        scaleX={scale}
+        scaleY={scale}
+        x={position.x}
+        y={position.y}
+        draggable
+        onWheel={onWheel}
+        onDragEnd={onDragEnd}
+        onClick={() => onBackgroundClick?.()}
+      >
         <Layer>
           <Rect
             x={0}
@@ -147,9 +150,8 @@ export function SeatPlanCanvas({
               />
             );
           })}
-          </Layer>
-        </Stage>
-      </div>
+        </Layer>
+      </Stage>
       {children}
     </div>
   );

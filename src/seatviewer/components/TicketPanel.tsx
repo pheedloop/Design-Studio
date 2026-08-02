@@ -27,11 +27,10 @@ interface TicketPanelProps {
 
 /**
  * List of ticket holders, in one of two shapes.
- *  - admin: a left rail — multi-select, search and infinite scroll over the
- *    event-wide list, where the email disambiguates strangers.
+ *  - admin: a left rail — multi-select over the event-wide list, with search,
+ *    filter chips and infinite scroll.
  *  - attendee: a collapsible strip above the canvas — single-select rows over
- *    the handful of tickets one attendee holds. A rail would spend a fixed
- *    column on two or three rows, and the email is the same address on each.
+ *    the attendee's own tickets.
  */
 export function TicketPanel({
   mode,

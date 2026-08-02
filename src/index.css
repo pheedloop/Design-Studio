@@ -199,8 +199,6 @@
 }
 
 @layer utilities {
-  /* The thumb stays visible whenever the region overflows — people don't
-     discover a scroll region they have to hover to see. */
   .scrollbar {
     scrollbar-width: thin;
     scrollbar-color: rgb(var(--gray-400)) transparent;
