@@ -182,7 +182,10 @@ export function TicketPanel({
         </button>
 
         {expanded && (
-          <div className="flex flex-wrap gap-2 px-4 pb-3" role="radiogroup">
+          <div
+            className="flex flex-wrap gap-2 px-4 pb-3 max-h-64 overflow-y-auto scrollbar"
+            role="radiogroup"
+          >
             {tickets.map(renderTicket)}
             {loading && <div className="p-3 text-sm text-gray-400">Loading…</div>}
             {!loading && tickets.length === 0 && (
