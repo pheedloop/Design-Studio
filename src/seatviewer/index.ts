@@ -11,3 +11,4 @@ export type {
   SeatFilterOption,
   SeatPlanViewerProps,
 } from "./types";
+export type { FloorPlanData, FloorPlanElement } from "../types";
