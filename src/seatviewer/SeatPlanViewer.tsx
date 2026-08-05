@@ -10,9 +10,6 @@ import { OccupancyLegend } from "./components/OccupancyLegend";
  * Presentational seat plan viewer. Renders a FloorPlanData with per-table
  * assignment state and lets the operator assign ticket holders to tables.
  * The host owns all data + API calls; this component emits intent via callbacks.
- *
- * This step implements `mode="admin"` (multi-select). `mode="attendee"`
- * (single-select, tag eligibility, self-service flags) lands in the next step.
  */
 export function SeatPlanViewer(props: SeatPlanViewerProps) {
   const {
@@ -185,7 +182,7 @@ export function SeatPlanViewer(props: SeatPlanViewerProps) {
     // attendee — single select
     const code = [...selectedCodes][0];
     const ticket = code ? ticketByCode.get(code) : undefined;
-    if (!ticket) return { label: "Select a ticket first", disabled: true, hint: "Choose one of your tickets on the left." };
+    if (!ticket) return { label: "Select a ticket first", disabled: true, hint: "Choose one of your tickets above." };
     if (ticket.tableCode) {
       const at = tableNameByCode.get(ticket.tableCode) ?? ticket.tableCode;
       return { label: "Ticket already seated", disabled: true, hint: `${ticket.attendee.firstName} is at ${at}. Clear it to move.` };
@@ -200,7 +197,11 @@ export function SeatPlanViewer(props: SeatPlanViewerProps) {
   }, [openTable, mode, assignableCodes, selectedCodes, ticketByCode, tableNameByCode]);
 
   return (
-    <div className="pl-map-editor flex h-full min-h-0 bg-gray-100 relative">
+    <div
+      className={`pl-map-editor flex h-full min-h-0 bg-gray-100 relative ${
+        mode === "attendee" ? "flex-col" : ""
+      }`}
+    >
       <TicketPanel
         mode={mode}
         tickets={tickets}
