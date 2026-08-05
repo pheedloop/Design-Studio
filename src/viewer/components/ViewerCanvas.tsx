@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, useState } from "react";
+import { useCallback, useLayoutEffect, useRef, useState } from "react";
 import { Stage, Layer, Rect } from "react-konva";
 import type { FloorPlanData } from "../../types";
 import { useCanvasControls } from "../../editor/hooks/useCanvasControls";
@@ -41,24 +41,51 @@ export function ViewerCanvas({ data, mode, occupiedBoothSlugs, selectedBoothSlug
     scale,
     position,
     stageSize,
+    setStageSize,
     hasMeasured,
     fitToBounds,
     handleWheel,
     handleDragEnd,
+    handleTouchMove,
+    handleTouchEnd,
   } = useCanvasControls(containerRef);
 
-  // On first load, fit the whole plan in the viewport (centered, with a margin)
-  // rather than pinning it to the top-left. useLayoutEffect so it's applied
-  // before the browser paints (no zoom/pan flash).
-  const didFit = useRef(false);
+  const hasMovedView = useRef(false);
+  const markViewMoved = useCallback(() => {
+    hasMovedView.current = true;
+  }, []);
+
+  const [isFitted, setIsFitted] = useState(false);
+
   useLayoutEffect(() => {
-    if (didFit.current || !hasMeasured) return;
-    didFit.current = true;
+    if (!hasMeasured || hasMovedView.current) return;
+
+    const rect = containerRef.current?.getBoundingClientRect();
+    if (rect && rect.width > 0 && rect.height > 0) {
+      if (
+        Math.round(rect.width) !== Math.round(stageSize.width) ||
+        Math.round(rect.height) !== Math.round(stageSize.height)
+      ) {
+        setStageSize({ width: rect.width, height: rect.height });
+        return;
+      }
+    }
+
     fitToBounds(
       { width: data.dimensions.width, height: data.dimensions.height },
       { padding: 48, maxScale: 1 },
     );
-  }, [hasMeasured, fitToBounds, data.dimensions.width, data.dimensions.height]);
+    setIsFitted(true);
+
+  }, [
+    hasMeasured,
+    stageSize.width,
+    stageSize.height,
+    setStageSize,
+    fitToBounds,
+    data.dimensions.width,
+    data.dimensions.height,
+  ]);
 
   const sortedElements = [...data.elements].sort(
     (a, b) => (a.properties.zIndex ?? 0) - (b.properties.zIndex ?? 0)
@@ -67,7 +94,12 @@ export function ViewerCanvas({ data, mode, occupiedBoothSlugs, selectedBoothSlug
   const hasHighlight = highlightedElementId !== null;
 
   return (
-    <div ref={containerRef} className="relative flex-1 min-w-0 bg-gray-200 overflow-hidden">
+    <div
+      ref={containerRef}
+      className="relative flex-1 min-w-0 bg-gray-200 overflow-hidden"
+      style={{ touchAction: "none" }}
+    >
+      {isFitted && (
       <Stage
         ref={stageRef}
         width={stageSize.width}
@@ -77,8 +109,17 @@ export function ViewerCanvas({ data, mode, occupiedBoothSlugs, selectedBoothSlug
         x={position.x}
         y={position.y}
         draggable
-        onWheel={handleWheel}
+        onWheel={(e) => {
+          markViewMoved();
+          handleWheel(e);
+        }}
+        onDragStart={markViewMoved}
         onDragEnd={handleDragEnd}
+        onTouchMove={(e) => {
+          if (e.evt.touches.length > 1) markViewMoved();
+          handleTouchMove(e);
+        }}
+        onTouchEnd={handleTouchEnd}
         onMouseDown={(e) => {
           if (isEmptySpaceClick(e)) onEmptySpaceClick?.();
         }}
@@ -175,7 +216,8 @@ export function ViewerCanvas({ data, mode, occupiedBoothSlugs, selectedBoothSlug
 
         {routePath && <RouteOverlay path={routePath} />}
       </Stage>
-      <ScaleBar dimensions={data.dimensions} scale={scale} />
+      )}
+      {isFitted && <ScaleBar dimensions={data.dimensions} scale={scale} />}
       <ViewerLegend legend={data.legend} />
     </div>
   );

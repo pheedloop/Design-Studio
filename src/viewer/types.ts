@@ -56,3 +56,14 @@ export type HoveredItem =
   | { type: "booth"; elementId: string; boothSlug: string }
   | { type: "session_area"; elementId: string; sessionId?: string | null }
   | { type: "meeting_room"; elementId: string; meetingRoomId?: string | null };
+
+/**
+ * `id` is the referenced SessionLocation / MeetingRoom record, null when the
+ * element has not been linked to one yet.
+ */
+export interface LocationClick {
+  type: "session_area" | "meeting_room";
+  id: string | null;
+  elementId: string;
+  name: string;
+}
