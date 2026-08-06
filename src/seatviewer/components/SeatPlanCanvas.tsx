@@ -1,4 +1,5 @@
-import { useLayoutEffect, useRef, useState, type ReactNode } from "react";
+import { useCallback, useLayoutEffect, useRef, useState, type ReactNode } from "react";
+import type Konva from "konva";
 import { Stage, Layer, Rect } from "react-konva";
 import type { FloorPlanData } from "../../types";
 import { useCanvasControls } from "../../editor/hooks/useCanvasControls";
@@ -53,18 +54,38 @@ export function SeatPlanCanvas({
     handleDragEnd,
   } = useCanvasControls(containerRef);
 
-  // On first load, fit the whole plan in the viewport (centered, with a margin)
-  // rather than pinning it to the top-left. useLayoutEffect so it's applied
-  // before the browser paints (no zoom/pan flash).
-  const didFit = useRef(false);
+  // useLayoutEffect so the fit lands before paint; useEffect flashes.
+  const userAdjusted = useRef(false);
   useLayoutEffect(() => {
-    if (didFit.current || !hasMeasured) return;
-    didFit.current = true;
+    if (!hasMeasured || userAdjusted.current) return;
     fitToBounds(
       { width: data.dimensions.width, height: data.dimensions.height },
       { padding: 48, maxScale: 1 },
     );
-  }, [hasMeasured, fitToBounds, data.dimensions.width, data.dimensions.height]);
+  }, [
+    hasMeasured,
+    stageSize.width,
+    stageSize.height,
+    fitToBounds,
+    data.dimensions.width,
+    data.dimensions.height,
+  ]);
+
+  const onWheel = useCallback(
+    (e: Konva.KonvaEventObject<WheelEvent>) => {
+      userAdjusted.current = true;
+      handleWheel(e);
+    },
+    [handleWheel],
+  );
+
+  const onDragEnd = useCallback(
+    (e: Konva.KonvaEventObject<DragEvent>) => {
+      userAdjusted.current = true;
+      handleDragEnd(e);
+    },
+    [handleDragEnd],
+  );
 
   const sortedElements = [...data.elements].sort(
     (a, b) => (a.properties.zIndex ?? 0) - (b.properties.zIndex ?? 0)
@@ -72,7 +93,9 @@ export function SeatPlanCanvas({
 
   return (
     <div ref={containerRef} className="relative flex-1 min-w-0 bg-gray-200 overflow-hidden">
+      {/* Absolute so the Stage's own pixel size can't grow the box we measure. */}
       <Stage
+        className="absolute inset-0"
         ref={stageRef}
         width={stageSize.width}
         height={stageSize.height}
@@ -81,8 +104,8 @@ export function SeatPlanCanvas({
         x={position.x}
         y={position.y}
         draggable
-        onWheel={handleWheel}
-        onDragEnd={handleDragEnd}
+        onWheel={onWheel}
+        onDragEnd={onDragEnd}
         onClick={() => onBackgroundClick?.()}
       >
         <Layer>

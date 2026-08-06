@@ -169,14 +169,23 @@
 }
 
 @layer utilities {
+  .scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: rgb(var(--gray-400)) transparent;
+  }
+
   .scrollbar::-webkit-scrollbar {
     width: 6px;
     height: 6px;
     background-color: transparent;
   }
 
-  .scrollbar:hover::-webkit-scrollbar-thumb {
+  .scrollbar::-webkit-scrollbar-thumb {
     background-color: rgb(var(--gray-400));
     border-radius: 8px;
+  }
+
+  .scrollbar:hover::-webkit-scrollbar-thumb {
+    background-color: rgb(var(--gray-500));
   }
 }
