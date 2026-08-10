@@ -5,13 +5,30 @@ import { SeatPlanCanvas } from "./components/SeatPlanCanvas";
 import { TicketPanel } from "./components/TicketPanel";
 import { TableDetailPopover } from "./components/TableDetailPopover";
 import { OccupancyLegend } from "./components/OccupancyLegend";
+import { I18nProvider } from "../i18n/context";
 
 /**
  * Presentational seat plan viewer. Renders a FloorPlanData with per-table
  * assignment state and lets the operator assign ticket holders to tables.
  * The host owns all data + API calls; this component emits intent via callbacks.
  */
-export function SeatPlanViewer(props: SeatPlanViewerProps) {
+export function SeatPlanViewer({
+  translate,
+  locale,
+  ...props
+}: SeatPlanViewerProps) {
+  return (
+    <I18nProvider translate={translate} locale={locale}>
+      <SeatPlanViewerInner {...props} />
+    </I18nProvider>
+  );
+}
+
+/**
+ * Split out because a component cannot consume a context it provides in the same
+ * render, and the body resolves display strings (the assign CTA) itself.
+ */
+function SeatPlanViewerInner(props: Omit<SeatPlanViewerProps, "translate" | "locale">) {
   const {
     mode,
     data,

@@ -17,6 +17,8 @@ import {
 } from "../editor/components/ui";
 import { BadgeTopBar } from "./BadgeTopBar";
 import { modKey } from "../editor/utils/platform";
+import { I18nProvider } from "../i18n/context";
+import type { Translate } from "../i18n/types";
 import { BadgeCanvas } from "./BadgeCanvas";
 import { BadgeRulers } from "./BadgeRulers";
 import { AlignmentControls } from "../editor/components/panels/AlignmentControls";
@@ -64,6 +66,15 @@ export interface BadgeEditorProps {
   /** Supplies attendee search + badge-data resolution for the live preview.
    *  When omitted, the picker is hidden and fields show placeholders. */
   attendeeProvider?: AttendeeProvider;
+  /**
+   * Resolves the editor's own UI strings. Omit for built-in English.
+   *
+   * MUST be referentially stable — wrap it in `useCallback` keyed on your
+   * language and catalog. See the README's Internationalization section.
+   */
+  translate?: Translate;
+  /** BCP-47 tag for number formatting — dimensions and the decimal separator. */
+  locale?: string;
 }
 
 /** Reference-grid spacing, in inches. */
@@ -90,12 +101,21 @@ function isEditableTarget(t: EventTarget | null): boolean {
  * multi-page folded badges (front/back/inside) that flatten to the legacy
  * badge_layout on Save.
  */
-export function BadgeEditor({
+export function BadgeEditor({ translate, locale, ...rest }: BadgeEditorProps) {
+  return (
+    <I18nProvider translate={translate} locale={locale}>
+      <BadgeEditorInner {...rest} />
+    </I18nProvider>
+  );
+}
+
+/** Split out so the body can consume the context this component provides. */
+function BadgeEditorInner({
   initialDocument,
   onSave,
   debug,
   attendeeProvider,
-}: BadgeEditorProps) {
+}: Omit<BadgeEditorProps, "translate" | "locale">) {
   const [initial] = useState<BadgeDocument>(
     () => initialDocument ?? createSampleDocument(),
   );

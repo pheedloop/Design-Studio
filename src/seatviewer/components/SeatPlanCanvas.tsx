@@ -6,6 +6,8 @@ import { useCanvasControls } from "../../editor/hooks/useCanvasControls";
 import { BackgroundImage } from "../../editor/components/canvas/BackgroundImage";
 import { DxfDrawing } from "../../editor/components/canvas/DxfDrawing";
 import { ViewerElement } from "../../viewer/components/ViewerElement";
+import { I18nProvider } from "../../i18n/context";
+import type { Translate } from "../../i18n/types";
 
 export interface SeatPlanCanvasProps {
   data: FloorPlanData;
@@ -24,6 +26,16 @@ export interface SeatPlanCanvasProps {
   onBackgroundClick?: () => void;
   /** Overlay content positioned within the canvas region (e.g. the table dialog). */
   children?: ReactNode;
+  /**
+   * Resolves this canvas's own UI strings. Omit for built-in English.
+   *
+   * Present because the canvas is published separately and a host may mount it
+   * without SeatPlanViewer. Nested inside SeatPlanViewer, leaving it undefined
+   * inherits that viewer's translator rather than resetting to English.
+   */
+  translate?: Translate;
+  /** BCP-47 tag for number and list formatting. Inherits when omitted. */
+  locale?: string;
 }
 
 /**
@@ -33,6 +45,18 @@ export interface SeatPlanCanvasProps {
  * renderer and the editor's pan/zoom controls.
  */
 export function SeatPlanCanvas({
+  translate,
+  locale,
+  ...rest
+}: SeatPlanCanvasProps) {
+  return (
+    <I18nProvider translate={translate} locale={locale}>
+      <SeatPlanCanvasInner {...rest} />
+    </I18nProvider>
+  );
+}
+
+function SeatPlanCanvasInner({
   data,
   getTableColor,
   highlightedTableCode,
@@ -40,7 +64,7 @@ export function SeatPlanCanvas({
   onTableClick,
   onBackgroundClick,
   children,
-}: SeatPlanCanvasProps) {
+}: Omit<SeatPlanCanvasProps, "translate" | "locale">) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [hoveredTableCode, setHoveredTableCode] = useState<string | null>(null);
   const {

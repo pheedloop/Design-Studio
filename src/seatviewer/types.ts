@@ -1,5 +1,6 @@
 import type { FloorPlanData } from "../types";
 import type { Tier, FeatureKey, FeatureOverride } from "../tiers";
+import type { Translate } from "../i18n/types";
 
 export type SeatPlanMode = "admin" | "attendee";
 
@@ -101,4 +102,21 @@ export interface SeatPlanViewerProps {
 
   tier?: Tier;
   features?: Partial<Record<FeatureKey, FeatureOverride>>;
+
+  /**
+   * Resolves the viewer's own UI strings. Omit for built-in English.
+   *
+   * Keys and their English come from `designStudioStrings`, exported alongside
+   * this component. MUST be referentially stable — wrap it in `useCallback`
+   * keyed on your language and catalog, since display strings are memoized off
+   * its identity. See the README's Internationalization section.
+   */
+  translate?: Translate;
+  /**
+   * BCP-47 tag for number and list formatting. Omit for the runtime default.
+   *
+   * Pass it explicitly wherever the language is not the device's — notably the
+   * mobile webview, where `?lang=` on the URL drives the language.
+   */
+  locale?: string;
 }

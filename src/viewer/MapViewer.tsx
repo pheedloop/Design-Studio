@@ -28,6 +28,8 @@ import { HoverTooltip } from "./components/HoverTooltip";
 import { DirectionsPanel } from "./components/DirectionsPanel";
 import { resolveFeatures } from "../tiers";
 import type { Tier, FeatureKey, FeatureOverride } from "../tiers";
+import { I18nProvider } from "../i18n/context";
+import type { Translate } from "../i18n/types";
 
 interface MapViewerProps {
   data: FloorPlanData;
@@ -52,6 +54,22 @@ interface MapViewerProps {
   reservedBoothSlugs?: Set<string>;
   /** Host content floated over the map, rendered outside `.pl-map-editor` so host styles win. */
   overlay?: ReactNode;
+  /**
+   * Resolves the viewer's own UI strings. Omit for built-in English.
+   *
+   * Keys and their English come from `designStudioStrings`, exported alongside
+   * this component. MUST be referentially stable — wrap it in `useCallback`
+   * keyed on your language and catalog, since display strings are memoized off
+   * its identity. See the README's Internationalization section.
+   */
+  translate?: Translate;
+  /**
+   * BCP-47 tag for number and list formatting. Omit for the runtime default.
+   *
+   * Pass it explicitly wherever the language is not the device's — notably the
+   * mobile webview, where `?lang=` on the URL drives the language.
+   */
+  locale?: string;
 }
 
 const MOBILE_BREAKPOINT = 640;
@@ -65,7 +83,22 @@ function boothItemForSlug(
   return el ? { type: "booth", elementId: el.id, boothSlug } : null;
 }
 
-export function MapViewer({
+/**
+ * Provides the translator, then renders the viewer.
+ *
+ * The split is required rather than stylistic: a component cannot consume a
+ * context it provides in the same render, and the viewer body calls `useT()`
+ * indirectly through useSearch/useDirections and the search placeholder.
+ */
+export function MapViewer({ translate, locale, ...rest }: MapViewerProps) {
+  return (
+    <I18nProvider translate={translate} locale={locale}>
+      <MapViewerInner {...rest} />
+    </I18nProvider>
+  );
+}
+
+function MapViewerInner({
   data,
   exhibitors,
   mode = "attendee",
@@ -78,7 +111,7 @@ export function MapViewer({
   selectedBoothSlugs,
   reservedBoothSlugs,
   overlay,
-}: MapViewerProps) {
+}: Omit<MapViewerProps, "translate" | "locale">) {
   // Wayfinding (Directions) is gated by the usage tier. The viewer hides the
   // feature entirely when it is not enabled (no disabled/trophy state here).
   const featureMap = useMemo(
