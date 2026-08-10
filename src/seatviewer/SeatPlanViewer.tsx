@@ -5,7 +5,7 @@ import { SeatPlanCanvas } from "./components/SeatPlanCanvas";
 import { TicketPanel } from "./components/TicketPanel";
 import { TableDetailPopover } from "./components/TableDetailPopover";
 import { OccupancyLegend } from "./components/OccupancyLegend";
-import { I18nProvider } from "../i18n/context";
+import { I18nProvider } from "../i18n/I18nProvider";
 
 /**
  * Presentational seat plan viewer. Renders a FloorPlanData with per-table

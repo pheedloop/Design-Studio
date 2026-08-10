@@ -6,7 +6,7 @@ import { useCanvasControls } from "../../editor/hooks/useCanvasControls";
 import { BackgroundImage } from "../../editor/components/canvas/BackgroundImage";
 import { DxfDrawing } from "../../editor/components/canvas/DxfDrawing";
 import { ViewerElement } from "../../viewer/components/ViewerElement";
-import { I18nProvider } from "../../i18n/context";
+import { I18nProvider } from "../../i18n/I18nProvider";
 import type { Translate } from "../../i18n/types";
 
 export interface SeatPlanCanvasProps {

@@ -16,50 +16,28 @@
 // whole would ship the editor's several hundred English strings into Charmander's
 // mobile webview. Each surface binds COMMON_STRINGS plus its own slice.
 //
-// The provider INHERITS rather than overrides. An undefined `translate` falls
-// through to an outer provider instead of resetting to English, which is what
-// makes SeatPlanCanvas — separately published, so it needs its own props — safe to
-// nest inside SeatPlanViewer without any conditional-provider gymnastics.
-//
 // With no provider at all, `translate` is undefined and each surface falls back to
 // its own English table. That is the guarantee the whole design rests on: a host
 // that upgrades and passes nothing sees exactly what it saw before.
+//
+// The provider component itself lives in I18nProvider.tsx — this file stays free
+// of components so both can be hot-reloaded independently.
 
-import { createContext, useContext, useMemo, type ReactNode } from "react";
+import { createContext, useContext, useMemo } from "react";
 import { interpolate, resolveEnglishFrom } from "./interpolate";
 import type { Lookup, T, Translate, Vars } from "./types";
 import type { StringKey } from "./strings";
 
-interface I18nValue {
+export interface I18nValue {
   /** undefined = no host translator in scope; surfaces use their English table. */
   translate: Translate | undefined;
   locale: string | undefined;
 }
 
-const I18nContext = createContext<I18nValue>({
+export const I18nContext = createContext<I18nValue>({
   translate: undefined,
   locale: undefined,
 });
-
-export function I18nProvider({
-  translate,
-  locale,
-  children,
-}: {
-  translate?: Translate;
-  locale?: string;
-  children: ReactNode;
-}) {
-  const outer = useContext(I18nContext);
-  const value = useMemo<I18nValue>(
-    () => ({
-      translate: translate ?? outer.translate,
-      locale: locale ?? outer.locale,
-    }),
-    [translate, locale, outer],
-  );
-  return <I18nContext.Provider value={value}>{children}</I18nContext.Provider>;
-}
 
 /**
  * BCP-47 tag for Intl formatting (see format.ts). undefined = runtime default.
