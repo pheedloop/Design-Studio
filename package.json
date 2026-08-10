@@ -22,6 +22,10 @@
       "import": "./dist/seatviewer.js",
       "types": "./dist/seatviewer/index.d.ts"
     },
+    "./i18n": {
+      "import": "./dist/i18n.js",
+      "types": "./dist/i18n/index.d.ts"
+    },
     "./style.css": "./dist/style.css"
   },
   "typesVersions": {
@@ -34,6 +38,9 @@
       ],
       "seatviewer": [
         "./dist/seatviewer/index.d.ts"
+      ],
+      "i18n": [
+        "./dist/i18n/index.d.ts"
       ]
     }
   },

@@ -122,6 +122,9 @@ export default defineConfig({
         editor: resolve(__dirname, "src/editor/index.ts"),
         viewer: resolve(__dirname, "src/viewer/index.ts"),
         seatviewer: resolve(__dirname, "src/seatviewer/index.ts"),
+        // Merged English manifest — imported by host BUILD steps to seed a catalog,
+        // never at runtime. See src/i18n/index.ts.
+        i18n: resolve(__dirname, "src/i18n/index.ts"),
         // Style-only entry — produces dist/style.css consumed by the host app
         style: resolve(__dirname, "src/lib-style.ts"),
       },
