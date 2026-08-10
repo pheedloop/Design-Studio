@@ -12,7 +12,6 @@ export const VIEWER_STRINGS = {
   "viewer.directions.to": "To",
   "viewer.directions.toPlaceholder": "Where do you want to go?",
   "viewer.getDirections": "Get directions to here",
-  "viewer.legend.title": "Legend",
   "viewer.legend.unlabeled": "Unlabeled",
   "viewer.search.boothsOnly": "Search booths",
   "viewer.search.empty": "Search",

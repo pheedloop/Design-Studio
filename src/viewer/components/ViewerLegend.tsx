@@ -40,7 +40,7 @@ export function ViewerLegend({ legend }: ViewerLegendProps) {
           onClick={() => setCollapsed((c) => !c)}
         >
           <span className="text-xs font-medium text-gray-600">
-            {t("viewer.legend.title")}
+            {t("common.legend")}
           </span>
           {collapsed
             ? <PiCaretUp size={11} className="text-gray-400" />

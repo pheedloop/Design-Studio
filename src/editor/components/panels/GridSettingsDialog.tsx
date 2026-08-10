@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Button, Dialog, Slider, SectionLabel, NumberInput, ColorSwatch } from "../ui";
+import { useT } from "../../i18n";
 
 export interface GridSettings {
   showGrid: boolean;
@@ -16,22 +17,23 @@ interface GridSettingsDialogProps {
 }
 
 export function GridSettingsDialog({ settings, onSave, onClose }: GridSettingsDialogProps) {
+  const t = useT();
   const [local, setLocal] = useState<GridSettings>({ ...settings });
 
   return (
     <Dialog
-      title="Grid Settings"
+      title={t("editor.dialog.gridSettings")}
       onClose={onClose}
       footer={
         <>
-          <Button variant="outline" color="neutral" onClick={onClose}>Cancel</Button>
-          <Button variant="solid" color="primary" onClick={() => { onSave(local); onClose(); }}>Apply</Button>
+          <Button variant="outline" color="neutral" onClick={onClose}>{t("editor.action.cancel")}</Button>
+          <Button variant="solid" color="primary" onClick={() => { onSave(local); onClose(); }}>{t("editor.action.apply")}</Button>
         </>
       }
     >
       <div className="flex flex-col gap-4 p-4">
         <div className="flex flex-col gap-1.5">
-          <SectionLabel>Spacing (px)</SectionLabel>
+          <SectionLabel>{t("editor.field.spacingPx")}</SectionLabel>
           <NumberInput
             value={local.gridSpacing}
             onChange={(v) => setLocal((s) => ({ ...s, gridSpacing: Math.max(5, v) }))}
@@ -39,7 +41,7 @@ export function GridSettingsDialog({ settings, onSave, onClose }: GridSettingsDi
         </div>
 
         <div className="flex flex-col gap-1.5">
-          <SectionLabel>Color</SectionLabel>
+          <SectionLabel>{t("editor.field.color")}</SectionLabel>
           <ColorSwatch
             label=""
             value={local.gridColor}
@@ -48,7 +50,7 @@ export function GridSettingsDialog({ settings, onSave, onClose }: GridSettingsDi
         </div>
 
         <div className="flex flex-col gap-1.5">
-          <SectionLabel>Opacity</SectionLabel>
+          <SectionLabel>{t("editor.field.opacity")}</SectionLabel>
           <div className="flex items-center gap-2">
             <Slider
               min={5}

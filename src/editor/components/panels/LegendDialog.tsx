@@ -9,6 +9,7 @@ import {
   PiTrash,
   PiPlus,
 } from "react-icons/pi";
+import { useT } from "../../i18n";
 
 interface LegendDialogProps {
   legend: Legend;
@@ -17,6 +18,7 @@ interface LegendDialogProps {
 }
 
 export function LegendDialog({ legend, onSave, onClose }: LegendDialogProps) {
+  const t = useT();
   const [local, setLocal] = useState<Legend>(() => ({
     ...legend,
     entries: legend.entries.map((e) => ({ ...e })),
@@ -71,13 +73,13 @@ export function LegendDialog({ legend, onSave, onClose }: LegendDialogProps) {
 
   return (
     <Dialog
-      title="Legend"
+      title={t("common.legend")}
       onClose={handleDone}
       width="440px"
       maxHeight="80vh"
       footer={
         <Button variant="solid" color="primary" onClick={handleDone}>
-          Done
+          {t("editor.action.done")}
         </Button>
       }
     >
@@ -92,7 +94,7 @@ export function LegendDialog({ legend, onSave, onClose }: LegendDialogProps) {
             }
             className="cursor-pointer"
           />
-          <span className="text-xs text-gray-700">Show legend on map</span>
+          <span className="text-xs text-gray-700">{t("editor.legend.showOnMap")}</span>
         </label>
 
         {/* Entry list */}
@@ -111,7 +113,7 @@ export function LegendDialog({ legend, onSave, onClose }: LegendDialogProps) {
                     onChange={(e) =>
                       updateEntry(entry.id, { label: e.target.value })
                     }
-                    placeholder="Label…"
+                    placeholder={t("editor.legend.labelPlaceholder")}
                   />
                 </div>
                 <button
@@ -119,7 +121,7 @@ export function LegendDialog({ legend, onSave, onClose }: LegendDialogProps) {
                   onClick={() =>
                     updateEntry(entry.id, { visible: !entry.visible })
                   }
-                  title={entry.visible ? "Hide entry" : "Show entry"}
+                  title={entry.visible ? t("editor.legend.hideEntry") : t("editor.legend.showEntry")}
                 >
                   {entry.visible ? (
                     <PiEye size={15} />
@@ -131,7 +133,7 @@ export function LegendDialog({ legend, onSave, onClose }: LegendDialogProps) {
                   className="p-1 rounded text-gray-400 hover:text-gray-600 transition-colors cursor-pointer disabled:opacity-30 disabled:cursor-default"
                   onClick={() => moveEntry(entry.id, "up")}
                   disabled={idx === 0}
-                  title="Move up"
+                  title={t("editor.action.moveUp")}
                 >
                   <PiArrowUp size={13} />
                 </button>
@@ -139,14 +141,14 @@ export function LegendDialog({ legend, onSave, onClose }: LegendDialogProps) {
                   className="p-1 rounded text-gray-400 hover:text-gray-600 transition-colors cursor-pointer disabled:opacity-30 disabled:cursor-default"
                   onClick={() => moveEntry(entry.id, "down")}
                   disabled={idx === local.entries.length - 1}
-                  title="Move down"
+                  title={t("editor.action.moveDown")}
                 >
                   <PiArrowDown size={13} />
                 </button>
                 <button
                   className="p-1 rounded text-gray-400 hover:text-red-500 transition-colors cursor-pointer"
                   onClick={() => removeEntry(entry.id)}
-                  title="Remove entry"
+                  title={t("editor.legend.removeEntry")}
                 >
                   <PiTrash size={14} />
                 </button>
@@ -157,7 +159,7 @@ export function LegendDialog({ legend, onSave, onClose }: LegendDialogProps) {
 
         {local.entries.length === 0 && (
           <p className="text-xs text-gray-400 text-center py-2">
-            No entries yet.
+            {t("editor.legend.empty")}
           </p>
         )}
 
@@ -167,7 +169,7 @@ export function LegendDialog({ legend, onSave, onClose }: LegendDialogProps) {
           onClick={addEntry}
         >
           <PiPlus size={13} />
-          Add entry
+          {t("editor.legend.addEntry")}
         </button>
       </div>
     </Dialog>

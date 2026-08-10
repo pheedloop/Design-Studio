@@ -7,7 +7,7 @@ import { pseudoTranslate } from "./useDemoLocale";
 
 describe("pseudoTranslate", () => {
   it("accents and brackets a plain string", () => {
-    const out = pseudoTranslate("viewer.legend.title");
+    const out = pseudoTranslate("common.legend");
     expect(out.startsWith("[")).toBe(true);
     expect(out).toContain("Łéğéñð");
   });

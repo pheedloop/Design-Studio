@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Button, Dialog, NumberInput, SectionLabel } from "../ui";
+import { useT } from "../../i18n";
 
 interface ArrangeGridDialogProps {
   elementCount: number;
@@ -8,6 +9,7 @@ interface ArrangeGridDialogProps {
 }
 
 export function ArrangeGridDialog({ elementCount, onConfirm, onClose }: ArrangeGridDialogProps) {
+  const t = useT();
   const defaultCols = Math.ceil(Math.sqrt(elementCount));
   const [cols, setCols] = useState(defaultCols);
   const [gapX, setGapX] = useState(10);
@@ -17,13 +19,13 @@ export function ArrangeGridDialog({ elementCount, onConfirm, onClose }: ArrangeG
 
   return (
     <Dialog
-      title="Arrange as Grid"
+      title={t("editor.dialog.arrangeGrid")}
       onClose={onClose}
       footer={
         <>
-          <Button variant="outline" color="neutral" onClick={onClose}>Cancel</Button>
+          <Button variant="outline" color="neutral" onClick={onClose}>{t("editor.action.cancel")}</Button>
           <Button variant="solid" color="primary" onClick={() => { onConfirm(cols, gapX, gapY); onClose(); }}>
-            Apply
+            {t("editor.action.apply")}
           </Button>
         </>
       }
@@ -33,14 +35,14 @@ export function ArrangeGridDialog({ elementCount, onConfirm, onClose }: ArrangeG
 
         <div className="flex gap-4">
           <div className="flex flex-col gap-1.5 flex-1">
-            <SectionLabel>Columns</SectionLabel>
+            <SectionLabel>{t("editor.field.columns")}</SectionLabel>
             <NumberInput
               value={cols}
               onChange={(v) => setCols(Math.max(1, Math.min(elementCount, Math.round(v))))}
             />
           </div>
           <div className="flex flex-col gap-1.5 flex-1">
-            <SectionLabel>Rows (computed)</SectionLabel>
+            <SectionLabel>{t("editor.field.rowsComputed")}</SectionLabel>
             <div className="flex items-center h-[30px] px-2 text-xs text-gray-400 bg-gray-50 border border-gray-200 rounded">
               {rows}
             </div>
@@ -49,11 +51,11 @@ export function ArrangeGridDialog({ elementCount, onConfirm, onClose }: ArrangeG
 
         <div className="flex gap-4">
           <div className="flex flex-col gap-1.5 flex-1">
-            <SectionLabel>Horizontal gap (px)</SectionLabel>
+            <SectionLabel>{t("editor.field.horizontalGapPx")}</SectionLabel>
             <NumberInput value={gapX} onChange={(v) => setGapX(Math.max(0, v))} />
           </div>
           <div className="flex flex-col gap-1.5 flex-1">
-            <SectionLabel>Vertical gap (px)</SectionLabel>
+            <SectionLabel>{t("editor.field.verticalGapPx")}</SectionLabel>
             <NumberInput value={gapY} onChange={(v) => setGapY(Math.max(0, v))} />
           </div>
         </div>

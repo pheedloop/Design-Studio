@@ -7,13 +7,13 @@ import type { Translate, Vars } from "./types";
 // See translate.test.ts for why the fixtures are widened past StringKey.
 type LooseT = (key: string, vars?: Vars) => string;
 
-const STRINGS = { "viewer.legend.title": "Legend" };
+const STRINGS = { "common.legend": "Legend" };
 const { useT } = createSurfaceI18n(STRINGS);
 const useLooseT = useT as unknown as () => LooseT;
 
 function Label() {
   const t = useLooseT();
-  return <span data-testid="label">{t("viewer.legend.title")}</span>;
+  return <span data-testid="label">{t("common.legend")}</span>;
 }
 
 function Locale() {
@@ -48,7 +48,7 @@ describe("provider", () => {
         <Label />
       </I18nProvider>,
     );
-    expect(label()).toBe("SHOUT:viewer.legend.title");
+    expect(label()).toBe("SHOUT:common.legend");
   });
 
   it("inherits through a nested provider that passes no translator", () => {
@@ -60,7 +60,7 @@ describe("provider", () => {
         </I18nProvider>
       </I18nProvider>,
     );
-    expect(label()).toBe("SHOUT:viewer.legend.title");
+    expect(label()).toBe("SHOUT:common.legend");
   });
 
   it("lets a nested provider override with its own translator", () => {
@@ -71,7 +71,7 @@ describe("provider", () => {
         </I18nProvider>
       </I18nProvider>,
     );
-    expect(label()).toBe("whisper:viewer.legend.title");
+    expect(label()).toBe("whisper:common.legend");
   });
 
   it("inherits locale independently of translate", () => {
@@ -149,13 +149,13 @@ describe("t identity", () => {
         <Label />
       </I18nProvider>,
     );
-    expect(label()).toBe("SHOUT:viewer.legend.title");
+    expect(label()).toBe("SHOUT:common.legend");
 
     rerender(
       <I18nProvider translate={whisper}>
         <Label />
       </I18nProvider>,
     );
-    expect(label()).toBe("whisper:viewer.legend.title");
+    expect(label()).toBe("whisper:common.legend");
   });
 });

@@ -1,6 +1,7 @@
 import type { TypeStyles, ElementTypeDefaults } from "../../../types";
 import { Dialog } from "../ui";
 import { TypeDefaultsPanel } from "./TypeDefaultsPanel";
+import { useT } from "../../i18n";
 
 interface TypeDefaultsDialogProps {
   typeStyles: TypeStyles;
@@ -11,11 +12,12 @@ interface TypeDefaultsDialogProps {
 }
 
 export function TypeDefaultsDialog({ typeStyles, typeKeys, onUpdateTypeStyles, onClose }: TypeDefaultsDialogProps) {
+  const t = useT();
   return (
-    <Dialog title="Element Defaults" onClose={onClose} width="400px" maxHeight="80vh">
+    <Dialog title={t("editor.dialog.elementDefaults")} onClose={onClose} width="400px" maxHeight="80vh">
       <div className="overflow-y-auto flex-1 p-4 flex flex-col gap-3">
         <p className="text-xs text-gray-500 leading-snug">
-          Style applied to new elements when placed on the canvas.
+          {t("editor.dialog.elementDefaultsHint")}
         </p>
         <TypeDefaultsPanel
           typeStyles={typeStyles}
