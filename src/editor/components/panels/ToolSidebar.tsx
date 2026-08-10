@@ -124,10 +124,6 @@ function SidebarHeader({
     }
   }, [editing]);
 
-  useEffect(() => {
-    if (!editing) setDraft(mapName);
-  }, [mapName, editing]);
-
   const commit = () => {
     const trimmed = draft.trim();
     if (trimmed) onMapNameChange(trimmed);

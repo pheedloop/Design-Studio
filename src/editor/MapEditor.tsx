@@ -303,11 +303,9 @@ function MapEditorInner({
   });
   const [snapToObjects, setSnapToObjects] = useState(true);
   const [showTransformControls, setShowTransformControls] = useState(true);
-  const [overlappingElementIds, setOverlappingElementIds] = useState<
-    Set<string>
-  >(new Set());
-
-  useEffect(() => {
+  // Derived from the elements, so it is computed rather than stored — an effect
+  // here would render once with a stale set before correcting itself.
+  const overlappingElementIds = useMemo(() => {
     const contentEls = data.elements.filter(
       (el) => (el.layer ?? ELEMENT_TYPE_TO_LAYER[el.type]) === "content",
     );
@@ -327,7 +325,7 @@ function MapEditorInner({
         }
       }
     }
-    setOverlappingElementIds(ids);
+    return ids;
   }, [data.elements]);
   const [walkableGridOpacity, setWalkableGridOpacity] = useState(0.3);
   const [showRulers, setShowRulers] = useState(false);

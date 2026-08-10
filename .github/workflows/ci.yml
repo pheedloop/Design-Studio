@@ -1,8 +1,5 @@
 name: CI
 
-# Lint is omitted: it reports 3 pre-existing errors on develop, and a permanently
-# red gate teaches people to ignore it.
-
 on:
   pull_request:
   push:
@@ -26,6 +23,9 @@ jobs:
 
       - name: Typecheck
         run: npx tsc -b --noEmit
+
+      - name: Lint
+        run: npx eslint . --max-warnings=0
 
       - name: Test
         run: npm test

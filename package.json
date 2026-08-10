@@ -100,6 +100,7 @@
   "lint-staged": {
     "*.{ts,tsx}": [
       "bash -c 'tsc -b --noEmit'",
+      "./scripts/with-node.sh npx eslint --max-warnings=0",
       "bash -c './scripts/with-node.sh npx vitest run'"
     ]
   }
