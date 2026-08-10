@@ -1,6 +1,7 @@
 import { useState } from "react";
 import type { Legend } from "../../types";
 import { PiCaretUp, PiCaretDown } from "react-icons/pi";
+import { useT } from "../i18n";
 
 interface ViewerLegendProps {
   legend: Legend;
@@ -8,6 +9,7 @@ interface ViewerLegendProps {
 
 export function ViewerLegend({ legend }: ViewerLegendProps) {
   const [collapsed, setCollapsed] = useState(false);
+  const t = useT();
 
   const visibleEntries = legend.entries.filter((e) => e.visible);
 
@@ -25,7 +27,10 @@ export function ViewerLegend({ legend }: ViewerLegendProps) {
                   style={{ width: 12, height: 12, background: entry.color }}
                 />
                 <span className="text-xs text-gray-700 leading-none whitespace-nowrap">
-                  {entry.label || <em className="text-gray-400">Unlabeled</em>}
+                  {/* entry.label is author-supplied data; only the fallback is ours. */}
+                  {entry.label || (
+                    <em className="text-gray-400">{t("viewer.legend.unlabeled")}</em>
+                  )}
                 </span>
               </div>
             ))}
@@ -35,7 +40,9 @@ export function ViewerLegend({ legend }: ViewerLegendProps) {
           className="flex items-center justify-between gap-4 px-3 py-1.5 w-full cursor-pointer hover:bg-gray-50 transition-colors"
           onClick={() => setCollapsed((c) => !c)}
         >
-          <span className="text-xs font-medium text-gray-600">Legend</span>
+          <span className="text-xs font-medium text-gray-600">
+            {t("viewer.legend.title")}
+          </span>
           {collapsed
             ? <PiCaretUp size={11} className="text-gray-400" />
             : <PiCaretDown size={11} className="text-gray-400" />}
