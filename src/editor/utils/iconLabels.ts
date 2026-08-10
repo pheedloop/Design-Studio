@@ -29,7 +29,7 @@ export const ICON_LABEL: Record<string, { labelKey: StringKey }> = {
   PiPrinter: { labelKey: "editor.icon.printer" },
   PiTicket: { labelKey: "editor.icon.ticket" },
   PiGift: { labelKey: "editor.icon.gift" },
-  PiArrowRight: { labelKey: "editor.icon.arrowRight" },
+  PiArrowRight: { labelKey: "editor.tool.arrow" },
   PiMapPin: { labelKey: "editor.icon.mapPin" },
   PiStar: { labelKey: "editor.icon.star" },
   PiFlag: { labelKey: "editor.icon.flag" },

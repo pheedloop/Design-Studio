@@ -4,7 +4,7 @@ import { useClickPlaceInteraction } from "./hooks/useClickPlaceInteraction";
 
 export const textTool: ToolDefinition<null> = {
   id: "text",
-  label: "Text",
+  labelKey: "editor.tool.text",
   shortcut: "T",
   icon: <PiTextT size={20} />,
   cursor: "crosshair",

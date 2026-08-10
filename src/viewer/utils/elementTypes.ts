@@ -16,7 +16,7 @@ export const TYPE_BADGE: Record<
   { labelKey: StringKey; className: string }
 > = {
   // Booth reuses the full name — unlike the other two it needs no abbreviation.
-  booth: { labelKey: "viewer.type.booth", className: "bg-gray-100 text-gray-500" },
+  booth: { labelKey: "common.type.booth", className: "bg-gray-100 text-gray-500" },
   session_area: {
     labelKey: "viewer.type.sessionShort",
     className: "bg-green-100 text-green-700",
@@ -34,9 +34,9 @@ export const TYPE_BADGE: Record<
  * a Record are invisible to scripts/verify-strings.ts and would report as dead.
  */
 export const TYPE_NAME: Record<ViewerElementType, { labelKey: StringKey }> = {
-  booth: { labelKey: "viewer.type.booth" },
+  booth: { labelKey: "common.type.booth" },
   session_area: { labelKey: "viewer.type.sessionArea" },
-  meeting_room: { labelKey: "viewer.type.meetingRoom" },
+  meeting_room: { labelKey: "common.type.meetingRoom" },
 };
 
 /**

@@ -18,6 +18,8 @@ import { IconPicker } from "./IconPicker";
 import { getIconEntry } from "../../utils/iconRegistry";
 import type { PlacementRecords } from "../../hooks/usePlacementRecords";
 import type { PlacementCategory } from "../../placement/types";
+import type { StringKey } from "../../../i18n/strings";
+import { useT } from "../../i18n";
 import { PlacementPanel } from "./PlacementPanel";
 import type { AutoArrangeRecord } from "./PlacementPanel";
 
@@ -27,7 +29,7 @@ import type { AutoArrangeRecord } from "./PlacementPanel";
 
 interface ToolDef<T extends string> {
   id: T;
-  label: string;
+  labelKey: StringKey;
   shortcut?: string;
   icon: React.ReactNode;
 }
@@ -38,21 +40,21 @@ interface ToolDef<T extends string> {
 
 const handDef: ToolDef<ActiveTool> = {
   id: "hand",
-  label: "Hand (pan)",
+  labelKey: "editor.tool.hand",
   shortcut: "H",
   icon: <PiHandFill size={16} />,
 };
 
 const selectDef: ToolDef<ActiveTool> = {
   id: "select",
-  label: "Select",
+  labelKey: "editor.tool.select",
   shortcut: "V",
   icon: <PiCursorFill size={16} />,
 };
 
 const toolDefs: ToolDef<ActiveTool>[] = TOOL_REGISTRY.map((t) => ({
   id: t.id as ActiveTool,
-  label: t.label,
+  labelKey: t.labelKey,
   shortcut: t.shortcut,
   icon: t.icon,
 }));
@@ -60,25 +62,25 @@ const toolDefs: ToolDef<ActiveTool>[] = TOOL_REGISTRY.map((t) => ({
 const pathingToolDefs: ToolDef<PathingTool>[] = [
   {
     id: "select",
-    label: "Select",
+    labelKey: "editor.tool.select",
     shortcut: "V",
     icon: <PiCursorFill size={16} />,
   },
   {
     id: "paintWalkable",
-    label: "Paint Walkable",
+    labelKey: "editor.tool.paintWalkable",
     shortcut: "W",
     icon: <PiPaintBrush size={16} />,
   },
   {
     id: "paintImpassable",
-    label: "Erase Impassable",
+    labelKey: "editor.tool.eraseImpassable",
     shortcut: "E",
     icon: <PiEraser size={16} />,
   },
   {
     id: "rectFill",
-    label: "Rectangle Fill",
+    labelKey: "editor.tool.rectangleFill",
     shortcut: "R",
     icon: <PiSquare size={16} />,
   },
@@ -216,6 +218,8 @@ function ToolRow<T extends string>({
   /** When true, show the premium trophy badge (implies disabled styling). */
   locked?: boolean;
 }) {
+  const t = useT();
+
   return (
     <button
       type="button"
@@ -232,7 +236,7 @@ function ToolRow<T extends string>({
       ].join(" ")}
     >
       <span className="shrink-0 flex items-center w-4">{tool.icon}</span>
-      <span className="flex-1 text-left">{tool.label}</span>
+      <span className="flex-1 text-left">{t(tool.labelKey)}</span>
       {locked ? (
         <TrophyIcon size={14} />
       ) : (

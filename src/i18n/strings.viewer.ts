@@ -25,12 +25,8 @@ export const VIEWER_STRINGS = {
   "viewer.sheet.expand": "Expand list",
   "viewer.tab.exhibitors": "Exhibitors",
   "viewer.tab.meetingRooms": "Meeting Rooms",
-  // The mobile sheet is width-constrained, so it keeps a short form of the same
-  // tab. Distinct English, therefore a distinct key.
   "viewer.tab.rooms": "Rooms",
   "viewer.tab.sessions": "Sessions",
-  "viewer.type.booth": "Booth",
-  "viewer.type.meetingRoom": "Meeting Room",
   "viewer.type.roomShort": "Room",
   "viewer.type.sessionArea": "Session Area",
   "viewer.type.sessionShort": "Session",

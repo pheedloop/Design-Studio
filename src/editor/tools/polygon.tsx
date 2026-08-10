@@ -7,7 +7,7 @@ import { PolygonVertexHandles } from "./handles/PolygonVertexHandles";
 
 export const polygonTool: ToolDefinition<PolygonToolState> = {
   id: "polygon",
-  label: "Polygon",
+  labelKey: "editor.tool.polygon",
   shortcut: "P",
   icon: <PiPolygon size={20} />,
   cursor: "crosshair",

@@ -6,7 +6,7 @@ import { MeasurePreview } from "./previews/MeasurePreview";
 
 export const measureTool: ToolDefinition<MeasureState> = {
   id: "measure",
-  label: "Measure",
+  labelKey: "editor.tool.measure",
   shortcut: "M",
   icon: <PiRuler size={20} />,
   cursor: "crosshair",

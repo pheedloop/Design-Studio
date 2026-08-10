@@ -6,7 +6,7 @@ import { RectPreview } from "./previews/RectPreview";
 
 export const tableTool: ToolDefinition<DrawingRect | null> = {
   id: "table",
-  label: "Table",
+  labelKey: "editor.tool.table",
   shortcut: "T",
   icon: <PiArmchair size={20} />,
   cursor: "crosshair",
