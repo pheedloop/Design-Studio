@@ -3,7 +3,7 @@
 // the merged manifest is fine here and nowhere else.
 
 import { useCallback, useState } from "react";
-import { STRINGS, type Translate, type Vars } from "../i18n";
+import { STRINGS, interpolate, type Translate, type Vars } from "../i18n";
 import { pseudoLocalize } from "./pseudo";
 
 export type DemoLocale = "en" | "pseudo" | "keys";
@@ -31,6 +31,18 @@ function englishFor(key: string, vars?: Vars): string {
   return table[key] ?? key;
 }
 
+/**
+ * Pseudo-localize a key.
+ *
+ * The interpolation is the library's, applied here rather than by it: a host
+ * translator returns display-ready text, so whatever this gives back is what
+ * renders. Transform the template first, then substitute, or every variable
+ * shows up on screen as a literal {{placeholder}}.
+ */
+export function pseudoTranslate(key: string, vars?: Vars): string {
+  return interpolate(pseudoLocalize(englishFor(key, vars)), vars);
+}
+
 export function useDemoLocale() {
   const [locale, setLocaleState] = useState<DemoLocale>(readStored);
 
@@ -39,10 +51,7 @@ export function useDemoLocale() {
     localStorage.setItem(STORAGE_KEY, next);
   }, []);
 
-  const pseudoTranslate = useCallback<Translate>(
-    (key, vars) => pseudoLocalize(englishFor(key, vars)),
-    [],
-  );
+  const pseudo = useCallback<Translate>((key, vars) => pseudoTranslate(key, vars), []);
 
   const keysTranslate = useCallback<Translate>((key) => `⟦${key}⟧`, []);
 
@@ -50,7 +59,7 @@ export function useDemoLocale() {
   // hits before it wires anything up.
   const translate =
     locale === "pseudo"
-      ? pseudoTranslate
+      ? pseudo
       : locale === "keys"
         ? keysTranslate
         : undefined;
