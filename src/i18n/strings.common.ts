@@ -5,6 +5,7 @@
 export const COMMON_STRINGS = {
   "common.area": "{{value}} sq {{unit}}",
   "common.labelWithCount": "{{label}} ({{count}})",
+  "common.loading": "Loading…",
   "common.measurement": "{{value}} {{unit}}",
   "common.unit.ft": "ft",
   "common.unit.m": "m",

@@ -6,6 +6,7 @@ import { TicketPanel } from "./components/TicketPanel";
 import { TableDetailPopover } from "./components/TableDetailPopover";
 import { OccupancyLegend } from "./components/OccupancyLegend";
 import { I18nProvider } from "../i18n/I18nProvider";
+import { useT } from "./i18n";
 
 /**
  * Presentational seat plan viewer. Renders a FloorPlanData with per-table
@@ -47,6 +48,8 @@ function SeatPlanViewerInner(props: Omit<SeatPlanViewerProps, "translate" | "loc
     hideAttendeeDetails,
     lockSeatSelectionPage,
   } = props;
+
+  const t = useT();
 
   const [selectedCodes, setSelectedCodes] = useState<ReadonlySet<string>>(new Set());
   const [openTableCode, setOpenTableCode] = useState<string | null>(null);
@@ -173,42 +176,82 @@ function SeatPlanViewerInner(props: Omit<SeatPlanViewerProps, "translate" | "loc
 
   // Assign CTA (label/disabled/hint) — centralized so admin & attendee read correctly.
   const assignCta = useMemo((): { label: string; disabled: boolean; hint?: string } => {
-    if (!openTable) return { label: "Assign", disabled: true };
-    if (openTable.isLocked) return { label: "Table locked", disabled: true, hint: "This table isn’t open for selection." };
-    if (openTable.occupancy >= openTable.seatCount) return { label: "Table full", disabled: true, hint: "No seats left at this table." };
+    if (!openTable) return { label: t("seatviewer.assign.cta"), disabled: true };
+    if (openTable.isLocked)
+      return {
+        label: t("seatviewer.assign.tableLocked"),
+        disabled: true,
+        hint: t("seatviewer.assign.tableLockedHint"),
+      };
+    if (openTable.occupancy >= openTable.seatCount)
+      return {
+        label: t("seatviewer.assign.tableFull"),
+        disabled: true,
+        hint: t("seatviewer.assign.tableFullHint"),
+      };
 
     if (mode === "admin") {
       if (assignableCodes.length > 0) {
         const extra = selectedCodes.size - assignableCodes.length;
         return {
-          label: `Assign ${assignableCodes.length} selected`,
+          label: t("seatviewer.assign.selectedCount", { count: assignableCodes.length }),
           disabled: false,
-          hint: extra > 0 ? `${extra} of ${selectedCodes.size} selected aren’t eligible for this table.` : undefined,
+          hint:
+            extra > 0
+              ? t("seatviewer.assign.someIneligible", {
+                  count: extra,
+                  total: selectedCodes.size,
+                })
+              : undefined,
         };
       }
       return {
-        label: "Select eligible ticket holders",
+        label: t("seatviewer.assign.selectEligible"),
         disabled: true,
-        hint: selectedCodes.size > 0 ? "None of the selected are eligible for this table." : undefined,
+        hint:
+          selectedCodes.size > 0 ? t("seatviewer.assign.noneEligible") : undefined,
       };
     }
 
     // attendee — single select
     const code = [...selectedCodes][0];
     const ticket = code ? ticketByCode.get(code) : undefined;
-    if (!ticket) return { label: "Select a ticket first", disabled: true, hint: "Choose one of your tickets above." };
+    if (!ticket)
+      return {
+        label: t("seatviewer.assign.selectTicket"),
+        disabled: true,
+        hint: t("seatviewer.assign.selectTicketHint"),
+      };
     if (ticket.tableCode) {
       const at = tableNameByCode.get(ticket.tableCode) ?? ticket.tableCode;
-      return { label: "Ticket already seated", disabled: true, hint: `${ticket.attendee.firstName} is at ${at}. Clear it to move.` };
+      return {
+        label: t("seatviewer.assign.alreadySeated"),
+        disabled: true,
+        hint: t("seatviewer.assign.alreadySeatedHint", {
+          name: ticket.attendee.firstName,
+          table: at,
+        }),
+      };
     }
     if (!openTable.eligibleTicketCodes.includes(ticket.ticketCode)) {
-      return { label: "Not eligible", disabled: true, hint: `${ticket.ticketName} can’t be seated at this table.` };
+      return {
+        label: t("seatviewer.assign.notEligible"),
+        disabled: true,
+        hint: t("seatviewer.assign.notEligibleHint", { ticket: ticket.ticketName }),
+      };
     }
-    if (openTable.tags.length > 0 && !ticket.attendeeTags.some((t) => openTable.tags.includes(t))) {
-      return { label: "Reserved table", disabled: true, hint: "This table is reserved for a specific group." };
+    if (openTable.tags.length > 0 && !ticket.attendeeTags.some((tag) => openTable.tags.includes(tag))) {
+      return {
+        label: t("seatviewer.assign.reserved"),
+        disabled: true,
+        hint: t("seatviewer.assign.reservedHint"),
+      };
     }
-    return { label: `Assign ${ticket.attendee.firstName} here`, disabled: false };
-  }, [openTable, mode, assignableCodes, selectedCodes, ticketByCode, tableNameByCode]);
+    return {
+      label: t("seatviewer.assign.assignNamed", { name: ticket.attendee.firstName }),
+      disabled: false,
+    };
+  }, [openTable, mode, assignableCodes, selectedCodes, ticketByCode, tableNameByCode, t]);
 
   return (
     <div
