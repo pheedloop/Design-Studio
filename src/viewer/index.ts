@@ -19,4 +19,5 @@ export type { FloorPlanData, FloorPlanElement } from "../types";
 // re-exporting it here would ship every other surface's English with this one.
 // Host build steps that want all of it import "@pheedloop/design-studio/i18n".
 export { designStudioStrings, createTranslate, defaultTranslate, resolveEnglish } from "./i18n";
-export type { Translate, Vars, Lookup, T, StringKey } from "../i18n";
+export type { Translate, Vars, Lookup, T } from "../i18n/types";
+export type { StringKey } from "../i18n/strings";

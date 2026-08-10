@@ -160,7 +160,7 @@ function walk(dir: string): void {
     // literal, and Rollup does not tree-shake object properties, so importing it
     // anywhere under a surface ships every other surface's English along with it.
     // Type-only imports are erased, so they are fine. src/demo never ships.
-    const importsMerged = /^(?!.*\bimport type\b).*from ["'][^"']*i18n\/strings["']/m.test(text);
+    const importsMerged = /^(?!.*\b(?:import|export) type\b).*from ["'][^"']*i18n\/strings["']/m.test(text);
     if (importsMerged && rel !== "src/i18n/index.ts" && !rel.startsWith("src/demo/")) {
       fail(`${rel} imports the merged manifest for its value — use this surface's slice instead`);
     }
@@ -221,15 +221,30 @@ function checkDecls(dir: string): void {
     const text = readFileSync(path, "utf8");
     for (const match of text.matchAll(/from ['"](\.[^'"]*)['"]/g)) {
       const target = resolve(dir, match[1]);
-      const exists = [".d.ts", "/index.d.ts", ""].some((ext) => {
+      const isFile = (p: string) => {
         try {
-          return statSync(target + ext).isFile();
+          return statSync(p).isFile();
         } catch {
           return false;
         }
-      });
-      if (!exists) {
+      };
+      const asDeclaration = isFile(`${target}.d.ts`);
+      const asDirectory = isFile(join(target, "index.d.ts"));
+
+      if (!asDeclaration && !asDirectory) {
         fail(`${relative(ROOT, path)} imports "${match[1]}", which was never emitted`);
+        continue;
+      }
+      // A bundle entry named `x` sits at dist/x.js while its declarations sit at
+      // dist/x/. A relative "./x" then resolves to the JS file, finds no adjacent
+      // x.d.ts, and degrades the whole import to `any` — silently, because
+      // skipLibCheck hides it. Import the specific declaration file instead.
+      if (!asDeclaration && asDirectory && isFile(`${target}.js`)) {
+        fail(
+          `${relative(ROOT, path)} imports "${match[1]}", which is ambiguous — ` +
+            `${relative(ROOT, `${target}.js`)} shadows ${relative(ROOT, join(target, "index.d.ts"))}, ` +
+            `so the types silently resolve to any. Import the declaration file directly.`,
+        );
       }
     }
   }
