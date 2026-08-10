@@ -6,4 +6,4 @@ export { STRINGS } from "./strings";
 export type { ManifestKey, StringKey } from "./strings";
 export { interpolate } from "./interpolate";
 export { formatList, formatNumber } from "./format";
-export type { Lookup, T, Translate, Vars } from "./types";
+export type { T, Translate, Vars } from "./types";

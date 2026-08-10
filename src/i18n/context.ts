@@ -1,6 +1,6 @@
 import { createContext, useContext, useMemo } from "react";
 import { interpolate, resolveEnglishFrom } from "./interpolate";
-import type { Lookup, T, Translate, Vars } from "./types";
+import type { T, Translate, Vars } from "./types";
 import type { StringKey } from "./strings";
 
 export interface I18nValue {
@@ -28,20 +28,6 @@ export function createSurfaceI18n(strings: Readonly<Record<string, string>>) {
   const defaultTranslate: Translate = (key, vars) =>
     interpolate(resolveEnglishFrom(strings, key, vars), vars);
 
-  /**
-   * Build a `Translate` from a catalog lookup.
-   *
-   * The lookup must see the UNINTERPOLATED English: a UGC catalog is keyed by
-   * "{{count}} seats free", not "3 seats free", so interpolating first yields a
-   * key that never matches and falls back to English silently.
-   */
-  const createTranslate = (lookup: Lookup): Translate => {
-    return (key, vars) => {
-      const english = resolveEnglishFrom(strings, key, vars);
-      return interpolate(lookup(english, key) || english, vars);
-    };
-  };
-
   const resolveEnglish = (key: StringKey, vars?: Vars): string =>
     resolveEnglishFrom(strings, key, vars);
 
@@ -52,5 +38,7 @@ export function createSurfaceI18n(strings: Readonly<Record<string, string>>) {
     return useMemo<T>(() => translate ?? defaultTranslate, [translate]);
   }
 
-  return { useT, defaultTranslate, createTranslate, resolveEnglish };
+  // defaultTranslate is returned for tests and the internal fallback only — it is
+  // not part of any surface's public exports.
+  return { useT, defaultTranslate, resolveEnglish };
 }

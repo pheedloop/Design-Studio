@@ -8,7 +8,7 @@ export const designStudioStrings = {
   ...EDITOR_STRINGS,
 };
 
-export const { useT, defaultTranslate, createTranslate, resolveEnglish } =
+export const { useT, resolveEnglish } =
   createSurfaceI18n(designStudioStrings);
 
 /** BCP-47 tag for Intl formatting, from the same provider as `useT`. */

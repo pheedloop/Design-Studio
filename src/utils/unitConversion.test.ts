@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { createSurfaceI18n } from "../i18n/context";
+import { interpolate } from "../i18n/interpolate";
+import type { Translate } from "../i18n/types";
 import { COMMON_STRINGS } from "../i18n/strings.common";
 import type { Dimensions } from "../types";
 import {
@@ -9,7 +11,15 @@ import {
   formatWalkingTime,
 } from "./unitConversion";
 
-const { defaultTranslate: t } = createSurfaceI18n(COMMON_STRINGS);
+const { defaultTranslate: t, resolveEnglish } = createSurfaceI18n(COMMON_STRINGS);
+
+/** The host adapter shape from the README, over a catalogue keyed by English. */
+const adapt =
+  (catalogue: Record<string, string>): Translate =>
+  (key, vars) => {
+    const english = resolveEnglish(key, vars);
+    return interpolate(catalogue[english] ?? english, vars);
+  };
 
 const px: Dimensions = { width: 100, height: 100, unit: "px", pixelsPerUnit: 1 };
 const feet: Dimensions = { width: 100, height: 100, unit: "ft", pixelsPerUnit: 10 };
@@ -74,16 +84,11 @@ describe("formatWalkingTime", () => {
 
 describe("translator wiring", () => {
   // A catalogue keyed by the English source — the shape Charmander's UGC uses.
-  const { createTranslate } = createSurfaceI18n(COMMON_STRINGS);
-  const fr = createTranslate(
-    (english) =>
-      ({
-        ft: "pi",
-        "{{value}} sq {{unit}}": "{{value}} {{unit}} carré",
-        "< 1 min": "< 1 min",
-        "~{{count}} min": "~{{count}} minutes",
-      })[english],
-  );
+  const fr = adapt({
+    ft: "pi",
+    "{{value}} sq {{unit}}": "{{value}} {{unit}} carré",
+    "~{{count}} min": "~{{count}} minutes",
+  });
 
   it("routes the unit through the manifest, so a host can localise it", () => {
     expect(formatMeasurement(125, feet, fr, "fr-FR")).toBe("12,5 pi");

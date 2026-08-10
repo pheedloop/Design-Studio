@@ -22,6 +22,6 @@ export type {
 
 // Scoped to this surface: re-exporting the merged manifest here would ship
 // every other surface's English with this one.
-export { designStudioStrings, createTranslate, defaultTranslate, resolveEnglish } from "./i18n";
-export type { Translate, Vars, Lookup, T } from "../i18n/types";
+export { designStudioStrings, resolveEnglish } from "./i18n";
+export type { Translate, Vars, T } from "../i18n/types";
 export type { StringKey } from "../i18n/strings";

@@ -14,10 +14,3 @@ export type Translate = (key: StringKey, opts?: Vars) => string;
 
 /** What `useT()` returns. */
 export type T = (key: StringKey, vars?: Vars) => string;
-
-/**
- * Catalog lookup for `createTranslate`. Receives the uninterpolated English
- * template — the form a UGC catalog is keyed by — and returns a translated
- * template with its `{{placeholders}}` intact, or undefined for English.
- */
-export type Lookup = (english: string, key: StringKey) => string | undefined;

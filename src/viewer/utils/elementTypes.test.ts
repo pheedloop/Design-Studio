@@ -2,9 +2,10 @@ import { describe, expect, it } from "vitest";
 import { createSurfaceI18n } from "../../i18n/context";
 import { COMMON_STRINGS } from "../../i18n/strings.common";
 import { VIEWER_STRINGS } from "../../i18n/strings.viewer";
+import type { Translate } from "../../i18n/types";
 import { TYPE_BADGE, TYPE_NAME, displayName, locationLabel } from "./elementTypes";
 
-const { defaultTranslate: t } = createSurfaceI18n({
+const { defaultTranslate: t, resolveEnglish } = createSurfaceI18n({
   ...COMMON_STRINGS,
   ...VIEWER_STRINGS,
 });
@@ -20,10 +21,10 @@ describe("displayName", () => {
   });
 
   it("resolves the fallback through the translator, not a stored string", () => {
-    const { createTranslate } = createSurfaceI18n({ ...COMMON_STRINGS, ...VIEWER_STRINGS });
-    const fr = createTranslate((english) =>
-      english === "Meeting Room" ? "Salle de réunion" : undefined,
-    );
+    const fr: Translate = (key, vars) => {
+      const english = resolveEnglish(key, vars);
+      return english === "Meeting Room" ? "Salle de réunion" : english;
+    };
     expect(displayName({ name: "", elementType: "meeting_room" }, fr)).toBe(
       "Salle de réunion",
     );

@@ -93,13 +93,27 @@ import { STRINGS } from "@pheedloop/design-studio/i18n";
 writeFileSync("src/locales/en-CA.json", JSON.stringify({ designStudio: STRINGS }, null, 2));
 ```
 
-**English-as-key + user-supplied translations (Charmander).** `createTranslate`
-maps key → English → your catalog, and interpolates only afterwards — the order
-matters, because a catalog keyed by English source text is keyed by
-`"{{count}} seats free"`, not `"3 seats free"`:
+**English-as-key + user-supplied translations (Charmander).** With i18next
+configured `keySeparator: false, nsSeparator: false`, the English string *is* the
+lookup key — so hand it the English and let i18next do the rest:
 
 ```tsx
-const translate = useMemo(() => createTranslate((english) => ugc[english]), [ugc]);
+const translate = useCallback<Translate>(
+  (key, opts) => i18n.t(resolveEnglish(key, opts), opts),
+  [i18n, i18n.language],
+);
+```
+
+`resolveEnglish` returns the **uninterpolated** English, plural variant already
+chosen. That order is the part to get right: a catalog keyed by English source is
+keyed by `"{{count}} seats free"`, not `"3 seats free"`, so interpolating before
+the lookup produces a key that can never match and silently falls back to English.
+
+Without an i18n runtime it is the same three steps, written out:
+
+```tsx
+const english = resolveEnglish(key, opts);
+return interpolate(catalog[english] ?? english, opts);
 ```
 
 > Because that lookup is by English text, **changing a DS English value
