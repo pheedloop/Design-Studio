@@ -28,6 +28,9 @@ const CROSS_SURFACE = new Set([
   "src/editor/components/canvas/BackgroundImage.tsx",
   "src/editor/components/canvas/DxfDrawing.tsx",
   "src/editor/utils/iconRegistry.ts",
+  // Lives under src/editor but is imported by the badge editor, so `editor.*`
+  // keys here would render untranslated there.
+  "src/editor/components/panels/AlignmentControls.tsx",
 ]);
 
 // Deliberate same-English-different-key pairs. Charmander keys its UGC by the
