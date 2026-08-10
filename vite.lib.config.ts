@@ -97,7 +97,16 @@ export default defineConfig({
     scopeCss(),
     dts({
       tsconfigPath: "./tsconfig.lib.json",
-      include: ["src/editor", "src/viewer", "src/seatviewer", "src/types"],
+      // Must stay in sync with tsconfig.lib.json's `include` — see the note there.
+      include: [
+        "src/editor",
+        "src/viewer",
+        "src/seatviewer",
+        "src/types",
+        "src/i18n",
+        "src/utils",
+        "src/tiers.ts",
+      ],
       insertTypesEntry: false,
     }),
   ],

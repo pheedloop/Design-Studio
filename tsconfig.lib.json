@@ -19,5 +19,17 @@
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src/editor/**/*", "src/viewer/**/*", "src/seatviewer/**/*", "src/types/**/*"]
+  // Shared modules that the published surfaces reference must be listed here, or
+  // vite-plugin-dts silently skips emitting their .d.ts while the surfaces that
+  // import them still emit the import — a dangling reference that only hosts with
+  // `skipLibCheck: false` ever see. `src/tiers.ts` was in exactly that state.
+  "include": [
+    "src/editor/**/*",
+    "src/viewer/**/*",
+    "src/seatviewer/**/*",
+    "src/types/**/*",
+    "src/i18n/**/*",
+    "src/utils/**/*",
+    "src/tiers.ts"
+  ]
 }
