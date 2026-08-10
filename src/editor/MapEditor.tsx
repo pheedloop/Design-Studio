@@ -84,6 +84,7 @@ import {
 import { resolveFeatures } from "../tiers";
 import type { Tier, FeatureKey, FeatureOverride } from "../tiers";
 import { I18nProvider } from "../i18n/I18nProvider";
+import { useT } from "./i18n";
 import type { Translate } from "../i18n/types";
 
 // Safari caps total canvas area near 16.7M px, so an unbounded 2x export of a
@@ -160,6 +161,7 @@ function MapEditorInner({
   tier,
   features,
 }: Omit<MapEditorProps, "translate" | "locale">) {
+  const t = useT();
   const debug = debugProp || import.meta.env.DEV;
   const storageKey = persistKey ?? DEFAULT_PERSIST_KEY;
 
@@ -899,19 +901,19 @@ function MapEditorInner({
     // Z-ordering actions
     items.push(
       {
-        label: "Bring to Front",
+        label: t("editor.contextMenu.bringToFront"),
         onClick: () => reorderElement(contextMenu.elementId, "front"),
       },
       {
-        label: "Bring Forward",
+        label: t("editor.contextMenu.bringForward"),
         onClick: () => reorderElement(contextMenu.elementId, "forward"),
       },
       {
-        label: "Send Backward",
+        label: t("editor.contextMenu.sendBackward"),
         onClick: () => reorderElement(contextMenu.elementId, "backward"),
       },
       {
-        label: "Send to Back",
+        label: t("editor.contextMenu.sendToBack"),
         onClick: () => reorderElement(contextMenu.elementId, "back"),
       },
     );
@@ -923,7 +925,7 @@ function MapEditorInner({
     if (clickedGroupId) {
       if (!activeGroupId) {
         items.push({
-          label: "Enter Group",
+          label: t("editor.group.enter"),
           onClick: () => {
             setActiveGroupId(clickedGroupId);
             selectOne(contextMenu.elementId);
@@ -932,7 +934,7 @@ function MapEditorInner({
         });
       }
       items.push({
-        label: "Ungroup",
+        label: t("editor.group.ungroup"),
         onClick: () => {
           dissolveGroup(clickedGroupId);
           setActiveGroupId(null);
@@ -947,7 +949,7 @@ function MapEditorInner({
       )
     ) {
       items.push({
-        label: "Group",
+        label: t("editor.group.group"),
         onClick: () => {
           createGroup([...selectedIds]);
           setContextMenu(null);
@@ -960,7 +962,7 @@ function MapEditorInner({
       switch (action) {
         case "delete":
           items.push({
-            label: "Delete",
+            label: t("editor.action.delete"),
             danger: true,
             onClick: () => {
               deleteElement(contextMenu.elementId);
@@ -1207,25 +1209,20 @@ function MapEditorInner({
       ) {
         if (
           !window.confirm(
-            "Changing grid resolution will clear your current walkable areas. Continue?",
+            t("editor.confirm.gridResolution"),
           )
         )
           return;
       }
       setWalkableGridResolution(size);
     },
-    [data.walkableLayer, setWalkableGridResolution],
+    [data.walkableLayer, setWalkableGridResolution, t],
   );
 
   const handleClearGrid = useCallback(() => {
-    if (
-      !window.confirm(
-        "Clear all walkable areas? This cannot be undone except via undo.",
-      )
-    )
-      return;
+    if (!window.confirm(t("editor.confirm.clearWalkable"))) return;
     clearWalkableGrid();
-  }, [clearWalkableGrid]);
+  }, [clearWalkableGrid, t]);
 
   // ---------------------------------------------------------------------------
   // Drag-to-place handlers
@@ -1486,7 +1483,7 @@ function MapEditorInner({
           ...(onEditProperties
             ? [
                 {
-                  label: "Map Properties…",
+                  label: t("editor.menu.mapProperties"),
                   onClick: onEditProperties,
                 },
                 { type: "divider" as const },
@@ -1495,7 +1492,7 @@ function MapEditorInner({
           ...(onSave
             ? [
                 {
-                  label: isSaving ? "Saving…" : "Save",
+                  label: isSaving ? t("editor.menu.saving") : t("editor.menu.save"),
                   shortcut: `${modKey}S`,
                   disabled: isSaving,
                   onClick: handleSave,
@@ -1504,7 +1501,7 @@ function MapEditorInner({
               ]
             : []),
           {
-            label: "Export as PNG",
+            label: t("editor.menu.exportPng"),
             onClick: async () => {
               const blob = await captureFloorPlanThumbnail(stageRef.current, data, {
                 maxEdge: Math.min(
@@ -1522,7 +1519,7 @@ function MapEditorInner({
             },
           },
           {
-            label: "Export as JSON",
+            label: t("editor.menu.exportJson"),
             onClick: () => {
               const json = JSON.stringify(data, null, 2);
               const blob = new Blob([json], { type: "application/json" });
@@ -1535,7 +1532,7 @@ function MapEditorInner({
             },
           },
           {
-            label: "Import JSON",
+            label: t("editor.menu.importJson"),
             onClick: () => {
               const input = document.createElement("input");
               input.type = "file";
@@ -1569,7 +1566,7 @@ function MapEditorInner({
             ? [
                 { type: "divider" as const },
                 {
-                  label: "Reset Demo",
+                  label: t("editor.menu.resetDemo"),
                   danger: true,
                   onClick: () => {
                     localStorage.removeItem(storageKey);
@@ -1581,32 +1578,32 @@ function MapEditorInner({
         ]}
         editMenuItems={[
           {
-            label: "Undo",
+            label: t("editor.menu.undo"),
             shortcut: `${modKey}Z`,
             disabled: !canUndo,
             onClick: undo,
           },
           {
-            label: "Redo",
+            label: t("editor.menu.redo"),
             shortcut: `${modKey}⇧Z`,
             disabled: !canRedo,
             onClick: redo,
           },
           { type: "divider" as const },
           {
-            label: "Copy",
+            label: t("editor.menu.copy"),
             shortcut: `${modKey}C`,
             disabled: !hasSelection,
             onClick: handleCopy,
           },
           {
-            label: "Paste",
+            label: t("editor.menu.paste"),
             shortcut: `${modKey}V`,
             disabled: !hasBuffer,
             onClick: handlePaste,
           },
           {
-            label: "Duplicate",
+            label: t("editor.menu.duplicate"),
             shortcut: `${modKey}D`,
             disabled: !hasSelection,
             onClick: handleDuplicate,
@@ -1614,40 +1611,40 @@ function MapEditorInner({
         ]}
         viewMenuItems={[
           {
-            label: `${showRulers ? "✓ " : "   "}Show Rulers`,
+            label: `${showRulers ? "✓ " : "   "}${t("editor.menu.showRulers")}`,
             onClick: () => setShowRulers((s) => !s),
           },
           {
-            label: `${gridSettings.showGrid ? "✓ " : "   "}Show Grid`,
+            label: `${gridSettings.showGrid ? "✓ " : "   "}${t("editor.menu.showGrid")}`,
             onClick: () =>
               setGridSettings((s) => ({ ...s, showGrid: !s.showGrid })),
           },
           {
-            label: `${gridSettings.snapToGrid ? "✓ " : "   "}Snap to Grid`,
+            label: `${gridSettings.snapToGrid ? "✓ " : "   "}${t("editor.menu.snapToGrid")}`,
             onClick: () =>
               setGridSettings((s) => ({ ...s, snapToGrid: !s.snapToGrid })),
           },
           {
-            label: `${snapToObjects ? "✓ " : "   "}Snap to Objects`,
+            label: `${snapToObjects ? "✓ " : "   "}${t("editor.menu.snapToObjects")}`,
             onClick: () => setSnapToObjects((s) => !s),
           },
           {
-            label: `${showTransformControls ? "✓ " : "   "}Show Transform Controls`,
+            label: `${showTransformControls ? "✓ " : "   "}${t("editor.menu.showTransformControls")}`,
             onClick: () => setShowTransformControls((s) => !s),
           },
         ]}
         toolsMenuItems={[
           {
-            label: "Element Defaults...",
+            label: t("editor.menu.elementDefaults"),
             onClick: () => setShowTypeDefaultsDialog(true),
           },
           { type: "divider" as const },
           {
-            label: "Configure Grid...",
+            label: t("editor.menu.configureGrid"),
             onClick: () => setShowGridDialog(true),
           },
           {
-            label: "Canvas Size...",
+            label: t("editor.menu.canvasSize"),
             onClick: () => setShowResizeDialog(true),
           },
           // Scale calibration is gated by the usage tier: omitted when hidden,
@@ -1656,7 +1653,7 @@ function MapEditorInner({
             ? []
             : [
                 {
-                  label: "Set Scale...",
+                  label: t("editor.menu.setScale"),
                   disabled: featureMap.scaleCalibration === "locked",
                   premium: featureMap.scaleCalibration === "locked",
                   onClick: handleStartCalibration,
@@ -1670,7 +1667,7 @@ function MapEditorInner({
           <button
             type="button"
             className="text-red-500 hover:text-red-700"
-            aria-label="Dismiss"
+            aria-label={t("editor.action.dismiss")}
             onClick={() => setDxfHydrationError(null)}
           >
             ✕
@@ -2005,18 +2002,18 @@ function MapEditorInner({
       )}
       {isCropping && (
         <div className="fixed top-4 left-1/2 -translate-x-1/2 z-[60] flex items-center gap-2 bg-white border border-gray-200 shadow-lg rounded-lg px-3 py-2">
-          <span className="text-xs text-gray-600">Drag to frame the area to keep</span>
+          <span className="text-xs text-gray-600">{t("editor.crop.hint")}</span>
           <button
             onClick={crop.confirm}
             className="text-xs font-medium text-white bg-primary-600 hover:bg-primary-700 rounded px-3 py-1.5 cursor-pointer transition-colors"
           >
-            Apply crop
+            {t("editor.crop.apply")}
           </button>
           <button
             onClick={handleCancelCrop}
             className="text-xs text-gray-600 border border-gray-200 rounded px-3 py-1.5 hover:bg-gray-50 cursor-pointer transition-colors"
           >
-            Cancel
+            {t("editor.action.cancel")}
           </button>
         </div>
       )}
