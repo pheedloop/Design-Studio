@@ -48,6 +48,72 @@ import "@pheedloop/design-studio/style.css";
 Capabilities are gated by a usage `tier` (`basic` / `advanced` / `premium`), with
 optional per-feature overrides. See [tiers.ts](src/tiers.ts).
 
+## Internationalization
+
+Design Studio ships English and owns no i18n runtime — no i18next, no locale
+files, no language state. It exports a manifest of stable keys and their English,
+and takes a translator from the host:
+
+```tsx
+import { MapViewer, designStudioStrings } from "@pheedloop/design-studio/viewer";
+import type { Translate } from "@pheedloop/design-studio/viewer";
+
+<MapViewer data={data} exhibitors={exhibitors} translate={translate} locale={language} />
+```
+
+**Pass nothing and you get English.** The prop is optional and the manifest value
+is the guaranteed fallback, so upgrading changes nothing until you opt in.
+
+Two rules matter:
+
+- **`translate` must be referentially stable.** Wrap it in `useCallback`/`useMemo`
+  keyed on your language and catalog. Display strings are memoized off its
+  identity, so a fresh function each render re-derives every menu and tool list in
+  the editor on every keystroke.
+- **Configure i18next with `interpolation: { escapeValue: false }`** for these
+  keys. The English uses curly apostrophes (`aren’t`, `can’t`), which default
+  escaping turns into numeric entities that render literally.
+
+Placeholders use i18next's `{{name}}` syntax, and plurals use its `_one`/`_other`
+key suffixes, so a catalog authored for i18next drops in unchanged.
+
+**Structured keys (ditto).** Namespace the key and let your catalog resolve it:
+
+```tsx
+const translate = useCallback<Translate>(
+  (key, opts) => i18nT(`designStudio.${key}`, { defaultValue: resolveEnglish(key, opts), ...opts }),
+  [i18nT],
+);
+```
+
+Seed the catalog from the merged manifest at **build** time:
+
+```ts
+import { STRINGS } from "@pheedloop/design-studio/i18n";
+writeFileSync("src/locales/en-CA.json", JSON.stringify({ designStudio: STRINGS }, null, 2));
+```
+
+**English-as-key + user-supplied translations (Charmander).** `createTranslate`
+maps key → English → your catalog, and interpolates only afterwards — the order
+matters, because a catalog keyed by English source text is keyed by
+`"{{count}} seats free"`, not `"3 seats free"`:
+
+```tsx
+const translate = useMemo(() => createTranslate((english) => ugc[english]), [ugc]);
+```
+
+> Because that lookup is by English text, **changing a DS English value
+> un-translates that string** until the catalog entry is re-created. Release notes
+> list changed English values, not just new keys.
+
+Import `designStudioStrings` from the entry point you already use — it is scoped
+to that surface. `@pheedloop/design-studio/i18n` carries every surface's strings
+and is for build steps only.
+
+The [demo](https://pheedloop.github.io/Design-Studio/) has a `Lang:` switcher with
+a pseudo-locale (accented, bracketed, padded ~40%) for spotting untranslated
+strings and text-expansion clipping, and a mode that renders each string's key.
+
 ## Scripts
 
 ```bash
@@ -57,6 +123,10 @@ npm run build:lib   # Build the publishable library → dist/
 npm run dev:lib     # Rebuild the library on change (for npm link into a host)
 npm run lint        # ESLint
 ```
+
+`make verify-strings` checks the i18n manifest against the source — dead keys,
+keys used outside their surface, and dangling imports in the emitted types. Run it
+after `make build-lib`.
 
 **Release:** `make release [BUMP=patch|minor|major]` from a clean `develop` —
 bumps, tags, and publishes to GitHub Packages. Every push to `develop` also
