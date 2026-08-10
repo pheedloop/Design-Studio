@@ -154,6 +154,9 @@ function walk(dir: string): void {
 
     const rel = relative(ROOT, path);
     if (rel.startsWith("src/i18n/strings")) continue; // the manifest itself
+    // Tests exercise the resolution machinery with fixture keys that are not,
+    // and should not be, in the manifest.
+    if (/\.test\.tsx?$/.test(rel)) continue;
     const text = readFileSync(path, "utf8");
 
     // The merged manifest must stay out of component bundles: it is one object

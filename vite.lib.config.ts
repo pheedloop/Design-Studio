@@ -107,6 +107,7 @@ export default defineConfig({
         "src/utils",
         "src/tiers.ts",
       ],
+      exclude: ["src/**/*.test.ts", "src/**/*.test.tsx"],
       insertTypesEntry: false,
     }),
   ],

@@ -31,5 +31,8 @@
     "src/i18n/**/*",
     "src/utils/**/*",
     "src/tiers.ts"
-  ]
+  ],
+  // Tests are co-located with what they cover; they must not be type-checked
+  // into the library build or emit declarations into dist/.
+  "exclude": ["src/**/*.test.ts", "src/**/*.test.tsx"]
 }
