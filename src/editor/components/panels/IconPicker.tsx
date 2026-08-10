@@ -1,11 +1,8 @@
 import { useState, useRef, useEffect } from "react";
 import { PiMagnifyingGlass } from "react-icons/pi";
-import {
-  iconRegistry,
-  searchIcons,
-  getCategories,
-  type IconEntry,
-} from "../../utils/iconRegistry";
+import { ICON_CATEGORIES, iconRegistry, type IconEntry } from "../../utils/iconRegistry";
+import { ICON_CATEGORY_LABEL, ICON_LABEL } from "../../utils/iconLabels";
+import { useT } from "../../i18n";
 
 interface IconPickerProps {
   selectedId: string | null;
@@ -15,6 +12,7 @@ interface IconPickerProps {
 }
 
 export function IconPicker({ selectedId, onSelect, onClose, anchorRect }: IconPickerProps) {
+  const t = useT();
   const [query, setQuery] = useState("");
   const ref = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -40,8 +38,17 @@ export function IconPicker({ selectedId, onSelect, onClose, anchorRect }: IconPi
     };
   }, [onClose]);
 
-  const filtered = query.trim() ? searchIcons(query) : null;
-  const categories = getCategories();
+  // Matches the translated label so search works in the reading language, and the
+  // English keywords, which stay untranslated as a synonym index.
+  const q = query.trim().toLowerCase();
+  const filtered = q
+    ? iconRegistry.filter(
+        (entry) =>
+          t(ICON_LABEL[entry.id].labelKey).toLowerCase().includes(q) ||
+          t(ICON_CATEGORY_LABEL[entry.category].labelKey).toLowerCase().includes(q) ||
+          entry.keywords.some((kw) => kw.toLowerCase().includes(q)),
+      )
+    : null;
 
   const renderIcon = (entry: IconEntry) => {
     const Icon = entry.component;
@@ -50,7 +57,7 @@ export function IconPicker({ selectedId, onSelect, onClose, anchorRect }: IconPi
       <button
         key={entry.id}
         onClick={() => onSelect(entry.id)}
-        title={entry.label}
+        title={t(ICON_LABEL[entry.id].labelKey)}
         className={`flex items-center justify-center w-9 h-9 rounded cursor-pointer transition-colors ${
           isSelected
             ? "bg-primary-600 text-white"
@@ -77,7 +84,7 @@ export function IconPicker({ selectedId, onSelect, onClose, anchorRect }: IconPi
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Search icons..."
+          placeholder={t("editor.icon.search")}
           className="flex-1 text-xs text-gray-800 placeholder:text-gray-400 outline-none bg-transparent"
         />
       </div>
@@ -85,17 +92,17 @@ export function IconPicker({ selectedId, onSelect, onClose, anchorRect }: IconPi
       <div className="flex-1 overflow-y-auto p-2">
         {filtered ? (
           filtered.length === 0 ? (
-            <p className="text-xs text-gray-400 p-2">No icons found</p>
+            <p className="text-xs text-gray-400 p-2">{t("editor.icon.noResults")}</p>
           ) : (
             <div className="flex flex-wrap gap-0.5">
               {filtered.map(renderIcon)}
             </div>
           )
         ) : (
-          categories.map((category) => (
+          ICON_CATEGORIES.map((category) => (
             <div key={category} className="mb-3">
               <div className="text-[10px] font-medium text-gray-400 uppercase tracking-wide px-1 mb-1">
-                {category}
+                {t(ICON_CATEGORY_LABEL[category].labelKey)}
               </div>
               <div className="flex flex-wrap gap-0.5">
                 {iconRegistry
