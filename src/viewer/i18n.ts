@@ -10,3 +10,6 @@ export const designStudioStrings = {
 
 export const { useT, defaultTranslate, createTranslate, resolveEnglish } =
   createSurfaceI18n(designStudioStrings);
+
+/** BCP-47 tag for Intl formatting, from the same provider as `useT`. */
+export { useLocale } from "../i18n/context";

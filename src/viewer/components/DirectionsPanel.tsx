@@ -4,6 +4,9 @@ import type { SearchResult } from "../hooks/useSearch";
 import type { DirectionsLocation, RouteStatus } from "../hooks/useDirections";
 import type { Dimensions } from "../../types";
 import { formatRouteDistance, pathDistance, pxToReal, estimateWalkingTime, formatWalkingTime } from "../../utils/unitConversion";
+import { TYPE_BADGE, displayName, locationLabel } from "../utils/elementTypes";
+import { useLocale, useT } from "../i18n";
+import type { T } from "../../i18n/types";
 
 interface DirectionsPanelProps {
   startLocation: DirectionsLocation | null;
@@ -18,12 +21,6 @@ interface DirectionsPanelProps {
   onClose: () => void;
 }
 
-const TYPE_BADGE: Record<SearchResult["elementType"], { label: string; className: string }> = {
-  booth: { label: "Booth", className: "bg-gray-100 text-gray-500" },
-  session_area: { label: "Session", className: "bg-green-100 text-green-700" },
-  meeting_room: { label: "Room", className: "bg-orange-100 text-orange-700" },
-};
-
 function LocationField({
   label,
   placeholder,
@@ -31,6 +28,7 @@ function LocationField({
   onSearch,
   onSelect,
   onClear,
+  t,
 }: {
   label: string;
   placeholder: string;
@@ -38,6 +36,7 @@ function LocationField({
   onSearch: (query: string) => SearchResult[];
   onSelect: (result: SearchResult) => void;
   onClear: () => void;
+  t: T;
 }) {
   const [query, setQuery] = useState("");
   const [focused, setFocused] = useState(false);
@@ -53,7 +52,7 @@ function LocationField({
           {label}
         </span>
         <span className="flex-1 text-xs font-medium text-gray-800 truncate">
-          {value.label}
+          {locationLabel(value, t)}
         </span>
         <button
           onClick={() => {
@@ -90,7 +89,7 @@ function LocationField({
       {showDropdown && (
         <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-44 overflow-y-auto">
           {results.length === 0 ? (
-            <div className="px-3 py-2 text-xs text-gray-400">No results</div>
+            <div className="px-3 py-2 text-xs text-gray-400">{t("viewer.search.noResults")}</div>
           ) : (
             results.map((result) => {
               const badge = TYPE_BADGE[result.elementType];
@@ -106,10 +105,10 @@ function LocationField({
                 >
                   <div className="flex items-center justify-between gap-2">
                     <span className="text-xs font-medium text-gray-800 truncate">
-                      {result.exhibitorName || result.name}
+                      {result.exhibitorName || displayName(result, t)}
                     </span>
                     <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded shrink-0 ${badge.className}`}>
-                      {badge.label}
+                      {t(badge.labelKey)}
                     </span>
                   </div>
                 </button>
@@ -134,10 +133,13 @@ export function DirectionsPanel({
   onSwap,
   onClose,
 }: DirectionsPanelProps) {
+  const t = useT();
+  const locale = useLocale();
+
   return (
     <div className="flex flex-col gap-2 p-3">
       <div className="flex items-center justify-between">
-        <span className="text-xs font-semibold text-gray-700">Directions</span>
+        <span className="text-xs font-semibold text-gray-700">{t("viewer.directions.title")}</span>
         <button
           onClick={onClose}
           className="text-gray-400 hover:text-gray-600 cursor-pointer"
@@ -149,16 +151,18 @@ export function DirectionsPanel({
       <div className="flex gap-2">
         <div className="flex flex-col gap-2 flex-1 min-w-0">
           <LocationField
-            label="From"
-            placeholder="Where are you?"
+            label={t("viewer.directions.from")}
+            placeholder={t("viewer.directions.fromPlaceholder")}
+            t={t}
             value={startLocation}
             onSearch={onSearch}
             onSelect={onSelectStart}
             onClear={() => onSelectStart(null)}
           />
           <LocationField
-            label="To"
-            placeholder="Where do you want to go?"
+            label={t("viewer.directions.to")}
+            placeholder={t("viewer.directions.toPlaceholder")}
+            t={t}
             value={endLocation}
             onSearch={onSearch}
             onSelect={onSelectEnd}
@@ -169,7 +173,7 @@ export function DirectionsPanel({
         <button
           onClick={onSwap}
           className="self-center p-1.5 rounded-md hover:bg-gray-100 text-gray-400 hover:text-gray-600 cursor-pointer shrink-0"
-          title="Swap start and end"
+          title={t("viewer.directions.swap")}
         >
           <PiArrowsDownUp size={16} />
         </button>
@@ -177,23 +181,23 @@ export function DirectionsPanel({
 
       {routeStatus === "no-route" && (
         <div className="text-xs text-red-500 bg-red-50 rounded-lg px-3 py-2">
-          No route available — the walkable areas may not be fully connected.
+          {t("viewer.directions.noRoute")}
         </div>
       )}
       {routeStatus === "same-location" && (
         <div className="text-xs text-amber-600 bg-amber-50 rounded-lg px-3 py-2">
-          You&apos;re already there!
+          {t("viewer.directions.sameLocation")}
         </div>
       )}
       {routeStatus === "ready" && routePath && routePath.length > 1 && (
         <div className="flex items-center gap-2 text-xs text-gray-600 bg-gray-50 rounded-lg px-3 py-2">
           <PiFootprints size={14} className="text-gray-400 shrink-0" />
-          <span>{formatRouteDistance(routePath, dimensions)}</span>
+          <span>{formatRouteDistance(routePath, dimensions, t, locale)}</span>
           {(() => {
             const pxDist = pathDistance(routePath);
             const realDist = pxToReal(pxDist, dimensions.pixelsPerUnit);
             const est = estimateWalkingTime(realDist, dimensions.unit);
-            return est ? <span className="text-gray-400">&middot; {formatWalkingTime(est)}</span> : null;
+            return est ? <span className="text-gray-400">&middot; {formatWalkingTime(est, t)}</span> : null;
           })()}
         </div>
       )}

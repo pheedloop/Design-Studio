@@ -1,4 +1,7 @@
 import type { Dimensions } from "../../types";
+import { unitLabel } from "../../utils/unitConversion";
+import { formatNumber } from "../../i18n/format";
+import { useLocale, useT } from "../i18n";
 
 interface ScaleBarProps {
   dimensions: Dimensions;
@@ -15,6 +18,10 @@ function niceDistance(rough: number): number {
 }
 
 export function ScaleBar({ dimensions, scale }: ScaleBarProps) {
+  // Above the early return below.
+  const t = useT();
+  const locale = useLocale();
+
   if (dimensions.unit === "px" || dimensions.pixelsPerUnit <= 0) return null;
 
   // Target ~120px of screen space for the bar
@@ -29,7 +36,10 @@ export function ScaleBar({ dimensions, scale }: ScaleBarProps) {
       className="absolute bottom-4 left-4 z-10 flex flex-col items-start gap-0.5 pointer-events-none select-none"
     >
       <span className="text-[10px] font-medium text-gray-600 bg-white/80 px-1 rounded">
-        {niceUnits} {dimensions.unit}
+        {t("common.measurement", {
+          value: formatNumber(niceUnits, locale, Number.isInteger(niceUnits) ? 0 : 1),
+          unit: unitLabel(dimensions.unit, t),
+        })}
       </span>
       <div
         className="h-1.5 bg-gray-700/70 rounded-sm"

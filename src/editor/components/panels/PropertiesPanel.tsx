@@ -11,6 +11,7 @@ import type {
 import { getToolUIConfig } from "../../tools/registry";
 import type { PropertiesPanelField } from "../canvas/elements/types";
 import { formatMeasurement, formatArea } from "../../../utils/unitConversion";
+import { useLocale, useT } from "../../i18n";
 import {
   Button,
   TabBar,
@@ -157,6 +158,9 @@ export function PropertiesPanel({
   onBackgroundColorChange,
   onUpdateTypeStyles,
 }: PropertiesPanelProps) {
+  // Above the early returns below.
+  const t = useT();
+  const locale = useLocale();
   const [tab, setTab] = useState<"properties" | "debug">("properties");
 
   if (!element && selectedCount > 1) {
@@ -694,7 +698,7 @@ export function PropertiesPanel({
             <div className="flex flex-col gap-1.5">
               <SectionLabel>Area</SectionLabel>
               <div className="px-2 py-1 text-xs text-gray-600 bg-gray-50 rounded border border-gray-200">
-                {formatArea(dims.width, dims.height, dimensions)}
+                {formatArea(dims.width, dims.height, dimensions, t, locale)}
               </div>
             </div>
           )}
@@ -703,7 +707,7 @@ export function PropertiesPanel({
             <div className="flex flex-col gap-1.5">
               <SectionLabel>Length</SectionLabel>
               <div className="px-2 py-1 text-xs text-gray-600 bg-gray-50 rounded border border-gray-200">
-                {formatMeasurement(dims.length, dimensions)}
+                {formatMeasurement(dims.length, dimensions, t, locale)}
               </div>
             </div>
           )}

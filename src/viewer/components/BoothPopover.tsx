@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import type { Exhibitor } from "../types";
 import { usePopoverPosition } from "../hooks/usePopoverPosition";
 import { ExhibitorLogo } from "./ExhibitorLogo";
+import { useT } from "../i18n";
 
 interface BoothPopoverProps {
   boothCode: string;
@@ -24,6 +25,7 @@ export function BoothPopover({
   onGetDirections,
   onExhibitorClick,
 }: BoothPopoverProps) {
+  const t = useT();
   const { ref, pos } = usePopoverPosition(x, y);
 
   useEffect(() => {
@@ -81,7 +83,7 @@ export function BoothPopover({
         )
       ) : (
         <div className="mt-1 text-center text-[11px] text-gray-400">
-          No exhibitor assigned
+          {t("viewer.booth.noExhibitor")}
         </div>
       )}
       {onGetDirections && (
@@ -89,7 +91,7 @@ export function BoothPopover({
           onClick={() => onGetDirections()}
           className="mt-2 w-full text-xs font-medium text-blue-600 hover:bg-blue-50 rounded px-2 py-1.5 cursor-pointer transition-colors text-left"
         >
-          Get directions to here
+          {t("viewer.getDirections")}
         </button>
       )}
     </div>

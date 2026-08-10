@@ -2,6 +2,7 @@ import { useState, useMemo } from "react";
 import { Button, Dialog, SectionLabel, NumberInput } from "../ui";
 import type { FloorPlanElement, Dimensions } from "../../../types";
 import { formatMeasurement } from "../../../utils/unitConversion";
+import { useLocale, useT } from "../../i18n";
 import { getElementBounds } from "../../utils/bounds";
 import { anchorOffset, type ResizeMode, type ResizeAnchor } from "../../hooks/useEditorState";
 
@@ -32,6 +33,8 @@ export function CanvasResizeDialog({
   onStartCrop,
   onClose,
 }: CanvasResizeDialogProps) {
+  const t = useT();
+  const locale = useLocale();
   const [newWidth, setNewWidth] = useState(width);
   const [newHeight, setNewHeight] = useState(height);
   const [mode, setMode] = useState<ResizeMode>("preserve");
@@ -85,7 +88,7 @@ export function CanvasResizeDialog({
           <SectionLabel>Width (px)</SectionLabel>
           <NumberInput value={newWidth} onChange={setW} />
           {dimensions.unit !== "px" && (
-            <span className="text-[11px] text-gray-400">{formatMeasurement(newWidth, dimensions)}</span>
+            <span className="text-[11px] text-gray-400">{formatMeasurement(newWidth, dimensions, t, locale)}</span>
           )}
         </div>
 
@@ -93,7 +96,7 @@ export function CanvasResizeDialog({
           <SectionLabel>Height (px)</SectionLabel>
           <NumberInput value={newHeight} onChange={setH} disabled={mode === "scale"} />
           {dimensions.unit !== "px" && (
-            <span className="text-[11px] text-gray-400">{formatMeasurement(newHeight, dimensions)}</span>
+            <span className="text-[11px] text-gray-400">{formatMeasurement(newHeight, dimensions, t, locale)}</span>
           )}
         </div>
 

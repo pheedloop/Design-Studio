@@ -1,4 +1,6 @@
 import type { Dimensions, Point, Unit } from "../types/FloorPlanData";
+import { formatNumber } from "../i18n/format";
+import type { T } from "../i18n/types";
 
 // ~1.0 m/s indoor event pace (accounts for crowds, turns, stopping)
 const INDOOR_WALKING_SPEED_MPS = 1.0;
@@ -34,11 +36,37 @@ export function realToPx(real: number, pixelsPerUnit: number): number {
 // Formatting
 // ---------------------------------------------------------------------------
 
+/**
+ * The unit's display abbreviation.
+ *
+ * A switch rather than a lookup table because scripts/verify-strings.ts only sees
+ * literal `t("…")` calls — a computed `t(`common.unit.${unit}`)` would report
+ * every unit key as dead.
+ */
+export function unitLabel(unit: Unit, t: T): string {
+  switch (unit) {
+    case "ft":
+      return t("common.unit.ft");
+    case "m":
+      return t("common.unit.m");
+    case "px":
+      return t("common.unit.px");
+  }
+}
+
 /** Format a single-axis pixel measurement as a real-world string (e.g. "12.5 ft"). */
-export function formatMeasurement(px: number, dims: Dimensions): string {
-  if (dims.unit === "px") return `${Math.round(px)} px`;
+export function formatMeasurement(
+  px: number,
+  dims: Dimensions,
+  t: T,
+  locale?: string,
+): string {
+  const unit = unitLabel(dims.unit, t);
+  if (dims.unit === "px") {
+    return t("common.measurement", { value: formatNumber(Math.round(px), locale, 0), unit });
+  }
   const real = pxToReal(px, dims.pixelsPerUnit);
-  return `${real.toFixed(1)} ${dims.unit}`;
+  return t("common.measurement", { value: formatNumber(real, locale, 1), unit });
 }
 
 /** Format a rectangular area (width × height in px) as a real-world string (e.g. "150.0 sq ft"). */
@@ -46,13 +74,17 @@ export function formatArea(
   widthPx: number,
   heightPx: number,
   dims: Dimensions,
+  t: T,
+  locale?: string,
 ): string {
+  const unit = unitLabel(dims.unit, t);
   if (dims.unit === "px") {
-    return `${Math.round(widthPx * heightPx)} sq px`;
+    const areaPx = Math.round(widthPx * heightPx);
+    return t("common.area", { value: formatNumber(areaPx, locale, 0), unit });
   }
   const w = pxToReal(widthPx, dims.pixelsPerUnit);
   const h = pxToReal(heightPx, dims.pixelsPerUnit);
-  return `${(w * h).toFixed(1)} sq ${dims.unit}`;
+  return t("common.area", { value: formatNumber(w * h, locale, 1), unit });
 }
 
 // ---------------------------------------------------------------------------
@@ -74,9 +106,11 @@ export function pathDistance(points: { x: number; y: number }[]): number {
 export function formatRouteDistance(
   pathPx: { x: number; y: number }[],
   dims: Dimensions,
+  t: T,
+  locale?: string,
 ): string {
   const px = pathDistance(pathPx);
-  return formatMeasurement(px, dims);
+  return formatMeasurement(px, dims, t, locale);
 }
 
 // ---------------------------------------------------------------------------
@@ -103,10 +137,10 @@ export function estimateWalkingTime(
 }
 
 /** Format a walking time estimate as a human-friendly string. */
-export function formatWalkingTime(est: {
-  minutes: number;
-  seconds: number;
-}): string {
-  if (est.minutes === 0) return "< 1 min";
-  return `~${est.minutes} min`;
+export function formatWalkingTime(
+  est: { minutes: number; seconds: number },
+  t: T,
+): string {
+  if (est.minutes === 0) return t("common.walkingTimeUnderMinute");
+  return t("common.walkingTime", { count: est.minutes });
 }

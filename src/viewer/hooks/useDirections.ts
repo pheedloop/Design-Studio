@@ -3,6 +3,8 @@ import type { FloorPlanData } from "../../types";
 import type { Exhibitor } from "../types";
 import type { SearchResult } from "./useSearch";
 import { findPath, smoothPath } from "../utils/pathfinding";
+import { displayName } from "../utils/elementTypes";
+import { useT } from "../i18n";
 import {
   findNearestWalkableCell,
   resolveBoothToCell,
@@ -11,8 +13,14 @@ import {
 export interface DirectionsLocation {
   type: "booth" | "exhibitor" | "session_area" | "meeting_room" | "point";
   // Future: add "poi" here without structural changes
-  /** Display label for the location */
-  label: string;
+  /**
+   * The location's own name. May be "" for an unnamed element.
+   *
+   * Deliberately not a resolved display label: these objects live in state, so a
+   * label stored here would keep whatever language was active when it was picked,
+   * even after the host switches. Resolve it at render — see locationLabel().
+   */
+  name: string;
   /** Booth slug (for booth/exhibitor types) */
   boothSlug?: string;
   /** Element UUID (for session_area / meeting_room / future poi) */
@@ -27,6 +35,7 @@ export function useDirections(
   data: FloorPlanData,
   exhibitors: Exhibitor[]
 ) {
+  const t = useT();
   const [active, setActive] = useState(false);
   const [startLocation, setStartLocation] = useState<DirectionsLocation | null>(null);
   const [endLocation, setEndLocation] = useState<DirectionsLocation | null>(null);
@@ -59,14 +68,14 @@ export function useDirections(
         entries.push({
           elementId: el.id,
           elementType: "session_area",
-          name: el.properties.name || "Session Area",
+          name: el.properties.name || "",
           code: el.properties.sessionId ?? null,
         } satisfies SearchResult);
       } else if (el.type === "meeting_room") {
         entries.push({
           elementId: el.id,
           elementType: "meeting_room",
-          name: el.properties.name || "Meeting Room",
+          name: el.properties.name || "",
           code: el.properties.meetingRoomId ?? null,
         } satisfies SearchResult);
       }
@@ -81,12 +90,12 @@ export function useDirections(
       if (!q) return [];
       return searchEntries.filter(
         (entry) =>
-          entry.name.toLowerCase().includes(q) ||
+          displayName(entry, t).toLowerCase().includes(q) ||
           (entry.code && entry.code.toLowerCase().includes(q)) ||
           (entry.exhibitorName && entry.exhibitorName.toLowerCase().includes(q))
       );
     },
-    [searchEntries]
+    [searchEntries, t]
   );
 
   /** Resolve a SearchResult into a DirectionsLocation */
@@ -96,21 +105,21 @@ export function useDirections(
         if (result.exhibitorName) {
           return {
             type: "exhibitor",
-            label: result.exhibitorName,
+            name: result.exhibitorName,
             boothSlug: result.code ?? undefined,
             elementId: result.elementId,
           };
         }
         return {
           type: "booth",
-          label: result.name,
+          name: result.name,
           boothSlug: result.code ?? undefined,
           elementId: result.elementId,
         };
       }
       return {
         type: result.elementType,
-        label: result.name,
+        name: result.name,
         elementId: result.elementId,
       };
     },
@@ -199,20 +208,20 @@ export function useDirections(
         const exhibitor = exhibitorsByBooth.get(el.properties.boothSlug ?? "");
         location = {
           type: exhibitor ? "exhibitor" : "booth",
-          label: exhibitor?.name || el.properties.name,
+          name: exhibitor?.name || el.properties.name,
           boothSlug: el.properties.boothSlug ?? undefined,
           elementId: el.id,
         };
       } else if (el.type === "session_area") {
         location = {
           type: "session_area",
-          label: el.properties.name || "Session Area",
+          name: el.properties.name || "",
           elementId: el.id,
         };
       } else if (el.type === "meeting_room") {
         location = {
           type: "meeting_room",
-          label: el.properties.name || "Meeting Room",
+          name: el.properties.name || "",
           elementId: el.id,
         };
       } else {

@@ -2,6 +2,7 @@ import { useState, useMemo } from "react";
 import { PiCaretUp, PiCaretDown } from "react-icons/pi";
 import type { FloorPlanElement } from "../../types";
 import type { Exhibitor, HoveredItem } from "../types";
+import { useT } from "../i18n";
 
 interface MapSheetProps {
   elements: FloorPlanElement[];
@@ -13,6 +14,7 @@ interface MapSheetProps {
 type TabId = "exhibitors" | "sessions" | "meetingRooms";
 
 export function MapSheet({ elements, exhibitors, selectedItem, onSelect }: MapSheetProps) {
+  const t = useT();
   const [expanded, setExpanded] = useState(false);
 
   const sessionElements = useMemo(
@@ -49,11 +51,11 @@ export function MapSheet({ elements, exhibitors, selectedItem, onSelect }: MapSh
   const visibleTabs = useMemo(
     () =>
       ([
-        { id: "exhibitors" as TabId, label: "Exhibitors", count: exhibitors.length },
-        { id: "sessions" as TabId, label: "Sessions", count: sessionElements.length },
-        { id: "meetingRooms" as TabId, label: "Rooms", count: meetingRoomElements.length },
+        { id: "exhibitors" as TabId, label: t("viewer.tab.exhibitors"), count: exhibitors.length },
+        { id: "sessions" as TabId, label: t("viewer.tab.sessions"), count: sessionElements.length },
+        { id: "meetingRooms" as TabId, label: t("viewer.tab.rooms"), count: meetingRoomElements.length },
       ] as const).filter((tab) => tab.count > 0),
-    [exhibitors.length, sessionElements.length, meetingRoomElements.length]
+    [exhibitors.length, sessionElements.length, meetingRoomElements.length, t]
   );
 
   const [activeTab, setActiveTab] = useState<TabId>(() => visibleTabs[0]?.id ?? "exhibitors");
@@ -71,7 +73,7 @@ export function MapSheet({ elements, exhibitors, selectedItem, onSelect }: MapSh
           type="button"
           onClick={() => setExpanded(!expanded)}
           aria-expanded={expanded}
-          aria-label={expanded ? "Collapse list" : "Expand list"}
+          aria-label={expanded ? t("viewer.sheet.collapse") : t("viewer.sheet.expand")}
           className="absolute inset-0 w-full cursor-pointer"
         />
         <div className="relative flex items-center justify-between w-full px-4 py-3 pointer-events-none">
@@ -97,7 +99,10 @@ export function MapSheet({ elements, exhibitors, selectedItem, onSelect }: MapSh
             </div>
           ) : (
             <span className="text-xs font-medium text-gray-600">
-              {visibleTabs[0]?.label} ({visibleTabs[0]?.count ?? 0})
+              {t("common.labelWithCount", {
+                label: visibleTabs[0]?.label ?? "",
+                count: visibleTabs[0]?.count ?? 0,
+              })}
             </span>
           )}
           {expanded ? (
@@ -131,7 +136,11 @@ export function MapSheet({ elements, exhibitors, selectedItem, onSelect }: MapSh
                     )}
                     <div>
                       <div className="text-xs font-medium text-gray-800">{exhibitor.name}</div>
-                      <div className="text-[11px] text-gray-400">Booth {boothEl?.properties.name ?? ""}</div>
+                      <div className="text-[11px] text-gray-400">
+                        {boothEl?.properties.name
+                          ? t("viewer.boothLabel", { code: boothEl.properties.name })
+                          : ""}
+                      </div>
                     </div>
                   </div>
                 </button>
@@ -150,7 +159,7 @@ export function MapSheet({ elements, exhibitors, selectedItem, onSelect }: MapSh
                   }`}
                 >
                   <div className="text-xs font-medium text-gray-800">
-                    {el.properties.name || "Unnamed Session"}
+                    {el.properties.name || t("viewer.unnamedSession")}
                   </div>
                 </button>
               );
@@ -168,7 +177,7 @@ export function MapSheet({ elements, exhibitors, selectedItem, onSelect }: MapSh
                   }`}
                 >
                   <div className="text-xs font-medium text-gray-800">
-                    {el.properties.name || "Unnamed Room"}
+                    {el.properties.name || t("viewer.unnamedRoom")}
                   </div>
                 </button>
               );

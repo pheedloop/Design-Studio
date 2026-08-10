@@ -29,6 +29,7 @@ import { DirectionsPanel } from "./components/DirectionsPanel";
 import { resolveFeatures } from "../tiers";
 import type { Tier, FeatureKey, FeatureOverride } from "../tiers";
 import { I18nProvider } from "../i18n/I18nProvider";
+import { useLocale, useT } from "./i18n";
 import type { Translate } from "../i18n/types";
 
 interface MapViewerProps {
@@ -98,6 +99,8 @@ function MapViewerInner({
   reservedBoothSlugs,
   overlay,
 }: Omit<MapViewerProps, "translate" | "locale">) {
+  const t = useT();
+  const locale = useLocale();
   // Wayfinding (Directions) is gated by the usage tier. The viewer hides the
   // feature entirely when it is not enabled (no disabled/trophy state here).
   const featureMap = useMemo(
@@ -132,8 +135,11 @@ function MapViewerInner({
     useSearch(data.elements, exhibitors, { boothsOnly: isPicker });
 
   const searchPlaceholder = useMemo(
-    () => (isPicker ? "Search booths" : buildSearchPlaceholder(data.elements)),
-    [data.elements, isPicker],
+    () =>
+      isPicker
+        ? t("viewer.search.boothsOnly")
+        : buildSearchPlaceholder(data.elements, t, locale),
+    [data.elements, isPicker, t, locale],
   );
 
   const directions = useDirections(data, exhibitors);
@@ -292,7 +298,7 @@ function MapViewerInner({
               className="flex items-center gap-1.5 px-3 py-2 text-xs font-medium text-blue-600 hover:bg-blue-50 cursor-pointer transition-colors shrink-0 border-l border-gray-200"
             >
               <PiPath size={16} />
-              <span className="hidden sm:inline">Directions</span>
+              <span className="hidden sm:inline">{t("viewer.directions.title")}</span>
             </button>
           )}
         </div>

@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import type { FloorPlanElement } from "../../types";
+import { useT } from "../i18n";
 import type { Exhibitor, HoveredItem } from "../types";
 
 interface MapSidebarProps {
@@ -17,6 +18,7 @@ export function MapSidebar({
   selectedItem,
   onSelect,
 }: MapSidebarProps) {
+  const t = useT();
   const sessionElements = useMemo(
     () =>
       [...elements.filter((el) => el.type === "session_area")].sort((a, b) =>
@@ -54,22 +56,22 @@ export function MapSidebar({
         [
           {
             id: "exhibitors" as TabId,
-            label: "Exhibitors",
+            label: t("viewer.tab.exhibitors"),
             count: exhibitors.length,
           },
           {
             id: "sessions" as TabId,
-            label: "Sessions",
+            label: t("viewer.tab.sessions"),
             count: sessionElements.length,
           },
           {
             id: "meetingRooms" as TabId,
-            label: "Meeting Rooms",
+            label: t("viewer.tab.meetingRooms"),
             count: meetingRoomElements.length,
           },
         ] as const
       ).filter((tab) => tab.count > 0),
-    [exhibitors.length, sessionElements.length, meetingRoomElements.length],
+    [exhibitors.length, sessionElements.length, meetingRoomElements.length, t],
   );
 
   const [activeTab, setActiveTab] = useState<TabId>(
@@ -105,7 +107,10 @@ export function MapSidebar({
       {visibleTabs.length === 1 && (
         <div className="px-3 py-2 border-b border-gray-200">
           <span className="text-xs font-medium text-gray-600">
-            {visibleTabs[0].label} ({visibleTabs[0].count})
+            {t("common.labelWithCount", {
+              label: visibleTabs[0].label,
+              count: visibleTabs[0].count,
+            })}
           </span>
         </div>
       )}
@@ -145,7 +150,9 @@ export function MapSidebar({
                       {exhibitor.name}
                     </div>
                     <div className="text-[11px] text-gray-400">
-                      {boothEl?.properties.name ?? ""}
+                      {boothEl?.properties.name
+                        ? t("viewer.boothLabel", { code: boothEl.properties.name })
+                        : ""}
                     </div>
                   </div>
                 </div>
@@ -171,7 +178,7 @@ export function MapSidebar({
                 }`}
               >
                 <div className="text-xs font-medium text-gray-800">
-                  {el.properties.name || "Unnamed Session"}
+                  {el.properties.name || t("viewer.unnamedSession")}
                 </div>
               </button>
             );
@@ -195,7 +202,7 @@ export function MapSidebar({
                 }`}
               >
                 <div className="text-xs font-medium text-gray-800">
-                  {el.properties.name || "Unnamed Room"}
+                  {el.properties.name || t("viewer.unnamedRoom")}
                 </div>
               </button>
             );
