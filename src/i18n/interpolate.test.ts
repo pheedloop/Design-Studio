@@ -19,7 +19,6 @@ describe("interpolate", () => {
   });
 
   it("leaves an unsupplied placeholder visible rather than blank", () => {
-    // A visible {{count}} gets reported; a silent gap does not.
     expect(interpolate("{{count}} seats", {})).toBe("{{count}} seats");
     expect(interpolate("{{count}} seats", { other: 1 })).toBe("{{count}} seats");
   });
@@ -29,8 +28,6 @@ describe("interpolate", () => {
   });
 
   it("does not re-scan substituted values for placeholders", () => {
-    // Otherwise a host translation or UGC value containing {{…}} could expand
-    // into another variable — or loop.
     expect(interpolate("{{a}}", { a: "{{b}}", b: "boom" })).toBe("{{b}}");
   });
 
@@ -52,7 +49,6 @@ describe("resolveEnglishFrom", () => {
   });
 
   it("returns the template uninterpolated", () => {
-    // The whole point: this is what a UGC catalog is keyed by.
     expect(resolveEnglishFrom(strings, "viewer.hello", { name: "Ada" })).toBe(
       "Hello {{name}}",
     );
@@ -65,7 +61,6 @@ describe("resolveEnglishFrom", () => {
   });
 
   it("selects the plural at every other count, including 0", () => {
-    // English puts zero in the plural — "0 seats free", not "0 seat free".
     expect(resolveEnglishFrom(strings, "seatviewer.seatsFree", { count: 0 })).toBe(
       "{{count}} seats free",
     );
@@ -75,15 +70,12 @@ describe("resolveEnglishFrom", () => {
   });
 
   it("falls back to the unsuffixed entry when a key has no plural variants", () => {
-    // Passing a count to a non-plural string must not blank it out.
     expect(resolveEnglishFrom(strings, "viewer.legend.title", { count: 2 })).toBe(
       "Legend",
     );
   });
 
   it("returns the key itself for an unknown key, never an empty string", () => {
-    // English is the guaranteed fallback; a missing entry must still render
-    // something a reader can trace back to a key.
     expect(resolveEnglishFrom(strings, "viewer.nope")).toBe("viewer.nope");
   });
 });

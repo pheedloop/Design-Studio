@@ -67,13 +67,12 @@ export interface BadgeEditorProps {
    *  When omitted, the picker is hidden and fields show placeholders. */
   attendeeProvider?: AttendeeProvider;
   /**
-   * Resolves the editor's own UI strings. Omit for built-in English.
-   *
-   * MUST be referentially stable — wrap it in `useCallback` keyed on your
-   * language and catalog. See the README's Internationalization section.
+   * Resolves this component's UI strings. Omit for built-in English. Keys come
+   * from `designStudioStrings`. Must be referentially stable — wrap in
+   * `useCallback`.
    */
   translate?: Translate;
-  /** BCP-47 tag for number formatting — dimensions and the decimal separator. */
+  /** BCP-47 tag for number and list formatting. */
   locale?: string;
 }
 
@@ -109,7 +108,7 @@ export function BadgeEditor({ translate, locale, ...rest }: BadgeEditorProps) {
   );
 }
 
-/** Split out so the body can consume the context this component provides. */
+/** Split so the body can consume the context the wrapper provides. */
 function BadgeEditorInner({
   initialDocument,
   onSave,

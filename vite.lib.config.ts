@@ -97,7 +97,7 @@ export default defineConfig({
     scopeCss(),
     dts({
       tsconfigPath: "./tsconfig.lib.json",
-      // Must stay in sync with tsconfig.lib.json's `include` — see the note there.
+      // Keep in sync with tsconfig.lib.json's `include`.
       include: [
         "src/editor",
         "src/viewer",
@@ -123,8 +123,7 @@ export default defineConfig({
         editor: resolve(__dirname, "src/editor/index.ts"),
         viewer: resolve(__dirname, "src/viewer/index.ts"),
         seatviewer: resolve(__dirname, "src/seatviewer/index.ts"),
-        // Merged English manifest — imported by host BUILD steps to seed a catalog,
-        // never at runtime. See src/i18n/index.ts.
+        // Merged English manifest, for host build steps.
         i18n: resolve(__dirname, "src/i18n/index.ts"),
         // Style-only entry — produces dist/style.css consumed by the host app
         style: resolve(__dirname, "src/lib-style.ts"),

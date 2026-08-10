@@ -1,9 +1,5 @@
-// Demo-only locale toggle. Styled to match the tier buttons in MapApp's nav.
-//
-// The demo's own chrome — this switcher, the product tabs, the tier and viewport
-// buttons — is deliberately NOT translated. That gives a visual boundary while
-// testing: anything bracketed and accented is the library, anything in plain
-// English is the host. Please keep it that way.
+// Demo chrome stays untranslated on purpose — it is the visual boundary
+// between library strings and host strings.
 
 import { DEMO_LOCALES, type DemoLocale } from "./useDemoLocale";
 

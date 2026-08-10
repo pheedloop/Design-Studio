@@ -11,7 +11,6 @@ const STRINGS = { "viewer.legend.title": "Legend" };
 const { useT } = createSurfaceI18n(STRINGS);
 const useLooseT = useT as unknown as () => LooseT;
 
-/** Renders one string, so the test can read what a component would display. */
 function Label() {
   const t = useLooseT();
   return <span data-testid="label">{t("viewer.legend.title")}</span>;
@@ -28,8 +27,6 @@ const label = () => screen.getByTestId("label").textContent;
 
 describe("English fallback", () => {
   it("renders the built-in English with no provider at all", () => {
-    // The guarantee the design rests on: a host that upgrades and passes
-    // nothing sees exactly what it saw before.
     render(<Label />);
     expect(label()).toBe("Legend");
   });
@@ -55,9 +52,7 @@ describe("provider", () => {
   });
 
   it("inherits through a nested provider that passes no translator", () => {
-    // This is SeatPlanCanvas nested inside SeatPlanViewer. The canvas is
-    // published separately so it takes its own props, but leaving them
-    // undefined must not reset the subtree to English.
+    // SeatPlanCanvas nested inside SeatPlanViewer.
     render(
       <I18nProvider translate={shout}>
         <I18nProvider>
@@ -97,9 +92,8 @@ describe("provider", () => {
 });
 
 describe("t identity", () => {
-  // Components put t in useMemo/useCallback dependency arrays. Stability keeps
-  // the editor from re-deriving every menu and tool list on each keystroke;
-  // changing on a language switch is what makes memoized strings rebuild.
+  // t goes in useMemo dependency arrays: stability avoids re-deriving the editor
+  // every render, and changing on a swap is what rebuilds memoized strings.
   function Probe({ seen }: { seen: LooseT[] }) {
     const t = useLooseT();
     seen.push(t);

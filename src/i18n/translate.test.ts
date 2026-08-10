@@ -2,10 +2,8 @@ import { describe, expect, it, vi } from "vitest";
 import { createSurfaceI18n } from "./context";
 import type { Vars } from "./types";
 
-// Fixture keys deliberately are not real manifest keys — these tests cover the
-// resolution machinery, not the catalogue. StringKey is the real union, so the
-// returned functions are widened to accept the fixtures. The type guardrail
-// itself is covered by the packaged type probe, not here.
+// Fixture keys are deliberately not real manifest keys, so the returned functions
+// are widened past StringKey.
 type LooseTranslate = (key: string, vars?: Vars) => string;
 type LooseLookup = (english: string, key: string) => string | undefined;
 
@@ -65,10 +63,8 @@ describe("resolveEnglish — what a host passes as its defaultValue", () => {
 
 describe("createTranslate — resolution order", () => {
   it("hands the lookup the UNINTERPOLATED English", () => {
-    // The invariant the whole helper exists to protect. A catalogue keyed by
-    // English source is keyed by "Hello {{name}}"; if interpolation ran first
-    // the lookup would receive "Hello Ada", match nothing, and fall back to
-    // English silently — for exactly the strings users notice most.
+    // If interpolation ran first the lookup would get "Hello Ada", match
+    // nothing, and fall back to English silently.
     const lookup = vi.fn<LooseLookup>(() => undefined);
     surface().createTranslate(lookup)("viewer.hello", { name: "Ada" });
 
@@ -92,8 +88,6 @@ describe("createTranslate — resolution order", () => {
   });
 
   it("translates a counted string end to end against an English-keyed catalogue", () => {
-    // The Charmander shape, in miniature. This is the regression that reversing
-    // the order would cause: the assertion below would read "3 seats free".
     const ugc: Record<string, string> = {
       "{{count}} seat free": "{{count}} place libre",
       "{{count}} seats free": "{{count}} places libres",
@@ -110,7 +104,6 @@ describe("createTranslate — resolution order", () => {
   });
 
   it("falls back to English when the lookup returns an empty string", () => {
-    // An untranslated catalogue entry is common; it must not blank the UI.
     const t = surface().createTranslate(() => "");
     expect(t("viewer.legend.title")).toBe("Legend");
   });

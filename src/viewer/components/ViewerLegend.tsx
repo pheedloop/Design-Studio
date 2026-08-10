@@ -27,7 +27,6 @@ export function ViewerLegend({ legend }: ViewerLegendProps) {
                   style={{ width: 12, height: 12, background: entry.color }}
                 />
                 <span className="text-xs text-gray-700 leading-none whitespace-nowrap">
-                  {/* entry.label is author-supplied data; only the fallback is ours. */}
                   {entry.label || (
                     <em className="text-gray-400">{t("viewer.legend.unlabeled")}</em>
                   )}

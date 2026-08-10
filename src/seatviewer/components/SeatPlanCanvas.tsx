@@ -27,14 +27,12 @@ export interface SeatPlanCanvasProps {
   /** Overlay content positioned within the canvas region (e.g. the table dialog). */
   children?: ReactNode;
   /**
-   * Resolves this canvas's own UI strings. Omit for built-in English.
-   *
-   * Present because the canvas is published separately and a host may mount it
-   * without SeatPlanViewer. Nested inside SeatPlanViewer, leaving it undefined
-   * inherits that viewer's translator rather than resetting to English.
+   * Resolves this component's UI strings. Omit for built-in English. Keys come
+   * from `designStudioStrings`. Must be referentially stable — wrap in
+   * `useCallback`.
    */
   translate?: Translate;
-  /** BCP-47 tag for number and list formatting. Inherits when omitted. */
+  /** BCP-47 tag for number and list formatting. */
   locale?: string;
 }
 

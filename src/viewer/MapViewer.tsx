@@ -55,20 +55,12 @@ interface MapViewerProps {
   /** Host content floated over the map, rendered outside `.pl-map-editor` so host styles win. */
   overlay?: ReactNode;
   /**
-   * Resolves the viewer's own UI strings. Omit for built-in English.
-   *
-   * Keys and their English come from `designStudioStrings`, exported alongside
-   * this component. MUST be referentially stable — wrap it in `useCallback`
-   * keyed on your language and catalog, since display strings are memoized off
-   * its identity. See the README's Internationalization section.
+   * Resolves this component's UI strings. Omit for built-in English. Keys come
+   * from `designStudioStrings`. Must be referentially stable — wrap in
+   * `useCallback`.
    */
   translate?: Translate;
-  /**
-   * BCP-47 tag for number and list formatting. Omit for the runtime default.
-   *
-   * Pass it explicitly wherever the language is not the device's — notably the
-   * mobile webview, where `?lang=` on the URL drives the language.
-   */
+  /** BCP-47 tag for number and list formatting. */
   locale?: string;
 }
 
@@ -83,13 +75,6 @@ function boothItemForSlug(
   return el ? { type: "booth", elementId: el.id, boothSlug } : null;
 }
 
-/**
- * Provides the translator, then renders the viewer.
- *
- * The split is required rather than stylistic: a component cannot consume a
- * context it provides in the same render, and the viewer body calls `useT()`
- * indirectly through useSearch/useDirections and the search placeholder.
- */
 export function MapViewer({ translate, locale, ...rest }: MapViewerProps) {
   return (
     <I18nProvider translate={translate} locale={locale}>
@@ -98,6 +83,7 @@ export function MapViewer({ translate, locale, ...rest }: MapViewerProps) {
   );
 }
 
+/** Split so the body can consume the context the wrapper provides. */
 function MapViewerInner({
   data,
   exhibitors,

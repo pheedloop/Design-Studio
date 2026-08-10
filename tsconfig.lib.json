@@ -19,10 +19,8 @@
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true
   },
-  // Shared modules that the published surfaces reference must be listed here, or
-  // vite-plugin-dts silently skips emitting their .d.ts while the surfaces that
-  // import them still emit the import — a dangling reference that only hosts with
-  // `skipLibCheck: false` ever see. `src/tiers.ts` was in exactly that state.
+  // Shared modules referenced by the published surfaces must be listed, or their
+  // .d.ts is never emitted while the importers still reference it.
   "include": [
     "src/editor/**/*",
     "src/viewer/**/*",
@@ -32,7 +30,5 @@
     "src/utils/**/*",
     "src/tiers.ts"
   ],
-  // Tests are co-located with what they cover; they must not be type-checked
-  // into the library build or emit declarations into dist/.
   "exclude": ["src/**/*.test.ts", "src/**/*.test.tsx"]
 }

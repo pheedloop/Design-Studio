@@ -24,10 +24,7 @@ export function SeatPlanViewer({
   );
 }
 
-/**
- * Split out because a component cannot consume a context it provides in the same
- * render, and the body resolves display strings (the assign CTA) itself.
- */
+/** Split so the body can consume the context the wrapper provides. */
 function SeatPlanViewerInner(props: Omit<SeatPlanViewerProps, "translate" | "locale">) {
   const {
     mode,

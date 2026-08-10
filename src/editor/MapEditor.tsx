@@ -126,30 +126,15 @@ interface MapEditorProps {
   /** Per-feature overrides applied on top of the tier preset. */
   features?: Partial<Record<FeatureKey, FeatureOverride>>;
   /**
-   * Resolves the editor's own UI strings. Omit for built-in English.
-   *
-   * Keys and their English come from `designStudioStrings`, exported alongside
-   * this component. MUST be referentially stable — wrap it in `useCallback`
-   * keyed on your language and catalog. The editor memoizes menus, tool lists
-   * and panel labels off its identity, so a fresh function each render
-   * re-derives all of them on every keystroke. See the README's
-   * Internationalization section.
+   * Resolves this component's UI strings. Omit for built-in English. Keys come
+   * from `designStudioStrings`. Must be referentially stable — wrap in
+   * `useCallback`.
    */
   translate?: Translate;
-  /**
-   * BCP-47 tag for number and list formatting — measurements, areas and the
-   * decimal separator. Omit for the runtime default.
-   */
+  /** BCP-47 tag for number and list formatting. */
   locale?: string;
 }
 
-/**
- * Provides the translator, then renders the editor.
- *
- * The split is required rather than stylistic: a component cannot consume a
- * context it provides in the same render, and the editor body resolves its menu
- * labels and confirmation prompts itself.
- */
 export function MapEditor({ translate, locale, ...rest }: MapEditorProps) {
   return (
     <I18nProvider translate={translate} locale={locale}>
@@ -158,6 +143,7 @@ export function MapEditor({ translate, locale, ...rest }: MapEditorProps) {
   );
 }
 
+/** Split so the body can consume the context the wrapper provides. */
 function MapEditorInner({
   initialData,
   placementCategories = [],

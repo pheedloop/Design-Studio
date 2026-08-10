@@ -1,24 +1,9 @@
-// ---------------------------------------------------------------------------
-// i18n manifest gate (no test runner in this repo — run via the Makefile):
-//   make verify-strings
+// Checks the i18n manifest against the source and the emitted declarations.
+// Run via `make verify-strings` (needs the Node in .nvmrc).
 //
-// Checks the string manifest against the source that uses it, and against the
-// emitted declaration files. The TypeScript StringKey union already makes a
-// typo'd key a compile error; this covers what a type cannot see — dead keys,
-// namespace leaks across surfaces, malformed manifest entries, and dangling
-// imports in dist/.
-//
-// This script deliberately IMPORTS NOTHING from src/. Two reasons:
-//   1. src/badgeeditor/verify.ts documents `node src/badgeeditor/verify.ts` but
-//      does not actually run — Node's TS resolver does not follow extensionless
-//      relative specifiers, so it dies before its first assertion. Parsing text
-//      sidesteps the whole problem.
-//   2. Reading the manifest as text lets us enforce FORMAT — sort order, one
-//      entry per line — which a runtime import cannot observe.
-//
-// The format contract for src/i18n/strings.<surface>.ts is therefore load-bearing:
-//   ^  "some.key": "English text",$
-// ---------------------------------------------------------------------------
+// Imports nothing on purpose: Node's TS resolver will not follow extensionless
+// relative specifiers, and reading the manifest as text also lets this enforce
+// format rules — sort order, one `"key": "English",` per line.
 
 import { readdirSync, readFileSync, statSync } from "node:fs";
 import { dirname, join, relative, resolve } from "node:path";
@@ -29,8 +14,6 @@ const SRC = join(ROOT, "src");
 
 /** Which manifest file owns which namespace, and where its keys may be used. */
 const SLICES: Record<string, { file: string; dirs: string[] }> = {
-  // `common.*` is for modules imported ACROSS surface directories — src/utils/*,
-  // and the src/editor canvas components the viewers pull in. Usable anywhere.
   common: { file: "src/i18n/strings.common.ts", dirs: ["src"] },
   viewer: { file: "src/i18n/strings.viewer.ts", dirs: ["src/viewer"] },
   seatviewer: { file: "src/i18n/strings.seatviewer.ts", dirs: ["src/seatviewer"] },
@@ -38,9 +21,7 @@ const SLICES: Record<string, { file: string; dirs: string[] }> = {
   badgeeditor: { file: "src/i18n/strings.badgeeditor.ts", dirs: ["src/badgeeditor"] },
 };
 
-// Modules that render under whichever surface's provider happens to be mounted,
-// because more than one surface imports them. Their strings must be `common.*`
-// or the English fallback silently disappears depending on the entry point.
+// Imported by more than one surface, so their strings must be `common.*`.
 const CROSS_SURFACE = new Set([
   "src/utils/unitConversion.ts",
   "src/viewer/components/ViewerElement.tsx",
@@ -49,10 +30,8 @@ const CROSS_SURFACE = new Set([
   "src/editor/utils/iconRegistry.ts",
 ]);
 
-// Intentional same-English-different-key pairs. Charmander's UGC catalog is keyed
-// by the English string, so two keys with identical English ALWAYS resolve to the
-// same translation there — a split buys nothing unless the English diverges too.
-// Anything listed here is a deliberate exception with a stated reason.
+// Deliberate same-English-different-key pairs. Charmander keys its UGC by the
+// English string, so a split buys nothing there unless the English diverges too.
 const ALLOWED_DUPES: Record<string, string> = {};
 
 const ENTRY = /^ {2}"([a-z][A-Za-z0-9_.]*)": "((?:[^"\\]|\\.)*)",$/;
@@ -154,15 +133,12 @@ function walk(dir: string): void {
 
     const rel = relative(ROOT, path);
     if (rel.startsWith("src/i18n/strings")) continue; // the manifest itself
-    // Tests exercise the resolution machinery with fixture keys that are not,
-    // and should not be, in the manifest.
+    // Tests use fixture keys that are deliberately not in the manifest.
     if (/\.test\.tsx?$/.test(rel)) continue;
     const text = readFileSync(path, "utf8");
 
-    // The merged manifest must stay out of component bundles: it is one object
-    // literal, and Rollup does not tree-shake object properties, so importing it
-    // anywhere under a surface ships every other surface's English along with it.
-    // Type-only imports are erased, so they are fine. src/demo never ships.
+    // The merged manifest must stay out of component bundles. Type-only imports
+    // are erased, so they are fine; src/demo never ships.
     const importsMerged = /^(?!.*\b(?:import|export) type\b).*from ["'][^"']*i18n\/strings["']/m.test(text);
     if (importsMerged && rel !== "src/i18n/index.ts" && !rel.startsWith("src/demo/")) {
       fail(`${rel} imports the merged manifest for its value — use this surface's slice instead`);
@@ -204,10 +180,6 @@ for (const key of callable) {
 }
 
 // --- emitted declarations resolve -------------------------------------------
-//
-// dist/tiers.d.ts was missing for months while five shipped .d.ts files imported
-// it; only skipLibCheck kept hosts from noticing. Now that the props type every
-// host instantiates imports from src/i18n, a repeat would be a hard error.
 
 const dist = join(ROOT, "dist");
 let checkedDecls = 0;
@@ -238,10 +210,7 @@ function checkDecls(dir: string): void {
         fail(`${relative(ROOT, path)} imports "${match[1]}", which was never emitted`);
         continue;
       }
-      // A bundle entry named `x` sits at dist/x.js while its declarations sit at
-      // dist/x/. A relative "./x" then resolves to the JS file, finds no adjacent
-      // x.d.ts, and degrades the whole import to `any` — silently, because
-      // skipLibCheck hides it. Import the specific declaration file instead.
+      // dist/x.js shadows dist/x/index.d.ts, so the import degrades to `any`.
       if (!asDeclaration && asDirectory && isFile(`${target}.js`)) {
         fail(
           `${relative(ROOT, path)} imports "${match[1]}", which is ambiguous — ` +
@@ -260,7 +229,7 @@ try {
     distChecked = true;
   }
 } catch {
-  // No dist/ — a source-only run. Reported below so it is never mistaken for a pass.
+  // No dist/ — reported below rather than passing silently.
 }
 
 // --- report -----------------------------------------------------------------

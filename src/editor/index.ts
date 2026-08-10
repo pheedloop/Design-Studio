@@ -9,15 +9,8 @@ export type { FloorPlanData, Background, BackgroundImageData, BackgroundDxfData 
 export type { ExhibitorBooth, SessionLocation, MeetingRoom } from "../viewer/types";
 export type { Tier, FeatureKey, FeatureOverride } from "../tiers";
 
-// ---------------------------------------------------------------------------
-// Internationalization
-// ---------------------------------------------------------------------------
-//
-// `designStudioStrings` is this surface's English, keyed by the same stable keys
-// `translate` receives. Deliberately scoped to this surface: the merged manifest
-// is one object literal and Rollup does not tree-shake object properties, so
-// re-exporting it here would ship every other surface's English with this one.
-// Host build steps that want all of it import "@pheedloop/design-studio/i18n".
+// Scoped to this surface: re-exporting the merged manifest here would ship
+// every other surface's English with this one.
 export { designStudioStrings, createTranslate, defaultTranslate, resolveEnglish } from "./i18n";
 export type { Translate, Vars, Lookup, T } from "../i18n/types";
 export type { StringKey } from "../i18n/strings";
