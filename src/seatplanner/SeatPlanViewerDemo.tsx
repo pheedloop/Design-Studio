@@ -1,6 +1,6 @@
 import { useMemo, useRef, useState, useCallback } from "react";
 import { SeatPlanViewer } from "../seatviewer";
-import type { SeatOccupant, SeatPlanMode, SeatTicket } from "../seatviewer";
+import type { SeatOccupant, SeatPlanMode, SeatTicket, Translate } from "../seatviewer";
 import { seatPlanMap } from "../sample-data/seatplan-map";
 import { seatPlanState } from "../sample-data/seatplan-state";
 import { buildSeatPlanRoster, MY_TICKET_CODES } from "../sample-data/seatplan-roster";
@@ -20,7 +20,7 @@ const BASE_TABLES = seatPlanState.filter((t) => MAPPED_CODES.has(t.tableCode));
  * of ticket holders in local state. Table occupancy and the per-table occupant
  * list are both derived from that roster, so the list and the floor always agree.
  */
-export function SeatPlanViewerDemo() {
+export function SeatPlanViewerDemo({ translate }: { translate?: Translate }) {
   const [viewerMode, setViewerMode] = useState<SeatPlanMode>("admin");
   const [lockSelection, setLockSelection] = useState(false);
   const [hideDetails, setHideDetails] = useState(false);
@@ -140,6 +140,7 @@ export function SeatPlanViewerDemo() {
           onUnassign={handleUnassign}
           lockSeatSelectionPage={viewerMode === "attendee" && lockSelection}
           hideAttendeeDetails={viewerMode === "attendee" && hideDetails}
+          translate={translate}
         />
       </div>
     </div>

@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { ProductSwitcher } from "../components/ProductSwitcher";
 import { SeatPlanEditor } from "./SeatPlanEditor";
 import { SeatPlanViewerDemo } from "./SeatPlanViewerDemo";
+import { LocaleSwitcher } from "../demo/LocaleSwitcher";
+import { useDemoLocale } from "../demo/useDemoLocale";
 
 type Mode = "editor" | "viewer";
 
@@ -13,6 +15,7 @@ function getMode(): Mode {
 
 export function SeatplannerApp() {
   const [mode, setMode] = useState<Mode>(getMode);
+  const { locale, setLocale, translate } = useDemoLocale();
 
   useEffect(() => {
     const onHashChange = () => setMode(getMode());
@@ -38,9 +41,14 @@ export function SeatplannerApp() {
         <div className="w-px h-4 bg-gray-700 mx-1" />
         {modeTab("editor", "Editor")}
         {modeTab("viewer", "Viewer")}
+        <LocaleSwitcher locale={locale} setLocale={setLocale} />
       </nav>
       <div className="flex-1 overflow-hidden">
-        {mode === "editor" ? <SeatPlanEditor /> : <SeatPlanViewerDemo />}
+        {mode === "editor" ? (
+          <SeatPlanEditor />
+        ) : (
+          <SeatPlanViewerDemo translate={translate} />
+        )}
       </div>
     </div>
   );
