@@ -1,0 +1,38 @@
+name: CI
+
+# Lint is omitted: it reports 3 pre-existing errors on develop, and a permanently
+# red gate teaches people to ignore it.
+
+on:
+  pull_request:
+  push:
+    branches: [develop]
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: npm
+      - run: npm ci
+
+      - name: Typecheck
+        run: npx tsc -b --noEmit
+
+      - name: Test
+        run: npm test
+
+      - name: Build library
+        run: npm run build:lib
+
+      # After the build, so it can also check the emitted declarations.
+      - name: Verify i18n manifest
+        run: node scripts/verify-strings.ts

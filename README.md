@@ -134,7 +134,8 @@ resolution order, plural selection, provider inheritance, and `t` identity.
 keys used outside their surface, and dangling imports in the emitted types. Run it
 after `make build-lib`.
 
-The pre-commit hook runs typecheck and tests.
+CI runs typecheck, tests, the library build and `verify-strings` on every pull
+request. The pre-commit hook runs typecheck and tests.
 
 **Release:** `make release [BUMP=patch|minor|major]` from a clean `develop` —
 bumps, tags, and publishes to GitHub Packages. Every push to `develop` also
