@@ -5,6 +5,7 @@ import { SectionLabel, ColorSwatch, NumberInput, Slider } from "../ui";
 import { LabelSection } from "./LabelSection";
 import type { ElementProperties } from "../../../types";
 import { PiCaretDown, PiCaretRight } from "react-icons/pi";
+import { useT } from "../../i18n";
 
 const TYPE_DISPLAY_NAMES: Record<string, string> = {
   booth: "Booth",
@@ -43,6 +44,7 @@ interface TypeSectionProps {
 }
 
 function TypeSection({ typeKey, defaults, onChange }: TypeSectionProps) {
+  const t = useT();
   const [open, setOpen] = useState(false);
   const opacity = defaults.opacity ?? 1;
 
@@ -65,17 +67,17 @@ function TypeSection({ typeKey, defaults, onChange }: TypeSectionProps) {
       {open && (
         <div className="flex flex-col gap-3 px-3 pb-3 border-t border-gray-100 pt-3">
           <ColorSwatch
-            label="Fill"
+            label={t("editor.field.fill")}
             value={defaults.color ?? "#94a3b8"}
             onChange={(c) => onChange({ color: c })}
           />
           <ColorSwatch
-            label="Stroke"
+            label={t("editor.field.stroke")}
             value={defaults.strokeColor ?? "#888888"}
             onChange={(c) => onChange({ strokeColor: c })}
           />
           <div className="flex flex-col gap-1.5">
-            <SectionLabel>Stroke Width</SectionLabel>
+            <SectionLabel>{t("editor.field.strokeWidth")}</SectionLabel>
             <div className="w-20">
               <NumberInput
                 value={defaults.strokeWidth ?? 1}
@@ -85,14 +87,14 @@ function TypeSection({ typeKey, defaults, onChange }: TypeSectionProps) {
           </div>
           <div className="flex gap-3">
             <div className="flex flex-col gap-1.5 flex-1">
-              <SectionLabel>Default Width</SectionLabel>
+              <SectionLabel>{t("editor.field.defaultWidth")}</SectionLabel>
               <NumberInput
                 value={defaults.defaultWidth ?? 120}
                 onChange={(v) => onChange({ defaultWidth: Math.max(1, v) })}
               />
             </div>
             <div className="flex flex-col gap-1.5 flex-1">
-              <SectionLabel>Default Height</SectionLabel>
+              <SectionLabel>{t("editor.field.defaultHeight")}</SectionLabel>
               <NumberInput
                 value={defaults.defaultHeight ?? 80}
                 onChange={(v) => onChange({ defaultHeight: Math.max(1, v) })}
@@ -101,7 +103,7 @@ function TypeSection({ typeKey, defaults, onChange }: TypeSectionProps) {
           </div>
           <div className="flex flex-col gap-1.5">
             <div className="flex items-center justify-between">
-              <SectionLabel>Opacity</SectionLabel>
+              <SectionLabel>{t("editor.field.opacity")}</SectionLabel>
               <span className="text-[11px] text-gray-400">{Math.round(opacity * 100)}%</span>
             </div>
             <Slider

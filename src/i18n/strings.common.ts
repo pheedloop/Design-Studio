@@ -2,13 +2,13 @@
 // vocabulary more than one surface shows. A viewer.* key cannot be used from
 // src/editor, so anything both render lives here or it duplicates.
 // Entries stay sorted, one per line — scripts/verify-strings.ts parses this text.
-
 export const COMMON_STRINGS = {
   "common.area": "{{value}} sq {{unit}}",
   "common.labelWithCount": "{{label}} ({{count}})",
   "common.legend": "Legend",
   "common.loading": "Loading…",
   "common.measurement": "{{value}} {{unit}}",
+  "common.premiumFeature": "Premium feature",
   "common.type.booth": "Booth",
   "common.type.meetingRoom": "Meeting Room",
   "common.unit.ft": "ft",

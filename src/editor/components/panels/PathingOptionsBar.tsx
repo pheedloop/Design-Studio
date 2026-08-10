@@ -1,5 +1,6 @@
 import { PiMagicWand, PiPath } from "react-icons/pi";
 import { Button, Select, Slider } from "../ui";
+import { useT } from "../../i18n";
 
 interface PathingOptionsBarProps {
   cellSize: number;
@@ -22,10 +23,11 @@ export function PathingOptionsBar({
   onAutoMarkWalkable,
   onClearGrid,
 }: PathingOptionsBarProps) {
+  const t = useT();
   return (
     <div className="flex items-center gap-4 px-3 py-2 bg-white border-b border-gray-200">
       <div className="flex items-center gap-1.5">
-        <span className="text-[11px] text-gray-500">Cell Size</span>
+        <span className="text-[11px] text-gray-500">{t("editor.field.cellSize")}</span>
         <Select value={cellSize} onChange={(e) => onCellSizeChange(Number(e.target.value))}>
           {CELL_SIZE_OPTIONS.map((s) => (
             <option key={s} value={s}>{s}px</option>
@@ -34,7 +36,7 @@ export function PathingOptionsBar({
       </div>
 
       <div className="flex items-center gap-1.5">
-        <span className="text-[11px] text-gray-500">Opacity</span>
+        <span className="text-[11px] text-gray-500">{t("editor.field.opacity")}</span>
         <Slider
           min={0.1}
           max={0.8}
@@ -48,24 +50,24 @@ export function PathingOptionsBar({
 
       <div className="h-4 w-px bg-gray-200" />
 
-      <Button variant="ghost" color="positive" className="gap-1" onClick={onAutoMarkWalkable} title="Mark all non-booth space as walkable">
+      <Button variant="ghost" color="positive" className="gap-1" onClick={onAutoMarkWalkable} title={t("editor.pathing.autoAislesHint")}>
         <PiPath size={14} />
-        Auto-mark aisles
+        {t("editor.pathing.autoAisles")}
       </Button>
 
       <button
         onClick={onAutoMarkObstacles}
         className="flex items-center gap-1 px-2 py-1 text-xs text-gray-600 hover:bg-amber-50 hover:text-amber-700 rounded transition-colors cursor-pointer"
-        title="Mark all booth footprints as impassable"
+        title={t("editor.pathing.autoObstaclesHint")}
       >
         <PiMagicWand size={14} />
-        Auto-mark obstacles
+        {t("editor.pathing.autoObstacles")}
       </button>
 
       <div className="h-4 w-px bg-gray-200" />
 
-      <Button variant="ghost" color="negative" onClick={onClearGrid} title="Reset all cells to impassable">
-        Clear grid
+      <Button variant="ghost" color="negative" onClick={onClearGrid} title={t("editor.pathing.clearHint")}>
+        {t("editor.pathing.clear")}
       </Button>
     </div>
   );

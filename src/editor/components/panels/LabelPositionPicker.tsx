@@ -1,4 +1,5 @@
 import { SectionLabel } from "../ui";
+import { useT } from "../../i18n";
 
 type VPos = "top" | "middle" | "bottom";
 type HPos = "left" | "center" | "right";
@@ -13,9 +14,10 @@ const vValues: VPos[] = ["top", "middle", "bottom"];
 const hValues: HPos[] = ["left", "center", "right"];
 
 export function LabelPositionPicker({ v, h, onChange }: LabelPositionPickerProps) {
+  const t = useT();
   return (
     <div className="flex flex-col gap-1.5">
-      <SectionLabel>Label Position</SectionLabel>
+      <SectionLabel>{t("editor.field.labelPosition")}</SectionLabel>
       <div className="inline-grid grid-cols-3 gap-1 p-1.5 bg-gray-50 rounded border border-gray-200 w-fit">
         {vValues.map((vv) =>
           hValues.map((hh) => {

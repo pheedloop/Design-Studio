@@ -2,6 +2,7 @@ import type { ElementProperties } from "../../../types";
 import { Button, SectionLabel, NumberInput, ColorSwatch, Slider } from "../ui";
 import { LabelPositionPicker } from "./LabelPositionPicker";
 import { PiEye, PiEyeSlash } from "react-icons/pi";
+import { useT } from "../../i18n";
 
 interface LabelSectionProps {
   properties: ElementProperties;
@@ -9,19 +10,20 @@ interface LabelSectionProps {
 }
 
 export function LabelSection({ properties, onChange }: LabelSectionProps) {
+  const t = useT();
   const visible = properties.labelVisible !== false;
   const hasBg = !!properties.labelBackground;
 
   return (
     <div className="flex flex-col gap-3">
       <div className="flex items-center justify-between">
-        <SectionLabel>Label</SectionLabel>
+        <SectionLabel>{t("editor.field.label")}</SectionLabel>
         <button
           className={`p-1 rounded transition-colors cursor-pointer ${
             visible ? "text-gray-500 hover:text-gray-700" : "text-red-400 hover:text-red-600"
           }`}
           onClick={() => onChange({ labelVisible: !visible })}
-          title={visible ? "Hide label" : "Show label"}
+          title={visible ? t("editor.label.hide") : t("editor.label.show")}
         >
           {visible ? <PiEye size={16} /> : <PiEyeSlash size={16} />}
         </button>
@@ -34,13 +36,13 @@ export function LabelSection({ properties, onChange }: LabelSectionProps) {
       />
 
       <ColorSwatch
-        label="Color"
+        label={t("editor.field.color")}
         value={properties.labelColor ?? "#ffffff"}
         onChange={(c) => onChange({ labelColor: c })}
       />
 
       <div className="flex flex-col gap-1.5">
-        <SectionLabel>Font Size</SectionLabel>
+        <SectionLabel>{t("editor.field.fontSize")}</SectionLabel>
         <div className="w-20">
           <NumberInput
             value={properties.labelFontSize ?? 12}
@@ -50,7 +52,7 @@ export function LabelSection({ properties, onChange }: LabelSectionProps) {
       </div>
 
       <div className="flex flex-col gap-1.5">
-        <SectionLabel>Style</SectionLabel>
+        <SectionLabel>{t("editor.field.style")}</SectionLabel>
         <div className="flex gap-1">
           <Button
             variant="outline"
@@ -84,7 +86,7 @@ export function LabelSection({ properties, onChange }: LabelSectionProps) {
 
       <div className="flex flex-col gap-1.5">
         <div className="flex items-center gap-2">
-          <SectionLabel>Background</SectionLabel>
+          <SectionLabel>{t("editor.field.background")}</SectionLabel>
           <input
             type="checkbox"
             checked={hasBg}
@@ -106,7 +108,7 @@ export function LabelSection({ properties, onChange }: LabelSectionProps) {
               onChange={(c) => onChange({ labelBackground: { ...properties.labelBackground!, color: c } })}
             />
             <div className="flex items-center gap-1.5">
-              <span className="text-[11px] text-gray-500">Opacity</span>
+              <span className="text-[11px] text-gray-500">{t("editor.field.opacity")}</span>
               <Slider
                 min={0}
                 max={100}
