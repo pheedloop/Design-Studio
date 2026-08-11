@@ -29,6 +29,8 @@ import { DirectionsPanel } from "./components/DirectionsPanel";
 import { resolveFeatures } from "../tiers";
 import type { Tier, FeatureKey, FeatureOverride } from "../tiers";
 import { I18nProvider } from "../i18n/I18nProvider";
+import { translateExhibitors, translateFloorPlan } from "../i18n/content";
+import type { TranslateContent } from "../i18n/content";
 import { useLocale, useT } from "./i18n";
 import type { Translate } from "./i18n";
 
@@ -61,6 +63,12 @@ interface MapViewerProps {
    * `useCallback`.
    */
   translate?: Translate;
+  /**
+   * Resolves author-entered text — element names, text boxes, legend labels,
+   * exhibitor names — which have no manifest key. Omit to render it as authored.
+   * Must be referentially stable.
+   */
+  translateContent?: TranslateContent;
   /** BCP-47 tag for number and list formatting. */
   locale?: string;
 }
@@ -76,10 +84,35 @@ function boothItemForSlug(
   return el ? { type: "booth", elementId: el.id, boothSlug } : null;
 }
 
-export function MapViewer({ translate, locale, ...rest }: MapViewerProps) {
+export function MapViewer({
+  translate,
+  translateContent,
+  locale,
+  data,
+  exhibitors,
+  ...rest
+}: MapViewerProps) {
+  // Translated once here rather than at each render site: everything downstream —
+  // lists, popovers, canvas labels, the search index, directions — then reads the
+  // same text, which is what keeps a search hit visible in the list it matched.
+  const translated = useMemo(
+    () =>
+      translateContent
+        ? {
+            data: translateFloorPlan(data, translateContent),
+            exhibitors: translateExhibitors(exhibitors, translateContent),
+          }
+        : { data, exhibitors },
+    [data, exhibitors, translateContent],
+  );
+
   return (
     <I18nProvider translate={translate} locale={locale}>
-      <MapViewerInner {...rest} />
+      <MapViewerInner
+        {...rest}
+        data={translated.data}
+        exhibitors={translated.exhibitors}
+      />
     </I18nProvider>
   );
 }
@@ -98,7 +131,7 @@ function MapViewerInner({
   selectedBoothSlugs,
   reservedBoothSlugs,
   overlay,
-}: Omit<MapViewerProps, "translate" | "locale">) {
+}: Omit<MapViewerProps, "translate" | "translateContent" | "locale">) {
   const t = useT();
   const locale = useLocale();
   // Wayfinding (Directions) is gated by the usage tier. The viewer hides the

@@ -22,3 +22,4 @@ export { interpolate } from "../i18n/interpolate";
 // Narrowed to this surface: another surface's key is a compile error.
 export type { Translate, T, StringKey } from "./i18n";
 export type { Vars } from "../i18n/types";
+export type { TranslateContent } from "../i18n/content";

@@ -6,6 +6,7 @@ import { TicketPanel } from "./components/TicketPanel";
 import { TableDetailPopover } from "./components/TableDetailPopover";
 import { OccupancyLegend } from "./components/OccupancyLegend";
 import { I18nProvider } from "../i18n/I18nProvider";
+import { translateFloorPlan } from "../i18n/content";
 import { useT } from "./i18n";
 import { assignCta } from "./labels";
 
@@ -16,18 +17,29 @@ import { assignCta } from "./labels";
  */
 export function SeatPlanViewer({
   translate,
+  translateContent,
   locale,
+  data,
   ...props
 }: SeatPlanViewerProps) {
+  // See MapViewer: translated once so the canvas, the popover and the table-name
+  // lookup all read the same text.
+  const translatedData = useMemo(
+    () => (translateContent ? translateFloorPlan(data, translateContent) : data),
+    [data, translateContent],
+  );
+
   return (
     <I18nProvider translate={translate} locale={locale}>
-      <SeatPlanViewerInner {...props} />
+      <SeatPlanViewerInner {...props} data={translatedData} />
     </I18nProvider>
   );
 }
 
 /** Split so the body can consume the context the wrapper provides. */
-function SeatPlanViewerInner(props: Omit<SeatPlanViewerProps, "translate" | "locale">) {
+function SeatPlanViewerInner(
+  props: Omit<SeatPlanViewerProps, "translate" | "translateContent" | "locale">,
+) {
   const {
     mode,
     data,

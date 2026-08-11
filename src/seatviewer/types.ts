@@ -1,6 +1,7 @@
 import type { FloorPlanData } from "../types";
 import type { Tier, FeatureKey, FeatureOverride } from "../tiers";
 import type { Translate } from "./i18n";
+import type { TranslateContent } from "../i18n/content";
 
 export type SeatPlanMode = "admin" | "attendee";
 
@@ -109,6 +110,12 @@ export interface SeatPlanViewerProps {
    * `useCallback`.
    */
   translate?: Translate;
+  /**
+   * Resolves author-entered text — table names, text boxes, legend labels — which
+   * have no manifest key. Omit to render it as authored. Must be referentially
+   * stable. Ticket holders' names are never passed through it.
+   */
+  translateContent?: TranslateContent;
   /** BCP-47 tag for number and list formatting. */
   locale?: string;
 }
