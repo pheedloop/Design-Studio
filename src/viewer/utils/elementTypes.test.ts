@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { createSurfaceI18n } from "../../i18n/context";
 import { COMMON_STRINGS } from "../../i18n/strings.common";
 import { VIEWER_STRINGS } from "../../i18n/strings.viewer";
-import type { Translate } from "../../i18n/types";
+import type { T } from "../i18n";
 import { TYPE_BADGE, TYPE_NAME, displayName, locationLabel } from "./elementTypes";
 
 const { defaultTranslate: t, resolveEnglish } = createSurfaceI18n({
@@ -21,7 +21,7 @@ describe("displayName", () => {
   });
 
   it("resolves the fallback through the translator, not a stored string", () => {
-    const fr: Translate = (key, vars) => {
+    const fr: T = (key, vars) => {
       const english = resolveEnglish(key, vars);
       return english === "Meeting Room" ? "Salle de réunion" : english;
     };
@@ -47,13 +47,13 @@ describe("type tables", () => {
     for (const entry of Object.values(TYPE_BADGE)) {
       expect(t(entry.labelKey)).not.toBe(entry.labelKey);
     }
-    for (const entry of Object.values(TYPE_NAME)) {
-      expect(t(entry.labelKey)).not.toBe(entry.labelKey);
+    for (const key of Object.values(TYPE_NAME)) {
+      expect(t(key)).not.toBe(key);
     }
   });
 
   it("abbreviates the badge where the full name is long", () => {
     expect(t(TYPE_BADGE.meeting_room.labelKey)).toBe("Room");
-    expect(t(TYPE_NAME.meeting_room.labelKey)).toBe("Meeting Room");
+    expect(t(TYPE_NAME.meeting_room)).toBe("Meeting Room");
   });
 });

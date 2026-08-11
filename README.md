@@ -151,12 +151,12 @@ Tests are co-located as `*.test.ts(x)` and excluded from the library build. They
 cover the parts neither the compiler nor a reviewer reliably catches — translator
 resolution order, plural selection, provider inheritance, and `t` identity.
 
-`make verify-strings` checks the i18n manifest against the source — dead keys,
-keys used outside their surface, and dangling imports in the emitted types. Run it
-after `make build-lib`.
+Namespace prefixes, cross-surface key use and sort order are enforced by the types
+and two eslint rules rather than a separate checker — see each `strings.*.ts` and
+`eslint.config.js`.
 
-CI runs typecheck, lint, tests, the library build and `verify-strings` on every
-pull request. The pre-commit hook runs typecheck, lint and tests.
+CI runs typecheck, lint, tests and the library build on every pull request. The
+pre-commit hook runs typecheck, lint and tests.
 
 **Release:** `make release [BUMP=patch|minor|major]` from a clean `develop` —
 bumps, tags, and publishes to GitHub Packages. Every push to `develop` also

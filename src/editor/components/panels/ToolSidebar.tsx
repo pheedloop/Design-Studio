@@ -18,7 +18,7 @@ import { IconPicker } from "./IconPicker";
 import { getIconEntry } from "../../utils/iconRegistry";
 import type { PlacementRecords } from "../../hooks/usePlacementRecords";
 import type { PlacementCategory } from "../../placement/types";
-import type { StringKey } from "../../../i18n/strings";
+import type { StringKey } from "../../i18n";
 import { useT } from "../../i18n";
 import { PlacementPanel } from "./PlacementPanel";
 import type { AutoArrangeRecord } from "./PlacementPanel";

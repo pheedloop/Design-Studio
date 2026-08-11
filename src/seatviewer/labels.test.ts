@@ -18,25 +18,25 @@ const state = (over: Partial<Parameters<typeof occupantHeading>[1]> = {}) => ({
 
 describe("occupantHeading", () => {
   it("reports loading above everything else", () => {
-    expect(occupantHeading(t, state({ loading: true }))).toBe("Loading…");
+    expect(occupantHeading(state({ loading: true }), t)).toBe("Loading…");
     // Loading wins even when the table is locked and already has people.
     expect(
-      occupantHeading(t, state({ loading: true, hasOccupants: true, locked: true })),
+      occupantHeading(state({ loading: true, hasOccupants: true, locked: true }), t),
     ).toBe("Loading…");
   });
 
   it("names the occupants when there are any, locked or not", () => {
-    expect(occupantHeading(t, state({ hasOccupants: true }))).toBe("Seated here");
-    expect(occupantHeading(t, state({ hasOccupants: true, locked: true }))).toBe(
+    expect(occupantHeading(state({ hasOccupants: true }), t)).toBe("Seated here");
+    expect(occupantHeading(state({ hasOccupants: true, locked: true }), t)).toBe(
       "Seated here",
     );
   });
 
   it("reports a locked empty table as locked", () => {
-    expect(occupantHeading(t, state({ locked: true }))).toBe("Locked");
+    expect(occupantHeading(state({ locked: true }), t)).toBe("Locked");
   });
 
   it("falls through to the empty state", () => {
-    expect(occupantHeading(t, state())).toBe("No one seated yet");
+    expect(occupantHeading(state(), t)).toBe("No one seated yet");
   });
 });

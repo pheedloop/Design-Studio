@@ -177,14 +177,14 @@ function SeatPlanViewerInner(props: Omit<SeatPlanViewerProps, "translate" | "loc
 
   const cta = useMemo(
     () =>
-      assignCta(t, {
+      assignCta({
         openTable,
         mode,
         assignableCodes,
         selectedCodes,
         ticketByCode,
         tableNameByCode,
-      }),
+      }, t),
     [openTable, mode, assignableCodes, selectedCodes, ticketByCode, tableNameByCode, t],
   );
 

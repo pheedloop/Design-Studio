@@ -84,11 +84,11 @@ export function TableDetailPopover({
       {!hideAttendeeDetails && (
         <div className="max-h-44 overflow-y-auto scrollbar">
           <div className="px-3 pt-2.5 pb-1 text-[10px] tracking-wider uppercase text-gray-400 font-semibold">
-            {occupantHeading(t, {
+            {occupantHeading({
               loading: !!occupantsLoading,
               hasOccupants: occupants.length > 0,
               locked: table.isLocked,
-            })}
+            }, t)}
           </div>
           {occupants.map((o) => (
             <div key={o.code} className="flex items-center gap-2.5 px-3 py-1.5">

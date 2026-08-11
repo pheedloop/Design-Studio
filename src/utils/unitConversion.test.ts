@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { createSurfaceI18n } from "../i18n/context";
 import { interpolate } from "../i18n/interpolate";
-import type { Translate } from "../i18n/types";
+import type { CommonT } from "../i18n/types";
 import { COMMON_STRINGS } from "../i18n/strings.common";
 import type { Dimensions } from "../types";
 import {
@@ -15,7 +15,7 @@ const { defaultTranslate: t, resolveEnglish } = createSurfaceI18n(COMMON_STRINGS
 
 /** The host adapter shape from the README, over a catalogue keyed by English. */
 const adapt =
-  (catalogue: Record<string, string>): Translate =>
+  (catalogue: Record<string, string>): CommonT =>
   (key, vars) => {
     const english = resolveEnglish(key, vars);
     return interpolate(catalogue[english] ?? english, vars);

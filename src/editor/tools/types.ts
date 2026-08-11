@@ -1,4 +1,4 @@
-import type { StringKey } from "../../i18n/strings";
+import type { StringKey } from "../i18n";
 import type Konva from "konva";
 import type {
   FloorPlanData,

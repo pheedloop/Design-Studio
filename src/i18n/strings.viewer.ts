@@ -31,4 +31,4 @@ export const VIEWER_STRINGS = {
   "viewer.type.sessionShort": "Session",
   "viewer.unnamedRoom": "Unnamed Room",
   "viewer.unnamedSession": "Unnamed Session",
-} as const satisfies Record<string, string>;
+} as const satisfies Record<`viewer.${string}`, string>;

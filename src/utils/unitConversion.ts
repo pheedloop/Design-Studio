@@ -1,6 +1,6 @@
 import type { Dimensions, Point, Unit } from "../types/FloorPlanData";
 import { formatNumber } from "../i18n/format";
-import type { T } from "../i18n/types";
+import type { CommonKey, CommonT as T } from "../i18n/types";
 
 // ~1.0 m/s indoor event pace (accounts for crowds, turns, stopping)
 const INDOOR_WALKING_SPEED_MPS = 1.0;
@@ -36,22 +36,17 @@ export function realToPx(real: number, pixelsPerUnit: number): number {
 // Formatting
 // ---------------------------------------------------------------------------
 
-/**
- * The unit's display abbreviation.
- *
- * A switch rather than a lookup table because scripts/verify-strings.ts only sees
- * literal `t("…")` calls — a computed `t(`common.unit.${unit}`)` would report
- * every unit key as dead.
- */
+// Spelled out rather than built as `common.unit.${unit}`: the compiler would
+// accept either, but a literal key is one a rename can actually find.
+const UNIT_LABEL: Record<Unit, CommonKey> = {
+  ft: "common.unit.ft",
+  m: "common.unit.m",
+  px: "common.unit.px",
+};
+
+/** The unit's display abbreviation. */
 export function unitLabel(unit: Unit, t: T): string {
-  switch (unit) {
-    case "ft":
-      return t("common.unit.ft");
-    case "m":
-      return t("common.unit.m");
-    case "px":
-      return t("common.unit.px");
-  }
+  return t(UNIT_LABEL[unit]);
 }
 
 /** Format a single-axis pixel measurement as a real-world string (e.g. "12.5 ft"). */

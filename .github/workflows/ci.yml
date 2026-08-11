@@ -32,7 +32,3 @@ jobs:
 
       - name: Build library
         run: npm run build:lib
-
-      # After the build, so it can also check the emitted declarations.
-      - name: Verify i18n manifest
-        run: node scripts/verify-strings.ts

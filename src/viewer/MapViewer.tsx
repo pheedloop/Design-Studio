@@ -30,7 +30,7 @@ import { resolveFeatures } from "../tiers";
 import type { Tier, FeatureKey, FeatureOverride } from "../tiers";
 import { I18nProvider } from "../i18n/I18nProvider";
 import { useLocale, useT } from "./i18n";
-import type { Translate } from "../i18n/types";
+import type { Translate } from "./i18n";
 
 interface MapViewerProps {
   data: FloorPlanData;

@@ -1,6 +1,6 @@
 import type { FloorPlanElement } from "../../types";
 import { formatList } from "../../i18n/format";
-import type { T } from "../../i18n/types";
+import type { T } from "../i18n";
 
 /**
  * Build the search-box placeholder from the element types actually present in

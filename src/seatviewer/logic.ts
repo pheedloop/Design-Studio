@@ -1,4 +1,4 @@
-import type { StringKey } from "../i18n/strings";
+import type { StringKey } from "./i18n";
 import type { SeatTableState, SeatTicket, SeatPlanMode } from "./types";
 
 export type OccupancyLevel = "available" | "half" | "low" | "full";

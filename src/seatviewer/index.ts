@@ -19,5 +19,7 @@ export { designStudioStrings, resolveEnglish } from "./i18n";
 // For hosts whose catalog is a plain dictionary: resolveEnglish gives the
 // uninterpolated key, interpolate fills it in after the lookup.
 export { interpolate } from "../i18n/interpolate";
-export type { Translate, Vars, T } from "../i18n/types";
-export type { StringKey } from "../i18n/strings";
+// Narrowed to this surface: a key another surface owns is a type error at the
+// call site rather than a key rendered raw at runtime.
+export type { Translate, T, StringKey } from "./i18n";
+export type { Vars } from "../i18n/types";

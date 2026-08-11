@@ -44,4 +44,4 @@ export const SEATVIEWER_STRINGS = {
   "seatviewer.tickets.searchPlaceholder": "Search name or email",
   "seatviewer.tickets.selected": "{{name}} selected",
   "seatviewer.tickets.yours": "Your tickets",
-} as const satisfies Record<string, string>;
+} as const satisfies Record<`seatviewer.${string}`, string>;

@@ -7,7 +7,7 @@ import { BackgroundImage } from "../../editor/components/canvas/BackgroundImage"
 import { DxfDrawing } from "../../editor/components/canvas/DxfDrawing";
 import { ViewerElement } from "../../viewer/components/ViewerElement";
 import { I18nProvider } from "../../i18n/I18nProvider";
-import type { Translate } from "../../i18n/types";
+import type { Translate } from "../i18n";
 
 export interface SeatPlanCanvasProps {
   data: FloorPlanData;

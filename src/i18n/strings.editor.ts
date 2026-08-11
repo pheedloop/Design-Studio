@@ -199,6 +199,7 @@ export const EDITOR_STRINGS = {
   "editor.pathing.autoObstaclesHint": "Mark all booth footprints as impassable",
   "editor.pathing.clear": "Clear grid",
   "editor.pathing.clearHint": "Reset all cells to impassable",
+  "editor.premiumFeature": "Premium feature",
   "editor.tool.arc": "Arc",
   "editor.tool.arrow": "Arrow",
   "editor.tool.ellipse": "Ellipse",
@@ -218,4 +219,4 @@ export const EDITOR_STRINGS = {
   "editor.unit.feet": "Feet",
   "editor.unit.inches": "Inches",
   "editor.unit.meters": "Meters",
-} as const satisfies Record<string, string>;
+} as const satisfies Record<`editor.${string}`, string>;

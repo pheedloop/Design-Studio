@@ -1,10 +1,10 @@
-import type { T } from "../i18n/types";
+import type { T } from "./i18n";
 import type { SeatPlanMode, SeatTableState, SeatTicket } from "./types";
 
 /** Heading above the occupant list. Flattened out of a four-way ternary. */
 export function occupantHeading(
-  t: T,
   state: { loading: boolean; hasOccupants: boolean; locked: boolean },
+  t: T,
 ): string {
   if (state.loading) return t("common.loading");
   if (state.hasOccupants) return t("seatviewer.table.seatedHere");
@@ -19,7 +19,6 @@ export function occupantHeading(
  * a Konva canvas, and so the admin and attendee messaging stays in one place.
  */
 export function assignCta(
-  t: T,
   input: {
     openTable: SeatTableState | null;
     mode: SeatPlanMode;
@@ -28,6 +27,7 @@ export function assignCta(
     ticketByCode: Map<string, SeatTicket>;
     tableNameByCode: Map<string, string>;
   },
+  t: T,
 ): { label: string; disabled: boolean; hint?: string } {
   const { openTable, mode, assignableCodes, selectedCodes, ticketByCode, tableNameByCode } =
     input;

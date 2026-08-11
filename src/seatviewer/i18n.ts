@@ -1,4 +1,5 @@
 import { createSurfaceI18n } from "../i18n/context";
+import type { SurfaceKey, TranslateFor } from "../i18n/types";
 import { COMMON_STRINGS } from "../i18n/strings.common";
 import { SEATVIEWER_STRINGS } from "../i18n/strings.seatviewer";
 
@@ -7,6 +8,18 @@ export const designStudioStrings = {
   ...COMMON_STRINGS,
   ...SEATVIEWER_STRINGS,
 };
+
+/** The keys this surface can render — its slice, plural variants collapsed. */
+export type StringKey = SurfaceKey<typeof designStudioStrings>;
+
+/** A translator over this surface's keys. What `useT()` returns. */
+export type T = TranslateFor<StringKey>;
+
+/**
+ * What a host passes as the `translate` prop. Same shape as `T`: the host
+ * resolves, this surface only ever asks for keys its slice carries.
+ */
+export type Translate = T;
 
 export const { useT, resolveEnglish } =
   createSurfaceI18n(designStudioStrings);

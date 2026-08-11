@@ -6,7 +6,7 @@ import type { Dimensions } from "../../types";
 import { formatRouteDistance, pathDistance, pxToReal, estimateWalkingTime, formatWalkingTime } from "../../utils/unitConversion";
 import { TYPE_BADGE, displayName, locationLabel } from "../utils/elementTypes";
 import { useLocale, useT } from "../i18n";
-import type { T } from "../../i18n/types";
+import type { T } from "../i18n";
 
 interface DirectionsPanelProps {
   startLocation: DirectionsLocation | null;

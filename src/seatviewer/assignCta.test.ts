@@ -41,14 +41,14 @@ function cta(
   } = {},
 ) {
   const selected = over.selected ?? [];
-  return assignCta(t, {
+  return assignCta({
     openTable: over.openTable === undefined ? table() : over.openTable,
     mode,
     assignableCodes: over.assignableCodes ?? [],
     selectedCodes: new Set(selected.map((s) => s.code)),
     ticketByCode: new Map(selected.map((s) => [s.code, s])),
     tableNameByCode: new Map(over.tableNames ?? []),
-  });
+  }, t);
 }
 
 describe("table-level blocks (both modes)", () => {

@@ -44,8 +44,8 @@ export function IconPicker({ selectedId, onSelect, onClose, anchorRect }: IconPi
   const filtered = q
     ? iconRegistry.filter(
         (entry) =>
-          t(ICON_LABEL[entry.id].labelKey).toLowerCase().includes(q) ||
-          t(ICON_CATEGORY_LABEL[entry.category].labelKey).toLowerCase().includes(q) ||
+          t(ICON_LABEL[entry.id]).toLowerCase().includes(q) ||
+          t(ICON_CATEGORY_LABEL[entry.category]).toLowerCase().includes(q) ||
           entry.keywords.some((kw) => kw.toLowerCase().includes(q)),
       )
     : null;
@@ -57,7 +57,7 @@ export function IconPicker({ selectedId, onSelect, onClose, anchorRect }: IconPi
       <button
         key={entry.id}
         onClick={() => onSelect(entry.id)}
-        title={t(ICON_LABEL[entry.id].labelKey)}
+        title={t(ICON_LABEL[entry.id])}
         className={`flex items-center justify-center w-9 h-9 rounded cursor-pointer transition-colors ${
           isSelected
             ? "bg-primary-600 text-white"
@@ -102,7 +102,7 @@ export function IconPicker({ selectedId, onSelect, onClose, anchorRect }: IconPi
           ICON_CATEGORIES.map((category) => (
             <div key={category} className="mb-3">
               <div className="text-[10px] font-medium text-gray-400 uppercase tracking-wide px-1 mb-1">
-                {t(ICON_CATEGORY_LABEL[category].labelKey)}
+                {t(ICON_CATEGORY_LABEL[category])}
               </div>
               <div className="flex flex-wrap gap-0.5">
                 {iconRegistry

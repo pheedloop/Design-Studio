@@ -1,5 +1,4 @@
-import type { StringKey } from "../../i18n/strings";
-import type { T } from "../../i18n/types";
+import type { StringKey, T } from "../i18n";
 
 /** The element types the viewer surfaces to users. */
 export type ViewerElementType = "booth" | "session_area" | "meeting_room";
@@ -7,9 +6,8 @@ export type ViewerElementType = "booth" | "session_area" | "meeting_room";
 /**
  * Short badge shown beside a search result.
  *
- * `labelKey` rather than a label: this table is module-level, so no hook reaches
- * it. The render site calls `t(...)`. `labelKey` is one of the property names
- * scripts/verify-strings.ts recognises, so the keys still count as referenced.
+ * A key rather than a label: this table is module-level, so no hook reaches it.
+ * The render site calls `t(...)`.
  */
 export const TYPE_BADGE: Record<
   ViewerElementType,
@@ -27,16 +25,11 @@ export const TYPE_BADGE: Record<
   },
 };
 
-/**
- * Full type name, used when an element has no name of its own.
- *
- * Wrapped in an object so the key sits on a `labelKey` property — bare values in
- * a Record are invisible to scripts/verify-strings.ts and would report as dead.
- */
-export const TYPE_NAME: Record<ViewerElementType, { labelKey: StringKey }> = {
-  booth: { labelKey: "common.type.booth" },
-  session_area: { labelKey: "viewer.type.sessionArea" },
-  meeting_room: { labelKey: "common.type.meetingRoom" },
+/** Full type name, used when an element has no name of its own. */
+export const TYPE_NAME: Record<ViewerElementType, StringKey> = {
+  booth: "common.type.booth",
+  session_area: "viewer.type.sessionArea",
+  meeting_room: "common.type.meetingRoom",
 };
 
 /**
@@ -53,7 +46,7 @@ export function displayName(
   entry: { name: string; elementType: ViewerElementType },
   t: T,
 ): string {
-  return entry.name || t(TYPE_NAME[entry.elementType].labelKey);
+  return entry.name || t(TYPE_NAME[entry.elementType]);
 }
 
 /**
@@ -62,6 +55,9 @@ export function displayName(
  *
  * Booth and exhibitor endpoints are only ever built from an element that has a
  * name (or an exhibitor that does), so their name carries the display text.
+ *
+ * `point` is in the union because DirectionsLocation declares it, but nothing
+ * constructs one today — hence the bare "" rather than a type-name fallback.
  */
 export function locationLabel(
   location: {
@@ -72,7 +68,7 @@ export function locationLabel(
 ): string {
   if (location.name) return location.name;
   if (location.type === "session_area" || location.type === "meeting_room") {
-    return t(TYPE_NAME[location.type].labelKey);
+    return t(TYPE_NAME[location.type]);
   }
-  return location.name;
+  return "";
 }

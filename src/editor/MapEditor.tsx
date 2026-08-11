@@ -85,7 +85,7 @@ import { resolveFeatures } from "../tiers";
 import type { Tier, FeatureKey, FeatureOverride } from "../tiers";
 import { I18nProvider } from "../i18n/I18nProvider";
 import { useT } from "./i18n";
-import type { Translate } from "../i18n/types";
+import type { Translate } from "./i18n";
 
 // Safari caps total canvas area near 16.7M px, so an unbounded 2x export of a
 // large plan silently produces no image at all.

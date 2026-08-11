@@ -2,7 +2,8 @@ import { describe, expect, it } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { createSurfaceI18n, useLocale } from "./context";
 import { I18nProvider } from "./I18nProvider";
-import type { Translate, Vars } from "./types";
+import type { Vars } from "./types";
+import type { Translate } from "./index";
 
 // See translate.test.ts for why the fixtures are widened past StringKey.
 type LooseT = (key: string, vars?: Vars) => string;

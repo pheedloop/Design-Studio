@@ -89,7 +89,7 @@ export function LayerPanel({
             return (
               <div
                 key={layer.id}
-                title={locked ? t("common.premiumFeature") : undefined}
+                title={locked ? t("editor.premiumFeature") : undefined}
                 className={`flex items-center gap-2 px-3 py-1.5 text-xs transition-colors ${
                   locked
                     ? "text-gray-300 cursor-not-allowed"

@@ -3,7 +3,7 @@
 # All Node-running targets go through scripts/with-node.sh, which installs and
 # uses the version pinned in .nvmrc — so you don't have to `nvm use` yourself.
 
-.PHONY: help start watch-lib build build-lib lint test test-watch verify-strings preview clean install release
+.PHONY: help start watch-lib build build-lib lint test test-watch preview clean install release
 
 WITH_NODE := ./scripts/with-node.sh
 BUMP ?= patch
@@ -34,9 +34,6 @@ test: ## Run the test suite once
 
 test-watch: ## Run the test suite in watch mode
 	$(WITH_NODE) npm run test:watch
-
-verify-strings: ## Check the i18n manifest against the source (run after build-lib)
-	$(WITH_NODE) node scripts/verify-strings.ts
 
 preview: ## Preview the production demo build
 	$(WITH_NODE) npm run preview

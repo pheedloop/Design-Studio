@@ -18,7 +18,7 @@ import {
 import { BadgeTopBar } from "./BadgeTopBar";
 import { modKey } from "../editor/utils/platform";
 import { I18nProvider } from "../i18n/I18nProvider";
-import type { Translate } from "../i18n/types";
+import type { Translate } from "./i18n";
 import { BadgeCanvas } from "./BadgeCanvas";
 import { BadgeRulers } from "./BadgeRulers";
 import { AlignmentControls } from "../editor/components/panels/AlignmentControls";

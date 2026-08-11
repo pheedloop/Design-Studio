@@ -6,13 +6,10 @@
  * comma conventions.
  */
 export function formatList(items: string[], locale: string | undefined): string {
-  if (typeof Intl.ListFormat === "function") {
-    return new Intl.ListFormat(locale, {
-      style: "long",
-      type: "disjunction",
-    }).format(items);
-  }
-  return items.join(", ");
+  return new Intl.ListFormat(locale, {
+    style: "long",
+    type: "disjunction",
+  }).format(items);
 }
 
 /** Fixed-decimal number using the locale's separator. Replaces toFixed(). */
