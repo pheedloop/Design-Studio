@@ -2,18 +2,34 @@
 // seed a catalog. At runtime take `designStudioStrings` and the helpers from the
 // entry point you already use; those are scoped to one surface.
 
-import type { StringKey } from "./strings";
-import type { TranslateFor } from "./types";
+import {
+  BADGEEDITOR,
+  COMMON,
+  EDITOR,
+  SEATVIEWER,
+  VIEWER,
+  flattenNamespaces,
+} from "./strings";
+import type { Flattened, TranslateFor } from "./types";
+import type { SurfaceKey } from "./types";
 
-export { STRINGS } from "./strings";
-export type { ManifestKey, StringKey } from "./strings";
+const GROUPS = {
+  common: COMMON,
+  viewer: VIEWER,
+  seatviewer: SEATVIEWER,
+  editor: EDITOR,
+  badgeeditor: BADGEEDITOR,
+};
+
+/** Every string, flattened to the keys `t()` accepts. */
+export const STRINGS = flattenNamespaces(GROUPS) as Flattened<typeof GROUPS>;
+
+export type ManifestKey = keyof typeof STRINGS;
+
+export type StringKey = SurfaceKey<typeof STRINGS>;
+
+export type Translate = TranslateFor<StringKey>;
+
 export { interpolate } from "./interpolate";
 export { formatList, formatNumber } from "./format";
 export type { Vars } from "./types";
-
-/**
- * A translator over every key in the manifest. Defined here rather than in
- * types.ts, which stays free of any dependency on the merged manifest so the
- * slices can depend on it.
- */
-export type Translate = TranslateFor<StringKey>;

@@ -6,8 +6,7 @@ export type ViewerElementType = "booth" | "session_area" | "meeting_room";
 /**
  * Short badge shown beside a search result.
  *
- * A key rather than a label: this table is module-level, so no hook reaches it.
- * The render site calls `t(...)`.
+ * Carries a key, not a label — module-level, so the render site calls `t(...)`.
  */
 export const TYPE_BADGE: Record<
   ViewerElementType,
@@ -57,7 +56,7 @@ export function displayName(
  * name (or an exhibitor that does), so their name carries the display text.
  *
  * `point` is in the union because DirectionsLocation declares it, but nothing
- * constructs one today — hence the bare "" rather than a type-name fallback.
+ * constructs one, hence the bare "".
  */
 export function locationLabel(
   location: {

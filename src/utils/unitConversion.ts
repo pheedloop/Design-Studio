@@ -36,8 +36,7 @@ export function realToPx(real: number, pixelsPerUnit: number): number {
 // Formatting
 // ---------------------------------------------------------------------------
 
-// Spelled out rather than built as `common.unit.${unit}`: the compiler would
-// accept either, but a literal key is one a rename can actually find.
+// Spelled out rather than `common.unit.${unit}` so a rename can find the keys.
 const UNIT_LABEL: Record<Unit, CommonKey> = {
   ft: "common.unit.ft",
   m: "common.unit.m",

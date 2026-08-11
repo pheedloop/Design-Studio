@@ -1,13 +1,12 @@
 import { describe, expect, it } from "vitest";
 import { createSurfaceI18n } from "../../i18n/context";
-import { COMMON_STRINGS } from "../../i18n/strings.common";
-import { VIEWER_STRINGS } from "../../i18n/strings.viewer";
+import { COMMON, VIEWER } from "../../i18n/strings";
 import type { FloorPlanElement } from "../../types";
 import { buildSearchPlaceholder } from "./searchPlaceholder";
 
 const { defaultTranslate: t } = createSurfaceI18n({
-  ...COMMON_STRINGS,
-  ...VIEWER_STRINGS,
+  common: COMMON,
+  viewer: VIEWER,
 });
 
 const el = (type: string) => ({ type, properties: {} }) as unknown as FloorPlanElement;

@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { createSurfaceI18n } from "../i18n/context";
 import { interpolate } from "../i18n/interpolate";
 import type { CommonT } from "../i18n/types";
-import { COMMON_STRINGS } from "../i18n/strings.common";
+import { COMMON } from "../i18n/strings";
 import type { Dimensions } from "../types";
 import {
   formatArea,
@@ -11,7 +11,7 @@ import {
   formatWalkingTime,
 } from "./unitConversion";
 
-const { defaultTranslate: t, resolveEnglish } = createSurfaceI18n(COMMON_STRINGS);
+const { defaultTranslate: t, resolveEnglish } = createSurfaceI18n({ common: COMMON });
 
 /** The host adapter shape from the README, over a catalogue keyed by English. */
 const adapt =

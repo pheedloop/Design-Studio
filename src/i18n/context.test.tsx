@@ -8,7 +8,7 @@ import type { Translate } from "./index";
 // See translate.test.ts for why the fixtures are widened past StringKey.
 type LooseT = (key: string, vars?: Vars) => string;
 
-const STRINGS = { "common.legend": "Legend" };
+const STRINGS = { common: { legend: "Legend" } };
 const { useT } = createSurfaceI18n(STRINGS);
 const useLooseT = useT as unknown as () => LooseT;
 

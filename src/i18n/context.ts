@@ -1,6 +1,12 @@
 import { createContext, useContext } from "react";
 import { interpolate, resolveEnglishFrom } from "./interpolate";
-import type { AnyTranslate, SurfaceKey, TranslateFor } from "./types";
+import { flattenNamespaces } from "./strings";
+import type {
+  AnyTranslate,
+  Flattened,
+  SurfaceKey,
+  TranslateFor,
+} from "./types";
 
 export interface I18nValue {
   /** undefined = no host translator; surfaces fall back to their English. */
@@ -19,13 +25,16 @@ export function useLocale(): string | undefined {
 }
 
 /**
- * Bind the i18n helpers to one surface's English slice — called once per surface
- * in its i18n.ts shim. Binding per surface rather than over the merged manifest
- * does two things: it keeps the editor's English out of the viewer bundles, and it
- * makes the returned helpers reject keys the slice does not carry.
+ * Binds the i18n helpers to one surface's slice, so the returned `useT` and
+ * `resolveEnglish` reject keys that slice does not carry. Called once per surface.
  */
-export function createSurfaceI18n<S extends Record<string, string>>(strings: S) {
-  type T = TranslateFor<SurfaceKey<S>>;
+export function createSurfaceI18n<
+  G extends Record<string, Readonly<Record<string, string>>>,
+>(groups: G) {
+  type T = TranslateFor<SurfaceKey<Flattened<G>>>;
+
+  const designStudioStrings = flattenNamespaces(groups) as Flattened<G>;
+  const strings: Readonly<Record<string, string>> = designStudioStrings;
 
   const defaultTranslate: T = (key, vars) =>
     interpolate(resolveEnglishFrom(strings, key, vars), vars);
@@ -34,13 +43,10 @@ export function createSurfaceI18n<S extends Record<string, string>>(strings: S) 
     resolveEnglishFrom(strings, key, vars);
 
   function useT(): T {
-    // No memo: the host's translator is stable by contract and defaultTranslate is
-    // created once per surface, so whichever is returned keeps its identity across
-    // renders — which is what the memoized display strings downstream key on.
+    // No memo needed: both branches are already stable across renders.
     return useContext(I18nContext).translate ?? defaultTranslate;
   }
 
-  // defaultTranslate is returned for tests and the internal fallback only — it is
-  // not part of any surface's public exports.
-  return { useT, defaultTranslate, resolveEnglish };
+  // defaultTranslate is for tests and the internal fallback; never re-exported.
+  return { designStudioStrings, useT, defaultTranslate, resolveEnglish };
 }

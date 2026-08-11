@@ -4,11 +4,8 @@ import type { AnyTranslate, TranslateFor } from "./types";
 
 /**
  * Inherits rather than overrides: an undefined `translate` falls through to an
- * outer provider, so a nested entry component (SeatPlanCanvas inside
- * SeatPlanViewer) does not reset its subtree to English.
- *
- * Generic over the key set so each surface can hand over its own narrowed
- * translator without casting at the call site.
+ * outer provider, so a nested entry component does not reset its subtree to
+ * English.
  */
 export function I18nProvider<K extends string>({
   translate,
@@ -22,10 +19,8 @@ export function I18nProvider<K extends string>({
   const outer = useContext(I18nContext);
   const value = useMemo<I18nValue>(
     () => ({
-      // The one widening in the system, and it cannot be typed away: the context
-      // has no memory of which surface stored the translator, while the guarantee
-      // we rely on — that a surface only asks for keys from its own slice — lives
-      // in the narrowed `useT()` each surface hands its components.
+      // Widened because the context can't know which surface stored it; the
+      // per-slice guarantee lives in each surface's narrowed `useT()`.
       translate: (translate as AnyTranslate | undefined) ?? outer.translate,
       locale: locale ?? outer.locale,
     }),

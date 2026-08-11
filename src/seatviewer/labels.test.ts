@@ -1,12 +1,11 @@
 import { describe, expect, it } from "vitest";
 import { createSurfaceI18n } from "../i18n/context";
-import { COMMON_STRINGS } from "../i18n/strings.common";
-import { SEATVIEWER_STRINGS } from "../i18n/strings.seatviewer";
+import { COMMON, SEATVIEWER } from "../i18n/strings";
 import { occupantHeading } from "./labels";
 
 const { defaultTranslate: t } = createSurfaceI18n({
-  ...COMMON_STRINGS,
-  ...SEATVIEWER_STRINGS,
+  common: COMMON,
+  seatviewer: SEATVIEWER,
 });
 
 const state = (over: Partial<Parameters<typeof occupantHeading>[1]> = {}) => ({

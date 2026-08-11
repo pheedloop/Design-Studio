@@ -151,8 +151,11 @@ Tests are co-located as `*.test.ts(x)` and excluded from the library build. They
 cover the parts neither the compiler nor a reviewer reliably catches — translator
 resolution order, plural selection, provider inheritance, and `t` identity.
 
-Namespace prefixes, cross-surface key use and sort order are enforced by the types
-and two eslint rules rather than a separate checker — see each `strings.*.ts` and
+All the English lives in one file, `src/i18n/strings.ts`, grouped by namespace with
+one export per group. Keys are written without their namespace — the const carries
+it — so the entry `"menu.duplicate"` under `EDITOR` is addressed as
+`t("editor.menu.duplicate")`. Which keys a surface may use is enforced by the
+narrowed `T` its `i18n.ts` exports; sort order by `sort-keys` in
 `eslint.config.js`.
 
 CI runs typecheck, lint, tests and the library build on every pull request. The

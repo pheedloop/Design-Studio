@@ -8,10 +8,14 @@ import type { Vars } from "./types";
 type LooseTranslate = (key: string, vars?: Vars) => string;
 
 const STRINGS = {
-  "viewer.legend.title": "Legend",
-  "viewer.hello": "Hello {{name}}",
-  "seatviewer.seatsFree_one": "{{count}} seat free",
-  "seatviewer.seatsFree_other": "{{count}} seats free",
+  viewer: {
+    "legend.title": "Legend",
+    hello: "Hello {{name}}",
+  },
+  seatviewer: {
+    seatsFree_one: "{{count}} seat free",
+    seatsFree_other: "{{count}} seats free",
+  },
 };
 
 function surface() {
