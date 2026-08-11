@@ -158,7 +158,6 @@ export function PropertiesPanel({
   onBackgroundColorChange,
   onUpdateTypeStyles,
 }: PropertiesPanelProps) {
-  // Above the early returns below.
   const t = useT();
   const locale = useLocale();
   const [tab, setTab] = useState<"properties" | "debug">("properties");

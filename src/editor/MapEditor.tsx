@@ -126,11 +126,7 @@ interface MapEditorProps {
   tier?: Tier;
   /** Per-feature overrides applied on top of the tier preset. */
   features?: Partial<Record<FeatureKey, FeatureOverride>>;
-  /**
-   * Resolves this component's UI strings. Omit for built-in English. Keys come
-   * from `designStudioStrings`. Must be referentially stable — wrap in
-   * `useCallback`.
-   */
+  /** Omit for built-in English. Must be referentially stable. */
   translate?: Translate;
   /** BCP-47 tag for number and list formatting. */
   locale?: string;

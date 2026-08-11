@@ -13,10 +13,8 @@ export function interpolate(template: string, vars?: Vars): string {
 }
 
 /**
- * A key's English template, plural-selected from `count`, NOT interpolated.
- *
- * English-only selection: the host's i18n does real CLDR off the base key. This
- * only picks which English source DS offers as the fallback.
+ * A key's English template, plural-selected from `count`, NOT interpolated. The
+ * selection is English-only; the host's i18n does the real CLDR.
  */
 export function resolveEnglishFrom(
   strings: Readonly<Record<string, string>>,

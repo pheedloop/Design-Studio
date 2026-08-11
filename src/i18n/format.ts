@@ -1,9 +1,6 @@
 /**
- * Join items with the locale's disjunction grammar ("a, b, or c" / "a, b ou c").
- *
- * Delegated to Intl so the key count stays linear — one noun per element type
- * rather than one key per combination — and no translator has to think about
- * comma conventions.
+ * Disjunction grammar ("a, b, or c" / "a, b ou c") via Intl, so the key count stays
+ * linear — one noun per element type rather than one key per combination.
  */
 export function formatList(items: string[], locale: string | undefined): string {
   return new Intl.ListFormat(locale, {

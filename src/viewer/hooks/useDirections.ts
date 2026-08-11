@@ -12,13 +12,9 @@ import {
 
 export interface DirectionsLocation {
   type: "booth" | "exhibitor" | "session_area" | "meeting_room" | "point";
-  // Future: add "poi" here without structural changes
   /**
-   * The location's own name. May be "" for an unnamed element.
-   *
-   * Deliberately not a resolved display label: these objects live in state, so a
-   * label stored here would keep whatever language was active when it was picked,
-   * even after the host switches. Resolve it at render — see locationLabel().
+   * The element's own name, may be "". Not a resolved label: these live in state, so
+   * a stored label would keep the language it was picked in. See locationLabel().
    */
   name: string;
   /** Booth slug (for booth/exhibitor types) */
@@ -49,7 +45,6 @@ export function useDirections(
     return map;
   }, [exhibitors]);
 
-  // Build searchable entries for all interactive element types
   const searchEntries = useMemo(() => {
     const entries: SearchResult[] = [];
 
@@ -98,7 +93,6 @@ export function useDirections(
     [searchEntries, t]
   );
 
-  /** Resolve a SearchResult into a DirectionsLocation */
   const locationFromResult = useCallback(
     (result: SearchResult): DirectionsLocation => {
       if (result.elementType === "booth") {
@@ -126,7 +120,6 @@ export function useDirections(
     []
   );
 
-  // Compute route whenever both locations are set
   const { routePath, routeStatus } = useMemo(() => {
     if (!startLocation || !endLocation || !grid || !grid.enabled) {
       return { routePath: null, routeStatus: "idle" as RouteStatus };

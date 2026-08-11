@@ -24,10 +24,7 @@ export function useLocale(): string | undefined {
   return useContext(I18nContext).locale;
 }
 
-/**
- * Binds the i18n helpers to one surface's slice, so the returned `useT` and
- * `resolveEnglish` reject keys that slice does not carry. Called once per surface.
- */
+/** Called once per surface; the returned helpers reject other surfaces' keys. */
 export function createSurfaceI18n<
   G extends Record<string, Readonly<Record<string, string>>>,
 >(groups: G) {
@@ -47,6 +44,5 @@ export function createSurfaceI18n<
     return useContext(I18nContext).translate ?? defaultTranslate;
   }
 
-  // defaultTranslate is for tests and the internal fallback; never re-exported.
   return { designStudioStrings, useT, defaultTranslate, resolveEnglish };
 }

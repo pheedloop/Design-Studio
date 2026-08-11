@@ -43,7 +43,6 @@ const UNIT_LABEL: Record<Unit, CommonKey> = {
   px: "common.unit.px",
 };
 
-/** The unit's display abbreviation. */
 export function unitLabel(unit: Unit, t: T): string {
   return t(UNIT_LABEL[unit]);
 }

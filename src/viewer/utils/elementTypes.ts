@@ -1,13 +1,8 @@
 import type { StringKey, T } from "../i18n";
 
-/** The element types the viewer surfaces to users. */
 export type ViewerElementType = "booth" | "session_area" | "meeting_room";
 
-/**
- * Short badge shown beside a search result.
- *
- * Carries a key, not a label — module-level, so the render site calls `t(...)`.
- */
+/** Short badge shown beside a search result. */
 export const TYPE_BADGE: Record<
   ViewerElementType,
   { labelKey: StringKey; className: string }
@@ -32,14 +27,8 @@ export const TYPE_NAME: Record<ViewerElementType, StringKey> = {
 };
 
 /**
- * What to show for an element that may have no name.
- *
- * The single source of truth for this fallback, deliberately: it is used both to
- * render a result and to match one while searching. If those two ever disagreed,
- * a user would get hits they cannot see, or see rows they cannot find again.
- *
- * Nothing writes the fallback back into the data — storing it would freeze the
- * text in whatever language was active at the time.
+ * Shared by rendering and by search matching — if they disagreed, a user would get
+ * hits they cannot see. Resolved per render, never written back into the data.
  */
 export function displayName(
   entry: { name: string; elementType: ViewerElementType },
@@ -48,16 +37,7 @@ export function displayName(
   return entry.name || t(TYPE_NAME[entry.elementType]);
 }
 
-/**
- * Display text for a directions endpoint, resolved at render for the same reason
- * as displayName — the location itself is held in state.
- *
- * Booth and exhibitor endpoints are only ever built from an element that has a
- * name (or an exhibitor that does), so their name carries the display text.
- *
- * `point` is in the union because DirectionsLocation declares it, but nothing
- * constructs one, hence the bare "".
- */
+/** `point` is declared by DirectionsLocation but never constructed, hence the "". */
 export function locationLabel(
   location: {
     name: string;

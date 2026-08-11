@@ -15,9 +15,8 @@ const IS_PLACEHOLDER = /^\{\{\s*[A-Za-z0-9_]+\s*\}\}$/;
 const EXPANSION = 0.4;
 
 /**
- * Accent, bracket and pad a string: unaccented text on screen is untranslated, a
- * missing `]` means the container clips, and the padding reproduces text
- * expansion. Placeholder contents are left alone or interpolation breaks.
+ * Unaccented text on screen is untranslated; a missing `]` means it clipped.
+ * Placeholder contents are left alone or interpolation breaks.
  */
 export function pseudoLocalize(template: string): string {
   const accented = template

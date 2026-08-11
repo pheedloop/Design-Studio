@@ -1,6 +1,5 @@
-// Demo-only stand-in for a host app's i18n. Under src/ so tsconfig.app checks it,
-// but in no lib include or entry, so it never ships — which is also why importing
-// the merged manifest is fine here and nowhere else.
+// Demo-only stand-in for a host app's i18n. In no lib include or entry, so it
+// never ships.
 
 import { useCallback, useState } from "react";
 import { STRINGS, interpolate, type Translate, type Vars } from "../i18n";
@@ -31,14 +30,7 @@ function englishFor(key: string, vars?: Vars): string {
   return table[key] ?? key;
 }
 
-/**
- * Pseudo-localize a key.
- *
- * The interpolation is the library's, applied here rather than by it: a host
- * translator returns display-ready text, so whatever this gives back is what
- * renders. Transform the template first, then substitute, or every variable
- * shows up on screen as a literal {{placeholder}}.
- */
+/** Transform the template first, then substitute, or the vars render literally. */
 export function pseudoTranslate(key: string, vars?: Vars): string {
   return interpolate(pseudoLocalize(englishFor(key, vars)), vars);
 }
@@ -55,8 +47,7 @@ export function useDemoLocale() {
 
   const keysTranslate = useCallback<Translate>((key) => `⟦${key}⟧`, []);
 
-  // undefined for "en" on purpose: exercises the no-translator path every host
-  // hits before it wires anything up.
+  // undefined for "en" on purpose: exercises the no-translator path.
   const translate =
     locale === "pseudo"
       ? pseudo

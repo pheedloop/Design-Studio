@@ -57,16 +57,11 @@ interface MapViewerProps {
   reservedBoothSlugs?: Set<string>;
   /** Host content floated over the map, rendered outside `.pl-map-editor` so host styles win. */
   overlay?: ReactNode;
-  /**
-   * Resolves this component's UI strings. Omit for built-in English. Keys come
-   * from `designStudioStrings`. Must be referentially stable — wrap in
-   * `useCallback`.
-   */
+  /** Omit for built-in English. Must be referentially stable. */
   translate?: Translate;
   /**
-   * Resolves author-entered text — element names, text boxes, legend labels,
-   * exhibitor names — which have no manifest key. Omit to render it as authored.
-   * Must be referentially stable.
+   * Resolves author-entered text, which has no manifest key. Omit to render it as
+   * authored. Must be referentially stable.
    */
   translateContent?: TranslateContent;
   /** BCP-47 tag for number and list formatting. */
@@ -92,9 +87,7 @@ export function MapViewer({
   exhibitors,
   ...rest
 }: MapViewerProps) {
-  // Translated once here rather than at each render site: everything downstream —
-  // lists, popovers, canvas labels, the search index, directions — then reads the
-  // same text, which is what keeps a search hit visible in the list it matched.
+  // Once here, so the search index and everything rendered read the same text.
   const translated = useMemo(
     () =>
       translateContent

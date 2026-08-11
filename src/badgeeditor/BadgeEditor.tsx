@@ -66,11 +66,7 @@ export interface BadgeEditorProps {
   /** Supplies attendee search + badge-data resolution for the live preview.
    *  When omitted, the picker is hidden and fields show placeholders. */
   attendeeProvider?: AttendeeProvider;
-  /**
-   * Resolves this component's UI strings. Omit for built-in English. Keys come
-   * from `designStudioStrings`. Must be referentially stable — wrap in
-   * `useCallback`.
-   */
+  /** Omit for built-in English. Must be referentially stable. */
   translate?: Translate;
   /** BCP-47 tag for number and list formatting. */
   locale?: string;

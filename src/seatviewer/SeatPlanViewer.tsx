@@ -22,8 +22,7 @@ export function SeatPlanViewer({
   data,
   ...props
 }: SeatPlanViewerProps) {
-  // See MapViewer: translated once so the canvas, the popover and the table-name
-  // lookup all read the same text.
+  // Once here, so the canvas, popover and table-name lookup agree. See MapViewer.
   const translatedData = useMemo(
     () => (translateContent ? translateFloorPlan(data, translateContent) : data),
     [data, translateContent],

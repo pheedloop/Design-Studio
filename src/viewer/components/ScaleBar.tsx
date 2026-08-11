@@ -18,7 +18,6 @@ function niceDistance(rough: number): number {
 }
 
 export function ScaleBar({ dimensions, scale }: ScaleBarProps) {
-  // Above the early return below.
   const t = useT();
   const locale = useLocale();
 

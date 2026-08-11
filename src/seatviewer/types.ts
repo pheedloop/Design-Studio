@@ -104,15 +104,10 @@ export interface SeatPlanViewerProps {
   tier?: Tier;
   features?: Partial<Record<FeatureKey, FeatureOverride>>;
 
-  /**
-   * Resolves this component's UI strings. Omit for built-in English. Keys come
-   * from `designStudioStrings`. Must be referentially stable — wrap in
-   * `useCallback`.
-   */
+  /** Omit for built-in English. Must be referentially stable. */
   translate?: Translate;
   /**
-   * Resolves author-entered text — table names, text boxes, legend labels — which
-   * have no manifest key. Omit to render it as authored. Must be referentially
+   * Resolves author-entered text, which has no manifest key. Must be referentially
    * stable. Ticket holders' names are never passed through it.
    */
   translateContent?: TranslateContent;

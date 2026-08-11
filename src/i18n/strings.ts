@@ -1,14 +1,10 @@
-// The English manifest, grouped by the namespace that owns it. Keys omit the
-// namespace — the const carries it, and createSurfaceI18n re-attaches it — so
-// "menu.duplicate" under EDITOR is addressed as t("editor.menu.duplicate").
+// Keys omit their namespace — the const carries it — so "menu.duplicate" under
+// EDITOR is addressed as t("editor.menu.duplicate").
 //
 // Every surface's bundle carries all of it: with several library entries rollup
 // emits one shared chunk for this module (~3 KB gz).
-//
-// Entries stay sorted; `sort-keys` in eslint.config.js enforces it.
 
-/** Anything rendered from more than one surface. A viewer key can't be used from
- * src/editor, so shared vocabulary lives here or it duplicates. */
+/** Anything rendered from more than one surface, or it duplicates. */
 export const COMMON = {
   "area": "{{value}} sq {{unit}}",
   "labelWithCount": "{{label}} ({{count}})",
@@ -332,7 +328,6 @@ export const EDITOR = {
 
 export const BADGEEDITOR = {} as const;
 
-/** Re-attaches each group's namespace to its keys. */
 export function flattenNamespaces(
   groups: Record<string, Readonly<Record<string, string>>>,
 ): Record<string, string> {

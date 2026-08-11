@@ -11,26 +11,18 @@ import type { Translate } from "../i18n";
 
 export interface SeatPlanCanvasProps {
   data: FloorPlanData;
-  /**
-   * Fill color for a table, keyed by its `properties.tableCode`. Return undefined
-   * to fall back to the element's own color. Typically an occupancy color.
-   */
+  /** Keyed by `properties.tableCode`; undefined falls back to the element's color. */
   getTableColor?: (tableCode: string) => string | undefined;
   /** Table (by code) drawn with selection emphasis. */
   highlightedTableCode?: string | null;
   /** Tables (by code) de-emphasized — e.g. not eligible for the current selection. */
   dimmedTableCodes?: ReadonlySet<string> | null;
-  /** Fired when an interactive table is clicked. */
   onTableClick?: (tableCode: string) => void;
-  /** Fired when empty canvas (anything other than an interactive table) is clicked. */
+  /** Empty canvas means anything other than an interactive table. */
   onBackgroundClick?: () => void;
   /** Overlay content positioned within the canvas region (e.g. the table dialog). */
   children?: ReactNode;
-  /**
-   * Resolves this component's UI strings. Omit for built-in English. Keys come
-   * from `designStudioStrings`. Must be referentially stable — wrap in
-   * `useCallback`.
-   */
+  /** Omit for built-in English. Must be referentially stable. */
   translate?: Translate;
   /** BCP-47 tag for number and list formatting. */
   locale?: string;
