@@ -102,6 +102,7 @@ export default defineConfig({
     }),
   ],
   resolve: {
+    alias: { "@": resolve(__dirname, "src") },
     // Prefer the ESM ("module" field) over CJS ("main") for packages that expose both.
     // This ensures react-icons and similar dual-format packages are bundled as ESM,
     // avoiding the rolldown CJS require() shim that throws in ESM environments.
