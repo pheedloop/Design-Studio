@@ -23,7 +23,7 @@ const ticket = (over: Partial<SeatTicket> = {}): SeatTicket => ({
   code: "P1",
   ticketCode: "VIP",
   ticketName: "VIP Gala",
-  attendee: { code: "A1", firstName: "Ada", lastName: "Lovelace", email: "a@x.com" },
+  attendee: { firstName: "Ada", lastName: "Lovelace", email: "a@x.com" },
   tableCode: null,
   seatSelectionCode: null,
   attendeeTags: [],
@@ -71,26 +71,28 @@ describe("table-level blocks (both modes)", () => {
 
 describe("admin", () => {
   it("counts the assignable selection", () => {
-    const r = cta("admin", { assignableCodes: ["a", "b", "c"], selected: [ticket()] });
+    const three = [ticket({ code: "a" }), ticket({ code: "b" }), ticket({ code: "c" })];
+    const r = cta("admin", { assignableCodes: ["a", "b", "c"], selected: three });
     expect(r).toEqual({ label: "Assign 3 selected", disabled: false, hint: undefined });
   });
 
-  it("flags the ineligible remainder, with the right plural", () => {
-    const three = [ticket({ code: "a" }), ticket({ code: "b" }), ticket({ code: "c" })];
+  it("warns that rule-mismatched picks get seated anyway, with the right plural", () => {
+    const wrong = (code: string) => ticket({ code, ticketCode: "GA" });
+    const three = [ticket({ code: "a" }), wrong("b"), wrong("c")];
     expect(cta("admin", { assignableCodes: ["a", "b"], selected: three }).hint).toBe(
-      "1 of 3 selected isn’t eligible for this table.",
+      "1 of 2 doesn’t meet this table’s rules — they’ll be seated anyway.",
     );
-    expect(cta("admin", { assignableCodes: ["a"], selected: three }).hint).toBe(
-      "2 of 3 selected aren’t eligible for this table.",
+    expect(cta("admin", { assignableCodes: ["a", "b", "c"], selected: three }).hint).toBe(
+      "2 of 3 don’t meet this table’s rules — they’ll be seated anyway.",
     );
   });
 
-  it("asks for a selection when nothing is eligible", () => {
-    expect(cta("admin").label).toBe("Select eligible ticket holders");
+  it("asks for a selection when nothing is assignable", () => {
+    expect(cta("admin").label).toBe("Select ticket holders");
     expect(cta("admin").hint).toBeUndefined();
 
-    const r = cta("admin", { selected: [ticket()] });
-    expect(r.hint).toBe("None of the selected are eligible for this table.");
+    const r = cta("admin", { selected: [ticket({ tableCode: "T9" })] });
+    expect(r.hint).toBe("Everyone selected is already seated. Clear a seat to move them.");
   });
 });
 

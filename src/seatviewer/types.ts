@@ -32,7 +32,6 @@ export interface SeatTicket {
   ticketCode: string;
   ticketName: string;
   attendee: {
-    code: string;
     firstName: string;
     lastName: string;
     email: string;
@@ -76,6 +75,11 @@ export interface SeatPlanViewerProps {
 
   // Ticket panel
   tickets: SeatTicket[];
+  /**
+   * Total matching the current search/filter, across all pages. `tickets` only
+   * holds what has been paged in so far, so the count has to come from the host.
+   */
+  totalTickets?: number;
   ticketsLoading?: boolean;
   hasMoreTickets?: boolean;
   onLoadMoreTickets?: () => void;

@@ -1,4 +1,5 @@
 import type { T } from "./i18n";
+import { seatEligibility } from "./logic";
 import type { SeatPlanMode, SeatTableState, SeatTicket } from "./types";
 
 export function occupantHeading(
@@ -41,25 +42,28 @@ export function assignCta(
       };
 
     if (mode === "admin") {
-      if (assignableCodes.length > 0) {
-        const extra = selectedCodes.size - assignableCodes.length;
+      if (assignableCodes.length === 0) {
         return {
-          label: t("seatviewer.assign.selectedCount", { count: assignableCodes.length }),
-          disabled: false,
-          hint:
-            extra > 0
-              ? t("seatviewer.assign.someIneligible", {
-                  count: extra,
-                  total: selectedCodes.size,
-                })
-              : undefined,
+          label: t("seatviewer.assign.selectHolders"),
+          disabled: true,
+          hint: selectedCodes.size > 0 ? t("seatviewer.assign.allSeated") : undefined,
         };
       }
+      // Admins seat through a rule mismatch — say how many, don't block.
+      const flagged = assignableCodes.filter((code) => {
+        const ticket = ticketByCode.get(code);
+        return ticket ? seatEligibility(ticket, openTable).flags.length > 0 : false;
+      }).length;
       return {
-        label: t("seatviewer.assign.selectEligible"),
-        disabled: true,
+        label: t("seatviewer.assign.selectedCount", { count: assignableCodes.length }),
+        disabled: false,
         hint:
-          selectedCodes.size > 0 ? t("seatviewer.assign.noneEligible") : undefined,
+          flagged > 0
+            ? t("seatviewer.assign.someFlagged", {
+                count: flagged,
+                total: assignableCodes.length,
+              })
+            : undefined,
       };
     }
 
@@ -72,8 +76,10 @@ export function assignCta(
         disabled: true,
         hint: t("seatviewer.assign.selectTicketHint"),
       };
-    if (ticket.tableCode) {
-      const at = tableNameByCode.get(ticket.tableCode) ?? ticket.tableCode;
+
+    const { block, flags } = seatEligibility(ticket, openTable);
+    if (block === "seated") {
+      const at = tableNameByCode.get(ticket.tableCode!) ?? ticket.tableCode!;
       return {
         label: t("seatviewer.assign.alreadySeated"),
         disabled: true,
@@ -83,14 +89,14 @@ export function assignCta(
         }),
       };
     }
-    if (!openTable.eligibleTicketCodes.includes(ticket.ticketCode)) {
+    if (flags.includes("ticketType")) {
       return {
         label: t("seatviewer.assign.notEligible"),
         disabled: true,
         hint: t("seatviewer.assign.notEligibleHint", { ticket: ticket.ticketName }),
       };
     }
-    if (openTable.tags.length > 0 && !ticket.attendeeTags.some((tag) => openTable.tags.includes(tag))) {
+    if (flags.includes("tag")) {
       return {
         label: t("seatviewer.assign.reserved"),
         disabled: true,

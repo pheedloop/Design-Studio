@@ -44,6 +44,7 @@ function SeatPlanViewerInner(
     data,
     tables,
     tickets,
+    totalTickets,
     ticketsLoading,
     hasMoreTickets,
     onLoadMoreTickets,
@@ -208,6 +209,7 @@ function SeatPlanViewerInner(
       <TicketPanel
         mode={mode}
         tickets={tickets}
+        totalTickets={totalTickets}
         selectedCodes={selectedCodes}
         onToggle={toggleTicket}
         openTable={openTable}

@@ -63,7 +63,7 @@ export function SeatPlanViewerDemo({ translate }: { translate?: Translate }) {
     return tickets
       .filter((t) => t.tableCode === openCode)
       .map((t) => ({
-        code: t.attendee.code,
+        code: t.code,
         firstName: t.attendee.firstName,
         lastName: t.attendee.lastName,
         email: t.attendee.email,
@@ -129,6 +129,7 @@ export function SeatPlanViewerDemo({ translate }: { translate?: Translate }) {
           data={seatPlanMap}
           tables={tables}
           tickets={visibleTickets}
+          totalTickets={visibleTickets.length}
           searchTerm={search}
           onSearchChange={setSearch}
           filterOptions={FILTER_OPTIONS}
