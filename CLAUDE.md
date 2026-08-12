@@ -2,7 +2,7 @@
 
 Rules for **writing** and **reviewing** code in this repo. Read this before opening or reviewing a PR. AI agents working in this repo should treat these rules as binding.
 
-Design-Studio (`@pheedloop/design-studio`) is a Konva.js + React + TypeScript **component library**. It was built solo with no written conventions — this is the standard the refactor and cleanup tickets in this project are measured against.
+Design-Studio (`@pheedloop/design-studio`) is a Konva.js + React + TypeScript **component library**.
 
 ---
 
@@ -104,11 +104,11 @@ If you're writing near-identical shape/handling logic for N variants that differ
 
 ### Tests
 
-There is no established testing pattern in this repo yet — that's tracked separately (see `ENG-3570`). Until that lands: don't invent a one-off test setup for a single PR, but do call out untested new logic in review rather than blocking on infrastructure that doesn't exist yet. This section will be replaced with real rules once that ticket resolves.
+**TBD.** There is no established testing pattern in this repo yet. Until one lands: don't invent a one-off test setup for a single PR, but do call out untested new logic in review rather than blocking on infrastructure that doesn't exist yet.
 
 ### Strings / i18n
 
-**TBD — deferred pending the localization spike (`ENG-3571`).** Design-Studio has two downstream consumers that translate differently (ditto uses structured keys, Charmander uses the English string as the key and supports user-provided translations), so this repo can't just copy either convention as-is. Do not hardcode a "wrap everything in `t()`" rule until that spike lands with a decision.
+**TBD.** Design-Studio has two downstream consumers that translate differently (ditto uses structured keys, Charmander uses the English string as the key and supports user-provided translations), so this repo can't just copy either convention as-is.
 
 ### Skills required before opening a PR
 
