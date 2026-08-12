@@ -1,11 +1,13 @@
 import { useRef, useState } from "react";
-import { PiMagnifyingGlass, PiCheck, PiCaretDown } from "react-icons/pi";
+import { PiMagnifyingGlass, PiCheck, PiCaretDown, PiWarningCircle } from "react-icons/pi";
 import type { SeatFilterOption, SeatPlanMode, SeatTableState, SeatTicket } from "../types";
-import { isEligible } from "../logic";
+import { isEligible, seatEligibility, SEAT_FLAG_LABELS } from "../logic";
 
 interface TicketPanelProps {
   mode: SeatPlanMode;
   tickets: SeatTicket[];
+  /** Total across all pages; `tickets` is only what has loaded so far. */
+  totalTickets?: number;
   selectedCodes: ReadonlySet<string>;
   onToggle: (code: string) => void;
   /** When a table is open, tickets ineligible for it are disabled (table-first path). */
@@ -35,6 +37,7 @@ interface TicketPanelProps {
 export function TicketPanel({
   mode,
   tickets,
+  totalTickets,
   selectedCodes,
   onToggle,
   openTable,
@@ -72,6 +75,8 @@ export function TicketPanel({
   const renderAdminRow = (t: SeatTicket) => {
     const isSel = selectedCodes.has(t.code);
     const disabled = openTable ? !isEligible(t, openTable, mode) && !isSel : false;
+    // Admins may seat against the rules — surface the mismatch instead of blocking.
+    const flags = openTable && !disabled ? seatEligibility(t, openTable).flags : [];
 
     return (
       <button
@@ -99,8 +104,23 @@ export function TicketPanel({
             {t.tableCode && <span className="shrink-0">{seatPill(t.tableCode)}</span>}
           </span>
           <span className="text-sm text-gray-500 leading-snug break-words">
-            <span className="text-gray-600 font-medium">{t.ticketName}</span> · {t.attendee.email}
+            <span className="text-gray-600 font-medium">{t.ticketName}</span>
+            {/* Guest tickets carry no email — don't leave the separator dangling. */}
+            {t.attendee.email ? ` · ${t.attendee.email}` : ""}
           </span>
+          {flags.length > 0 && (
+            <span className="mt-0.5 flex flex-wrap gap-1.5">
+              {flags.map((f) => (
+                <span
+                  key={f}
+                  className="inline-flex items-center gap-1.5 text-xs font-medium px-2 py-0.5 rounded-full text-[#8a5300] bg-[rgba(240,169,46,0.16)]"
+                >
+                  <PiWarningCircle size={12} />
+                  {SEAT_FLAG_LABELS[f]}
+                </span>
+              ))}
+            </span>
+          )}
         </span>
       </button>
     );
@@ -216,7 +236,7 @@ export function TicketPanel({
         <div className="flex items-baseline gap-2">
           <h2 className="text-base font-medium text-gray-700 m-0">Ticket holders</h2>
           <span className="text-sm text-gray-400 tabular-nums">
-            {tickets.length} shown · {selectedCodes.size} selected
+            {totalTickets ?? tickets.length} total · {selectedCodes.size} selected
           </span>
         </div>
         <div className="relative">
