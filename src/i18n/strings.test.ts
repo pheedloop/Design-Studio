@@ -5,8 +5,7 @@ import { COMMON, EDITOR, SEATVIEWER, VIEWER, flattenNamespaces } from "./strings
 const { defaultTranslate: t } = createSurfaceI18n({ common: COMMON, editor: EDITOR });
 
 describe("editor plurals", () => {
-  // Was `element{count > 1 ? "s" : ""}` — a count ternary at the call site, which
-  // no locale with a different plural rule could follow.
+  // Was `element{count > 1 ? "s" : ""}`, a count ternary at the call site.
   it("selects the clipped-element variant from count", () => {
     expect(t("editor.resize.clipped", { count: 1 })).toBe(
       "1 element will be outside the new canvas bounds.",

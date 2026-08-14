@@ -78,7 +78,6 @@ export function BackgroundUploadDialog({
   const [mode, setMode] = useState<FitMode>("fit");
   const [opacity, setOpacity] = useState(1);
   const [pending, setPending] = useState(false);
-  // A key, not English: the message is resolved at the render site.
   const [error, setError] = useState<StringKey | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
 

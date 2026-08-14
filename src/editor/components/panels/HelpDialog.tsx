@@ -8,9 +8,7 @@ const mod = isMac ? "⌘" : "Ctrl";
 type HelpTab = "start" | "shortcuts" | "menus";
 
 interface Shortcut {
-  /** Keycap combo, rendered as-is. */
-  keys: string;
-  /** Set instead of `keys` when the label is words rather than keycaps. */
+  keys?: string;
   keysKey?: StringKey;
   descriptionKey: StringKey;
 }
@@ -59,92 +57,32 @@ const shortcuts: { categoryKey: StringKey; items: Shortcut[] }[] = [
     items: [
       { keys: `${mod}+G`, descriptionKey: "editor.help.shortcut.group" },
       { keys: `${mod}+Shift+G`, descriptionKey: "editor.group.ungroup" },
-      {
-        keys: "",
-        keysKey: "editor.help.keys.doubleClick",
-        descriptionKey: "editor.help.shortcut.enterGroup",
-      },
+      { keysKey: "editor.help.keys.doubleClick", descriptionKey: "editor.help.shortcut.enterGroup" },
       { keys: "Escape", descriptionKey: "editor.help.shortcut.exitGroup" },
     ],
   },
   {
     categoryKey: "editor.help.category.canvas",
     items: [
-      {
-        keys: "",
-        keysKey: "editor.help.keys.scroll",
-        descriptionKey: "editor.help.shortcut.zoom",
-      },
-      {
-        keys: "",
-        keysKey: "editor.help.keys.handThenDrag",
-        descriptionKey: "editor.help.shortcut.panHand",
-      },
-      {
-        keys: "",
-        keysKey: "editor.help.keys.spaceDrag",
-        descriptionKey: "editor.help.shortcut.pan",
-      },
-      {
-        keys: "",
-        keysKey: "editor.help.keys.shiftDrag",
-        descriptionKey: "editor.help.shortcut.constrain",
-      },
-      {
-        keys: "",
-        keysKey: "editor.help.keys.shiftRotate",
-        descriptionKey: "editor.help.shortcut.snapRotate",
-      },
-      {
-        keys: "",
-        keysKey: "editor.help.keys.shiftLineArrow",
-        descriptionKey: "editor.help.shortcut.snapLine",
-      },
-      {
-        keys: "",
-        keysKey: "editor.help.keys.shiftPolygon",
-        descriptionKey: "editor.help.shortcut.snapPolygon",
-      },
-      {
-        keys: "",
-        keysKey: "editor.help.keys.shiftMeasure",
-        descriptionKey: "editor.help.shortcut.snapMeasure",
-      },
-      {
-        keys: "",
-        keysKey: "editor.help.keys.shiftCalibrate",
-        descriptionKey: "editor.help.shortcut.snapCalibrate",
-      },
+      { keysKey: "editor.help.keys.scroll", descriptionKey: "editor.help.shortcut.zoom" },
+      { keysKey: "editor.help.keys.handThenDrag", descriptionKey: "editor.help.shortcut.panHand" },
+      { keysKey: "editor.help.keys.spaceDrag", descriptionKey: "editor.help.shortcut.pan" },
+      { keysKey: "editor.help.keys.shiftDrag", descriptionKey: "editor.help.shortcut.constrain" },
+      { keysKey: "editor.help.keys.shiftRotate", descriptionKey: "editor.help.shortcut.snapRotate" },
+      { keysKey: "editor.help.keys.shiftLineArrow", descriptionKey: "editor.help.shortcut.snapLine" },
+      { keysKey: "editor.help.keys.shiftPolygon", descriptionKey: "editor.help.shortcut.snapPolygon" },
+      { keysKey: "editor.help.keys.shiftMeasure", descriptionKey: "editor.help.shortcut.snapMeasure" },
+      { keysKey: "editor.help.keys.shiftCalibrate", descriptionKey: "editor.help.shortcut.snapCalibrate" },
     ],
   },
   {
     categoryKey: "editor.help.category.selection",
     items: [
-      {
-        keys: "",
-        keysKey: "editor.help.keys.click",
-        descriptionKey: "editor.help.shortcut.selectElement",
-      },
-      {
-        keys: "",
-        keysKey: "editor.help.keys.clickGroupMember",
-        descriptionKey: "editor.help.shortcut.selectGroup",
-      },
-      {
-        keys: "",
-        keysKey: "editor.help.keys.shiftClick",
-        descriptionKey: "editor.help.shortcut.addRemove",
-      },
-      {
-        keys: "",
-        keysKey: "editor.help.keys.dragEmpty",
-        descriptionKey: "editor.help.shortcut.dragSelect",
-      },
-      {
-        keys: "",
-        keysKey: "editor.help.keys.rightClick",
-        descriptionKey: "editor.help.shortcut.contextMenu",
-      },
+      { keysKey: "editor.help.keys.click", descriptionKey: "editor.help.shortcut.selectElement" },
+      { keysKey: "editor.help.keys.clickGroupMember", descriptionKey: "editor.help.shortcut.selectGroup" },
+      { keysKey: "editor.help.keys.shiftClick", descriptionKey: "editor.help.shortcut.addRemove" },
+      { keysKey: "editor.help.keys.dragEmpty", descriptionKey: "editor.help.shortcut.dragSelect" },
+      { keysKey: "editor.help.keys.rightClick", descriptionKey: "editor.help.shortcut.contextMenu" },
     ],
   },
 ];

@@ -80,8 +80,7 @@ describe("admin", () => {
     });
   });
 
-  // Was one count-agnostic "Assign {{count}} selected", which left every locale
-  // with no singular form to inflect.
+  // Was "Assign {{count}} selected", with no singular form for a locale to inflect.
   it("uses the singular label for one holder", () => {
     const one = [ticket({ code: "a" })];
     const r = cta("admin", { assignableCodes: ["a"], selected: one });

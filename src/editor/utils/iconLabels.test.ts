@@ -2,8 +2,6 @@ import { describe, expect, it } from "vitest";
 import { ICON_CATEGORY_LABEL, ICON_LABEL } from "./iconLabels";
 import { ICON_CATEGORIES, iconRegistry } from "./iconRegistry";
 
-// ICON_LABEL is keyed by `string`, so a new registry entry with no label here is
-// not a compile error — it reaches IconPicker as `t(undefined)`.
 describe("ICON_LABEL", () => {
   it("labels every registered icon", () => {
     for (const entry of iconRegistry) {

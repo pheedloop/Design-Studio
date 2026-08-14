@@ -8,8 +8,6 @@ export const TYPE_BADGE: Record<
   { labelKey: StringKey; className: string }
 > = {
   booth: { labelKey: "common.type.booth", className: "bg-gray-100 text-gray-500" },
-  // "Session Area" shortens to an unambiguous "Session"; "Meeting Room" does not
-  // shorten to "Room", which reads as any room in the venue.
   session_area: {
     labelKey: "viewer.type.sessionShort",
     className: "bg-green-100 text-green-700",

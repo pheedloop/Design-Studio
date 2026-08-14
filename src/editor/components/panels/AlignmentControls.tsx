@@ -39,7 +39,6 @@ export function AlignmentControls({
   onDistributeH,
   onDistributeV,
 }: AlignmentControlsProps) {
-  // Rendered by both the map editor and the badge editor, so common.* keys only.
   const t: CommonT = useT();
 
   return (

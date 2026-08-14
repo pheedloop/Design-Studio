@@ -80,8 +80,7 @@ describe("translateFloorPlan", () => {
     expect(out.elements[0].properties.name).toBe("");
   });
 
-  // An entry translated to "" used to blank the label on the map; a catalog with
-  // a hole in it should read as English, not as nothing.
+  // A "" entry used to blank the label rather than fall back to English.
   it("keeps the authored text when the catalog entry is empty", () => {
     const blank = (text: string) => (text === "Casual Play Hall" ? "" : text);
     const out = translateFloorPlan(plan(), blank);
