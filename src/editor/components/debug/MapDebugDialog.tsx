@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Button, Dialog, TabBar } from "../ui";
 import type { FloorPlanData } from "../../../types";
 import { JsonDebugView } from "./JsonDebugView";
+import { useT } from "../../i18n";
 
 interface MapDebugDialogProps {
   data: FloorPlanData;
@@ -9,11 +10,15 @@ interface MapDebugDialogProps {
 }
 
 export function MapDebugDialog({ data, onClose }: MapDebugDialogProps) {
+  const t = useT();
   const [tab, setTab] = useState<"tree" | "raw">("tree");
 
   const tabs = (
     <TabBar
-      tabs={[{ id: "tree", label: "Tree" }, { id: "raw", label: "JSON" }]}
+      tabs={[
+        { id: "tree", label: t("editor.debug.tree") },
+        { id: "raw", label: t("editor.debug.raw") },
+      ]}
       value={tab}
       onChange={(id) => setTab(id as typeof tab)}
       itemClassName="px-2 py-1"
@@ -22,14 +27,14 @@ export function MapDebugDialog({ data, onClose }: MapDebugDialogProps) {
 
   return (
     <Dialog
-      title="Map Debug"
+      title={t("editor.debug.title")}
       onClose={onClose}
       width="640px"
       maxHeight="80vh"
       headerActions={tabs}
       footer={
         <Button variant="ghost" color="primary" className="px-0" onClick={() => navigator.clipboard.writeText(JSON.stringify(data, null, 2))}>
-          Copy to clipboard
+          {t("editor.debug.copy")}
         </Button>
       }
     >

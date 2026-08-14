@@ -310,6 +310,7 @@ export function ToolSidebar({
   features,
   placementIcon,
 }: ToolSidebarProps) {
+  const t = useT();
   const iconRowRef = useRef<HTMLDivElement>(null);
   const showIconPicker = activeTool === "icon" && !!onIconSelect;
 
@@ -332,7 +333,7 @@ export function ToolSidebar({
       <div className="flex flex-col w-64 shrink-0 bg-white border-r border-gray-200 overflow-hidden">
         <div className="px-3 py-3 border-b border-gray-100">
           <div className="text-[10px] uppercase tracking-wider text-gray-400 leading-none mb-1">
-            Pathing Layer
+            {t("editor.pathing.layerTitle")}
           </div>
           <div className="text-base font-semibold text-gray-800 truncate">
             {mapName}
@@ -359,7 +360,7 @@ export function ToolSidebar({
       <div className="flex flex-col w-64 shrink-0 bg-white border-r border-gray-200 overflow-hidden">
         <div className="px-3 py-3 border-b border-gray-100">
           <div className="text-[10px] uppercase tracking-wider text-gray-400 leading-none mb-1">
-            Background Layer
+            {t("editor.background.layerTitle")}
           </div>
           <div className="text-base font-semibold text-gray-800 truncate">
             {mapName}
@@ -377,7 +378,7 @@ export function ToolSidebar({
             onClick={() => onToolChange("select")}
           />
           <p className="px-2 py-3 text-xs text-gray-400 leading-relaxed">
-            Set the background image and color from the panel on the right.
+            {t("editor.background.layerHint")}
           </p>
         </div>
       </div>

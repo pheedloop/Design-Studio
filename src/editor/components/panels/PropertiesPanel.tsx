@@ -269,7 +269,7 @@ export function PropertiesPanel({
                     onBatchUpdateProperties({ labelVisible: false })
                   }
                 >
-                  Hide All Labels
+                  {t("editor.label.hideAll")}
                 </Button>
                 <Button
                   variant="outline"
@@ -279,7 +279,7 @@ export function PropertiesPanel({
                     onBatchUpdateProperties({ labelVisible: true })
                   }
                 >
-                  Show All Labels
+                  {t("editor.label.showAll")}
                 </Button>
               </div>
             </>
@@ -305,7 +305,7 @@ export function PropertiesPanel({
         <div className="w-60 shrink-0 border-l border-gray-200 bg-white flex flex-col">
           <div className="px-3 py-2 border-b border-gray-200">
             <span className="text-xs font-medium text-gray-600">
-              Background
+              {t("editor.field.background")}
             </span>
           </div>
           <div className="flex flex-col gap-4 p-3 overflow-y-auto flex-1">
@@ -383,7 +383,7 @@ export function PropertiesPanel({
                       className="flex-1"
                       onClick={onUploadBackground}
                     >
-                      Replace
+                      {t("editor.background.replace")}
                     </Button>
                     <Button
                       variant="outline"
@@ -391,7 +391,7 @@ export function PropertiesPanel({
                       className="flex-1"
                       onClick={onRemoveBackground}
                     >
-                      Remove
+                      {t("editor.background.remove")}
                     </Button>
                   </div>
                 </div>
@@ -400,7 +400,7 @@ export function PropertiesPanel({
                   onClick={onUploadBackground}
                   className="w-full text-xs text-gray-600 border border-gray-200 border-dashed rounded px-2 py-3 hover:bg-gray-50 cursor-pointer transition-colors"
                 >
-                  Upload Background
+                  {t("editor.background.uploadCta")}
                 </button>
               )}
             </div>
@@ -477,11 +477,10 @@ export function PropertiesPanel({
           {isSelectedUnlinked && (
             <div className="flex items-start gap-1.5 px-2 py-1.5 rounded bg-red-50 border border-red-200">
               <span className="text-red-500 text-[10px] font-medium leading-4">
-                Unlinked
+                {t("editor.properties.unlinked")}
               </span>
               <span className="text-red-400 text-[10px] leading-4">
-                — switch to Placement Mode and drag a record onto this shape to
-                link it.
+                {t("editor.properties.unlinkedHint")}
               </span>
             </div>
           )}
@@ -773,7 +772,7 @@ export function PropertiesPanel({
               )
             }
           >
-            Save as Default Style
+            {t("editor.properties.saveDefaultStyle")}
           </Button>
         )}
         <Button
@@ -782,7 +781,7 @@ export function PropertiesPanel({
           className="w-full"
           onClick={() => onDelete(element.id)}
         >
-          Delete
+          {t("editor.action.delete")}
         </Button>
       </div>
     </div>

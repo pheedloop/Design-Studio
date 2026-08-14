@@ -170,7 +170,7 @@ function FilterBar({
           {filterOpen && (
             <div className="absolute right-0 top-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-20 py-1.5 w-36">
               <div className="px-2.5 pb-1 text-[10px] uppercase tracking-wider text-gray-400 font-medium">
-                Status
+                {t("editor.placement.status")}
               </div>
               {(["all", "unplaced", "placed"] as const).map((f) => (
                 <label
@@ -189,10 +189,10 @@ function FilterBar({
                   />
                   <span className="text-gray-700">
                     {f === "all"
-                      ? "All"
+                      ? t("editor.placement.statusAll")
                       : f === "placed"
-                        ? "Placed"
-                        : "Unplaced"}
+                        ? t("editor.placement.placed")
+                        : t("editor.placement.unplaced")}
                   </span>
                 </label>
               ))}
@@ -271,6 +271,7 @@ function Section({
   onAutoArrange,
   children,
 }: SectionProps) {
+  const t = useT();
   const total = placed + unplaced;
 
   return (
@@ -299,7 +300,7 @@ function Section({
             {title}
           </span>
           <span className="block text-xs text-gray-400 tabular-nums">
-            Placed: {placed}&nbsp;&nbsp;|&nbsp;&nbsp;Unplaced: {unplaced}
+            {t("editor.placement.counts", { placed, unplaced })}
           </span>
         </span>
         <span
@@ -311,8 +312,8 @@ function Section({
           ].join(" ")}
           title={
             totalUnplaced > 0
-              ? `Auto-place ${totalUnplaced} unplaced`
-              : "No unplaced items"
+              ? t("editor.placement.autoPlace", { count: totalUnplaced })
+              : t("editor.placement.noUnplaced")
           }
           onClick={(e) => {
             e.stopPropagation();
@@ -331,7 +332,7 @@ function Section({
         <SectionShapeContext.Provider value={defaultShape}>
           {total === 0 ? (
             <p className="px-3 py-2.5 text-xs text-gray-400 italic">
-              No records found
+              {t("editor.placement.noRecords")}
             </p>
           ) : (
             <>
@@ -413,7 +414,9 @@ function RecordRow({
   record: unknown;
   isPlaced: boolean;
 }) {
+  const t = useT();
   const secondary = category.getSecondaryLabel?.(record);
+
   return (
     <PlacementRow
       isPlaced={isPlaced}
@@ -428,11 +431,11 @@ function RecordRow({
       </span>
       {isPlaced ? (
         <span className="shrink-0 text-xs font-medium text-green-600">
-          Placed
+          {t("editor.placement.placed")}
         </span>
       ) : (
         <span className="shrink-0 text-xs font-medium text-amber-500">
-          Unplaced
+          {t("editor.placement.unplaced")}
         </span>
       )}
     </PlacementRow>

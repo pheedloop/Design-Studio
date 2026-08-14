@@ -1,5 +1,6 @@
 import { IconButton } from "../ui";
 import { useT } from "../../i18n";
+import type { CommonT } from "../../../i18n/types";
 import {
   AlignLeftIcon,
   AlignCenterHIcon,
@@ -38,7 +39,8 @@ export function AlignmentControls({
   onDistributeH,
   onDistributeV,
 }: AlignmentControlsProps) {
-  const t = useT();
+  // Rendered by both the map editor and the badge editor, so common.* keys only.
+  const t: CommonT = useT();
 
   return (
     <>
