@@ -543,6 +543,13 @@ export const EDITOR = {
 
 export const BADGEEDITOR = {} as const;
 
+export type Namespace =
+  | "common"
+  | "viewer"
+  | "seatviewer"
+  | "editor"
+  | "badgeeditor";
+
 export function flattenNamespaces(
   groups: Record<string, Readonly<Record<string, string>>>,
 ): Record<string, string> {

@@ -8,7 +8,7 @@ import type { Exhibitor } from "../viewer/types";
 export type TranslateContent = (text: string) => string;
 
 const sub = (text: string | undefined, translate: TranslateContent) =>
-  text ? translate(text) : text;
+  text ? translate(text) || text : text;
 
 /**
  * Applied once to the data, not at each render site: search matching has to see the

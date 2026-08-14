@@ -79,6 +79,14 @@ describe("translateFloorPlan", () => {
     const out = translateFloorPlan(source, translate);
     expect(out.elements[0].properties.name).toBe("");
   });
+
+  // An entry translated to "" used to blank the label on the map; a catalog with
+  // a hole in it should read as English, not as nothing.
+  it("keeps the authored text when the catalog entry is empty", () => {
+    const blank = (text: string) => (text === "Casual Play Hall" ? "" : text);
+    const out = translateFloorPlan(plan(), blank);
+    expect(out.elements[0].properties.name).toBe("Casual Play Hall");
+  });
 });
 
 describe("search sees what the list shows", () => {

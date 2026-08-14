@@ -100,7 +100,7 @@ a plain dictionary keyed by the English source, resolve then interpolate:
 const translate = useMemo<Translate>(
   () => (key, opts) => {
     const english = resolveEnglish(key, opts);
-    return interpolate(translations[english] ?? english, opts);
+    return interpolate(translations[english] || english, opts);
   },
   [translations],
 );

@@ -10,6 +10,7 @@ import {
   VIEWER,
   flattenNamespaces,
 } from "./strings";
+import type { Namespace } from "./strings";
 import type { Flattened, TranslateFor } from "./types";
 import type { SurfaceKey } from "./types";
 
@@ -19,7 +20,7 @@ const GROUPS = {
   seatviewer: SEATVIEWER,
   editor: EDITOR,
   badgeeditor: BADGEEDITOR,
-};
+} satisfies Record<Namespace, object>;
 
 /** Every string, flattened to the keys `t()` accepts. */
 export const STRINGS = flattenNamespaces(GROUPS) as Flattened<typeof GROUPS>;

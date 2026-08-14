@@ -3,6 +3,7 @@
 
 import { useCallback, useState } from "react";
 import { STRINGS, interpolate, type Translate, type Vars } from "../i18n";
+import { resolveEnglishFrom } from "../i18n/interpolate";
 import { pseudoLocalize } from "./pseudo";
 
 export type DemoLocale = "en" | "pseudo" | "keys";
@@ -20,19 +21,9 @@ function readStored(): DemoLocale {
   return stored === "pseudo" || stored === "keys" ? stored : "en";
 }
 
-function englishFor(key: string, vars?: Vars): string {
-  const table: Record<string, string> = STRINGS;
-  const count = vars?.count;
-  if (count !== undefined) {
-    const variant = table[count === 1 ? `${key}_one` : `${key}_other`];
-    if (variant !== undefined) return variant;
-  }
-  return table[key] ?? key;
-}
-
 /** Transform the template first, then substitute, or the vars render literally. */
 export function pseudoTranslate(key: string, vars?: Vars): string {
-  return interpolate(pseudoLocalize(englishFor(key, vars)), vars);
+  return interpolate(pseudoLocalize(resolveEnglishFrom(STRINGS, key, vars)), vars);
 }
 
 export function useDemoLocale() {
