@@ -1,5 +1,6 @@
 import { useRef, useEffect } from "react";
 import { TrophyIcon } from "./TrophyIcon";
+import { useT } from "../../i18n";
 
 export interface MenuItemConfig {
   label: string;
@@ -22,11 +23,13 @@ function isMenuDivider(entry: MenuEntry): entry is MenuDivider {
 }
 
 function MenuItem({ label, shortcut, disabled, danger, premium, onClick }: MenuItemConfig) {
+  const t = useT();
+
   return (
     <button
       onClick={onClick}
       disabled={disabled}
-      title={disabled && premium ? "Premium feature" : undefined}
+      title={disabled && premium ? t("editor.premiumFeature") : undefined}
       className={`flex items-center justify-between w-full px-3 py-1.5 text-xs transition-colors ${
         disabled
           ? "text-gray-300 cursor-default"

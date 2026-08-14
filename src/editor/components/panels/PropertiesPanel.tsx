@@ -230,7 +230,7 @@ export function PropertiesPanel({
         <div className="flex flex-col gap-4 p-3 overflow-y-auto flex-1">
           <div className="flex flex-col gap-1.5">
             <div className="flex items-center justify-between">
-              <SectionLabel>Opacity</SectionLabel>
+              <SectionLabel>{t("editor.field.opacity")}</SectionLabel>
               <span className="text-[11px] text-gray-400">
                 {commonOpacity !== undefined
                   ? `${Math.round(commonOpacity * 100)}%`
@@ -310,7 +310,7 @@ export function PropertiesPanel({
           </div>
           <div className="flex flex-col gap-4 p-3 overflow-y-auto flex-1">
             <div className="flex flex-col gap-1.5">
-              <SectionLabel>Background Color</SectionLabel>
+              <SectionLabel>{t("editor.field.backgroundColor")}</SectionLabel>
               <ColorSwatch
                 label=""
                 value={backgroundColor ?? "#ffffff"}
@@ -319,7 +319,7 @@ export function PropertiesPanel({
             </div>
 
             <div className="flex flex-col gap-1.5">
-              <SectionLabel>Background File</SectionLabel>
+              <SectionLabel>{t("editor.field.backgroundFile")}</SectionLabel>
               {background ? (
                 <div className="flex flex-col gap-2">
                   {background.kind === "image" ? (
@@ -339,7 +339,7 @@ export function PropertiesPanel({
                   )}
                   <div className="flex flex-col gap-1.5">
                     <div className="flex items-center justify-between">
-                      <span className="text-[11px] text-gray-500">Opacity</span>
+                      <span className="text-[11px] text-gray-500">{t("editor.field.opacity")}</span>
                       <span className="text-[11px] text-gray-400">
                         {Math.round(background.opacity * 100)}%
                       </span>
@@ -359,7 +359,7 @@ export function PropertiesPanel({
 
                   {background.kind === "dxf" && (
                     <div className="flex flex-col gap-1">
-                      <span className="text-[11px] text-gray-500">Layers</span>
+                      <span className="text-[11px] text-gray-500">{t("editor.field.layers")}</span>
                       <div className="max-h-32 overflow-y-auto flex flex-col gap-1 border border-gray-200 rounded-md p-2">
                         {background.layers.map((layer) => (
                           <label key={layer} className="flex items-center gap-2 cursor-pointer text-[11px]">
@@ -411,7 +411,7 @@ export function PropertiesPanel({
 
     return (
       <div className="w-60 shrink-0 border-l border-gray-200 bg-white p-4">
-        <p className="text-xs text-gray-400">No Items Selected</p>
+        <p className="text-xs text-gray-400">{t("editor.properties.noSelection")}</p>
       </div>
     );
   }
@@ -487,7 +487,7 @@ export function PropertiesPanel({
           )}
           {fields.has("name") && (
             <div className="flex flex-col gap-1.5">
-              <SectionLabel>Name</SectionLabel>
+              <SectionLabel>{t("editor.field.name")}</SectionLabel>
               <TextInput
                 value={element.properties.name || ""}
                 onChange={(e) =>
@@ -498,7 +498,7 @@ export function PropertiesPanel({
           )}
           <div className="flex flex-col gap-1.5">
             <div className="flex items-center justify-between">
-              <SectionLabel>Opacity</SectionLabel>
+              <SectionLabel>{t("editor.field.opacity")}</SectionLabel>
               <span className="text-[11px] text-gray-400">
                 {Math.round((element.properties.opacity ?? 1) * 100)}%
               </span>
@@ -541,7 +541,7 @@ export function PropertiesPanel({
 
           {fields.has("text") && (
             <div className="flex flex-col gap-1.5">
-              <SectionLabel>Text</SectionLabel>
+              <SectionLabel>{t("editor.field.text")}</SectionLabel>
               <TextArea
                 value={element.properties.text || ""}
                 rows={2}
@@ -554,7 +554,7 @@ export function PropertiesPanel({
 
           {fields.has("fontSize") && (
             <div className="flex flex-col gap-1.5">
-              <SectionLabel>Font Size</SectionLabel>
+              <SectionLabel>{t("editor.field.fontSize")}</SectionLabel>
               <NumberInput
                 value={element.properties.fontSize ?? 16}
                 onChange={(v) =>
@@ -568,7 +568,7 @@ export function PropertiesPanel({
             fields.has("fontStyle") ||
             fields.has("textDecoration")) && (
             <div className="flex flex-col gap-1.5">
-              <SectionLabel>Style</SectionLabel>
+              <SectionLabel>{t("editor.field.style")}</SectionLabel>
               <div className="flex gap-1">
                 {fields.has("fontWeight") && (
                   <Button
@@ -630,7 +630,7 @@ export function PropertiesPanel({
 
           {fields.has("textAlign") && (
             <div className="flex flex-col gap-1.5">
-              <SectionLabel>Alignment</SectionLabel>
+              <SectionLabel>{t("editor.field.alignment")}</SectionLabel>
               <div className="flex">
                 {(["left", "center", "right"] as const).map((align) => (
                   <Button
@@ -659,7 +659,7 @@ export function PropertiesPanel({
           {(fields.has("width") || fields.has("height")) &&
             (geo.shape === "rect" || geo.shape === "ellipse") && (
               <div className="flex flex-col gap-1.5">
-                <SectionLabel>Size</SectionLabel>
+                <SectionLabel>{t("editor.field.size")}</SectionLabel>
                 {fields.has("width") && (
                   <FieldRow label="W">
                     <NumberInput
@@ -681,7 +681,7 @@ export function PropertiesPanel({
 
           {fields.has("rotation") && (
             <div className="flex flex-col gap-1.5">
-              <SectionLabel>Rotation</SectionLabel>
+              <SectionLabel>{t("editor.field.rotation")}</SectionLabel>
               <FieldRow label="°">
                 <NumberInput
                   value={"rotation" in geo ? (geo.rotation ?? 0) : 0}
@@ -695,7 +695,7 @@ export function PropertiesPanel({
 
           {fields.has("area") && (
             <div className="flex flex-col gap-1.5">
-              <SectionLabel>Area</SectionLabel>
+              <SectionLabel>{t("editor.field.area")}</SectionLabel>
               <div className="px-2 py-1 text-xs text-gray-600 bg-gray-50 rounded border border-gray-200">
                 {formatArea(dims.width, dims.height, dimensions, t, locale)}
               </div>
@@ -704,7 +704,7 @@ export function PropertiesPanel({
 
           {fields.has("length") && (
             <div className="flex flex-col gap-1.5">
-              <SectionLabel>Length</SectionLabel>
+              <SectionLabel>{t("editor.field.length")}</SectionLabel>
               <div className="px-2 py-1 text-xs text-gray-600 bg-gray-50 rounded border border-gray-200">
                 {formatMeasurement(dims.length, dimensions, t, locale)}
               </div>
@@ -713,7 +713,7 @@ export function PropertiesPanel({
 
           {fields.has("arrowHeadStyle") && element.properties.arrowHead && (
             <div className="flex flex-col gap-1.5">
-              <SectionLabel>Arrow Style</SectionLabel>
+              <SectionLabel>{t("editor.field.arrowStyle")}</SectionLabel>
               <div className="flex">
                 {(["triangle", "chevron"] as const).map((style) => (
                   <Button
@@ -739,8 +739,8 @@ export function PropertiesPanel({
 
           {fields.has("arrowHeadSize") && element.properties.arrowHead && (
             <div className="flex flex-col gap-1.5">
-              <SectionLabel>Arrow Size</SectionLabel>
-              <FieldRow label="px">
+              <SectionLabel>{t("editor.field.arrowSize")}</SectionLabel>
+              <FieldRow label={t("common.unit.px")}>
                 <NumberInput
                   value={element.properties.arrowHead.size}
                   onChange={(v) =>

@@ -28,7 +28,7 @@ export function ViewerLegend({ legend }: ViewerLegendProps) {
                 />
                 <span className="text-xs text-gray-700 leading-none whitespace-nowrap">
                   {entry.label || (
-                    <em className="text-gray-400">{t("viewer.legend.unlabeled")}</em>
+                    <em className="text-gray-400">{t("common.unlabeled")}</em>
                   )}
                 </span>
               </div>

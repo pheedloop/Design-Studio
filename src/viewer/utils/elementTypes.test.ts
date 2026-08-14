@@ -51,8 +51,10 @@ describe("type tables", () => {
     }
   });
 
-  it("abbreviates the badge where the full name is long", () => {
-    expect(t(TYPE_BADGE.meeting_room.labelKey)).toBe("Room");
-    expect(t(TYPE_NAME.meeting_room)).toBe("Meeting Room");
+  it("abbreviates the badge only where the short form stays unambiguous", () => {
+    expect(t(TYPE_BADGE.session_area.labelKey)).toBe("Session");
+    expect(t(TYPE_NAME.session_area)).toBe("Session Area");
+    // Was "Room", which reads as any room in the venue rather than a meeting room.
+    expect(t(TYPE_BADGE.meeting_room.labelKey)).toBe("Meeting Room");
   });
 });

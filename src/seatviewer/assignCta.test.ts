@@ -73,7 +73,19 @@ describe("admin", () => {
   it("counts the assignable selection", () => {
     const three = [ticket({ code: "a" }), ticket({ code: "b" }), ticket({ code: "c" })];
     const r = cta("admin", { assignableCodes: ["a", "b", "c"], selected: three });
-    expect(r).toEqual({ label: "Assign 3 selected", disabled: false, hint: undefined });
+    expect(r).toEqual({
+      label: "Assign 3 ticket holders",
+      disabled: false,
+      hint: undefined,
+    });
+  });
+
+  // Was one count-agnostic "Assign {{count}} selected", which left every locale
+  // with no singular form to inflect.
+  it("uses the singular label for one holder", () => {
+    const one = [ticket({ code: "a" })];
+    const r = cta("admin", { assignableCodes: ["a"], selected: one });
+    expect(r.label).toBe("Assign 1 ticket holder");
   });
 
   it("warns that rule-mismatched picks get seated anyway, with the right plural", () => {

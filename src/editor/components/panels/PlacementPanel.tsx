@@ -13,6 +13,7 @@ import type {
   PlacedRecord,
 } from "../../hooks/usePlacementRecords";
 import type { PlacementCategory } from "../../placement/types";
+import { useT } from "../../i18n";
 import type { ElementType } from "../../../types";
 
 // ---------------------------------------------------------------------------
@@ -64,6 +65,7 @@ function FilterBar({
   statusFilter: StatusFilter;
   onStatusFilterChange: (f: StatusFilter) => void;
 }) {
+  const t = useT();
   const [shapeOpen, setShapeOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [filterOpen, setFilterOpen] = useState(false);
@@ -140,7 +142,7 @@ function FilterBar({
               ? "text-primary-600 bg-primary-50"
               : "text-gray-400 hover:text-gray-600",
           ].join(" ")}
-          title="Search"
+          title={t("editor.placement.search")}
         >
           <PiMagnifyingGlass size={13} />
         </button>
@@ -161,7 +163,7 @@ function FilterBar({
                   ? "text-primary-600 bg-primary-50"
                   : "text-gray-400 hover:text-gray-600",
             ].join(" ")}
-            title="Filter by status"
+            title={t("editor.placement.filterByStatus")}
           >
             <PiFunnel size={13} />
           </button>
@@ -208,7 +210,7 @@ function FilterBar({
               type="text"
               value={query}
               onChange={(e) => onQueryChange(e.target.value)}
-              placeholder="Search…"
+              placeholder={t("editor.placement.searchPlaceholder")}
               className="w-full pl-2.5 pr-6 py-1 text-xs border border-gray-200 rounded bg-gray-50 focus:bg-white focus:outline-none focus:ring-1 focus:ring-primary-400 transition"
             />
             {query && (

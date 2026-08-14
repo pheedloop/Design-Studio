@@ -7,14 +7,15 @@ export const TYPE_BADGE: Record<
   ViewerElementType,
   { labelKey: StringKey; className: string }
 > = {
-  // Booth reuses the full name — unlike the other two it needs no abbreviation.
   booth: { labelKey: "common.type.booth", className: "bg-gray-100 text-gray-500" },
+  // "Session Area" shortens to an unambiguous "Session"; "Meeting Room" does not
+  // shorten to "Room", which reads as any room in the venue.
   session_area: {
     labelKey: "viewer.type.sessionShort",
     className: "bg-green-100 text-green-700",
   },
   meeting_room: {
-    labelKey: "viewer.type.roomShort",
+    labelKey: "common.type.meetingRoom",
     className: "bg-orange-100 text-orange-700",
   },
 };
