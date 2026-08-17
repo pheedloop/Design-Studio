@@ -152,7 +152,7 @@ This satisfies both consumers: ditto gets structured keys, Charmander keeps Engl
 
 **Pure functions take `t` as a parameter.** `assignCta(input, t)` and `occupantHeading(state, t)` in `seatviewer/labels.ts` — that keeps them testable without mounting anything, which is the same reason the Tests section wants them extracted.
 
-**Entry components own the provider.** Every published entry point (`MapViewer`, `MapEditor`, `SeatPlanViewer`, `SeatPlanCanvas`, `BadgeEditor`) accepts optional `translate` + `locale` and wraps its tree in `I18nProvider`. The provider **inherits** rather than overrides, so a nested entry component doesn't reset its subtree to English. Both props must be **referentially stable** — memoized UI keys off the translator's identity, so an inline arrow re-renders the tree every frame.
+**Entry components own the provider.** Every entry component (`MapViewer`, `MapEditor`, `SeatPlanViewer`, `SeatPlanCanvas`, and demo-only `BadgeEditor`) accepts optional `translate` + `locale` and wraps its tree in `I18nProvider`. The provider **inherits** rather than overrides, so a nested entry component doesn't reset its subtree to English. Both props must be **referentially stable** — memoized UI keys off the translator's identity, so an inline arrow re-renders the tree every frame.
 
 **Content translation is applied to the data, once — not per render site.** `translateFloorPlan` / `translateExhibitors` in `src/i18n/content.ts` map over the data before it reaches the tree. This is load-bearing: search has to match against the same text it displays, or a user gets hits they cannot see.
 
