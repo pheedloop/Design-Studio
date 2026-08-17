@@ -99,10 +99,10 @@ a plain dictionary keyed by the English source, resolve then interpolate:
 ```tsx
 const translate = useMemo<Translate>(
   () => (key, opts) => {
-    const english = resolveEnglish(key, opts);
+    const english = resolveEnglish(key, opts, language);
     return interpolate(translations[english] || english, opts);
   },
-  [translations],
+  [translations, language],
 );
 ```
 
@@ -111,6 +111,22 @@ already chosen, and that order is the part to get right: a catalog keyed by
 English source is keyed by `"{{count}} seats free"`, not `"3 seats free"`, so
 interpolating before the lookup produces a key that can never match and silently
 falls back to English.
+
+**Pass your target locale as the third argument here, and only here.** The English
+coming back is a lookup key, and your catalog holds one row per English form — so
+the *target* locale's plural rules decide which row you want. French treats 0 as
+singular where English does not, so `{ count: 0 }` under `"fr"` has to resolve to
+the English singular or the lookup lands on the French plural. Omit the argument
+wherever the result is displayed as English instead (the structured-key
+`defaultValue` above, and the built-in fallback when no translator is supplied) —
+those want English's own rules regardless of what the tree's locale is set to.
+`language` belongs in the dep array once you pass it, or the memoized closure
+keeps resolving against a stale locale.
+
+> A locale with more plural categories than English can only reach the two forms
+> that exist. Russian selects `few` at 2 and Arabic selects `many` at 11; both
+> fall back to `_other`. That ceiling is inherent to keying a catalog by English
+> text — reaching the full CLDR set needs the structured-key setup above.
 
 If your catalog lives in an i18next instance configured with
 `keySeparator: false, nsSeparator: false`, the English *is* the key and i18next
@@ -122,6 +138,9 @@ const translate = useCallback<Translate>(
   [i18n, i18n.language],
 );
 ```
+
+No locale argument in this one: i18next re-suffixes the key it is handed and runs
+CLDR against its own `language`, so selecting a second time here would fight it.
 
 > Because that lookup is by English text, **changing a DS English value
 > un-translates that string** until the catalog entry is re-created. Release notes

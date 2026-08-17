@@ -1,5 +1,6 @@
 import { useContext, useMemo, type ReactNode } from "react";
 import { I18nContext, type I18nValue } from "./context";
+import { canonicalLocale } from "./format";
 import type { AnyTranslate, TranslateFor } from "./types";
 
 /**
@@ -21,7 +22,8 @@ export function I18nProvider<K extends string>({
       // Widened: the context can't know which surface stored it. The per-slice
       // guarantee lives in each surface's narrowed `useT()`.
       translate: (translate as AnyTranslate | undefined) ?? outer.translate,
-      locale: locale ?? outer.locale,
+      // Canonicalized here so every Intl call downstream gets a tag it accepts.
+      locale: canonicalLocale(locale) ?? outer.locale,
     }),
     [translate, locale, outer],
   );

@@ -69,6 +69,41 @@ describe("resolveEnglishFrom", () => {
     );
   });
 
+  // Pins the ditto `defaultValue` and no-host paths, where the result is shown as
+  // English: those must stay on English rules however the tree's locale is set.
+  it("uses English rules when no locale is given", () => {
+    expect(resolveEnglishFrom(strings, "seatviewer.seatsFree", { count: 0 })).toBe(
+      "{{count}} seats free",
+    );
+  });
+
+  it("selects the form the target locale needs, not the one English needs", () => {
+    // Was: count 0 always took `_other`, so a French catalogue keyed by the
+    // English plural returned "0 places libres" for a locale that wants singular.
+    expect(
+      resolveEnglishFrom(strings, "seatviewer.seatsFree", { count: 0 }, "fr"),
+    ).toBe("{{count}} seat free");
+    expect(
+      resolveEnglishFrom(strings, "seatviewer.seatsFree", { count: 1 }, "fr"),
+    ).toBe("{{count}} seat free");
+    expect(
+      resolveEnglishFrom(strings, "seatviewer.seatsFree", { count: 2 }, "fr"),
+    ).toBe("{{count}} seats free");
+  });
+
+  it("falls back to _other for a category English has no form for", () => {
+    // ru selects "few" at 2; only _one/_other exist, so the plural is the ceiling.
+    expect(
+      resolveEnglishFrom(strings, "seatviewer.seatsFree", { count: 2 }, "ru"),
+    ).toBe("{{count}} seats free");
+  });
+
+  it("treats a malformed locale as English rather than throwing", () => {
+    expect(
+      resolveEnglishFrom(strings, "seatviewer.seatsFree", { count: 0 }, "fr_CA"),
+    ).toBe("{{count}} seats free");
+  });
+
   it("falls back to the unsuffixed entry when a key has no plural variants", () => {
     expect(resolveEnglishFrom(strings, "viewer.legend.title", { count: 2 })).toBe(
       "Legend",

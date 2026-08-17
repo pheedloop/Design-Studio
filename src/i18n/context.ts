@@ -4,6 +4,7 @@ import { flattenNamespaces } from "./strings";
 import type {
   AnyTranslate,
   Flattened,
+  ResolveEnglishFor,
   SurfaceKey,
   TranslateFor,
 } from "./types";
@@ -36,8 +37,11 @@ export function createSurfaceI18n<
   const defaultTranslate: T = (key, vars) =>
     interpolate(resolveEnglishFrom(strings, key, vars), vars);
 
-  const resolveEnglish: T = (key, vars) =>
-    resolveEnglishFrom(strings, key, vars);
+  const resolveEnglish: ResolveEnglishFor<SurfaceKey<Flattened<G>>> = (
+    key,
+    vars,
+    locale,
+  ) => resolveEnglishFrom(strings, key, vars, locale);
 
   function useT(): T {
     // No memo needed: both branches are already stable across renders.
