@@ -31,7 +31,9 @@ export function ArrangeGridDialog({ elementCount, onConfirm, onClose }: ArrangeG
       }
     >
       <div className="flex flex-col gap-4 p-4">
-        <p className="text-xs text-gray-500">{elementCount} elements selected</p>
+        <p className="text-xs text-gray-500">
+          {t("editor.selection.count", { count: elementCount })}
+        </p>
 
         <div className="flex gap-4">
           <div className="flex flex-col gap-1.5 flex-1">

@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { useT } from "../../i18n";
 
 interface DialogProps {
   title: string;
@@ -21,6 +22,7 @@ export function Dialog({
   footer,
   children,
 }: DialogProps) {
+  const t = useT();
   return (
     <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/50" onClick={onClose} />
@@ -34,6 +36,7 @@ export function Dialog({
             {headerActions}
             <button
               onClick={onClose}
+              aria-label={t("editor.action.close")}
               className="text-gray-400 hover:text-gray-600 text-lg leading-none cursor-pointer"
             >
               &times;

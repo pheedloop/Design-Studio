@@ -1,6 +1,9 @@
 import { Circle, Group, Line, Rect, Text } from "react-konva";
 import type { CalibrationState } from "../../hooks/useCalibration";
-import type { ScaleCalibration } from "../../../types";
+import type { ScaleCalibration, Unit } from "../../../types";
+import { useLocale, useT } from "../../i18n";
+import { formatNumber } from "../../../i18n/format";
+import { unitLabel } from "../../../utils/unitConversion";
 
 interface CalibrationPreviewProps {
   calibrationState: CalibrationState;
@@ -19,8 +22,15 @@ export function CalibrationPreview({
   existingCalibration,
   scale,
 }: CalibrationPreviewProps) {
+  const t = useT();
+  const locale = useLocale();
   const { step, p1, p2, mousePos } = calibrationState;
   const inverseScale = 1 / scale;
+  const measurement = (value: number, unit: Unit, fractionDigits: number) =>
+    t("common.measurement", {
+      value: formatNumber(value, locale, fractionDigits),
+      unit: unitLabel(unit, t),
+    });
 
   // Show persisted calibration when idle (tool just activated, before picking)
   if (step === "idle" && existingCalibration) {
@@ -29,7 +39,11 @@ export function CalibrationPreview({
         p1={existingCalibration.p1}
         p2={existingCalibration.p2}
         inverseScale={inverseScale}
-        label={`${existingCalibration.distance} ${existingCalibration.unit}`}
+        label={measurement(
+          existingCalibration.distance,
+          existingCalibration.unit,
+          1,
+        )}
         dimmed
       />
     );
@@ -60,7 +74,7 @@ export function CalibrationPreview({
         p1={p1}
         p2={p2}
         inverseScale={inverseScale}
-        label={`${dist} px`}
+        label={measurement(dist, "px", 0)}
       />
     );
   }

@@ -2,6 +2,7 @@ import { Rect, Line, Ellipse, Circle, Text, Group } from "react-konva";
 import type { Geometry, ElementProperties } from "../../../../types";
 import { getLabelXY, getLabelFontStyle, getLabelRenderProps } from "./labelUtils";
 import { LabelWithBackground } from "./LabelWithBackground";
+import { UnlinkedBadge } from "./UnlinkedBadge";
 import { getGeometryBounds } from "../../../utils/bounds";
 
 interface SessionAreaShapeProps {
@@ -89,16 +90,7 @@ export function SessionAreaShape({ geo, color, strokeColor, strokeWidth, propert
         fontSize={10}
         listening={false}
       />
-      {!isLinked && (
-        <Text
-          text="Unlinked"
-          x={3}
-          y={14}
-          fontSize={9}
-          fill="#ef4444"
-          listening={false}
-        />
-      )}
+      {!isLinked && <UnlinkedBadge />}
       {displayName && (
         <Group opacity={lp.labelVisible ? 1 : 0.35} listening={false}>
           <LabelWithBackground

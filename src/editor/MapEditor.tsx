@@ -1881,9 +1881,9 @@ function MapEditorInner({
                     onClick={handleLocateOverlapping}
                     className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-red-50 border border-red-300 text-red-700 text-sm px-3 py-1.5 rounded-full shadow-sm z-10 whitespace-nowrap hover:bg-red-100 cursor-pointer"
                   >
-                    {overlappingElementIds.size} element
-                    {overlappingElementIds.size !== 1 ? "s" : ""} overlapping —
-                    click to locate
+                    {t("editor.overlap.locate", {
+                      count: overlappingElementIds.size,
+                    })}
                   </button>
                 )}
 

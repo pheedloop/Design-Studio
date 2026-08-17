@@ -223,7 +223,7 @@ export function TicketPanel({
             role="radiogroup"
           >
             {tickets.map(renderAttendeeRow)}
-            {loading && <div className="p-3 text-sm text-gray-400">{t("common.loading")}</div>}
+            {loading && <div className="p-3 text-sm text-gray-400">{t("seatviewer.loading")}</div>}
             {!loading && tickets.length === 0 && (
               <div className="p-3 text-sm text-gray-400">{t("seatviewer.tickets.noneYours")}</div>
             )}
@@ -282,7 +282,7 @@ export function TicketPanel({
         {tickets.map(renderAdminRow)}
 
         {loading && (
-          <div className="p-3 text-sm text-gray-400 text-center">{t("common.loading")}</div>
+          <div className="p-3 text-sm text-gray-400 text-center">{t("seatviewer.loading")}</div>
         )}
         {!loading && tickets.length === 0 && (
           <div className="p-6 text-sm text-gray-400 text-center">{t("seatviewer.tickets.noMatch")}</div>

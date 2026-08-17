@@ -99,7 +99,7 @@ export function MapSheet({ elements, exhibitors, selectedItem, onSelect }: MapSh
             </div>
           ) : (
             <span className="text-xs font-medium text-gray-600">
-              {t("common.labelWithCount", {
+              {t("viewer.labelWithCount", {
                 label: visibleTabs[0]?.label ?? "",
                 count: visibleTabs[0]?.count ?? 0,
               })}

@@ -30,7 +30,9 @@ export function PathingOptionsBar({
         <span className="text-[11px] text-gray-500">{t("editor.field.cellSize")}</span>
         <Select value={cellSize} onChange={(e) => onCellSizeChange(Number(e.target.value))}>
           {CELL_SIZE_OPTIONS.map((s) => (
-            <option key={s} value={s}>{s}px</option>
+            <option key={s} value={s}>
+              {t("common.measurement", { value: s, unit: t("common.unit.px") })}
+            </option>
           ))}
         </Select>
       </div>

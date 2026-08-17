@@ -6,7 +6,7 @@ export function occupantHeading(
   state: { loading: boolean; hasOccupants: boolean; locked: boolean },
   t: T,
 ): string {
-  if (state.loading) return t("common.loading");
+  if (state.loading) return t("seatviewer.loading");
   if (state.hasOccupants) return t("seatviewer.table.seatedHere");
   if (state.locked) return t("seatviewer.table.locked");
   return t("seatviewer.table.empty");

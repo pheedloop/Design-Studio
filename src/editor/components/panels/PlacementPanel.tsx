@@ -13,8 +13,14 @@ import type {
   PlacedRecord,
 } from "../../hooks/usePlacementRecords";
 import type { PlacementCategory } from "../../placement/types";
-import { useT } from "../../i18n";
+import { useT, type StringKey } from "../../i18n";
 import type { ElementType } from "../../../types";
+
+/** The ellipse option is offered as "Circle" — the placement grid only ever squares it. */
+const PLACEMENT_SHAPE_LABEL: Record<"rect" | "ellipse", StringKey> = {
+  ellipse: "editor.shape.circle",
+  rect: "editor.shape.rect",
+};
 
 // ---------------------------------------------------------------------------
 // Data transfer constants
@@ -99,7 +105,7 @@ function FilterBar({
               className="inline-block w-2.5 h-2.5 bg-gray-300 shrink-0"
               style={{ borderRadius: shape === "ellipse" ? "9999px" : "0px" }}
             />
-            {shape === "ellipse" ? "Circle" : "Rectangle"}
+            {t(PLACEMENT_SHAPE_LABEL[shape])}
             <PiCaretDown size={10} className="text-gray-400" />
           </button>
           {shapeOpen && (
@@ -123,7 +129,7 @@ function FilterBar({
                     className="inline-block w-2.5 h-2.5 bg-gray-300 shrink-0"
                     style={{ borderRadius: s === "ellipse" ? "9999px" : "0px" }}
                   />
-                  {s === "ellipse" ? "Circle" : "Rectangle"}
+                  {t(PLACEMENT_SHAPE_LABEL[s])}
                 </button>
               ))}
             </div>

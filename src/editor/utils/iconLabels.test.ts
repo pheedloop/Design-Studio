@@ -13,6 +13,15 @@ describe("ICON_LABEL", () => {
     const ids = new Set(iconRegistry.map(entry => entry.id));
     expect(Object.keys(ICON_LABEL).filter(id => !ids.has(id))).toEqual([]);
   });
+
+  it("labels from editor.icon.* only", () => {
+    // Was: PiForkKnife borrowed editor.iconCategory.foodDrink and PiArrowRight
+    // borrowed editor.tool.arrow, so rewording a category or a tool silently
+    // reworded an icon name.
+    for (const [id, key] of Object.entries(ICON_LABEL)) {
+      expect(key, id).toMatch(/^editor\.icon\./);
+    }
+  });
 });
 
 describe("ICON_CATEGORY_LABEL", () => {

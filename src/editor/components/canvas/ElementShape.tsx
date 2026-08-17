@@ -1,6 +1,7 @@
 import { memo } from "react";
 import { Group } from "react-konva";
 import type { FloorPlanElement } from "../../../types";
+import { useT } from "../../i18n";
 import { RectShape } from "./elements/RectShape";
 import { EllipseShape } from "./elements/EllipseShape";
 import { LineShape } from "./elements/LineShape";
@@ -55,6 +56,7 @@ function ElementShapeImpl({
   isDimmed = false,
   onDoubleClick,
 }: ElementShapeProps) {
+  const t = useT();
   const geo = element.geometry;
   const label = getLabel(element);
   const color = element.properties.color;
@@ -150,7 +152,7 @@ function ElementShapeImpl({
       {element.type === "label" && geo.shape === "rect" && (
         <TextShape
           geo={geo}
-          text={element.properties.text || "Text"}
+          text={element.properties.text || t("editor.placeholder.label")}
           color={color}
           fontSize={element.properties.fontSize ?? 16}
           fontWeight={element.properties.fontWeight ?? "normal"}

@@ -11,7 +11,8 @@ import type {
 import { getToolUIConfig } from "../../tools/registry";
 import type { PropertiesPanelField } from "../canvas/elements/types";
 import { formatMeasurement, formatArea } from "../../../utils/unitConversion";
-import { useLocale, useT } from "../../i18n";
+import { elementTypeLabel } from "../../utils/elementLabels";
+import { useLocale, useT, type StringKey } from "../../i18n";
 import {
   Button,
   TabBar,
@@ -25,6 +26,17 @@ import {
 } from "../ui";
 import { JsonDebugView } from "../debug";
 import { LabelSection } from "./LabelSection";
+
+const TEXT_ALIGN_LABEL: Record<"left" | "center" | "right", StringKey> = {
+  center: "editor.textAlign.center",
+  left: "editor.textAlign.left",
+  right: "editor.textAlign.right",
+};
+
+const ARROW_STYLE_LABEL: Record<"triangle" | "chevron", StringKey> = {
+  chevron: "editor.arrowStyle.chevron",
+  triangle: "editor.arrowStyle.triangle",
+};
 
 interface PropertiesPanelProps {
   element: FloorPlanElement | null;
@@ -224,7 +236,7 @@ export function PropertiesPanel({
       <div className="w-60 shrink-0 border-l border-gray-200 bg-white flex flex-col">
         <div className="px-3 py-2 border-b border-gray-200">
           <span className="text-xs font-medium text-gray-600">
-            {selectedCount} elements selected
+            {t("editor.selection.count", { count: selectedCount })}
           </span>
         </div>
         <div className="flex flex-col gap-4 p-3 overflow-y-auto flex-1">
@@ -234,7 +246,7 @@ export function PropertiesPanel({
               <span className="text-[11px] text-gray-400">
                 {commonOpacity !== undefined
                   ? `${Math.round(commonOpacity * 100)}%`
-                  : "Mixed"}
+                  : t("editor.field.mixed")}
               </span>
             </div>
             <Slider
@@ -292,7 +304,7 @@ export function PropertiesPanel({
             className="w-full"
             onClick={() => onDelete("")}
           >
-            Delete All ({selectedCount})
+            {t("editor.action.deleteAll", { count: selectedCount })}
           </Button>
         </div>
       </div>
@@ -445,8 +457,8 @@ export function PropertiesPanel({
         {debug && (
           <TabBar
             tabs={[
-              { id: "properties", label: "Props" },
-              { id: "debug", label: "Debug" },
+              { id: "properties", label: t("editor.tab.props") },
+              { id: "debug", label: t("editor.tab.debug") },
             ]}
             value={tab}
             onChange={(id) => setTab(id as typeof tab)}
@@ -455,16 +467,8 @@ export function PropertiesPanel({
         )}
       </div>
       <div className="flex items-center justify-between px-3 py-2 border-b border-gray-200">
-        <span className="text-xs font-medium text-gray-600 capitalize">
-          {element.type === "shape"
-            ? element.properties.arrowHead
-              ? "arrow"
-              : geo.shape
-            : element.type === "session_area"
-              ? "Session Location"
-              : element.type === "meeting_room"
-                ? "Meeting Room"
-                : element.type}
+        <span className="text-xs font-medium text-gray-600">
+          {elementTypeLabel(element, t)}
         </span>
       </div>
 
@@ -637,7 +641,7 @@ export function PropertiesPanel({
                     variant="outline"
                     color="neutral"
                     active={(element.properties.textAlign ?? "left") === align}
-                    className={`flex-1 py-1 capitalize ${
+                    className={`flex-1 py-1 ${
                       align === "left"
                         ? "rounded-r-none"
                         : align === "right"
@@ -648,7 +652,7 @@ export function PropertiesPanel({
                       onUpdateProperties(element.id, { textAlign: align })
                     }
                   >
-                    {align}
+                    {t(TEXT_ALIGN_LABEL[align])}
                   </Button>
                 ))}
               </div>
@@ -660,7 +664,7 @@ export function PropertiesPanel({
               <div className="flex flex-col gap-1.5">
                 <SectionLabel>{t("editor.field.size")}</SectionLabel>
                 {fields.has("width") && (
-                  <FieldRow label="W">
+                  <FieldRow label={t("editor.field.widthShort")}>
                     <NumberInput
                       value={dims.width}
                       onChange={handleWidthChange}
@@ -668,7 +672,7 @@ export function PropertiesPanel({
                   </FieldRow>
                 )}
                 {fields.has("height") && (
-                  <FieldRow label="H">
+                  <FieldRow label={t("editor.field.heightShort")}>
                     <NumberInput
                       value={dims.height}
                       onChange={handleHeightChange}
@@ -720,7 +724,7 @@ export function PropertiesPanel({
                     variant="outline"
                     color="neutral"
                     active={element.properties.arrowHead?.style === style}
-                    className={`flex-1 py-1 capitalize ${
+                    className={`flex-1 py-1 ${
                       style === "triangle" ? "rounded-r-none" : "rounded-l-none"
                     }`}
                     onClick={() =>
@@ -729,7 +733,7 @@ export function PropertiesPanel({
                       })
                     }
                   >
-                    {style}
+                    {t(ARROW_STYLE_LABEL[style])}
                   </Button>
                 ))}
               </div>
