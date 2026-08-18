@@ -6,7 +6,7 @@ import { RectPreview } from "./previews/RectPreview";
 
 export const meetingRoomTool: ToolDefinition<DrawingRect | null> = {
   id: "meeting_room",
-  label: "Meeting Room",
+  labelKey: "common.type.meetingRoom",
   shortcut: "N",
   icon: <PiDoor size={20} />,
   cursor: "crosshair",

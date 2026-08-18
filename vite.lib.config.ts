@@ -97,7 +97,17 @@ export default defineConfig({
     scopeCss(),
     dts({
       tsconfigPath: "./tsconfig.lib.json",
-      include: ["src/editor", "src/viewer", "src/seatviewer", "src/types"],
+      // Keep in sync with tsconfig.lib.json's `include`.
+      include: [
+        "src/editor",
+        "src/viewer",
+        "src/seatviewer",
+        "src/types",
+        "src/i18n",
+        "src/utils",
+        "src/tiers.ts",
+      ],
+      exclude: ["src/**/*.test.ts", "src/**/*.test.tsx"],
       insertTypesEntry: false,
     }),
   ],
@@ -114,6 +124,8 @@ export default defineConfig({
         editor: resolve(__dirname, "src/editor/index.ts"),
         viewer: resolve(__dirname, "src/viewer/index.ts"),
         seatviewer: resolve(__dirname, "src/seatviewer/index.ts"),
+        // Merged English manifest, for host build steps.
+        i18n: resolve(__dirname, "src/i18n/index.ts"),
         // Style-only entry — produces dist/style.css consumed by the host app
         style: resolve(__dirname, "src/lib-style.ts"),
       },

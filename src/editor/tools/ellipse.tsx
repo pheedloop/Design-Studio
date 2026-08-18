@@ -6,7 +6,7 @@ import { EllipsePreview } from "./previews/EllipsePreview";
 
 export const ellipseTool: ToolDefinition<DrawingRect | null> = {
   id: "ellipse",
-  label: "Ellipse",
+  labelKey: "editor.tool.ellipse",
   shortcut: "O",
   icon: <PiCircle size={20} />,
   cursor: "crosshair",

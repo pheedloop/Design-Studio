@@ -7,7 +7,7 @@ import { ArcControlHandle } from "./handles/ArcControlHandle";
 
 export const arcTool: ToolDefinition<ArcToolState> = {
   id: "arc",
-  label: "Arc",
+  labelKey: "editor.tool.arc",
   shortcut: "C",
   icon: <PiBezierCurve size={20} />,
   cursor: "crosshair",

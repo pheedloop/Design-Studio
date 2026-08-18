@@ -1,3 +1,4 @@
+import type { StringKey } from "./i18n";
 import type { SeatTableState, SeatTicket, SeatPlanMode } from "./types";
 
 export type OccupancyLevel = "available" | "half" | "low" | "full";
@@ -33,16 +34,17 @@ export function occupancyColor(table: OccupancyInput): string {
 
 export interface OccupancyLegendItem {
   level: OccupancyLevel;
-  label: string;
+  /** Module scope, so no hook reaches here — the render site translates. */
+  labelKey: StringKey;
   color: string;
 }
 
 /** Legend entries describing the occupancy color scale, in order. */
 export const OCCUPANCY_LEGEND: OccupancyLegendItem[] = [
-  { level: "available", label: "Open (>50% free)", color: OCCUPANCY_FILL.available },
-  { level: "half", label: "Filling (10–50%)", color: OCCUPANCY_FILL.half },
-  { level: "low", label: "Almost full (<10%)", color: OCCUPANCY_FILL.low },
-  { level: "full", label: "Full / locked", color: OCCUPANCY_FILL.full },
+  { level: "available", labelKey: "seatviewer.legend.available", color: OCCUPANCY_FILL.available },
+  { level: "half", labelKey: "seatviewer.legend.half", color: OCCUPANCY_FILL.half },
+  { level: "low", labelKey: "seatviewer.legend.low", color: OCCUPANCY_FILL.low },
+  { level: "full", labelKey: "seatviewer.legend.full", color: OCCUPANCY_FILL.full },
 ];
 
 /** Seating a ticket here is impossible, in either mode. */
@@ -56,9 +58,10 @@ export interface SeatEligibility {
   flags: SeatFlagReason[];
 }
 
-export const SEAT_FLAG_LABELS: Record<SeatFlagReason, string> = {
-  ticketType: "Ticket type isn’t on this table’s list",
-  tag: "Missing a tag this table requires",
+/** Module scope, so no hook reaches here — the render site translates. */
+export const SEAT_FLAG_LABEL_KEYS: Record<SeatFlagReason, StringKey> = {
+  ticketType: "seatviewer.flag.ticketType",
+  tag: "seatviewer.flag.tag",
 };
 
 /**

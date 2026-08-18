@@ -1,4 +1,5 @@
 import { IconButton } from "../ui";
+import { useT } from "../../i18n";
 import {
   AlignLeftIcon,
   AlignCenterHIcon,
@@ -37,36 +38,38 @@ export function AlignmentControls({
   onDistributeH,
   onDistributeV,
 }: AlignmentControlsProps) {
+  const t = useT();
+
   return (
     <>
       {onAlignLeft && (
-        <IconButton size="sm" title="Align left edges" onClick={onAlignLeft}>
+        <IconButton size="sm" title={t("editor.align.left")} onClick={onAlignLeft}>
           <AlignLeftIcon />
         </IconButton>
       )}
       {onAlignCenterH && (
-        <IconButton size="sm" title="Align horizontal centers" onClick={onAlignCenterH}>
+        <IconButton size="sm" title={t("editor.align.centerH")} onClick={onAlignCenterH}>
           <AlignCenterHIcon />
         </IconButton>
       )}
       {onAlignRight && (
-        <IconButton size="sm" title="Align right edges" onClick={onAlignRight}>
+        <IconButton size="sm" title={t("editor.align.right")} onClick={onAlignRight}>
           <AlignRightIcon />
         </IconButton>
       )}
       <div className="w-px h-3.5 bg-gray-200 shrink-0 mx-0.5" />
       {onAlignTop && (
-        <IconButton size="sm" title="Align top edges" onClick={onAlignTop}>
+        <IconButton size="sm" title={t("editor.align.top")} onClick={onAlignTop}>
           <AlignTopIcon />
         </IconButton>
       )}
       {onAlignCenterV && (
-        <IconButton size="sm" title="Align vertical centers" onClick={onAlignCenterV}>
+        <IconButton size="sm" title={t("editor.align.centerV")} onClick={onAlignCenterV}>
           <AlignCenterVIcon />
         </IconButton>
       )}
       {onAlignBottom && (
-        <IconButton size="sm" title="Align bottom edges" onClick={onAlignBottom}>
+        <IconButton size="sm" title={t("editor.align.bottom")} onClick={onAlignBottom}>
           <AlignBottomIcon />
         </IconButton>
       )}
@@ -74,12 +77,12 @@ export function AlignmentControls({
         <div className="w-px h-3.5 bg-gray-200 shrink-0 mx-0.5" />
       )}
       {onDistributeH && (
-        <IconButton size="sm" title="Distribute horizontally" onClick={onDistributeH}>
+        <IconButton size="sm" title={t("editor.distribute.horizontal")} onClick={onDistributeH}>
           <DistributeHIcon />
         </IconButton>
       )}
       {onDistributeV && (
-        <IconButton size="sm" title="Distribute vertically" onClick={onDistributeV}>
+        <IconButton size="sm" title={t("editor.distribute.vertical")} onClick={onDistributeV}>
           <DistributeVIcon />
         </IconButton>
       )}

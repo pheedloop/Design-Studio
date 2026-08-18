@@ -1,17 +1,44 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import type { SeatPlanViewerProps } from "./types";
-import { isEligible, occupancyColor, seatEligibility } from "./logic";
+import { isEligible, occupancyColor } from "./logic";
 import { SeatPlanCanvas } from "./components/SeatPlanCanvas";
 import { TicketPanel } from "./components/TicketPanel";
 import { TableDetailPopover } from "./components/TableDetailPopover";
 import { OccupancyLegend } from "./components/OccupancyLegend";
+import { I18nProvider } from "../i18n/I18nProvider";
+import { translateFloorPlan } from "../i18n/content";
+import { useT } from "./i18n";
+import { assignCta } from "./labels";
 
 /**
  * Presentational seat plan viewer. Renders a FloorPlanData with per-table
  * assignment state and lets the operator assign ticket holders to tables.
  * The host owns all data + API calls; this component emits intent via callbacks.
  */
-export function SeatPlanViewer(props: SeatPlanViewerProps) {
+export function SeatPlanViewer({
+  translate,
+  translateContent,
+  locale,
+  data,
+  ...props
+}: SeatPlanViewerProps) {
+  // Once here, so the canvas, popover and table-name lookup agree. See MapViewer.
+  const translatedData = useMemo(
+    () => (translateContent ? translateFloorPlan(data, translateContent) : data),
+    [data, translateContent],
+  );
+
+  return (
+    <I18nProvider translate={translate} locale={locale}>
+      <SeatPlanViewerInner {...props} data={translatedData} />
+    </I18nProvider>
+  );
+}
+
+/** Split so the body can consume the context the wrapper provides. */
+function SeatPlanViewerInner(
+  props: Omit<SeatPlanViewerProps, "translate" | "translateContent" | "locale">,
+) {
   const {
     mode,
     data,
@@ -34,6 +61,8 @@ export function SeatPlanViewer(props: SeatPlanViewerProps) {
     hideAttendeeDetails,
     lockSeatSelectionPage,
   } = props;
+
+  const t = useT();
 
   const [selectedCodes, setSelectedCodes] = useState<ReadonlySet<string>>(new Set());
   const [openTableCode, setOpenTableCode] = useState<string | null>(null);
@@ -158,51 +187,18 @@ export function SeatPlanViewer(props: SeatPlanViewerProps) {
     [handleUnassign],
   );
 
-  // Assign CTA (label/disabled/hint) — centralized so admin & attendee read correctly.
-  const assignCta = useMemo((): { label: string; disabled: boolean; hint?: string } => {
-    if (!openTable) return { label: "Assign", disabled: true };
-    if (openTable.isLocked) return { label: "Table locked", disabled: true, hint: "This table isn’t open for selection." };
-    if (openTable.occupancy >= openTable.seatCount) return { label: "Table full", disabled: true, hint: "No seats left at this table." };
-
-    if (mode === "admin") {
-      if (assignableCodes.length === 0) {
-        return {
-          label: "Select ticket holders",
-          disabled: true,
-          hint: selectedCodes.size > 0 ? "Everyone selected is already seated. Clear a seat to move them." : undefined,
-        };
-      }
-      const flagged = assignableCodes.filter((c) => {
-        const t = ticketByCode.get(c);
-        return t ? seatEligibility(t, openTable).flags.length > 0 : false;
-      }).length;
-      return {
-        label: `Assign ${assignableCodes.length} selected`,
-        disabled: false,
-        hint: flagged > 0
-          ? `${flagged} of ${assignableCodes.length} don’t meet this table’s rules — they’ll be seated anyway.`
-          : undefined,
-      };
-    }
-
-    // attendee — single select
-    const code = [...selectedCodes][0];
-    const ticket = code ? ticketByCode.get(code) : undefined;
-    if (!ticket) return { label: "Select a ticket first", disabled: true, hint: "Choose one of your tickets above." };
-
-    const { block, flags } = seatEligibility(ticket, openTable);
-    if (block === "seated") {
-      const at = tableNameByCode.get(ticket.tableCode!) ?? ticket.tableCode;
-      return { label: "Ticket already seated", disabled: true, hint: `${ticket.attendee.firstName} is at ${at}. Clear it to move.` };
-    }
-    if (flags.includes("ticketType")) {
-      return { label: "Not eligible", disabled: true, hint: `${ticket.ticketName} can’t be seated at this table.` };
-    }
-    if (flags.includes("tag")) {
-      return { label: "Reserved table", disabled: true, hint: "This table is reserved for a specific group." };
-    }
-    return { label: `Assign ${ticket.attendee.firstName} here`, disabled: false };
-  }, [openTable, mode, assignableCodes, selectedCodes, ticketByCode, tableNameByCode]);
+  const cta = useMemo(
+    () =>
+      assignCta({
+        openTable,
+        mode,
+        assignableCodes,
+        selectedCodes,
+        ticketByCode,
+        tableNameByCode,
+      }, t),
+    [openTable, mode, assignableCodes, selectedCodes, ticketByCode, tableNameByCode, t],
+  );
 
   return (
     <div
@@ -247,9 +243,9 @@ export function SeatPlanViewer(props: SeatPlanViewerProps) {
             occupantsLoading={occupantsLoading}
             hideAttendeeDetails={hideAttendeeDetails}
             allowUnassign={mode === "admin" || !lockSeatSelectionPage}
-            assignLabel={assignCta.label}
-            assignDisabled={assignCta.disabled}
-            assignHint={assignCta.hint}
+            assignLabel={cta.label}
+            assignDisabled={cta.disabled}
+            assignHint={cta.hint}
             assigning={assigning}
             onAssign={handleAssign}
             onUnassign={handleUnassign}

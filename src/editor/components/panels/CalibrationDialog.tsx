@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Button, Dialog, NumberInput, Select, SectionLabel } from "../ui";
 import type { Unit } from "../../../types";
+import { useLocale, useT } from "../../i18n";
+import { formatNumber } from "../../../i18n/format";
 
 type DisplayUnit = Unit | "in";
 
@@ -25,6 +27,8 @@ export function CalibrationDialog({
   onConfirm,
   onClose,
 }: CalibrationDialogProps) {
+  const t = useT();
+  const locale = useLocale();
   const [distance, setDistance] = useState<number>(0);
   const [displayUnit, setDisplayUnit] = useState<DisplayUnit>(
     existingUnit && existingUnit !== "px" ? existingUnit : "ft",
@@ -40,12 +44,12 @@ export function CalibrationDialog({
 
   return (
     <Dialog
-      title="Set Scale"
+      title={t("editor.dialog.setScale")}
       onClose={onClose}
       footer={
         <>
           <Button variant="outline" color="neutral" onClick={onClose}>
-            Cancel
+            {t("editor.action.cancel")}
           </Button>
           <Button
             variant="solid"
@@ -53,23 +57,24 @@ export function CalibrationDialog({
             onClick={handleConfirm}
             disabled={!canConfirm}
           >
-            Apply
+            {t("editor.action.apply")}
           </Button>
         </>
       }
     >
       <div className="flex flex-col gap-4 p-4">
         <p className="text-xs text-gray-500">
-          You selected two points{" "}
-          <span className="font-medium text-gray-700">
-            {Math.round(pixelDistance)} px
-          </span>{" "}
-          apart. Enter the real-world distance between them.
+          {t("editor.calibration.prompt", {
+            distance: t("common.measurement", {
+              value: formatNumber(Math.round(pixelDistance), locale, 0),
+              unit: t("common.unit.px"),
+            }),
+          })}
         </p>
 
         <div className="flex gap-3 items-end">
           <div className="flex flex-col gap-1.5 flex-1">
-            <SectionLabel>Distance</SectionLabel>
+            <SectionLabel>{t("editor.field.distance")}</SectionLabel>
             <NumberInput
               value={distance}
               onChange={(v) => setDistance(Math.max(0, v))}
@@ -77,21 +82,26 @@ export function CalibrationDialog({
             />
           </div>
           <div className="flex flex-col gap-1.5">
-            <SectionLabel>Unit</SectionLabel>
+            <SectionLabel>{t("editor.field.unit")}</SectionLabel>
             <Select
               value={displayUnit}
               onChange={(e) => setDisplayUnit(e.target.value as DisplayUnit)}
             >
-              <option value="ft">Feet</option>
-              <option value="in">Inches</option>
-              <option value="m">Meters</option>
+              <option value="ft">{t("editor.unit.feet")}</option>
+              <option value="in">{t("editor.unit.inches")}</option>
+              <option value="m">{t("editor.unit.meters")}</option>
             </Select>
           </div>
         </div>
 
         {displayUnit === "in" && distance > 0 && (
           <p className="text-[11px] text-gray-400">
-            = {(distance / 12).toFixed(2)} ft
+            {t("editor.calibration.equals", {
+              measurement: t("common.measurement", {
+                value: formatNumber(distance / 12, locale, 2),
+                unit: t("common.unit.ft"),
+              }),
+            })}
           </p>
         )}
       </div>

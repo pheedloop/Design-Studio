@@ -6,7 +6,7 @@ import { RectPreview } from "./previews/RectPreview";
 
 export const rectangleTool: ToolDefinition<DrawingRect | null> = {
   id: "rectangle",
-  label: "Rectangle",
+  labelKey: "editor.tool.rectangle",
   shortcut: "R",
   icon: <PiRectangle size={20} />,
   cursor: "crosshair",

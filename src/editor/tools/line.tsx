@@ -7,7 +7,7 @@ import { LineEndpointHandles } from "./handles/LineEndpointHandles";
 
 export const lineTool: ToolDefinition<LinePreviewState | null> = {
   id: "line",
-  label: "Line",
+  labelKey: "editor.tool.line",
   shortcut: "L",
   icon: <PiLineSegment size={20} />,
   cursor: "crosshair",

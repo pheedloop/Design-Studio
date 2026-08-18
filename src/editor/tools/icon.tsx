@@ -4,7 +4,7 @@ import { useClickPlaceInteraction } from "./hooks/useClickPlaceInteraction";
 
 export const iconTool: ToolDefinition<null> = {
   id: "icon",
-  label: "Icon",
+  labelKey: "editor.tool.icon",
   shortcut: "I",
   icon: <PiSticker size={20} />,
   cursor: "crosshair",

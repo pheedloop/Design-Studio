@@ -1,10 +1,12 @@
 import type { Legend } from "../../../types";
+import { useT } from "../../i18n";
 
 interface LegendCanvasOverlayProps {
   legend: Legend;
 }
 
 export function LegendCanvasOverlay({ legend }: LegendCanvasOverlayProps) {
+  const t = useT();
   const visibleEntries = legend.entries.filter((e) => e.visible);
 
   if (!legend.visible || visibleEntries.length === 0) return null;
@@ -18,7 +20,7 @@ export function LegendCanvasOverlay({ legend }: LegendCanvasOverlayProps) {
               className="shrink-0 rounded-sm border border-gray-300"
               style={{ width: 12, height: 12, background: entry.color }}
             />
-            <span className="text-xs text-gray-700 leading-none">{entry.label || <em className="text-gray-400">Unlabeled</em>}</span>
+            <span className="text-xs text-gray-700 leading-none">{entry.label || <em className="text-gray-400">{t("common.unlabeled")}</em>}</span>
           </div>
         ))}
       </div>

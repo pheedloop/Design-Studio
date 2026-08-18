@@ -7,7 +7,7 @@ import { LineEndpointHandles } from "./handles/LineEndpointHandles";
 
 export const arrowTool: ToolDefinition<LinePreviewState | null> = {
   id: "arrow",
-  label: "Arrow",
+  labelKey: "editor.tool.arrow",
   shortcut: "A",
   icon: <PiArrowUpRight size={20} />,
   cursor: "crosshair",

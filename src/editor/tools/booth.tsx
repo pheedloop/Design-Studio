@@ -6,7 +6,7 @@ import { RectPreview } from "./previews/RectPreview";
 
 export const boothTool: ToolDefinition<DrawingRect | null> = {
   id: "booth",
-  label: "Booth",
+  labelKey: "common.type.booth",
   shortcut: "B",
   icon: <PiStorefront size={20} />,
   cursor: "crosshair",

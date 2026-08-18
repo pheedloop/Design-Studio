@@ -1,32 +1,29 @@
 import type { FloorPlanElement } from "../../types";
+import { formatList } from "../../i18n/format";
+import type { T } from "../i18n";
 
 /**
  * Build the search-box placeholder from the element types actually present in
  * the map, so it never invites the user to search for a category that isn't
  * there (e.g. no session areas → "Search booths").
  *
- * English-only for now. i18n (translatable + the two-consumer keying model) is
- * a separate planned PR — see .planning/IDEAS-I18N.md. When that lands, the
- * nouns and template here become `t(...)` calls; the presence logic stays.
+ * The list grammar comes from Intl rather than one key per combination: three
+ * types is 7 combinations and a fourth would be 15, and Intl already knows which
+ * locales drop the Oxford comma.
  */
-export function buildSearchPlaceholder(elements: FloorPlanElement[]): string {
+export function buildSearchPlaceholder(
+  elements: FloorPlanElement[],
+  t: T,
+  locale?: string,
+): string {
   const nouns: string[] = [];
-  if (elements.some((el) => el.type === "booth")) nouns.push("booths");
+  if (elements.some((el) => el.type === "booth")) nouns.push(t("viewer.search.nounBooths"));
   if (elements.some((el) => el.type === "session_area"))
-    nouns.push("session locations");
+    nouns.push(t("viewer.search.nounSessionLocations"));
   if (elements.some((el) => el.type === "meeting_room"))
-    nouns.push("meeting rooms");
+    nouns.push(t("viewer.search.nounMeetingRooms"));
 
-  if (nouns.length === 0) return "Search";
+  if (nouns.length === 0) return t("viewer.search.empty");
 
-  let list: string;
-  if (nouns.length === 1) {
-    list = nouns[0];
-  } else if (nouns.length === 2) {
-    list = `${nouns[0]} or ${nouns[1]}`;
-  } else {
-    list = `${nouns.slice(0, -1).join(", ")}, or ${nouns[nouns.length - 1]}`;
-  }
-
-  return `Search ${list}`;
+  return t("viewer.search.placeholder", { list: formatList(nouns, locale) });
 }

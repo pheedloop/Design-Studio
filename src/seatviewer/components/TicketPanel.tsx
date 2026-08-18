@@ -1,7 +1,8 @@
 import { useRef, useState } from "react";
 import { PiMagnifyingGlass, PiCheck, PiCaretDown, PiWarningCircle } from "react-icons/pi";
 import type { SeatFilterOption, SeatPlanMode, SeatTableState, SeatTicket } from "../types";
-import { isEligible, seatEligibility, SEAT_FLAG_LABELS } from "../logic";
+import { isEligible, seatEligibility, SEAT_FLAG_LABEL_KEYS } from "../logic";
+import { useT } from "../i18n";
 
 interface TicketPanelProps {
   mode: SeatPlanMode;
@@ -53,6 +54,7 @@ export function TicketPanel({
   hasMore,
   onLoadMore,
 }: TicketPanelProps) {
+  const t = useT();
   const listRef = useRef<HTMLDivElement>(null);
   const [expanded, setExpanded] = useState(true);
   const isAdmin = mode === "admin";
@@ -70,21 +72,22 @@ export function TicketPanel({
     </span>
   );
 
-  const attendeeName = (t: SeatTicket) => `${t.attendee.firstName} ${t.attendee.lastName}`;
+  const attendeeName = (ticket: SeatTicket) =>
+    `${ticket.attendee.firstName} ${ticket.attendee.lastName}`;
 
-  const renderAdminRow = (t: SeatTicket) => {
-    const isSel = selectedCodes.has(t.code);
-    const disabled = openTable ? !isEligible(t, openTable, mode) && !isSel : false;
+  const renderAdminRow = (ticket: SeatTicket) => {
+    const isSel = selectedCodes.has(ticket.code);
+    const disabled = openTable ? !isEligible(ticket, openTable, mode) && !isSel : false;
     // Admins may seat against the rules — surface the mismatch instead of blocking.
-    const flags = openTable && !disabled ? seatEligibility(t, openTable).flags : [];
+    const flags = openTable && !disabled ? seatEligibility(ticket, openTable).flags : [];
 
     return (
       <button
-        key={t.code}
+        key={ticket.code}
         type="button"
         aria-pressed={isSel}
         disabled={disabled}
-        onClick={() => onToggle(t.code)}
+        onClick={() => onToggle(ticket.code)}
         className={`w-full text-left flex items-start gap-2.5 p-3 border-b border-gray-200 transition-colors ${
           isSel ? "bg-primary-100 shadow-[inset_2px_0_0_var(--color-primary-600)]" : "hover:bg-gray-100"
         } ${disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
@@ -99,14 +102,14 @@ export function TicketPanel({
         <span className="min-w-0 flex-1 flex flex-col gap-1">
           <span className="flex items-start gap-2">
             <span className="flex-1 min-w-0 text-sm font-medium text-gray-700 leading-snug line-clamp-2">
-              {attendeeName(t)}
+              {attendeeName(ticket)}
             </span>
-            {t.tableCode && <span className="shrink-0">{seatPill(t.tableCode)}</span>}
+            {ticket.tableCode && <span className="shrink-0">{seatPill(ticket.tableCode)}</span>}
           </span>
           <span className="text-sm text-gray-500 leading-snug break-words">
-            <span className="text-gray-600 font-medium">{t.ticketName}</span>
+            <span className="text-gray-600 font-medium">{ticket.ticketName}</span>
             {/* Guest tickets carry no email — don't leave the separator dangling. */}
-            {t.attendee.email ? ` · ${t.attendee.email}` : ""}
+            {ticket.attendee.email ? ` · ${ticket.attendee.email}` : ""}
           </span>
           {flags.length > 0 && (
             <span className="mt-0.5 flex flex-wrap gap-1.5">
@@ -116,7 +119,7 @@ export function TicketPanel({
                   className="inline-flex items-center gap-1.5 text-xs font-medium px-2 py-0.5 rounded-full text-[#8a5300] bg-[rgba(240,169,46,0.16)]"
                 >
                   <PiWarningCircle size={12} />
-                  {SEAT_FLAG_LABELS[f]}
+                  {t(SEAT_FLAG_LABEL_KEYS[f])}
                 </span>
               ))}
             </span>
@@ -126,20 +129,20 @@ export function TicketPanel({
     );
   };
 
-  const renderAttendeeRow = (t: SeatTicket) => {
-    const isSel = selectedCodes.has(t.code);
+  const renderAttendeeRow = (ticket: SeatTicket) => {
+    const isSel = selectedCodes.has(ticket.code);
 
     const label = (
       <span className="flex-1 min-w-0 flex flex-col sm:flex-row sm:items-baseline sm:gap-2">
-        <span className="truncate text-sm font-medium text-gray-700">{attendeeName(t)}</span>
-        <span className="truncate text-sm text-gray-500">{t.ticketName}</span>
+        <span className="truncate text-sm font-medium text-gray-700">{attendeeName(ticket)}</span>
+        <span className="truncate text-sm text-gray-500">{ticket.ticketName}</span>
       </span>
     );
 
-    if (t.tableCode) {
+    if (ticket.tableCode) {
       return (
         <div
-          key={t.code}
+          key={ticket.code}
           className="w-full flex items-center gap-3 px-4 py-2.5 border-b border-gray-200"
         >
           <span className="size-[18px] shrink-0 grid place-items-center rounded-full bg-[#00a863] text-white">
@@ -147,14 +150,14 @@ export function TicketPanel({
           </span>
           {label}
           <span className="shrink-0 flex items-center gap-2.5">
-            {seatPill(t.tableCode)}
+            {seatPill(ticket.tableCode)}
             {!lockSeatSelectionPage && onClearTicket && (
               <button
                 type="button"
-                onClick={() => onClearTicket(t)}
+                onClick={() => onClearTicket(ticket)}
                 className="text-xs font-medium text-primary-600 hover:underline cursor-pointer"
               >
-                Clear
+                {t("seatviewer.tickets.clear")}
               </button>
             )}
           </span>
@@ -162,15 +165,15 @@ export function TicketPanel({
       );
     }
 
-    const disabled = openTable ? !isEligible(t, openTable, mode) && !isSel : false;
+    const disabled = openTable ? !isEligible(ticket, openTable, mode) && !isSel : false;
     return (
       <button
-        key={t.code}
+        key={ticket.code}
         type="button"
         role="radio"
         aria-checked={isSel}
         disabled={disabled}
-        onClick={() => onToggle(t.code)}
+        onClick={() => onToggle(ticket.code)}
         className={`w-full text-left flex items-center gap-3 px-4 py-2.5 border-b border-gray-200 transition-colors ${
           isSel ? "bg-primary-100 shadow-[inset_2px_0_0_var(--color-primary-600)]" : "hover:bg-gray-100"
         } ${disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
@@ -185,17 +188,17 @@ export function TicketPanel({
         {label}
         <span className="shrink-0 inline-flex items-center gap-1.5 text-xs font-medium px-2 py-0.5 rounded-full text-gray-500 bg-gray-200 whitespace-nowrap">
           <span className="size-1.5 rounded-full bg-gray-400" />
-          No table yet
+          {t("seatviewer.tickets.noTable")}
         </span>
       </button>
     );
   };
 
   if (!isAdmin) {
-    const selected = tickets.find((t) => selectedCodes.has(t.code));
+    const selected = tickets.find((tk) => selectedCodes.has(tk.code));
     const summary = selected
-      ? `${attendeeName(selected)} selected`
-      : "Pick a ticket, then choose an available table.";
+      ? t("seatviewer.tickets.selected", { name: attendeeName(selected) })
+      : t("seatviewer.tickets.pickPrompt");
 
     return (
       <aside className="shrink-0 bg-card border-b border-gray-200">
@@ -205,7 +208,7 @@ export function TicketPanel({
           onClick={() => setExpanded((prev) => !prev)}
           className="w-full flex items-center gap-2 px-4 py-3 text-left cursor-pointer hover:bg-gray-100"
         >
-          <h2 className="text-base font-medium text-gray-700 m-0">Your tickets</h2>
+          <h2 className="text-base font-medium text-gray-700 m-0">{t("seatviewer.tickets.yours")}</h2>
           <span className="text-sm text-gray-400 tabular-nums">{tickets.length}</span>
           <span className="flex-1 min-w-0 text-sm text-gray-500 truncate">{summary}</span>
           <PiCaretDown
@@ -220,9 +223,9 @@ export function TicketPanel({
             role="radiogroup"
           >
             {tickets.map(renderAttendeeRow)}
-            {loading && <div className="p-3 text-sm text-gray-400">Loading…</div>}
+            {loading && <div className="p-3 text-sm text-gray-400">{t("seatviewer.loading")}</div>}
             {!loading && tickets.length === 0 && (
-              <div className="p-3 text-sm text-gray-400">You have no tickets for this plan.</div>
+              <div className="p-3 text-sm text-gray-400">{t("seatviewer.tickets.noneYours")}</div>
             )}
           </div>
         )}
@@ -234,9 +237,12 @@ export function TicketPanel({
     <aside className="w-80 shrink-0 bg-card border-r border-gray-200 flex flex-col min-h-0">
       <div className="p-4 border-b border-gray-200 flex flex-col gap-3">
         <div className="flex items-baseline gap-2">
-          <h2 className="text-base font-medium text-gray-700 m-0">Ticket holders</h2>
+          <h2 className="text-base font-medium text-gray-700 m-0">{t("seatviewer.tickets.holders")}</h2>
           <span className="text-sm text-gray-400 tabular-nums">
-            {totalTickets ?? tickets.length} total · {selectedCodes.size} selected
+            {t("seatviewer.tickets.counts", {
+              total: totalTickets ?? tickets.length,
+              selected: selectedCodes.size,
+            })}
           </span>
         </div>
         <div className="relative">
@@ -245,13 +251,13 @@ export function TicketPanel({
             type="text"
             value={searchTerm}
             onChange={(e) => onSearchChange(e.target.value)}
-            placeholder="Search name or email"
-            aria-label="Search ticket holders"
+            placeholder={t("seatviewer.tickets.searchPlaceholder")}
+            aria-label={t("seatviewer.tickets.searchLabel")}
             className="w-full text-sm text-gray-700 pl-8 pr-2.5 py-2 border border-gray-200 rounded-lg bg-gray-100 focus:outline-2 focus:outline-primary-600 focus:bg-white"
           />
         </div>
         {filterOptions && filterOptions.length > 0 && (
-          <div className="flex flex-wrap gap-1.5" role="group" aria-label="Filter ticket holders">
+          <div className="flex flex-wrap gap-1.5" role="group" aria-label={t("seatviewer.tickets.filterLabel")}>
             {filterOptions.map((opt) => {
               const active = activeFilterIds?.includes(opt.id) ?? false;
               return (
@@ -275,9 +281,11 @@ export function TicketPanel({
       <div ref={listRef} onScroll={handleScroll} className="flex-1 overflow-y-auto scrollbar">
         {tickets.map(renderAdminRow)}
 
-        {loading && <div className="p-3 text-sm text-gray-400 text-center">Loading…</div>}
+        {loading && (
+          <div className="p-3 text-sm text-gray-400 text-center">{t("seatviewer.loading")}</div>
+        )}
         {!loading && tickets.length === 0 && (
-          <div className="p-6 text-sm text-gray-400 text-center">No ticket holders match.</div>
+          <div className="p-6 text-sm text-gray-400 text-center">{t("seatviewer.tickets.noMatch")}</div>
         )}
       </div>
     </aside>

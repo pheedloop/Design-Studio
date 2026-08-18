@@ -1,11 +1,14 @@
 import { useState, useMemo } from "react";
 import type { FloorPlanElement } from "../../types";
 import type { Exhibitor } from "../types";
+import { displayName, type ViewerElementType } from "../utils/elementTypes";
+import { useT } from "../i18n";
 
 export interface SearchResult {
   elementId: string;           // element.id UUID — use as React key and for canvas highlight lookup
-  elementType: "booth" | "session_area" | "meeting_room";
-  name: string;                // primary display name
+  elementType: ViewerElementType;
+  /** The element's own name. May be "" — resolve for display with displayName(). */
+  name: string;
   code?: string | null;        // boothCode (EXHBOT...) / meetingRoomId (MEL...) / sessionId (LOCA...)
   exhibitorName?: string | null;
 }
@@ -17,6 +20,7 @@ export function useSearch(
 ) {
   const boothsOnly = options?.boothsOnly ?? false;
   const [query, setQuery] = useState("");
+  const t = useT();
 
   const exhibitorsByBooth = useMemo(() => {
     const map = new Map<string, Exhibitor>();
@@ -44,14 +48,14 @@ export function useSearch(
         entries.push({
           elementId: el.id,
           elementType: "session_area",
-          name: el.properties.name || "Session Area",
+          name: el.properties.name || "",
           code: el.properties.sessionId ?? null,
         } satisfies SearchResult);
       } else if (!boothsOnly && el.type === "meeting_room") {
         entries.push({
           elementId: el.id,
           elementType: "meeting_room",
-          name: el.properties.name || "Meeting Room",
+          name: el.properties.name || "",
           code: el.properties.meetingRoomId ?? null,
         } satisfies SearchResult);
       }
@@ -65,7 +69,9 @@ export function useSearch(
     if (!q) return [];
 
     return allEntries.filter((entry) => {
-      if (entry.name.toLowerCase().includes(q)) return true;
+      // Match what the user can actually read, so an unnamed room stays findable
+      // by its type name — in whatever language it is currently shown in.
+      if (displayName(entry, t).toLowerCase().includes(q)) return true;
       if (boothsOnly) return false;
       if (entry.exhibitorName && entry.exhibitorName.toLowerCase().includes(q)) {
         return true;
@@ -78,7 +84,7 @@ export function useSearch(
         String(entry.code).toLowerCase().includes(q)
       );
     });
-  }, [query, allEntries, boothsOnly]);
+  }, [query, allEntries, boothsOnly, t]);
 
   const matchedElementIds = useMemo(
     () => new Set(results.map((r) => r.elementId)),

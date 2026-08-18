@@ -1,6 +1,8 @@
 import type { Exhibitor, HoveredItem } from "../types";
 import { usePopoverPosition } from "../hooks/usePopoverPosition";
 import { ExhibitorLogo } from "./ExhibitorLogo";
+import { TYPE_NAME } from "../utils/elementTypes";
+import { useT } from "../i18n";
 
 interface HoverTooltipProps {
   item: HoveredItem;
@@ -29,6 +31,7 @@ export function HoverTooltip({
   x,
   y,
 }: HoverTooltipProps) {
+  const t = useT();
   const { ref, pos } = usePopoverPosition(x, y);
 
   return (
@@ -55,14 +58,14 @@ export function HoverTooltip({
           {item.type === "booth" ? (
             reserved ? (
               <div className="mt-0.5 text-[11px] font-medium text-amber-600">
-                Reserved
+                {t("viewer.booth.reserved")}
               </div>
             ) : (
-              <div className="mt-0.5 text-[11px] text-gray-400">Unoccupied</div>
+              <div className="mt-0.5 text-[11px] text-gray-400">{t("viewer.booth.unoccupied")}</div>
             )
           ) : (
             <div className="mt-0.5 text-[11px] font-medium text-gray-400 uppercase tracking-wide">
-              {item.type === "session_area" ? "Session Area" : "Meeting Room"}
+              {t(TYPE_NAME[item.type === "session_area" ? "session_area" : "meeting_room"])}
             </div>
           )}
         </>

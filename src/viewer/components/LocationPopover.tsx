@@ -1,5 +1,7 @@
 import { useEffect } from "react";
 import { usePopoverPosition } from "../hooks/usePopoverPosition";
+import { TYPE_NAME } from "../utils/elementTypes";
+import { useT } from "../i18n";
 
 interface LocationPopoverProps {
   name: string;
@@ -10,12 +12,8 @@ interface LocationPopoverProps {
   onGetDirections?: () => void;
 }
 
-const TYPE_LABEL: Record<LocationPopoverProps["type"], string> = {
-  session_area: "Session Area",
-  meeting_room: "Meeting Room",
-};
-
 export function LocationPopover({ name, type, x, y, onClose, onGetDirections }: LocationPopoverProps) {
+  const t = useT();
   const { ref, pos } = usePopoverPosition(x, y);
 
   useEffect(() => {
@@ -49,7 +47,7 @@ export function LocationPopover({ name, type, x, y, onClose, onGetDirections }: 
       style={{ left: pos.left, top: pos.top }}
     >
       <div className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
-        {TYPE_LABEL[type]}
+        {t(TYPE_NAME[type])}
       </div>
       <div className="mt-1 text-sm font-medium text-gray-900">
         {name}
@@ -59,7 +57,7 @@ export function LocationPopover({ name, type, x, y, onClose, onGetDirections }: 
           onClick={onGetDirections}
           className="mt-2 w-full text-xs font-medium text-blue-600 hover:bg-blue-50 rounded px-2 py-1.5 cursor-pointer transition-colors text-left"
         >
-          Get directions to here
+          {t("viewer.getDirections")}
         </button>
       )}
     </div>

@@ -2,6 +2,7 @@ import { Circle, Group, Line, Rect, Text } from "react-konva";
 import type { MeasureState } from "../hooks/useMeasureInteraction";
 import type { Dimensions } from "../../../types";
 import { formatMeasurement } from "../../../utils/unitConversion";
+import { useLocale, useT } from "../../i18n";
 
 interface MeasurePreviewProps {
   state: MeasureState;
@@ -14,6 +15,10 @@ const COLOR = "#0d9488"; // teal-600
 const LINE_DASH = [6, 4];
 
 export function MeasurePreview({ state, scale, dimensions }: MeasurePreviewProps) {
+  // Hooks must precede the early returns below.
+  const t = useT();
+  const locale = useLocale();
+
   const { p1, p2 } = state;
   if (!p1 || !p2) return null;
 
@@ -26,7 +31,7 @@ export function MeasurePreview({ state, scale, dimensions }: MeasurePreviewProps
 
   const midX = (p1.x + p2.x) / 2;
   const midY = (p1.y + p2.y) / 2;
-  const label = formatMeasurement(pxDist, dimensions);
+  const label = formatMeasurement(pxDist, dimensions, t, locale);
 
   return (
     <Group listening={false}>

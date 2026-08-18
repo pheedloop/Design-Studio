@@ -4,6 +4,7 @@ import type { LayerDefinition, LayerId } from "../../../types";
 import type { FeatureMap } from "../../../tiers";
 import { showTrophy } from "../../../tiers";
 import { IconButton, TrophyIcon } from "../ui";
+import { useT } from "../../i18n";
 
 interface LayerPanelProps {
   layers: LayerDefinition[];
@@ -30,6 +31,7 @@ export function LayerPanel({
   topOffset = 8,
   features,
 }: LayerPanelProps) {
+  const t = useT();
   const [open, setOpen] = useState(false);
   const panelRef = useRef<HTMLDivElement>(null);
 
@@ -70,7 +72,7 @@ export function LayerPanel({
           active={open}
           onClick={() => setOpen((prev) => !prev)}
           className={`shadow-md border ${open ? "border-primary-600" : "border-gray-200 bg-white hover:bg-gray-50"}`}
-          title="Layers"
+          title={t("editor.field.layers")}
         >
           <PiStack size={18} />
         </IconButton>
@@ -87,7 +89,7 @@ export function LayerPanel({
             return (
               <div
                 key={layer.id}
-                title={locked ? "Premium feature" : undefined}
+                title={locked ? t("editor.premiumFeature") : undefined}
                 className={`flex items-center gap-2 px-3 py-1.5 text-xs transition-colors ${
                   locked
                     ? "text-gray-300 cursor-not-allowed"
@@ -111,7 +113,7 @@ export function LayerPanel({
                       e.stopPropagation();
                       onToggleVisibility(layer.id);
                     }}
-                    title={layer.visible ? "Hide layer" : "Show layer"}
+                    title={layer.visible ? t("editor.layer.hide") : t("editor.layer.show")}
                   >
                     {layer.visible ? <PiEye size={14} /> : <PiEyeSlash size={14} />}
                   </IconButton>

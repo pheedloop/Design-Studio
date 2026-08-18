@@ -6,7 +6,7 @@ import { RectPreview } from "./previews/RectPreview";
 
 export const sessionAreaTool: ToolDefinition<DrawingRect | null> = {
   id: "session_area",
-  label: "Session Location",
+  labelKey: "editor.type.sessionLocation",
   shortcut: "S",
   icon: <PiMicrophone size={20} />,
   cursor: "crosshair",

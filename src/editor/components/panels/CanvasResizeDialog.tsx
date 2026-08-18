@@ -2,6 +2,7 @@ import { useState, useMemo } from "react";
 import { Button, Dialog, SectionLabel, NumberInput } from "../ui";
 import type { FloorPlanElement, Dimensions } from "../../../types";
 import { formatMeasurement } from "../../../utils/unitConversion";
+import { useLocale, useT, type StringKey } from "../../i18n";
 import { getElementBounds } from "../../utils/bounds";
 import { anchorOffset, type ResizeMode, type ResizeAnchor } from "../../hooks/useEditorState";
 
@@ -23,6 +24,18 @@ const ANCHOR_GRID: ResizeAnchor[] = [
   "bottom-left", "bottom", "bottom-right",
 ];
 
+const ANCHOR_LABEL_KEYS: Record<ResizeAnchor, StringKey> = {
+  "top-left": "editor.anchor.topLeft",
+  "top": "editor.anchor.top",
+  "top-right": "editor.anchor.topRight",
+  "left": "editor.anchor.left",
+  "center": "editor.anchor.center",
+  "right": "editor.anchor.right",
+  "bottom-left": "editor.anchor.bottomLeft",
+  "bottom": "editor.anchor.bottom",
+  "bottom-right": "editor.anchor.bottomRight",
+};
+
 export function CanvasResizeDialog({
   width,
   height,
@@ -32,6 +45,8 @@ export function CanvasResizeDialog({
   onStartCrop,
   onClose,
 }: CanvasResizeDialogProps) {
+  const t = useT();
+  const locale = useLocale();
   const [newWidth, setNewWidth] = useState(width);
   const [newHeight, setNewHeight] = useState(height);
   const [mode, setMode] = useState<ResizeMode>("preserve");
@@ -70,49 +85,49 @@ export function CanvasResizeDialog({
 
   return (
     <Dialog
-      title="Canvas Size"
+      title={t("editor.dialog.canvasSize")}
       width="420px"
       onClose={onClose}
       footer={
         <>
-          <Button variant="outline" color="neutral" onClick={onClose}>Cancel</Button>
-          <Button variant="solid" color="primary" onClick={() => { onConfirm(newWidth, newHeight, mode, anchor); onClose(); }}>Apply</Button>
+          <Button variant="outline" color="neutral" onClick={onClose}>{t("editor.action.cancel")}</Button>
+          <Button variant="solid" color="primary" onClick={() => { onConfirm(newWidth, newHeight, mode, anchor); onClose(); }}>{t("editor.action.apply")}</Button>
         </>
       }
     >
       <div className="flex flex-col gap-4 p-4">
         <div className="flex flex-col gap-1.5">
-          <SectionLabel>Width (px)</SectionLabel>
+          <SectionLabel>{t("editor.field.widthPx")}</SectionLabel>
           <NumberInput value={newWidth} onChange={setW} />
           {dimensions.unit !== "px" && (
-            <span className="text-[11px] text-gray-400">{formatMeasurement(newWidth, dimensions)}</span>
+            <span className="text-[11px] text-gray-400">{formatMeasurement(newWidth, dimensions, t, locale)}</span>
           )}
         </div>
 
         <div className="flex flex-col gap-1.5">
-          <SectionLabel>Height (px)</SectionLabel>
+          <SectionLabel>{t("editor.field.heightPx")}</SectionLabel>
           <NumberInput value={newHeight} onChange={setH} disabled={mode === "scale"} />
           {dimensions.unit !== "px" && (
-            <span className="text-[11px] text-gray-400">{formatMeasurement(newHeight, dimensions)}</span>
+            <span className="text-[11px] text-gray-400">{formatMeasurement(newHeight, dimensions, t, locale)}</span>
           )}
         </div>
 
         <div className="flex flex-col gap-1.5">
-          <SectionLabel>Content</SectionLabel>
+          <SectionLabel>{t("editor.field.content")}</SectionLabel>
           <div className="flex gap-2">
-            <Button variant="outline" color="neutral" active={mode === "preserve"} className="flex-1" onClick={() => selectMode("preserve")}>Keep size</Button>
-            <Button variant="outline" color="neutral" active={mode === "scale"} className="flex-1" onClick={() => selectMode("scale")}>Scale to fit</Button>
+            <Button variant="outline" color="neutral" active={mode === "preserve"} className="flex-1" onClick={() => selectMode("preserve")}>{t("editor.resize.keepSize")}</Button>
+            <Button variant="outline" color="neutral" active={mode === "scale"} className="flex-1" onClick={() => selectMode("scale")}>{t("editor.resize.scaleToFit")}</Button>
           </div>
           <span className="text-[11px] text-gray-400">
             {mode === "scale"
-              ? "Everything (background, elements, scale) resizes together — aspect locked so a floor plan stays true to size."
-              : "Everything keeps its current size; the canvas grows or shrinks around it."}
+              ? t("editor.resize.scaleHint")
+              : t("editor.resize.preserveHint")}
           </span>
         </div>
 
         {mode === "preserve" && (
           <div className="flex flex-col gap-2">
-            <SectionLabel>Resize from</SectionLabel>
+            <SectionLabel>{t("editor.resize.anchor")}</SectionLabel>
             <div className="grid grid-cols-3 gap-1 w-max">
               {ANCHOR_GRID.map((a) => {
                 const selected = anchor === a;
@@ -120,8 +135,8 @@ export function CanvasResizeDialog({
                   <button
                     key={a}
                     type="button"
-                    aria-label={a}
-                    title={a}
+                    aria-label={t(ANCHOR_LABEL_KEYS[a])}
+                    title={t(ANCHOR_LABEL_KEYS[a])}
                     onClick={() => setAnchor(a)}
                     className={`flex h-8 w-8 items-center justify-center rounded border transition-colors ${
                       selected
@@ -137,16 +152,14 @@ export function CanvasResizeDialog({
               })}
             </div>
             <span className="text-[11px] text-gray-400 leading-relaxed">
-              Where existing content stays. New space is added on the opposite
-              side — e.g. pick <strong>bottom-right</strong> to add margin on the
-              top-left, or <strong>center</strong> for even margins all around.
+              {t("editor.resize.anchorHint")}
             </span>
           </div>
         )}
 
         {onStartCrop && (
           <div className="flex flex-col gap-1.5 border-t border-gray-100 pt-4">
-            <SectionLabel>Or crop visually</SectionLabel>
+            <SectionLabel>{t("editor.resize.cropSection")}</SectionLabel>
             <Button
               variant="outline"
               color="neutral"
@@ -155,17 +168,17 @@ export function CanvasResizeDialog({
                 onStartCrop();
               }}
             >
-              Crop / resize on canvas…
+              {t("editor.resize.cropCta")}
             </Button>
             <span className="text-[11px] text-gray-400">
-              Draw a box to keep — the canvas resizes to it and all content stays aligned.
+              {t("editor.resize.cropHint")}
             </span>
           </div>
         )}
 
         {clippedCount > 0 && (
           <p className="text-xs text-amber-600 bg-amber-50 border border-amber-200 rounded px-2 py-1.5">
-            {clippedCount} element{clippedCount > 1 ? "s" : ""} will be outside the new canvas bounds.
+            {t("editor.resize.clipped", { count: clippedCount })}
           </p>
         )}
       </div>

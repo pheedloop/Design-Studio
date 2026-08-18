@@ -1,6 +1,8 @@
 import { useRef, useState } from "react";
 import { PiMagnifyingGlass, PiX } from "react-icons/pi";
 import type { SearchResult } from "../hooks/useSearch";
+import { TYPE_BADGE, displayName } from "../utils/elementTypes";
+import { useT } from "../i18n";
 
 interface SearchBarProps {
   query: string;
@@ -10,13 +12,8 @@ interface SearchBarProps {
   onResultSelect: (result: SearchResult) => void;
 }
 
-const TYPE_BADGE: Record<SearchResult["elementType"], { label: string; className: string }> = {
-  booth: { label: "Booth", className: "bg-gray-100 text-gray-500" },
-  session_area: { label: "Session", className: "bg-green-100 text-green-700" },
-  meeting_room: { label: "Room", className: "bg-orange-100 text-orange-700" },
-};
-
 export function SearchBar({ query, results, placeholder, onQueryChange, onResultSelect }: SearchBarProps) {
+  const t = useT();
   const [focused, setFocused] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const showDropdown = focused && query.trim().length > 0;
@@ -55,7 +52,7 @@ export function SearchBar({ query, results, placeholder, onQueryChange, onResult
         <div className="absolute top-full left-0 right-0 bg-white border border-gray-200 border-t-0 rounded-b-lg shadow-lg z-50 max-h-60 overflow-y-auto">
           {results.length === 0 ? (
             <div className="px-3 py-3 text-xs text-gray-400">
-              No results found
+              {t("viewer.search.noResults")}
             </div>
           ) : (
             results.map((result) => {
@@ -72,14 +69,14 @@ export function SearchBar({ query, results, placeholder, onQueryChange, onResult
                 >
                   <div className="flex items-center justify-between gap-2">
                     <span className="text-xs font-medium text-gray-800 truncate">
-                      {result.exhibitorName || result.name}
+                      {result.exhibitorName || displayName(result, t)}
                     </span>
                     <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded shrink-0 ${badge.className}`}>
-                      {badge.label}
+                      {t(badge.labelKey)}
                     </span>
                   </div>
                   {result.exhibitorName && (
-                    <div className="text-[11px] text-gray-400">{result.name}</div>
+                    <div className="text-[11px] text-gray-400">{displayName(result, t)}</div>
                   )}
                 </button>
               );

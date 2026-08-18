@@ -1,6 +1,7 @@
 import { Button, ColorSwatch, NumberInput } from "../ui";
 import { AlignmentControls } from "./AlignmentControls";
 import type { OptionsBarField } from "../canvas/elements/types";
+import { useT } from "../../i18n";
 
 export interface DrawingDefaults {
   fill: string;
@@ -45,6 +46,7 @@ export function OptionsBar({
   onDistributeV,
   onArrangeAsGrid,
 }: OptionsBarProps) {
+  const t = useT();
   const fields = new Set<OptionsBarField>(config.optionsBar);
   const groupActions = [onGroup, onUngroup, onEnterGroup, onExitGroup].filter(Boolean);
   const alignActions = [
@@ -57,21 +59,21 @@ export function OptionsBar({
     <div className="flex items-center gap-4 px-3 py-2 bg-white border-b border-gray-200 h-[43px]">
       {fields.has("fill") && (
         <ColorSwatch
-          label="Fill"
+          label={t("editor.field.fill")}
           value={defaults.fill}
           onChange={(fill) => onDefaultsChange({ fill })}
         />
       )}
       {fields.has("stroke") && (
         <ColorSwatch
-          label="Stroke"
+          label={t("editor.field.stroke")}
           value={defaults.stroke}
           onChange={(stroke) => onDefaultsChange({ stroke })}
         />
       )}
       {fields.has("strokeWidth") && (
         <div className="flex items-center gap-1.5">
-          <span className="text-[11px] text-gray-500">Stroke</span>
+          <span className="text-[11px] text-gray-500">{t("editor.field.stroke")}</span>
           <div className="w-14">
             <NumberInput
               value={defaults.strokeWidth}
@@ -86,22 +88,22 @@ export function OptionsBar({
           <div className="flex items-center gap-1">
             {onExitGroup && (
               <Button variant="outline" color="primary" size="sm" onClick={onExitGroup}>
-                Exit Group
+                {t("editor.group.exit")}
               </Button>
             )}
             {onEnterGroup && (
               <Button variant="outline" color="neutral" size="sm" onClick={onEnterGroup}>
-                Enter Group
+                {t("editor.group.enter")}
               </Button>
             )}
             {onUngroup && (
               <Button variant="outline" color="neutral" size="sm" onClick={onUngroup}>
-                Ungroup
+                {t("editor.group.ungroup")}
               </Button>
             )}
             {onGroup && (
               <Button variant="outline" color="neutral" size="sm" onClick={onGroup}>
-                Group
+                {t("editor.group.group")}
               </Button>
             )}
           </div>
@@ -125,7 +127,7 @@ export function OptionsBar({
               <>
                 <div className="w-px h-3.5 bg-gray-200 shrink-0 mx-0.5" />
                 <Button variant="outline" color="neutral" size="sm" onClick={onArrangeAsGrid}>
-                  Grid
+                  {t("editor.field.grid")}
                 </Button>
               </>
             )}

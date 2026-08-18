@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { PiCaretUp, PiCaretDown } from "react-icons/pi";
 
 interface NumberInputProps {
@@ -9,19 +9,19 @@ interface NumberInputProps {
 }
 
 export function NumberInput({ value, onChange, disabled, step = 1 }: NumberInputProps) {
-  const [localValue, setLocalValue] = useState(String(Math.round(value)));
-
-  useEffect(() => {
-    setLocalValue(String(Math.round(value)));
-  }, [value]);
+  // A draft exists only while the field is being edited, so free-form input
+  // ("", "-", "12.") is possible without the displayed value ever drifting from
+  // the prop — the rest of the time it is derived, not stored.
+  const [draft, setDraft] = useState<string | null>(null);
+  const display = draft ?? String(Math.round(value));
 
   const commit = () => {
-    const parsed = Number(localValue);
-    if (!isNaN(parsed) && localValue.trim() !== "") {
-      onChange(parsed);
-    } else {
-      setLocalValue(String(Math.round(value)));
-    }
+    if (draft === null) return;
+    const parsed = Number(draft);
+    if (!isNaN(parsed) && draft.trim() !== "") onChange(parsed);
+    // Either way the draft is dropped: on success the prop carries the value, on
+    // failure the display falls back to the last good one.
+    setDraft(null);
   };
 
   const increment = () => {
@@ -38,8 +38,8 @@ export function NumberInput({ value, onChange, disabled, step = 1 }: NumberInput
     <div className="flex items-stretch">
       <input
         type="number"
-        value={localValue}
-        onChange={(e) => setLocalValue(e.target.value)}
+        value={display}
+        onChange={(e) => setDraft(e.target.value)}
         onBlur={commit}
         onKeyDown={(e) => {
           if (e.key === "Enter") {

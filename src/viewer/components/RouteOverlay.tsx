@@ -44,6 +44,7 @@ export function RouteOverlay({ path }: RouteOverlayProps) {
         y={start.y - MARKER_FONT_SIZE / 2}
         width={MARKER_RADIUS * 2}
         height={MARKER_FONT_SIZE}
+        // Route endpoint markers, not words — deliberately untranslated.
         text="A"
         fontSize={MARKER_FONT_SIZE}
         fill="#ffffff"

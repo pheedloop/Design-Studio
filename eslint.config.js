@@ -20,4 +20,11 @@ export default defineConfig([
       globals: globals.browser,
     },
   },
+  {
+    // Sorted within each namespace: predictable merges, findable keys.
+    files: ['src/i18n/strings.ts'],
+    rules: {
+      'sort-keys': ['error', 'asc', { caseSensitive: true, natural: false }],
+    },
+  },
 ])

@@ -13,7 +13,14 @@ import type {
   PlacedRecord,
 } from "../../hooks/usePlacementRecords";
 import type { PlacementCategory } from "../../placement/types";
+import { useT, type StringKey } from "../../i18n";
 import type { ElementType } from "../../../types";
+
+/** The ellipse option is offered as "Circle" — the placement grid only ever squares it. */
+const PLACEMENT_SHAPE_LABEL: Record<"rect" | "ellipse", StringKey> = {
+  ellipse: "editor.shape.circle",
+  rect: "editor.shape.rect",
+};
 
 // ---------------------------------------------------------------------------
 // Data transfer constants
@@ -64,6 +71,7 @@ function FilterBar({
   statusFilter: StatusFilter;
   onStatusFilterChange: (f: StatusFilter) => void;
 }) {
+  const t = useT();
   const [shapeOpen, setShapeOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [filterOpen, setFilterOpen] = useState(false);
@@ -97,7 +105,7 @@ function FilterBar({
               className="inline-block w-2.5 h-2.5 bg-gray-300 shrink-0"
               style={{ borderRadius: shape === "ellipse" ? "9999px" : "0px" }}
             />
-            {shape === "ellipse" ? "Circle" : "Rectangle"}
+            {t(PLACEMENT_SHAPE_LABEL[shape])}
             <PiCaretDown size={10} className="text-gray-400" />
           </button>
           {shapeOpen && (
@@ -121,7 +129,7 @@ function FilterBar({
                     className="inline-block w-2.5 h-2.5 bg-gray-300 shrink-0"
                     style={{ borderRadius: s === "ellipse" ? "9999px" : "0px" }}
                   />
-                  {s === "ellipse" ? "Circle" : "Rectangle"}
+                  {t(PLACEMENT_SHAPE_LABEL[s])}
                 </button>
               ))}
             </div>
@@ -140,7 +148,7 @@ function FilterBar({
               ? "text-primary-600 bg-primary-50"
               : "text-gray-400 hover:text-gray-600",
           ].join(" ")}
-          title="Search"
+          title={t("editor.placement.search")}
         >
           <PiMagnifyingGlass size={13} />
         </button>
@@ -161,14 +169,14 @@ function FilterBar({
                   ? "text-primary-600 bg-primary-50"
                   : "text-gray-400 hover:text-gray-600",
             ].join(" ")}
-            title="Filter by status"
+            title={t("editor.placement.filterByStatus")}
           >
             <PiFunnel size={13} />
           </button>
           {filterOpen && (
             <div className="absolute right-0 top-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-20 py-1.5 w-36">
               <div className="px-2.5 pb-1 text-[10px] uppercase tracking-wider text-gray-400 font-medium">
-                Status
+                {t("editor.placement.status")}
               </div>
               {(["all", "unplaced", "placed"] as const).map((f) => (
                 <label
@@ -187,10 +195,10 @@ function FilterBar({
                   />
                   <span className="text-gray-700">
                     {f === "all"
-                      ? "All"
+                      ? t("editor.placement.statusAll")
                       : f === "placed"
-                        ? "Placed"
-                        : "Unplaced"}
+                        ? t("editor.placement.placed")
+                        : t("editor.placement.unplaced")}
                   </span>
                 </label>
               ))}
@@ -208,7 +216,7 @@ function FilterBar({
               type="text"
               value={query}
               onChange={(e) => onQueryChange(e.target.value)}
-              placeholder="Search…"
+              placeholder={t("editor.placement.searchPlaceholder")}
               className="w-full pl-2.5 pr-6 py-1 text-xs border border-gray-200 rounded bg-gray-50 focus:bg-white focus:outline-none focus:ring-1 focus:ring-primary-400 transition"
             />
             {query && (
@@ -269,6 +277,7 @@ function Section({
   onAutoArrange,
   children,
 }: SectionProps) {
+  const t = useT();
   const total = placed + unplaced;
 
   return (
@@ -297,7 +306,7 @@ function Section({
             {title}
           </span>
           <span className="block text-xs text-gray-400 tabular-nums">
-            Placed: {placed}&nbsp;&nbsp;|&nbsp;&nbsp;Unplaced: {unplaced}
+            {t("editor.placement.counts", { placed, unplaced })}
           </span>
         </span>
         <span
@@ -309,8 +318,8 @@ function Section({
           ].join(" ")}
           title={
             totalUnplaced > 0
-              ? `Auto-place ${totalUnplaced} unplaced`
-              : "No unplaced items"
+              ? t("editor.placement.autoPlace", { count: totalUnplaced })
+              : t("editor.placement.noUnplaced")
           }
           onClick={(e) => {
             e.stopPropagation();
@@ -329,7 +338,7 @@ function Section({
         <SectionShapeContext.Provider value={defaultShape}>
           {total === 0 ? (
             <p className="px-3 py-2.5 text-xs text-gray-400 italic">
-              No records found
+              {t("editor.placement.noRecords")}
             </p>
           ) : (
             <>
@@ -411,7 +420,9 @@ function RecordRow({
   record: unknown;
   isPlaced: boolean;
 }) {
+  const t = useT();
   const secondary = category.getSecondaryLabel?.(record);
+
   return (
     <PlacementRow
       isPlaced={isPlaced}
@@ -426,11 +437,11 @@ function RecordRow({
       </span>
       {isPlaced ? (
         <span className="shrink-0 text-xs font-medium text-green-600">
-          Placed
+          {t("editor.placement.placed")}
         </span>
       ) : (
         <span className="shrink-0 text-xs font-medium text-amber-500">
-          Unplaced
+          {t("editor.placement.unplaced")}
         </span>
       )}
     </PlacementRow>

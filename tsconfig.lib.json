@@ -23,5 +23,16 @@
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src/editor/**/*", "src/viewer/**/*", "src/seatviewer/**/*", "src/types/**/*"]
+  // Shared modules referenced by the published surfaces must be listed, or their
+  // .d.ts is never emitted while the importers still reference it.
+  "include": [
+    "src/editor/**/*",
+    "src/viewer/**/*",
+    "src/seatviewer/**/*",
+    "src/types/**/*",
+    "src/i18n/**/*",
+    "src/utils/**/*",
+    "src/tiers.ts"
+  ],
+  "exclude": ["src/**/*.test.ts", "src/**/*.test.tsx"]
 }

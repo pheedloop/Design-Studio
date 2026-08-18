@@ -1,6 +1,8 @@
 import { PiX } from "react-icons/pi";
 import type { SeatOccupant, SeatTableState } from "../types";
 import { occupancyLevel, type OccupancyLevel } from "../logic";
+import { useT } from "../i18n";
+import { occupantHeading } from "../labels";
 
 interface TableDetailPopoverProps {
   table: SeatTableState;
@@ -50,6 +52,7 @@ export function TableDetailPopover({
   onUnassign,
   onClose,
 }: TableDetailPopoverProps) {
+  const t = useT();
   const level = occupancyLevel(table);
   const seatsFree = Math.max(0, table.seatCount - table.occupancy);
 
@@ -57,18 +60,23 @@ export function TableDetailPopover({
     <div
       role="dialog"
       aria-modal="false"
-      aria-label={`${tableName} details`}
+      aria-label={t("seatviewer.table.details", { name: tableName })}
       className="absolute z-[9999] w-72 max-w-[calc(100%-24px)] left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-card border border-gray-300 rounded-xl shadow-[0_16px_48px_rgba(38,59,90,0.28)] overflow-hidden"
     >
       <div className="flex items-start gap-2 p-3 border-b border-gray-200">
         <div className="flex-1 min-w-0">
           <h3 className="m-0 text-base font-medium text-gray-700">{tableName}</h3>
-          <span className="text-xs text-gray-400 tabular-nums">{seatsFree} of {table.seatCount} seats free</span>
+          <span className="text-xs text-gray-400 tabular-nums">
+            {t("seatviewer.table.seatsFree", {
+              count: seatsFree,
+              total: table.seatCount,
+            })}
+          </span>
         </div>
         <span className={`text-xs font-medium tabular-nums px-2 py-0.5 rounded-full whitespace-nowrap ${OCC_BADGE[level]}`}>
           {table.occupancy}/{table.seatCount}
         </span>
-        <button type="button" aria-label="Close" onClick={onClose} className="text-gray-400 hover:text-gray-700 p-0.5 rounded cursor-pointer leading-none">
+        <button type="button" aria-label={t("seatviewer.table.close")} onClick={onClose} className="text-gray-400 hover:text-gray-700 p-0.5 rounded cursor-pointer leading-none">
           <PiX size={16} />
         </button>
       </div>
@@ -76,7 +84,11 @@ export function TableDetailPopover({
       {!hideAttendeeDetails && (
         <div className="max-h-44 overflow-y-auto scrollbar">
           <div className="px-3 pt-2.5 pb-1 text-[10px] tracking-wider uppercase text-gray-400 font-semibold">
-            {occupantsLoading ? "Loading…" : occupants.length ? "Seated here" : table.isLocked ? "Locked" : "No one seated yet"}
+            {occupantHeading({
+              loading: !!occupantsLoading,
+              hasOccupants: occupants.length > 0,
+              locked: table.isLocked,
+            }, t)}
           </div>
           {occupants.map((o) => (
             <div key={o.code} className="flex items-center gap-2.5 px-3 py-1.5">
@@ -93,7 +105,7 @@ export function TableDetailPopover({
                   onClick={() => onUnassign(o.seatSelectionCode as number)}
                   className="shrink-0 text-xs text-gray-400 hover:text-[#b42318] hover:bg-[rgba(235,87,87,0.12)] px-1.5 py-1 rounded cursor-pointer"
                 >
-                  Remove
+                  {t("seatviewer.table.remove")}
                 </button>
               )}
             </div>
@@ -108,7 +120,7 @@ export function TableDetailPopover({
           onClick={onAssign}
           className="w-full text-sm font-medium py-2.5 rounded-lg cursor-pointer disabled:cursor-not-allowed bg-primary-600 text-white hover:bg-primary-700 disabled:bg-gray-200 disabled:text-gray-400"
         >
-          {assigning ? "Assigning…" : assignLabel}
+          {assigning ? t("seatviewer.table.assigning") : assignLabel}
         </button>
         {assignHint && <p className="text-xs text-gray-500 text-center mt-2 m-0">{assignHint}</p>}
       </div>

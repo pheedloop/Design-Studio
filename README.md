@@ -48,6 +48,114 @@ import "@pheedloop/design-studio/style.css";
 Capabilities are gated by a usage `tier` (`basic` / `advanced` / `premium`), with
 optional per-feature overrides. See [tiers.ts](src/tiers.ts).
 
+## Internationalization
+
+Design Studio ships English and owns no i18n runtime — no i18next, no locale
+files, no language state. It exports a manifest of stable keys and their English,
+and takes a translator from the host:
+
+```tsx
+import { MapViewer, designStudioStrings } from "@pheedloop/design-studio/viewer";
+import type { Translate } from "@pheedloop/design-studio/viewer";
+
+<MapViewer data={data} exhibitors={exhibitors} translate={translate} locale={language} />
+```
+
+**Pass nothing and you get English.** The prop is optional and the manifest value
+is the guaranteed fallback, so upgrading changes nothing until you opt in.
+
+Two rules matter:
+
+- **`translate` must be referentially stable.** Wrap it in `useCallback`/`useMemo`
+  keyed on your language and catalog. Display strings are memoized off its
+  identity, so a fresh function each render re-derives every menu and tool list in
+  the editor on every keystroke.
+- **Configure i18next with `interpolation: { escapeValue: false }`** for these
+  keys. The English uses curly apostrophes (`aren’t`, `can’t`), which default
+  escaping turns into numeric entities that render literally.
+
+Placeholders use i18next's `{{name}}` syntax, and plurals use its `_one`/`_other`
+key suffixes, so a catalog authored for i18next drops in unchanged.
+
+**Structured keys (ditto).** Namespace the key and let your catalog resolve it:
+
+```tsx
+const translate = useCallback<Translate>(
+  (key, opts) => i18nT(`designStudio.${key}`, { defaultValue: resolveEnglish(key, opts), ...opts }),
+  [i18nT],
+);
+```
+
+Seed the catalog from the merged manifest at **build** time:
+
+```ts
+import { STRINGS } from "@pheedloop/design-studio/i18n";
+writeFileSync("src/locales/en-CA.json", JSON.stringify({ designStudio: STRINGS }, null, 2));
+```
+
+**English-as-key + user-supplied translations (Charmander).** Where the catalog is
+a plain dictionary keyed by the English source, use `resolveEnglishPair`:
+
+```tsx
+const translate = useMemo<Translate>(
+  () => (key, opts) => {
+    const { lookup, fallback } = resolveEnglishPair(key, opts, language);
+    return interpolate(translations[lookup] || fallback, opts);
+  },
+  [translations, language],
+);
+```
+
+Both strings are **uninterpolated**, and that order is the part to get right: a
+catalog keyed by English source is keyed by `"{{count}} seats free"`, not
+`"3 seats free"`, so interpolating before the lookup produces a key that can never
+match and silently falls back to English.
+
+The pair exists because those two strings differ once a plural is involved:
+
+- **`lookup`** is the row to fetch. Your catalog holds one row per English form, so
+  the *target* locale's rules decide which one you want — French is singular at a
+  count of 0, Russian at 21, where English is not.
+- **`fallback`** is what to render when that row is missing. It follows English
+  rules, because a miss means the user sees English, and "0 seat free" is not
+  English.
+
+Use `resolveEnglish` (no locale, one string) wherever the result is displayed
+rather than looked up: the structured-key `defaultValue` above, and the built-in
+fallback when no translator is supplied. `language` belongs in the dep array, or
+the memoized closure keeps resolving against a stale locale.
+
+> A locale with more plural categories than English can only reach the two forms
+> that exist. Russian selects `few` at 2 and Arabic selects `many` at 11; both
+> fall back to `_other`. That ceiling is inherent to keying a catalog by English
+> text — reaching the full CLDR set needs the structured-key setup above.
+
+If your catalog lives in an i18next instance configured with
+`keySeparator: false, nsSeparator: false`, the English *is* the key and i18next
+does both steps:
+
+```tsx
+const translate = useCallback<Translate>(
+  (key, opts) => i18n.t(resolveEnglish(key, opts), opts),
+  [i18n, i18n.language],
+);
+```
+
+`resolveEnglish`, not the pair: i18next re-suffixes the key it is handed and runs
+CLDR against its own `language`, so selecting a second time here would fight it.
+
+> Because that lookup is by English text, **changing a DS English value
+> un-translates that string** until the catalog entry is re-created. Release notes
+> list changed English values, not just new keys.
+
+Import `designStudioStrings` from the entry point you already use — it is scoped
+to that surface. `@pheedloop/design-studio/i18n` carries every surface's strings
+and is for build steps only.
+
+The [demo](https://pheedloop.github.io/Design-Studio/) has a `Lang:` switcher with
+a pseudo-locale (accented, bracketed, padded ~40%) for spotting untranslated
+strings and text-expansion clipping, and a mode that renders each string's key.
+
 ## Scripts
 
 ```bash
@@ -56,7 +164,23 @@ npm run build       # Type-check + production build (demo)
 npm run build:lib   # Build the publishable library → dist/
 npm run dev:lib     # Rebuild the library on change (for npm link into a host)
 npm run lint        # ESLint
+npm test            # Vitest, once
+npm run test:watch  # Vitest, watch mode
 ```
+
+Tests are co-located as `*.test.ts(x)` and excluded from the library build. They
+cover the parts neither the compiler nor a reviewer reliably catches — translator
+resolution order, plural selection, provider inheritance, and `t` identity.
+
+All the English lives in one file, `src/i18n/strings.ts`, grouped by namespace with
+one export per group. Keys are written without their namespace — the const carries
+it — so the entry `"menu.duplicate"` under `EDITOR` is addressed as
+`t("editor.menu.duplicate")`. Which keys a surface may use is enforced by the
+narrowed `T` its `i18n.ts` exports; sort order by `sort-keys` in
+`eslint.config.js`.
+
+CI runs typecheck, lint, tests and the library build on every pull request. The
+pre-commit hook runs typecheck, lint and tests.
 
 **Release:** `make release [BUMP=patch|minor|major]` from a clean `develop` —
 bumps, tags, and publishes to GitHub Packages. Every push to `develop` also

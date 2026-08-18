@@ -1,3 +1,4 @@
+import type { StringKey } from "../i18n";
 import type Konva from "konva";
 import type {
   FloorPlanData,
@@ -62,7 +63,7 @@ export type ToolResult =
 
 export interface ToolDefinition<TState = unknown> {
   id: string;
-  label: string;
+  labelKey: StringKey;
   shortcut?: string;
   icon: React.ReactNode;
   cursor: string;

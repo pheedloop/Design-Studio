@@ -18,6 +18,8 @@ import { IconPicker } from "./IconPicker";
 import { getIconEntry } from "../../utils/iconRegistry";
 import type { PlacementRecords } from "../../hooks/usePlacementRecords";
 import type { PlacementCategory } from "../../placement/types";
+import type { StringKey } from "../../i18n";
+import { useT } from "../../i18n";
 import { PlacementPanel } from "./PlacementPanel";
 import type { AutoArrangeRecord } from "./PlacementPanel";
 
@@ -27,7 +29,7 @@ import type { AutoArrangeRecord } from "./PlacementPanel";
 
 interface ToolDef<T extends string> {
   id: T;
-  label: string;
+  labelKey: StringKey;
   shortcut?: string;
   icon: React.ReactNode;
 }
@@ -38,21 +40,21 @@ interface ToolDef<T extends string> {
 
 const handDef: ToolDef<ActiveTool> = {
   id: "hand",
-  label: "Hand (pan)",
+  labelKey: "editor.tool.hand",
   shortcut: "H",
   icon: <PiHandFill size={16} />,
 };
 
 const selectDef: ToolDef<ActiveTool> = {
   id: "select",
-  label: "Select",
+  labelKey: "editor.tool.select",
   shortcut: "V",
   icon: <PiCursorFill size={16} />,
 };
 
 const toolDefs: ToolDef<ActiveTool>[] = TOOL_REGISTRY.map((t) => ({
   id: t.id as ActiveTool,
-  label: t.label,
+  labelKey: t.labelKey,
   shortcut: t.shortcut,
   icon: t.icon,
 }));
@@ -60,25 +62,25 @@ const toolDefs: ToolDef<ActiveTool>[] = TOOL_REGISTRY.map((t) => ({
 const pathingToolDefs: ToolDef<PathingTool>[] = [
   {
     id: "select",
-    label: "Select",
+    labelKey: "editor.tool.select",
     shortcut: "V",
     icon: <PiCursorFill size={16} />,
   },
   {
     id: "paintWalkable",
-    label: "Paint Walkable",
+    labelKey: "editor.tool.paintWalkable",
     shortcut: "W",
     icon: <PiPaintBrush size={16} />,
   },
   {
     id: "paintImpassable",
-    label: "Erase Impassable",
+    labelKey: "editor.tool.eraseImpassable",
     shortcut: "E",
     icon: <PiEraser size={16} />,
   },
   {
     id: "rectFill",
-    label: "Rectangle Fill",
+    labelKey: "editor.tool.rectangleFill",
     shortcut: "R",
     icon: <PiSquare size={16} />,
   },
@@ -113,6 +115,7 @@ function SidebarHeader({
    *  for the seatplanner. */
   placementIcon?: React.ReactNode;
 }) {
+  const t = useT();
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState(mapName);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -124,10 +127,6 @@ function SidebarHeader({
     }
   }, [editing]);
 
-  useEffect(() => {
-    if (!editing) setDraft(mapName);
-  }, [mapName, editing]);
-
   const commit = () => {
     const trimmed = draft.trim();
     if (trimmed) onMapNameChange(trimmed);
@@ -138,7 +137,7 @@ function SidebarHeader({
   return (
     <div className="px-3 py-3 border-b border-gray-100 flex items-center gap-2 min-w-0">
       {isDirty && (
-        <span className="shrink-0 text-red-500 font-bold text-sm leading-none" title="Unsaved changes">*</span>
+        <span className="shrink-0 text-red-500 font-bold text-sm leading-none" title={t("editor.toolbar.unsavedChanges")}>*</span>
       )}
       {!nameEditable ? (
         <span className="flex-1 text-base font-semibold text-gray-800 truncate">
@@ -167,7 +166,7 @@ function SidebarHeader({
             setEditing(true);
           }}
           className="flex-1 text-left text-base font-semibold text-gray-800 truncate hover:text-primary-600 transition-colors"
-          title="Click to rename"
+          title={t("editor.toolbar.clickToRename")}
         >
           {mapName}
         </button>
@@ -177,13 +176,13 @@ function SidebarHeader({
         size="sm"
         active={editorMode === "design"}
         onClick={() => onEditorModeChange("design")}
-        title="Design Mode"
+        title={t("editor.mode.design")}
       >
         <PiPencilSimple size={16} />
       </IconButton>
       {objectsState !== "hidden" &&
         (objectsState === "locked" ? (
-          <span className="relative inline-flex shrink-0" title="Premium feature">
+          <span className="relative inline-flex shrink-0" title={t("editor.premiumFeature")}>
             <IconButton size="sm" disabled>
               {placementIcon}
             </IconButton>
@@ -196,7 +195,7 @@ function SidebarHeader({
             size="sm"
             active={editorMode === "placement"}
             onClick={() => onEditorModeChange("placement")}
-            title="Placement Mode"
+            title={t("editor.mode.placement")}
           >
             {placementIcon}
           </IconButton>
@@ -220,12 +219,14 @@ function ToolRow<T extends string>({
   /** When true, show the premium trophy badge (implies disabled styling). */
   locked?: boolean;
 }) {
+  const t = useT();
+
   return (
     <button
       type="button"
       onClick={disabled ? undefined : onClick}
       disabled={disabled}
-      title={disabled ? "Premium feature" : undefined}
+      title={disabled ? t("editor.premiumFeature") : undefined}
       className={[
         "w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded-md text-sm transition-colors",
         disabled
@@ -236,7 +237,7 @@ function ToolRow<T extends string>({
       ].join(" ")}
     >
       <span className="shrink-0 flex items-center w-4">{tool.icon}</span>
-      <span className="flex-1 text-left">{tool.label}</span>
+      <span className="flex-1 text-left">{t(tool.labelKey)}</span>
       {locked ? (
         <TrophyIcon size={14} />
       ) : (
@@ -309,6 +310,7 @@ export function ToolSidebar({
   features,
   placementIcon,
 }: ToolSidebarProps) {
+  const t = useT();
   const iconRowRef = useRef<HTMLDivElement>(null);
   const showIconPicker = activeTool === "icon" && !!onIconSelect;
 
@@ -331,7 +333,7 @@ export function ToolSidebar({
       <div className="flex flex-col w-64 shrink-0 bg-white border-r border-gray-200 overflow-hidden">
         <div className="px-3 py-3 border-b border-gray-100">
           <div className="text-[10px] uppercase tracking-wider text-gray-400 leading-none mb-1">
-            Pathing Layer
+            {t("editor.pathing.layerTitle")}
           </div>
           <div className="text-base font-semibold text-gray-800 truncate">
             {mapName}
@@ -358,7 +360,7 @@ export function ToolSidebar({
       <div className="flex flex-col w-64 shrink-0 bg-white border-r border-gray-200 overflow-hidden">
         <div className="px-3 py-3 border-b border-gray-100">
           <div className="text-[10px] uppercase tracking-wider text-gray-400 leading-none mb-1">
-            Background Layer
+            {t("editor.background.layerTitle")}
           </div>
           <div className="text-base font-semibold text-gray-800 truncate">
             {mapName}
@@ -376,7 +378,7 @@ export function ToolSidebar({
             onClick={() => onToolChange("select")}
           />
           <p className="px-2 py-3 text-xs text-gray-400 leading-relaxed">
-            Set the background image and color from the panel on the right.
+            {t("editor.background.layerHint")}
           </p>
         </div>
       </div>

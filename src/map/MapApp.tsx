@@ -6,6 +6,11 @@ import {
   PiStorefront,
 } from "react-icons/pi";
 import { MapEditor, definePlacementCategory, type Tier } from "../editor";
+// The merged translator, not either surface's: this shell drives both the editor
+// and the viewer, and each surface's own `Translate` covers only its own keys.
+import type { Translate } from "../i18n";
+import { LocaleSwitcher } from "../demo/LocaleSwitcher";
+import { useDemoLocale } from "../demo/useDemoLocale";
 import { MapViewer } from "../viewer";
 import { ProductSwitcher } from "../components/ProductSwitcher";
 import { exhibitionHallMap } from "../sample-data/exhibition-hall-map";
@@ -44,10 +49,12 @@ function ViewerRoute({
   viewport,
   mode,
   tier,
+  translate,
 }: {
   viewport: Viewport;
   mode: ViewerMode;
   tier: Tier;
+  translate?: Translate;
 }) {
   const data = loadViewerData() ?? exhibitionHallMap;
   const viewer = (
@@ -56,6 +63,7 @@ function ViewerRoute({
       exhibitors={conferenceExpoExhibitors}
       mode={mode}
       tier={tier}
+      translate={translate}
     />
   );
 
@@ -80,6 +88,9 @@ export function MapApp() {
   const [viewport, setViewport] = useState<Viewport>("desktop");
   const [viewerMode, setViewerMode] = useState<ViewerMode>("attendee");
   const [tier, setTier] = useState<Tier>("premium");
+  // One toggle drives both the editor and the viewer, so a locale check covers
+  // both modes without re-selecting it after switching tabs.
+  const { locale, setLocale, translate } = useDemoLocale();
 
   useEffect(() => {
     const onHashChange = () => setMode(getMode());
@@ -173,6 +184,8 @@ export function MapApp() {
           </button>
         ))}
 
+        <LocaleSwitcher locale={locale} setLocale={setLocale} />
+
         {mode === "viewer" && (
           <>
             <div className="w-px h-4 bg-gray-700 mx-1" />
@@ -232,12 +245,18 @@ export function MapApp() {
             initialData={exhibitionHallMap}
             placementCategories={placementCategories}
             tier={tier}
+            translate={translate}
             persist
             debug
           />
         )}
         {mode === "viewer" && (
-          <ViewerRoute viewport={viewport} mode={viewerMode} tier={tier} />
+          <ViewerRoute
+            viewport={viewport}
+            mode={viewerMode}
+            tier={tier}
+            translate={translate}
+          />
         )}
       </div>
     </div>
