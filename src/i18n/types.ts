@@ -21,12 +21,18 @@ export type Flattened<G> = {
 /** Must be referentially stable — derived UI is memoized off its identity. */
 export type TranslateFor<K extends string> = (key: K, vars?: Vars) => string;
 
-/** `TranslateFor` plus the target locale, for when the result is a lookup key. */
-export type ResolveEnglishFor<K extends string> = (
+/** What a catalogue keyed by English text needs: the row to fetch, and what to
+ * render when that row is missing. See `resolveEnglishPairFrom`. */
+export interface EnglishPair {
+  lookup: string;
+  fallback: string;
+}
+
+export type ResolveEnglishPairFor<K extends string> = (
   key: K,
   vars?: Vars,
   locale?: string,
-) => string;
+) => EnglishPair;
 
 /** What the context carries: one host translator serves every surface it mounts. */
 export type AnyTranslate = TranslateFor<string>;

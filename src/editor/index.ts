@@ -9,8 +9,13 @@ export type { FloorPlanData, Background, BackgroundImageData, BackgroundDxfData 
 export type { ExhibitorBooth, SessionLocation, MeetingRoom } from "../viewer/types";
 export type { Tier, FeatureKey, FeatureOverride } from "../tiers";
 
-export { designStudioStrings, resolveEnglish } from "./i18n";
-// resolveEnglish gives the uninterpolated English; interpolate it after the lookup.
+export {
+  designStudioStrings,
+  resolveEnglish,
+  resolveEnglishPair,
+} from "./i18n";
+// Both give uninterpolated English; interpolate after the lookup. resolveEnglish
+// is the string to display; resolveEnglishPair is for catalogues keyed by English.
 export { interpolate } from "../i18n/interpolate";
 // Narrowed to this surface: another surface's key is a compile error.
 export type { Translate, T, StringKey } from "./i18n";

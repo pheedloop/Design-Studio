@@ -2,7 +2,12 @@ import { createSurfaceI18n } from "../i18n/context";
 import { COMMON, EDITOR } from "../i18n/strings";
 import type { SurfaceKey, TranslateFor } from "../i18n/types";
 
-export const { designStudioStrings, useT, resolveEnglish } = createSurfaceI18n({
+export const {
+  designStudioStrings,
+  useT,
+  resolveEnglish,
+  resolveEnglishPair,
+} = createSurfaceI18n({
   common: COMMON,
   editor: EDITOR,
 });

@@ -26,23 +26,11 @@ export function interpolate(template: string, vars?: Vars): string {
   });
 }
 
-/**
- * A key's English template, plural-selected from `count`, NOT interpolated.
- *
- * `locale` selects which English form comes back. Pass it only when the result is
- * a lookup key into a catalogue keyed by English — that catalogue holds one row
- * per English form, so the target locale's rules decide which row is wanted (fr
- * treats 0 as singular where en does not). Omit it when the result is displayed
- * as English, which is what the ditto `defaultValue` and the no-host fallback do.
- *
- * A locale with more categories than English (ru `few`, ar `many`) can only reach
- * the two forms that exist; the surplus categories fall back to `_other`.
- */
-export function resolveEnglishFrom(
+function selectFrom(
   strings: Readonly<Record<string, string>>,
   key: string,
-  vars?: Vars,
-  locale: string = ENGLISH,
+  vars: Vars | undefined,
+  locale: string,
 ): string {
   const count = vars?.count;
   if (count !== undefined) {
@@ -52,4 +40,44 @@ export function resolveEnglishFrom(
     if (variant !== undefined) return variant;
   }
   return strings[key] ?? key;
+}
+
+/**
+ * A key's English template, plural-selected from `count` by English rules and NOT
+ * interpolated. This is the string to *display*: i18next's `defaultValue`, or the
+ * fallback when no host translator is supplied.
+ */
+export function resolveEnglishFrom(
+  strings: Readonly<Record<string, string>>,
+  key: string,
+  vars?: Vars,
+): string {
+  return selectFrom(strings, key, vars, ENGLISH);
+}
+
+/**
+ * The two English strings a catalogue keyed by English text needs, which are not
+ * the same string once a plural is involved.
+ *
+ * `lookup` is the row to fetch: the catalogue holds one row per English form, so
+ * the *target* locale's rules decide which one is wanted — fr is singular at a
+ * count of 0, ru at 21, where en is not.
+ *
+ * `fallback` is what to render if that row is missing. It follows English rules,
+ * because a miss means the user sees English and "0 seat free" is not English.
+ *
+ * A locale with more categories than English (ru `few`, ar `many`) can only reach
+ * the two forms that exist; the surplus categories fall back to `_other`.
+ */
+export function resolveEnglishPairFrom(
+  strings: Readonly<Record<string, string>>,
+  key: string,
+  vars?: Vars,
+  locale?: string,
+): { lookup: string; fallback: string } {
+  const fallback = selectFrom(strings, key, vars, ENGLISH);
+  return {
+    lookup: locale === undefined ? fallback : selectFrom(strings, key, vars, locale),
+    fallback,
+  };
 }
