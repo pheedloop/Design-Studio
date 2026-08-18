@@ -119,7 +119,7 @@ A pre-commit hook (husky + lint-staged) runs `tsc -b --noEmit`, `eslint --max-wa
 
 - **Extract branchy label/state logic out of the component so it can be tested directly.** `seatviewer/labels.ts` exists precisely for this — `assignCta` has a dozen branches over mode, lock state, occupancy and eligibility, and testing it through a mounted Konva stage would be slow and brittle. A function taking `(input, t)` and returning `{ label, disabled, hint }` tests exhaustively in milliseconds. Do the same when you find comparable logic inline in a component.
 - **Render tests are for what only rendering can prove** — pluralization actually reaching the DOM, a provider override winning, an element appearing or not. `TableDetailPopover.test.tsx` is the model: render inside `I18nProvider`, assert on `screen.getByText`.
-- **Regressions get a test with the old behavior named in a comment.** See the `"1 seats free"` note in `TableDetailPopover.test.tsx` — it says what was broken, so nobody "simplifies" the fix away later.
+- **Regressions against *released* behavior get a test with the old behavior named in a comment**, so nobody "simplifies" the fix away later. This does not apply to churn inside a single PR: by the time it merges there is no "used to", and a comment saying otherwise is archaeology a reader cannot verify. Write what the code guarantees and why that case is easy to get wrong — a test called "no longer does X" is a test with no meaning once X is gone.
 
 Konva components that need a real stage stay untested for now; there is no canvas harness in this repo. Don't build one for a single PR — extract the logic instead and test that.
 
@@ -209,7 +209,7 @@ Reject (or block on fix) when you see any of the following. These map 1:1 to the
 - **New branchy logic testable only through a mounted component.** Ask for the extraction — that's what `labels.ts` is for.
 - **A `tests/` subfolder**, or a test file not named after its subject.
 - **`describe`/`it`/`expect` used without importing them** — passes in your editor, fails under `globals: false`.
-- **A bug fix with no test naming the old behavior.** The regression comes back otherwise.
+- **A fix to released behavior with no test naming the old behavior.** The regression comes back otherwise. Conversely: a test whose name or comment describes an intermediate state of the PR under review — strip it back to what the code should do.
 - **A test that slows the suite disproportionately.** It runs on every commit for everyone.
 
 ### Review questions to ask out loud

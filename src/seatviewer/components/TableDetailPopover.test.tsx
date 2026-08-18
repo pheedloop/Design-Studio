@@ -34,8 +34,9 @@ function show(props: Partial<Parameters<typeof TableDetailPopover>[0]> = {}, tra
 }
 
 describe("seats free", () => {
+  // Rendered, not unit-tested, because the point is that the plural selection
+  // survives the whole t() -> provider -> DOM path.
   it("uses the singular at one seat", () => {
-    // This rendered "1 seats free" before the migration.
     show({ table: table({ seatCount: 8, occupancy: 7 }) });
     expect(screen.getByText("1 of 8 seat free")).toBeTruthy();
   });

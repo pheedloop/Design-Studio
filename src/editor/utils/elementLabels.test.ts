@@ -17,8 +17,6 @@ const element = (type: ElementType, shape: Geometry["shape"], arrowHead = false)
 
 describe("elementTypeLabel", () => {
   it("names a non-shape element by its type", () => {
-    // Was: the header rendered the raw enum, so a booth read "booth" and a
-    // walkway read "walkway", untranslated in every locale.
     expect(elementTypeLabel(element("booth", "rect"), t)).toBe("Booth");
     expect(elementTypeLabel(element("walkway", "rect"), t)).toBe("Walkway");
     expect(elementTypeLabel(element("session_area", "rect"), t)).toBe(

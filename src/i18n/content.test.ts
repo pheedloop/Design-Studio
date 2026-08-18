@@ -80,7 +80,6 @@ describe("translateFloorPlan", () => {
     expect(out.elements[0].properties.name).toBe("");
   });
 
-  // A "" entry used to blank the label rather than fall back to English.
   it("keeps the authored text when the catalog entry is empty", () => {
     const blank = (text: string) => (text === "Casual Play Hall" ? "" : text);
     const out = translateFloorPlan(plan(), blank);
@@ -89,9 +88,9 @@ describe("translateFloorPlan", () => {
 });
 
 describe("search sees what the list shows", () => {
-  // The bug this guards: translating at the render site but not in the search
-  // index leaves the user unable to find a row they can plainly read.
-  it("matches the translated name, and no longer the English one", () => {
+  // Translating at the render site but not in the search index would leave a user
+  // unable to find a row they can plainly read.
+  it("matches on the translated name, not the English source", () => {
     const elements = translateFloorPlan(plan(), translate).elements;
     const { result } = renderHook(() => useSearch(elements, []));
 

@@ -64,24 +64,14 @@ describe("resolveEnglishFrom", () => {
     );
   });
 
-  it("selects the plural at every other count, including 0", () => {
-    expect(resolveEnglishFrom(strings, "seatviewer.seatsFree", { count: 0 })).toBe(
-      "{{count}} seats free",
-    );
-    expect(resolveEnglishFrom(strings, "seatviewer.seatsFree", { count: 7 })).toBe(
-      "{{count}} seats free",
-    );
-  });
-
-  // Pins the ditto `defaultValue` and no-host paths, where the result is shown as
-  // English: those stay on English rules however the tree's locale is set.
-  it("always uses English rules", () => {
-    expect(resolveEnglishFrom(strings, "seatviewer.seatsFree", { count: 0 })).toBe(
-      "{{count}} seats free",
-    );
-    expect(resolveEnglishFrom(strings, "seatviewer.seatsFree", { count: 21 })).toBe(
-      "{{count}} seats free",
-    );
+  it("selects the plural at every other count, including 0 and 21", () => {
+    // 0 and 21 are the counts other locales treat as singular; this function is
+    // the displayed-English path, so it stays on English rules regardless.
+    for (const count of [0, 7, 21]) {
+      expect(resolveEnglishFrom(strings, "seatviewer.seatsFree", { count })).toBe(
+        "{{count}} seats free",
+      );
+    }
   });
 
   it("falls back to the unsuffixed entry when a key has no plural variants", () => {
@@ -112,18 +102,21 @@ describe("resolveEnglishPairFrom", () => {
     expect(pair(21, "ru").lookup).toBe("{{count}} seat free");
   });
 
+  // A miss means the user is shown English, and "0 seat free" is not English.
   it("keeps the fallback on English rules whatever the locale", () => {
-    // Was: one locale-selected string served as both key and fallback, so a
-    // missing fr row rendered "0 seat free" instead of "0 seats free".
     expect(pair(0, "fr").fallback).toBe("{{count}} seats free");
     expect(pair(21, "ru").fallback).toBe("{{count}} seats free");
     expect(pair(1, "fr").fallback).toBe("{{count}} seat free");
   });
 
   it("returns the same string twice when no locale is given", () => {
-    const { lookup, fallback } = pair(0);
-    expect(lookup).toBe(fallback);
-    expect(lookup).toBe("{{count}} seats free");
+    expect(pair(0)).toEqual({
+      lookup: "{{count}} seats free",
+      fallback: "{{count}} seats free",
+    });
+    expect(
+      resolveEnglishPairFrom(strings, "viewer.legend.title", undefined, "fr"),
+    ).toEqual({ lookup: "Legend", fallback: "Legend" });
   });
 
   it("treats a malformed locale as English rather than throwing", () => {
@@ -133,10 +126,5 @@ describe("resolveEnglishPairFrom", () => {
   it("falls back to _other for a category English has no form for", () => {
     // ru selects "few" at 2; only _one/_other exist, so the plural is the ceiling.
     expect(pair(2, "ru").lookup).toBe("{{count}} seats free");
-  });
-
-  it("handles a key with no plural variants", () => {
-    const p = resolveEnglishPairFrom(strings, "viewer.legend.title", undefined, "fr");
-    expect(p).toEqual({ lookup: "Legend", fallback: "Legend" });
   });
 });

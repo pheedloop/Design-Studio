@@ -10,16 +10,12 @@ describe("canonicalLocale", () => {
     expect(canonicalLocale(undefined)).toBeUndefined();
   });
 
+  // Every Intl constructor throws RangeError on a bad tag, and the tag is a host
+  // prop, so an unguarded one takes down the canvas rather than one label.
   it("drops a malformed tag instead of throwing", () => {
-    // Was: an underscored tag reached Intl and threw RangeError mid-render,
-    // taking down the canvas rather than one label.
     expect(canonicalLocale("fr_CA")).toBeUndefined();
     expect(canonicalLocale("")).toBeUndefined();
-  });
-
-  it("keeps the guarded tag usable by the Intl helpers", () => {
-    const locale = canonicalLocale("fr_CA");
-    expect(formatNumber(1.5, locale, 1)).toBeTypeOf("string");
-    expect(formatList(["a", "b"], locale)).toBeTypeOf("string");
+    expect(() => formatNumber(1.5, canonicalLocale("fr_CA"), 1)).not.toThrow();
+    expect(() => formatList(["a", "b"], canonicalLocale("fr_CA"))).not.toThrow();
   });
 });

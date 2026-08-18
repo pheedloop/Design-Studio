@@ -15,9 +15,8 @@ describe("ICON_LABEL", () => {
   });
 
   it("labels from editor.icon.* only", () => {
-    // Was: PiForkKnife borrowed editor.iconCategory.foodDrink and PiArrowRight
-    // borrowed editor.tool.arrow, so rewording a category or a tool silently
-    // reworded an icon name.
+    // Borrowing a key from another family couples an icon name to a category or
+    // tool name, so rewording one silently rewords the other.
     for (const [id, key] of Object.entries(ICON_LABEL)) {
       expect(key, id).toMatch(/^editor\.icon\./);
     }
