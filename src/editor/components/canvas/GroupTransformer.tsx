@@ -7,10 +7,16 @@ import { getElementBounds } from "../../utils/bounds";
 interface GroupTransformerProps {
   groupId: string;
   memberElements: FloorPlanElement[];
-  onGroupTransformEnd: (updates: Array<{ id: string; geometry: Partial<Geometry> }>) => void;
+  onGroupTransformEnd: (
+    updates: Array<{ id: string; geometry: Partial<Geometry> }>,
+  ) => void;
 }
 
-export function GroupTransformer({ groupId, memberElements, onGroupTransformEnd }: GroupTransformerProps) {
+export function GroupTransformer({
+  groupId,
+  memberElements,
+  onGroupTransformEnd,
+}: GroupTransformerProps) {
   const trRef = useRef<Konva.Transformer>(null);
   const rectRef = useRef<Konva.Rect>(null);
   const origDataRef = useRef<{
@@ -19,7 +25,10 @@ export function GroupTransformer({ groupId, memberElements, onGroupTransformEnd 
   } | null>(null);
 
   const bounds = useMemo(() => {
-    let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+    let minX = Infinity,
+      minY = Infinity,
+      maxX = -Infinity,
+      maxY = -Infinity;
     for (const el of memberElements) {
       const b = getElementBounds(el);
       minX = Math.min(minX, b.left);
@@ -48,7 +57,7 @@ export function GroupTransformer({ groupId, memberElements, onGroupTransformEnd 
   const handleTransformStart = useCallback(() => {
     origDataRef.current = {
       bounds: { ...bounds },
-      geometries: new Map(memberElements.map((el) => [el.id, el.geometry])),
+      geometries: new Map(memberElements.map(el => [el.id, el.geometry])),
     };
   }, [bounds, memberElements]);
 
@@ -72,9 +81,16 @@ export function GroupTransformer({ groupId, memberElements, onGroupTransformEnd 
     const scaleX = newWidth / orig.width;
     const scaleY = newHeight / orig.height;
 
-    const updates = memberElements.map((el) => ({
+    const updates = memberElements.map(el => ({
       id: el.id,
-      geometry: scaleGeometry(origGeoms.get(el.id)!, orig, newX, newY, scaleX, scaleY),
+      geometry: scaleGeometry(
+        origGeoms.get(el.id)!,
+        orig,
+        newX,
+        newY,
+        scaleX,
+        scaleY,
+      ),
     }));
 
     onGroupTransformEnd(updates);
@@ -103,7 +119,8 @@ export function GroupTransformer({ groupId, memberElements, onGroupTransformEnd 
         anchorSize={8}
         anchorCornerRadius={2}
         boundBoxFunc={(_oldBox, newBox) => {
-          if (Math.abs(newBox.width) < 10 || Math.abs(newBox.height) < 10) return _oldBox;
+          if (Math.abs(newBox.width) < 10 || Math.abs(newBox.height) < 10)
+            return _oldBox;
           return newBox;
         }}
       />
@@ -123,37 +140,55 @@ function scaleGeometry(
   const gy = newY + (geo.y - orig.y) * scaleY;
 
   if (geo.shape === "rect") {
-    return { x: gx, y: gy, width: geo.width * scaleX, height: geo.height * scaleY };
+    return {
+      x: gx,
+      y: gy,
+      width: geo.width * scaleX,
+      height: geo.height * scaleY,
+    };
   }
   if (geo.shape === "ellipse") {
-    return { x: gx, y: gy, radiusX: geo.radiusX * scaleX, radiusY: geo.radiusY * scaleY };
+    return {
+      x: gx,
+      y: gy,
+      radiusX: geo.radiusX * scaleX,
+      radiusY: geo.radiusY * scaleY,
+    };
   }
   if (geo.shape === "circle") {
     return { x: gx, y: gy, radius: geo.radius * Math.min(scaleX, scaleY) };
   }
   if (geo.shape === "line" || geo.shape === "arrow") {
     return {
-      x: gx, y: gy,
+      x: gx,
+      y: gy,
       points: [
-        geo.points[0] * scaleX, geo.points[1] * scaleY,
-        geo.points[2] * scaleX, geo.points[3] * scaleY,
+        geo.points[0] * scaleX,
+        geo.points[1] * scaleY,
+        geo.points[2] * scaleX,
+        geo.points[3] * scaleY,
       ] as [number, number, number, number],
     };
   }
   if (geo.shape === "arc") {
     return {
-      x: gx, y: gy,
+      x: gx,
+      y: gy,
       points: [
-        geo.points[0] * scaleX, geo.points[1] * scaleY,
-        geo.points[2] * scaleX, geo.points[3] * scaleY,
-        geo.points[4] * scaleX, geo.points[5] * scaleY,
+        geo.points[0] * scaleX,
+        geo.points[1] * scaleY,
+        geo.points[2] * scaleX,
+        geo.points[3] * scaleY,
+        geo.points[4] * scaleX,
+        geo.points[5] * scaleY,
       ] as [number, number, number, number, number, number],
     };
   }
   if (geo.shape === "polygon") {
     return {
-      x: gx, y: gy,
-      points: geo.points.map((v, i) => i % 2 === 0 ? v * scaleX : v * scaleY),
+      x: gx,
+      y: gy,
+      points: geo.points.map((v, i) => (i % 2 === 0 ? v * scaleX : v * scaleY)),
     };
   }
   return { x: gx, y: gy };

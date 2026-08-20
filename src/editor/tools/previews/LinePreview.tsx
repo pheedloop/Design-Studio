@@ -18,9 +18,6 @@ export function LinePreview({ state }: LinePreviewProps) {
   if (!state) return null;
 
   return (
-    <Line
-      points={[state.x1, state.y1, state.x2, state.y2]}
-      {...previewStyle}
-    />
+    <Line points={[state.x1, state.y1, state.x2, state.y2]} {...previewStyle} />
   );
 }

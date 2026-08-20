@@ -66,9 +66,7 @@ export function CalibrationPreview({
 
   // Both points placed (confirming step): solid line with distance label
   if (p2) {
-    const dist = Math.round(
-      Math.sqrt((p2.x - p1.x) ** 2 + (p2.y - p1.y) ** 2),
-    );
+    const dist = Math.round(Math.sqrt((p2.x - p1.x) ** 2 + (p2.y - p1.y) ** 2));
     return (
       <CalibrationLine
         p1={p1}
@@ -133,7 +131,7 @@ function CalibrationLine({
         points={[p1.x, p1.y, p2.x, p2.y]}
         stroke={LINE_COLOR}
         strokeWidth={2 * inverseScale}
-        dash={dashed ? LINE_DASH.map((d) => d * inverseScale) : undefined}
+        dash={dashed ? LINE_DASH.map(d => d * inverseScale) : undefined}
         opacity={opacity}
         listening={false}
       />
@@ -142,7 +140,7 @@ function CalibrationLine({
       {label && (
         <>
           <Rect
-            x={midX - (label.length * 4 * inverseScale)}
+            x={midX - label.length * 4 * inverseScale}
             y={midY - 10 * inverseScale}
             width={label.length * 8 * inverseScale}
             height={18 * inverseScale}
@@ -152,7 +150,7 @@ function CalibrationLine({
             listening={false}
           />
           <Text
-            x={midX - (label.length * 4 * inverseScale)}
+            x={midX - label.length * 4 * inverseScale}
             y={midY - 7 * inverseScale}
             width={label.length * 8 * inverseScale}
             text={label}

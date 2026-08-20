@@ -4,7 +4,15 @@ import { Rect, Text } from "react-konva";
 
 interface LabelWithBackgroundProps {
   text: string;
-  labelPos: { x: number; y: number; width: number; height: number; align: string; verticalAlign: string; padding: number };
+  labelPos: {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+    align: string;
+    verticalAlign: string;
+    padding: number;
+  };
   fontSize: number;
   fill: string;
   fontStyle: string;

@@ -40,19 +40,25 @@ function cta(
   } = {},
 ) {
   const selected = over.selected ?? [];
-  return assignCta({
-    openTable: over.openTable === undefined ? table() : over.openTable,
-    mode,
-    assignableCodes: over.assignableCodes ?? [],
-    selectedCodes: new Set(selected.map((s) => s.code)),
-    ticketByCode: new Map(selected.map((s) => [s.code, s])),
-    tableNameByCode: new Map(over.tableNames ?? []),
-  }, t);
+  return assignCta(
+    {
+      openTable: over.openTable === undefined ? table() : over.openTable,
+      mode,
+      assignableCodes: over.assignableCodes ?? [],
+      selectedCodes: new Set(selected.map(s => s.code)),
+      ticketByCode: new Map(selected.map(s => [s.code, s])),
+      tableNameByCode: new Map(over.tableNames ?? []),
+    },
+    t,
+  );
 }
 
 describe("table-level blocks (both modes)", () => {
   it("is inert with no table open", () => {
-    expect(cta("admin", { openTable: null })).toEqual({ label: "Assign", disabled: true });
+    expect(cta("admin", { openTable: null })).toEqual({
+      label: "Assign",
+      disabled: true,
+    });
   });
 
   it("explains a locked table", () => {
@@ -63,7 +69,9 @@ describe("table-level blocks (both modes)", () => {
   });
 
   it("explains a full table", () => {
-    const r = cta("admin", { openTable: table({ seatCount: 4, occupancy: 4 }) });
+    const r = cta("admin", {
+      openTable: table({ seatCount: 4, occupancy: 4 }),
+    });
     expect(r.label).toBe("Table full");
     expect(r.hint).toBe("No seats left at this table.");
   });
@@ -71,8 +79,15 @@ describe("table-level blocks (both modes)", () => {
 
 describe("admin", () => {
   it("counts the assignable selection", () => {
-    const three = [ticket({ code: "a" }), ticket({ code: "b" }), ticket({ code: "c" })];
-    const r = cta("admin", { assignableCodes: ["a", "b", "c"], selected: three });
+    const three = [
+      ticket({ code: "a" }),
+      ticket({ code: "b" }),
+      ticket({ code: "c" }),
+    ];
+    const r = cta("admin", {
+      assignableCodes: ["a", "b", "c"],
+      selected: three,
+    });
     expect(r).toEqual({
       label: "Assign 3 ticket holders",
       disabled: false,
@@ -90,12 +105,14 @@ describe("admin", () => {
   it("warns that rule-mismatched picks get seated anyway, with the right plural", () => {
     const wrong = (code: string) => ticket({ code, ticketCode: "GA" });
     const three = [ticket({ code: "a" }), wrong("b"), wrong("c")];
-    expect(cta("admin", { assignableCodes: ["a", "b"], selected: three }).hint).toBe(
+    expect(
+      cta("admin", { assignableCodes: ["a", "b"], selected: three }).hint,
+    ).toBe(
       "1 of 2 doesn’t meet this table’s rules — they’ll be seated anyway.",
     );
-    expect(cta("admin", { assignableCodes: ["a", "b", "c"], selected: three }).hint).toBe(
-      "2 of 3 don’t meet this table’s rules — they’ll be seated anyway.",
-    );
+    expect(
+      cta("admin", { assignableCodes: ["a", "b", "c"], selected: three }).hint,
+    ).toBe("2 of 3 don’t meet this table’s rules — they’ll be seated anyway.");
   });
 
   it("asks for a selection when nothing is assignable", () => {
@@ -103,7 +120,9 @@ describe("admin", () => {
     expect(cta("admin").hint).toBeUndefined();
 
     const r = cta("admin", { selected: [ticket({ tableCode: "T9" })] });
-    expect(r.hint).toBe("Everyone selected is already seated. Clear a seat to move them.");
+    expect(r.hint).toBe(
+      "Everyone selected is already seated. Clear a seat to move them.",
+    );
   });
 });
 
@@ -116,7 +135,10 @@ describe("attendee", () => {
 
   it("names the table an already-seated ticket is at", () => {
     const seated = ticket({ tableCode: "T9" });
-    const r = cta("attendee", { selected: [seated], tableNames: [["T9", "Head Table"]] });
+    const r = cta("attendee", {
+      selected: [seated],
+      tableNames: [["T9", "Head Table"]],
+    });
     expect(r.label).toBe("Ticket already seated");
     expect(r.hint).toBe("Ada is at Head Table. Clear it to move.");
   });

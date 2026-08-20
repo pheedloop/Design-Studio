@@ -45,8 +45,12 @@ describe("defaultTranslate — the no-host-translator path", () => {
 
   it("selects and interpolates the plural variant", () => {
     const { defaultTranslate } = surface();
-    expect(defaultTranslate("seatviewer.seatsFree", { count: 1 })).toBe("1 seat free");
-    expect(defaultTranslate("seatviewer.seatsFree", { count: 4 })).toBe("4 seats free");
+    expect(defaultTranslate("seatviewer.seatsFree", { count: 1 })).toBe(
+      "1 seat free",
+    );
+    expect(defaultTranslate("seatviewer.seatsFree", { count: 4 })).toBe(
+      "4 seats free",
+    );
   });
 
   it("never returns empty for an unknown key", () => {

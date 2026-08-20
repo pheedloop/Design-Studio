@@ -6,34 +6,35 @@
 
 /** Anything rendered from more than one surface, or it duplicates. */
 export const COMMON = {
-  "area": "{{value}} sq {{unit}}",
-  "legend": "Legend",
-  "measurement": "{{value}} {{unit}}",
+  area: "{{value}} sq {{unit}}",
+  legend: "Legend",
+  measurement: "{{value}} {{unit}}",
   "type.booth": "Booth",
   "type.meetingRoom": "Meeting Room",
   "unit.ft": "ft",
   "unit.m": "m",
   "unit.px": "px",
-  "unlabeled": "Unlabeled",
-  "walkingTime": "~{{count}} min",
-  "walkingTimeUnderMinute": "< 1 min",
+  unlabeled: "Unlabeled",
+  walkingTime: "~{{count}} min",
+  walkingTimeUnderMinute: "< 1 min",
 } as const;
 
 export const VIEWER = {
   "booth.noExhibitor": "No exhibitor assigned",
   "booth.reserved": "Reserved",
   "booth.unoccupied": "Unoccupied",
-  "boothLabel": "Booth {{code}}",
+  boothLabel: "Booth {{code}}",
   "directions.from": "From",
   "directions.fromPlaceholder": "Where are you?",
-  "directions.noRoute": "No route available — the walkable areas may not be fully connected.",
+  "directions.noRoute":
+    "No route available — the walkable areas may not be fully connected.",
   "directions.sameLocation": "You’re already there!",
   "directions.swap": "Swap start and end",
   "directions.title": "Directions",
   "directions.to": "To",
   "directions.toPlaceholder": "Where do you want to go?",
-  "getDirections": "Get directions to here",
-  "labelWithCount": "{{label}} ({{count}})",
+  getDirections: "Get directions to here",
+  labelWithCount: "{{label}} ({{count}})",
   "search.boothsOnly": "Search booths",
   "search.empty": "Search",
   "search.noResults": "No results found",
@@ -49,12 +50,13 @@ export const VIEWER = {
   "tab.sessions": "Sessions",
   "type.sessionArea": "Session Area",
   "type.sessionShort": "Session",
-  "unnamedRoom": "Unnamed Room",
-  "unnamedSession": "Unnamed Session",
+  unnamedRoom: "Unnamed Room",
+  unnamedSession: "Unnamed Session",
 } as const;
 
 export const SEATVIEWER = {
-  "assign.allSeated": "Everyone selected is already seated. Clear a seat to move them.",
+  "assign.allSeated":
+    "Everyone selected is already seated. Clear a seat to move them.",
   "assign.alreadySeated": "Ticket already seated",
   "assign.alreadySeatedHint": "{{name}} is at {{table}}. Clear it to move.",
   "assign.assignNamed": "Assign {{name}} here",
@@ -68,8 +70,10 @@ export const SEATVIEWER = {
   "assign.selectTicketHint": "Choose one of your tickets above.",
   "assign.selectedCount_one": "Assign {{count}} ticket holder",
   "assign.selectedCount_other": "Assign {{count}} ticket holders",
-  "assign.someFlagged_one": "{{count}} of {{total}} doesn’t meet this table’s rules — they’ll be seated anyway.",
-  "assign.someFlagged_other": "{{count}} of {{total}} don’t meet this table’s rules — they’ll be seated anyway.",
+  "assign.someFlagged_one":
+    "{{count}} of {{total}} doesn’t meet this table’s rules — they’ll be seated anyway.",
+  "assign.someFlagged_other":
+    "{{count}} of {{total}} don’t meet this table’s rules — they’ll be seated anyway.",
   "assign.tableFull": "Table full",
   "assign.tableFullHint": "No seats left at this table.",
   "assign.tableLocked": "Table locked",
@@ -81,7 +85,7 @@ export const SEATVIEWER = {
   "legend.half": "Filling (10–50%)",
   "legend.low": "Almost full (<10%)",
   "legend.title": "Availability",
-  "loading": "Loading…",
+  loading: "Loading…",
   "table.assigning": "Assigning…",
   "table.close": "Close",
   "table.details": "{{name}} details",
@@ -135,13 +139,17 @@ export const EDITOR = {
   "background.canvasDimensions": "Canvas: {{canvasWidth}} × {{canvasHeight}}px",
   "background.chooseDifferent": "Choose different file",
   "background.chooseFile": "Click to select a file",
-  "background.dimensions": "Image: {{imageWidth}} × {{imageHeight}}px · Canvas: {{canvasWidth}} × {{canvasHeight}}px",
+  "background.dimensions":
+    "Image: {{imageWidth}} × {{imageHeight}}px · Canvas: {{canvasWidth}} × {{canvasHeight}}px",
   "background.dxfUnits": "Scale detected from DXF units ({{units}}).",
   "background.fileTypes": "PNG, JPG, SVG, AutoCAD DXF",
   "background.fitToCanvas": "Fit to canvas",
-  "background.fitToCanvasHint": "Scale the file to match the current canvas size",
-  "background.largeSelection": "Large selection ({{size}} MB) — may slow saving.",
-  "background.layerHint": "Set the background image and color from the panel on the right.",
+  "background.fitToCanvasHint":
+    "Scale the file to match the current canvas size",
+  "background.largeSelection":
+    "Large selection ({{size}} MB) — may slow saving.",
+  "background.layerHint":
+    "Set the background image and color from the panel on the right.",
   "background.layerTitle": "Background Layer",
   "background.layersToImport": "Layers to import",
   "background.preview": "Preview",
@@ -151,14 +159,18 @@ export const EDITOR = {
   "background.resizeToFileHint": "Match the floor plan dimensions to the file",
   "background.skipped_one": "{{count}} unsupported entity was skipped.",
   "background.skipped_other": "{{count}} unsupported entities were skipped.",
-  "background.tooLarge": "Selection is too large ({{size}} MB). Deselect some layers.",
+  "background.tooLarge":
+    "Selection is too large ({{size}} MB). Deselect some layers.",
   "background.upload": "Upload",
   "background.uploadCta": "Upload Background",
   "background.uploading": "Uploading…",
   "calibration.equals": "= {{measurement}}",
-  "calibration.prompt": "You selected two points {{distance}} apart. Enter the real-world distance between them.",
-  "confirm.clearWalkable": "Clear all walkable areas? This cannot be undone except via undo.",
-  "confirm.gridResolution": "Changing grid resolution will clear your current walkable areas. Continue?",
+  "calibration.prompt":
+    "You selected two points {{distance}} apart. Enter the real-world distance between them.",
+  "confirm.clearWalkable":
+    "Clear all walkable areas? This cannot be undone except via undo.",
+  "confirm.gridResolution":
+    "Changing grid resolution will clear your current walkable areas. Continue?",
   "contextMenu.bringForward": "Bring Forward",
   "contextMenu.bringToFront": "Bring to Front",
   "contextMenu.sendBackward": "Send Backward",
@@ -172,7 +184,8 @@ export const EDITOR = {
   "dialog.arrangeGrid": "Arrange as Grid",
   "dialog.canvasSize": "Canvas Size",
   "dialog.elementDefaults": "Element Defaults",
-  "dialog.elementDefaultsHint": "Style applied to new elements when placed on the canvas.",
+  "dialog.elementDefaultsHint":
+    "Style applied to new elements when placed on the canvas.",
   "dialog.gridSettings": "Grid Settings",
   "dialog.setScale": "Set Scale",
   "distribute.horizontal": "Distribute horizontally",
@@ -230,19 +243,32 @@ export const EDITOR = {
   "help.category.pathingTools": "Pathing Tools (Pathing layer active)",
   "help.category.selection": "Selection",
   "help.category.tools": "Tools",
-  "help.drawing.arc": "Arc (C) — click to set the start point, click to set the end point, then move the mouse to bend the curve and click to finalize",
-  "help.drawing.arrow": "Arrow (A) — click and drag to draw an arrow. Select it to change the arrowhead style and size in the properties panel",
-  "help.drawing.click": "Click an element to select it — resize, rotate, or edit its properties in the right panel",
-  "help.drawing.handles": "Select any arrow, arc, or polygon to see its control handles for reshaping",
-  "help.drawing.optionsBar": "Use the options bar above the canvas to change fill, stroke, and stroke width",
-  "help.drawing.polygon": "Polygon (P) — click to place vertices. Close the shape by clicking near the first vertex, pressing Enter, or double-clicking. Minimum 3 vertices. Escape cancels",
-  "help.drawing.select": "Select a tool from the Design tab, then click and drag on the canvas to draw",
-  "help.drawing.snap": "Hold Shift while drawing lines, arrows, or polygon edges to snap to 45° angles",
-  "help.grouping.enter": "Double-click a group to enter editing mode and select individual elements inside it",
-  "help.grouping.exit": "Press Escape to exit group editing, or use the Exit Group button in the options bar",
-  "help.grouping.group": "Select two or more elements and press {{mod}}+G, or use the options bar, to group them",
-  "help.grouping.selectWhole": "Clicking any member of a group selects the whole group — move or resize all members together",
-  "help.grouping.ungroup": "Press {{mod}}+Shift+G, or use Ungroup in the options bar or right-click menu, to dissolve a group",
+  "help.drawing.arc":
+    "Arc (C) — click to set the start point, click to set the end point, then move the mouse to bend the curve and click to finalize",
+  "help.drawing.arrow":
+    "Arrow (A) — click and drag to draw an arrow. Select it to change the arrowhead style and size in the properties panel",
+  "help.drawing.click":
+    "Click an element to select it — resize, rotate, or edit its properties in the right panel",
+  "help.drawing.handles":
+    "Select any arrow, arc, or polygon to see its control handles for reshaping",
+  "help.drawing.optionsBar":
+    "Use the options bar above the canvas to change fill, stroke, and stroke width",
+  "help.drawing.polygon":
+    "Polygon (P) — click to place vertices. Close the shape by clicking near the first vertex, pressing Enter, or double-clicking. Minimum 3 vertices. Escape cancels",
+  "help.drawing.select":
+    "Select a tool from the Design tab, then click and drag on the canvas to draw",
+  "help.drawing.snap":
+    "Hold Shift while drawing lines, arrows, or polygon edges to snap to 45° angles",
+  "help.grouping.enter":
+    "Double-click a group to enter editing mode and select individual elements inside it",
+  "help.grouping.exit":
+    "Press Escape to exit group editing, or use the Exit Group button in the options bar",
+  "help.grouping.group":
+    "Select two or more elements and press {{mod}}+G, or use the options bar, to group them",
+  "help.grouping.selectWhole":
+    "Clicking any member of a group selects the whole group — move or resize all members together",
+  "help.grouping.ungroup":
+    "Press {{mod}}+Shift+G, or use Ungroup in the options bar or right-click menu, to dissolve a group",
   "help.keys.click": "Click",
   "help.keys.clickGroupMember": "Click a group member",
   "help.keys.doubleClick": "Double-click",
@@ -258,26 +284,42 @@ export const EDITOR = {
   "help.keys.shiftPolygon": "Shift + polygon",
   "help.keys.shiftRotate": "Shift + rotate",
   "help.keys.spaceDrag": "Space + drag",
-  "help.layers.active": "Click a layer to make it active — new elements and placed records are added to the active layer",
-  "help.layers.four": "There are four layers: Background, Content, Pathing, and Markup",
-  "help.layers.open": "Click the layer icon at the top right of the canvas to open the layer panel",
+  "help.layers.active":
+    "Click a layer to make it active — new elements and placed records are added to the active layer",
+  "help.layers.four":
+    "There are four layers: Background, Content, Pathing, and Markup",
+  "help.layers.open":
+    "Click the layer icon at the top right of the canvas to open the layer panel",
   "help.layers.selectable": "Only elements on the active layer are selectable",
   "help.layers.visibility": "Toggle the eye icon to show or hide a layer",
   "help.menusIntro": "Quick reference for the top menu bar.",
-  "help.modes.design": "Design — drawing tools for building the floor plan shell: walls, aisles, labels, icons, and annotations",
-  "help.modes.placement": "Placement — place PheedLoop records (booths, session locations, meeting rooms) onto the map",
+  "help.modes.design":
+    "Design — drawing tools for building the floor plan shell: walls, aisles, labels, icons, and annotations",
+  "help.modes.placement":
+    "Placement — place PheedLoop records (booths, session locations, meeting rooms) onto the map",
   "help.modes.tabs": "The left sidebar has two tabs: Design and Placement",
-  "help.placing.dimmed": "Placed records are dimmed in the list; unplaced records show at full opacity and are ready to drag",
-  "help.placing.drag": "Drag a record from the list onto the canvas to place it as a new shape",
-  "help.placing.drop": "Drop a record onto an existing shape to assign it — the shape becomes a linked booth, session, or meeting room",
-  "help.placing.shape": "Use the Rectangle / Circle selector in each section to choose the shape new placements will use",
-  "help.placing.switch": "Switch to the Placement tab to see your booths, session locations, and meeting rooms",
-  "help.scale.displayUnits": "Change display units (ft / m) at any time in the status bar without re-calibrating",
-  "help.scale.measure": "Use the Measure tool (M) to measure distances — click and drag between two points",
-  "help.scale.rulers": "Turn on View > Show Rulers to see rulers along the canvas edges — they show real-world units once calibrated",
-  "help.scale.setScale": "Use Tools > Set Scale to calibrate your floor plan — click two points and enter the real-world distance between them",
-  "help.scale.snap": "Hold Shift while placing the second point to snap to horizontal or vertical",
-  "help.scale.units": "Supports feet, inches, and meters — inches convert to feet automatically",
+  "help.placing.dimmed":
+    "Placed records are dimmed in the list; unplaced records show at full opacity and are ready to drag",
+  "help.placing.drag":
+    "Drag a record from the list onto the canvas to place it as a new shape",
+  "help.placing.drop":
+    "Drop a record onto an existing shape to assign it — the shape becomes a linked booth, session, or meeting room",
+  "help.placing.shape":
+    "Use the Rectangle / Circle selector in each section to choose the shape new placements will use",
+  "help.placing.switch":
+    "Switch to the Placement tab to see your booths, session locations, and meeting rooms",
+  "help.scale.displayUnits":
+    "Change display units (ft / m) at any time in the status bar without re-calibrating",
+  "help.scale.measure":
+    "Use the Measure tool (M) to measure distances — click and drag between two points",
+  "help.scale.rulers":
+    "Turn on View > Show Rulers to see rulers along the canvas edges — they show real-world units once calibrated",
+  "help.scale.setScale":
+    "Use Tools > Set Scale to calibrate your floor plan — click two points and enter the real-world distance between them",
+  "help.scale.snap":
+    "Hold Shift while placing the second point to snap to horizontal or vertical",
+  "help.scale.units":
+    "Supports feet, inches, and meters — inches convert to feet automatically",
   "help.section.drawing": "Drawing Tools (Design Mode)",
   "help.section.grouping": "Grouping",
   "help.section.layers": "Layers",
@@ -313,7 +355,8 @@ export const EDITOR = {
   "help.shortcut.selectElement": "Select an element",
   "help.shortcut.selectGroup": "Select the entire group",
   "help.shortcut.selectPan": "Select / pan",
-  "help.shortcut.snapCalibrate": "Snap the calibration line to horizontal, vertical, or 45°",
+  "help.shortcut.snapCalibrate":
+    "Snap the calibration line to horizontal, vertical, or 45°",
   "help.shortcut.snapLine": "Snap to 45° angles",
   "help.shortcut.snapMeasure": "Snap to horizontal, vertical, or 45°",
   "help.shortcut.snapPolygon": "Snap edges to 45° angles",
@@ -325,12 +368,18 @@ export const EDITOR = {
   "help.tab.shortcuts": "Shortcuts",
   "help.title": "Help",
   "help.wayfinding.adjust": "Adjust cell size and opacity in the options bar",
-  "help.wayfinding.autoAisles": "Use Auto-mark aisles to quickly mark all open space as walkable",
-  "help.wayfinding.autoObstacles": "Use Auto-mark obstacles to block booth footprints",
-  "help.wayfinding.cells": "Green cells are walkable and empty cells are impassable. Unset areas default to impassable.",
-  "help.wayfinding.routes": "When the map is calibrated, wayfinding routes show distance and estimated walking time",
-  "help.wayfinding.switch": "Switch to the Pathing layer to define walkable areas for attendee wayfinding",
-  "help.wayfinding.tools": "The sidebar swaps to pathing tools: Paint Walkable (W), Erase (E), and Rectangle Fill (R)",
+  "help.wayfinding.autoAisles":
+    "Use Auto-mark aisles to quickly mark all open space as walkable",
+  "help.wayfinding.autoObstacles":
+    "Use Auto-mark obstacles to block booth footprints",
+  "help.wayfinding.cells":
+    "Green cells are walkable and empty cells are impassable. Unset areas default to impassable.",
+  "help.wayfinding.routes":
+    "When the map is calibrated, wayfinding routes show distance and estimated walking time",
+  "help.wayfinding.switch":
+    "Switch to the Pathing layer to define walkable areas for attendee wayfinding",
+  "help.wayfinding.tools":
+    "The sidebar swaps to pathing tools: Paint Walkable (W), Erase (E), and Rectangle Fill (R)",
   "icon.airplaneTakeoff": "Airplane",
   "icon.alien": "Alien",
   "icon.arrow": "Arrow",
@@ -511,21 +560,28 @@ export const EDITOR = {
   "placement.status": "Status",
   "placement.statusAll": "All",
   "placement.unplaced": "Unplaced",
-  "premiumFeature": "Premium feature",
+  premiumFeature: "Premium feature",
   "properties.noSelection": "No Items Selected",
   "properties.saveDefaultStyle": "Save as Default Style",
   "properties.unlinked": "Unlinked",
-  "properties.unlinkedHint": "Switch to Placement Mode and drag a record onto this shape to link it.",
+  "properties.unlinkedHint":
+    "Switch to Placement Mode and drag a record onto this shape to link it.",
   "resize.anchor": "Resize from",
-  "resize.anchorHint": "Where existing content stays. New space is added on the opposite side — pick bottom right to add margin at the top left, or center for even margins all around.",
-  "resize.clipped_one": "{{count}} element will be outside the new canvas bounds.",
-  "resize.clipped_other": "{{count}} elements will be outside the new canvas bounds.",
+  "resize.anchorHint":
+    "Where existing content stays. New space is added on the opposite side — pick bottom right to add margin at the top left, or center for even margins all around.",
+  "resize.clipped_one":
+    "{{count}} element will be outside the new canvas bounds.",
+  "resize.clipped_other":
+    "{{count}} elements will be outside the new canvas bounds.",
   "resize.cropCta": "Crop / resize on canvas…",
-  "resize.cropHint": "Draw a box to keep — the canvas resizes to it and all content stays aligned.",
+  "resize.cropHint":
+    "Draw a box to keep — the canvas resizes to it and all content stays aligned.",
   "resize.cropSection": "Or crop visually",
   "resize.keepSize": "Keep size",
-  "resize.preserveHint": "Everything keeps its current size; the canvas grows or shrinks around it.",
-  "resize.scaleHint": "Everything (background, elements, scale) resizes together — aspect locked so a floor plan stays true to size.",
+  "resize.preserveHint":
+    "Everything keeps its current size; the canvas grows or shrinks around it.",
+  "resize.scaleHint":
+    "Everything (background, elements, scale) resizes together — aspect locked so a floor plan stays true to size.",
   "resize.scaleToFit": "Scale to fit",
   "selection.count_one": "{{count}} element selected",
   "selection.count_other": "{{count}} elements selected",
@@ -578,11 +634,7 @@ export const EDITOR = {
 export const BADGEEDITOR = {} as const;
 
 export type Namespace =
-  | "common"
-  | "viewer"
-  | "seatviewer"
-  | "editor"
-  | "badgeeditor";
+  "common" | "viewer" | "seatviewer" | "editor" | "badgeeditor";
 
 export function flattenNamespaces(
   groups: Record<string, Readonly<Record<string, string>>>,

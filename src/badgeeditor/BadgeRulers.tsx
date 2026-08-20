@@ -202,7 +202,8 @@ export function BadgeRulers({
 
   useEffect(() => {
     if (!visible) return;
-    if (hRef.current) drawHorizontal(hRef.current, scale, position.x, ppi, unit);
+    if (hRef.current)
+      drawHorizontal(hRef.current, scale, position.x, ppi, unit);
     if (vRef.current) drawVertical(vRef.current, scale, position.y, ppi, unit);
   }, [
     visible,

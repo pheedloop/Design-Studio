@@ -24,7 +24,8 @@ export function SeatPlanViewer({
 }: SeatPlanViewerProps) {
   // Once here, so the canvas, popover and table-name lookup agree. See MapViewer.
   const translatedData = useMemo(
-    () => (translateContent ? translateFloorPlan(data, translateContent) : data),
+    () =>
+      translateContent ? translateFloorPlan(data, translateContent) : data,
     [data, translateContent],
   );
 
@@ -64,37 +65,46 @@ function SeatPlanViewerInner(
 
   const t = useT();
 
-  const [selectedCodes, setSelectedCodes] = useState<ReadonlySet<string>>(new Set());
+  const [selectedCodes, setSelectedCodes] = useState<ReadonlySet<string>>(
+    new Set(),
+  );
   const [openTableCode, setOpenTableCode] = useState<string | null>(null);
   const [assigning, setAssigning] = useState(false);
 
   const tableByCode = useMemo(
-    () => new Map(tables.map((t) => [t.tableCode, t])),
+    () => new Map(tables.map(t => [t.tableCode, t])),
     [tables],
   );
   const ticketByCode = useMemo(
-    () => new Map(tickets.map((t) => [t.code, t])),
+    () => new Map(tickets.map(t => [t.code, t])),
     [tickets],
   );
   const tableNameByCode = useMemo(() => {
     const m = new Map<string, string>();
     for (const el of data.elements) {
       if (el.type === "table" && el.properties.tableCode) {
-        m.set(el.properties.tableCode, el.properties.name || el.properties.tableCode);
+        m.set(
+          el.properties.tableCode,
+          el.properties.name || el.properties.tableCode,
+        );
       }
     }
     return m;
   }, [data.elements]);
 
-  const openTable = openTableCode ? tableByCode.get(openTableCode) ?? null : null;
+  const openTable = openTableCode
+    ? (tableByCode.get(openTableCode) ?? null)
+    : null;
 
   // Tables for which no currently-selected ticket is eligible → dimmed.
   const dimmedTableCodes = useMemo(() => {
     if (selectedCodes.size === 0) return null;
-    const selected = [...selectedCodes].map((c) => ticketByCode.get(c)).filter(Boolean);
+    const selected = [...selectedCodes]
+      .map(c => ticketByCode.get(c))
+      .filter(Boolean);
     const dimmed = new Set<string>();
     for (const t of tables) {
-      const anyEligible = selected.some((tk) => isEligible(tk!, t, mode));
+      const anyEligible = selected.some(tk => isEligible(tk!, t, mode));
       if (!anyEligible) dimmed.add(t.tableCode);
     }
     return dimmed;
@@ -110,7 +120,7 @@ function SeatPlanViewerInner(
 
   const toggleTicket = useCallback(
     (code: string) => {
-      setSelectedCodes((prev) => {
+      setSelectedCodes(prev => {
         const next = new Set(prev);
         if (mode === "attendee") {
           // single-select
@@ -129,7 +139,7 @@ function SeatPlanViewerInner(
 
   const handleTableClick = useCallback(
     (tableCode: string) => {
-      setOpenTableCode((prev) => {
+      setOpenTableCode(prev => {
         const next = prev === tableCode ? null : tableCode;
         if (next) onTableOpen?.(next);
         return next;
@@ -155,7 +165,7 @@ function SeatPlanViewerInner(
   // Selected tickets that are eligible for the open table.
   const assignableCodes = useMemo(() => {
     if (!openTable) return [];
-    return [...selectedCodes].filter((c) => {
+    return [...selectedCodes].filter(c => {
       const t = ticketByCode.get(c);
       return t && isEligible(t, openTable, mode);
     });
@@ -165,7 +175,12 @@ function SeatPlanViewerInner(
     if (!openTable || assignableCodes.length === 0) return;
     setAssigning(true);
     try {
-      await Promise.resolve(onAssign({ tableCode: openTable.tableCode, purchaseCodes: assignableCodes }));
+      await Promise.resolve(
+        onAssign({
+          tableCode: openTable.tableCode,
+          purchaseCodes: assignableCodes,
+        }),
+      );
       setSelectedCodes(new Set());
       closePopover();
     } finally {
@@ -182,22 +197,34 @@ function SeatPlanViewerInner(
 
   const handleClearTicket = useCallback(
     (ticket: { seatSelectionCode: number | null }) => {
-      if (ticket.seatSelectionCode != null) handleUnassign(ticket.seatSelectionCode);
+      if (ticket.seatSelectionCode != null)
+        handleUnassign(ticket.seatSelectionCode);
     },
     [handleUnassign],
   );
 
   const cta = useMemo(
     () =>
-      assignCta({
-        openTable,
-        mode,
-        assignableCodes,
-        selectedCodes,
-        ticketByCode,
-        tableNameByCode,
-      }, t),
-    [openTable, mode, assignableCodes, selectedCodes, ticketByCode, tableNameByCode, t],
+      assignCta(
+        {
+          openTable,
+          mode,
+          assignableCodes,
+          selectedCodes,
+          ticketByCode,
+          tableNameByCode,
+        },
+        t,
+      ),
+    [
+      openTable,
+      mode,
+      assignableCodes,
+      selectedCodes,
+      ticketByCode,
+      tableNameByCode,
+      t,
+    ],
   );
 
   return (
@@ -214,11 +241,11 @@ function SeatPlanViewerInner(
         onToggle={toggleTicket}
         openTable={openTable}
         searchTerm={searchTerm}
-        onSearchChange={(t) => onSearchChange?.(t)}
+        onSearchChange={t => onSearchChange?.(t)}
         filterOptions={filterOptions}
         activeFilterIds={activeFilterIds}
         onFilterToggle={onFilterToggle}
-        tableLabel={(code) => tableNameByCode.get(code)}
+        tableLabel={code => tableNameByCode.get(code)}
         onClearTicket={handleClearTicket}
         lockSeatSelectionPage={lockSeatSelectionPage}
         loading={ticketsLoading}
@@ -238,7 +265,9 @@ function SeatPlanViewerInner(
         {openTable && (
           <TableDetailPopover
             table={openTable}
-            tableName={tableNameByCode.get(openTable.tableCode) ?? openTable.tableCode}
+            tableName={
+              tableNameByCode.get(openTable.tableCode) ?? openTable.tableCode
+            }
             occupants={occupants}
             occupantsLoading={occupantsLoading}
             hideAttendeeDetails={hideAttendeeDetails}

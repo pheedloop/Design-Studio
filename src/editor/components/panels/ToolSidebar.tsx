@@ -52,7 +52,7 @@ const selectDef: ToolDef<ActiveTool> = {
   icon: <PiCursorFill size={16} />,
 };
 
-const toolDefs: ToolDef<ActiveTool>[] = TOOL_REGISTRY.map((t) => ({
+const toolDefs: ToolDef<ActiveTool>[] = TOOL_REGISTRY.map(t => ({
   id: t.id as ActiveTool,
   labelKey: t.labelKey,
   shortcut: t.shortcut,
@@ -137,7 +137,12 @@ function SidebarHeader({
   return (
     <div className="px-3 py-3 border-b border-gray-100 flex items-center gap-2 min-w-0">
       {isDirty && (
-        <span className="shrink-0 text-red-500 font-bold text-sm leading-none" title={t("editor.toolbar.unsavedChanges")}>*</span>
+        <span
+          className="shrink-0 text-red-500 font-bold text-sm leading-none"
+          title={t("editor.toolbar.unsavedChanges")}
+        >
+          *
+        </span>
       )}
       {!nameEditable ? (
         <span className="flex-1 text-base font-semibold text-gray-800 truncate">
@@ -147,9 +152,9 @@ function SidebarHeader({
         <input
           ref={inputRef}
           value={draft}
-          onChange={(e) => setDraft(e.target.value)}
+          onChange={e => setDraft(e.target.value)}
           onBlur={commit}
-          onKeyDown={(e) => {
+          onKeyDown={e => {
             if (e.key === "Enter") commit();
             if (e.key === "Escape") {
               setDraft(mapName);
@@ -182,7 +187,10 @@ function SidebarHeader({
       </IconButton>
       {objectsState !== "hidden" &&
         (objectsState === "locked" ? (
-          <span className="relative inline-flex shrink-0" title={t("editor.premiumFeature")}>
+          <span
+            className="relative inline-flex shrink-0"
+            title={t("editor.premiumFeature")}
+          >
             <IconButton size="sm" disabled>
               {placementIcon}
             </IconButton>
@@ -340,7 +348,7 @@ export function ToolSidebar({
           </div>
         </div>
         <div className="flex-1 overflow-y-auto py-1 px-1">
-          {pathingToolDefs.map((tool) => (
+          {pathingToolDefs.map(tool => (
             <ToolRow
               key={tool.id}
               tool={tool}
@@ -387,81 +395,92 @@ export function ToolSidebar({
 
   return (
     <>
-    <div className="flex flex-col w-64 shrink-0 bg-white border-r border-gray-200 overflow-hidden">
-      {/* Map name + mode switcher */}
-      <SidebarHeader
-        mapName={mapName}
-        onMapNameChange={onMapNameChange}
-        nameEditable={nameEditable}
-        editorMode={editorMode}
-        onEditorModeChange={onEditorModeChange}
-        isDirty={isDirty}
-        objectsState={features.objects}
-        placementIcon={placementIcon}
-      />
-
-      {/* Tab content */}
-      {editorMode === "design" ? (
-        <div className="flex-1 overflow-y-auto py-1 px-1">
-          <ToolRow
-            tool={handDef}
-            isActive={activeTool === "hand"}
-            onClick={() => onToolChange("hand")}
-          />
-          <ToolRow
-            tool={selectDef}
-            isActive={activeTool === "select"}
-            onClick={() => onToolChange("select")}
-          />
-          {features.drawingTools !== "hidden" &&
-            toolDefs
-              // The measure tool is meaningless without real-world scale, so it
-              // follows the scaleCalibration feature.
-              .filter(
-                (tool) =>
-                  !(tool.id === "measure" && features.scaleCalibration === "hidden"),
-              )
-              .map((tool) => {
-              const displayTool =
-                tool.id === "icon" && activeIconName
-                  ? (() => {
-                      const entry = getIconEntry(activeIconName);
-                      if (!entry) return tool;
-                      const ActiveIcon = entry.component;
-                      return { ...tool, icon: <ActiveIcon size={16} /> };
-                    })()
-                  : tool;
-
-              return (
-                <div key={tool.id} ref={tool.id === "icon" ? iconRowRef : null}>
-                  <ToolRow
-                    tool={displayTool}
-                    isActive={activeTool === tool.id}
-                    onClick={() => onToolChange(tool.id)}
-                    disabled={features.drawingTools === "locked"}
-                    locked={showTrophy("drawingTools", features)}
-                  />
-                </div>
-              );
-            })}
-        </div>
-      ) : (
-        <div className="flex-1 overflow-hidden flex flex-col">
-          <PlacementPanel records={placementRecords} onAutoArrange={onAutoArrange} />
-        </div>
-      )}
-    </div>
-    {showIconPicker && iconAnchorRect && createPortal(
-      <div className="pl-map-editor">
-        <IconPicker
-          anchorRect={iconAnchorRect}
-          selectedId={activeIconName}
-          onSelect={(iconId) => onIconSelect!(iconId)}
-          onClose={() => onToolChange("select")}
+      <div className="flex flex-col w-64 shrink-0 bg-white border-r border-gray-200 overflow-hidden">
+        {/* Map name + mode switcher */}
+        <SidebarHeader
+          mapName={mapName}
+          onMapNameChange={onMapNameChange}
+          nameEditable={nameEditable}
+          editorMode={editorMode}
+          onEditorModeChange={onEditorModeChange}
+          isDirty={isDirty}
+          objectsState={features.objects}
+          placementIcon={placementIcon}
         />
-      </div>,
-      document.body
-    )}
+
+        {/* Tab content */}
+        {editorMode === "design" ? (
+          <div className="flex-1 overflow-y-auto py-1 px-1">
+            <ToolRow
+              tool={handDef}
+              isActive={activeTool === "hand"}
+              onClick={() => onToolChange("hand")}
+            />
+            <ToolRow
+              tool={selectDef}
+              isActive={activeTool === "select"}
+              onClick={() => onToolChange("select")}
+            />
+            {features.drawingTools !== "hidden" &&
+              toolDefs
+                // The measure tool is meaningless without real-world scale, so it
+                // follows the scaleCalibration feature.
+                .filter(
+                  tool =>
+                    !(
+                      tool.id === "measure" &&
+                      features.scaleCalibration === "hidden"
+                    ),
+                )
+                .map(tool => {
+                  const displayTool =
+                    tool.id === "icon" && activeIconName
+                      ? (() => {
+                          const entry = getIconEntry(activeIconName);
+                          if (!entry) return tool;
+                          const ActiveIcon = entry.component;
+                          return { ...tool, icon: <ActiveIcon size={16} /> };
+                        })()
+                      : tool;
+
+                  return (
+                    <div
+                      key={tool.id}
+                      ref={tool.id === "icon" ? iconRowRef : null}
+                    >
+                      <ToolRow
+                        tool={displayTool}
+                        isActive={activeTool === tool.id}
+                        onClick={() => onToolChange(tool.id)}
+                        disabled={features.drawingTools === "locked"}
+                        locked={showTrophy("drawingTools", features)}
+                      />
+                    </div>
+                  );
+                })}
+          </div>
+        ) : (
+          <div className="flex-1 overflow-hidden flex flex-col">
+            <PlacementPanel
+              records={placementRecords}
+              onAutoArrange={onAutoArrange}
+            />
+          </div>
+        )}
+      </div>
+      {showIconPicker &&
+        iconAnchorRect &&
+        createPortal(
+          <div className="pl-map-editor">
+            <IconPicker
+              anchorRect={iconAnchorRect}
+              selectedId={activeIconName}
+              onSelect={iconId => onIconSelect!(iconId)}
+              onClose={() => onToolChange("select")}
+            />
+          </div>,
+          document.body,
+        )}
     </>
   );
 }

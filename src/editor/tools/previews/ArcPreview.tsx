@@ -27,7 +27,13 @@ export function ArcPreview({ state }: ArcPreviewProps) {
           points={[pointA.x, pointA.y, pointB.x, pointB.y]}
           {...linePreviewStyle}
         />
-        <Circle x={pointA.x} y={pointA.y} radius={VERTEX_RADIUS} fill="#475569" listening={false} />
+        <Circle
+          x={pointA.x}
+          y={pointA.y}
+          radius={VERTEX_RADIUS}
+          fill="#475569"
+          listening={false}
+        />
       </>
     );
   }
@@ -39,14 +45,37 @@ export function ArcPreview({ state }: ArcPreviewProps) {
           sceneFunc={(ctx, shape) => {
             ctx.beginPath();
             ctx.moveTo(pointA.x, pointA.y);
-            ctx.quadraticCurveTo(controlPoint.x, controlPoint.y, pointB.x, pointB.y);
+            ctx.quadraticCurveTo(
+              controlPoint.x,
+              controlPoint.y,
+              pointB.x,
+              pointB.y,
+            );
             ctx.fillStrokeShape(shape);
           }}
           {...linePreviewStyle}
         />
-        <Circle x={pointA.x} y={pointA.y} radius={VERTEX_RADIUS} fill="#475569" listening={false} />
-        <Circle x={pointB.x} y={pointB.y} radius={VERTEX_RADIUS} fill="#475569" listening={false} />
-        <Circle x={controlPoint.x} y={controlPoint.y} radius={3} fill="#007bff" listening={false} />
+        <Circle
+          x={pointA.x}
+          y={pointA.y}
+          radius={VERTEX_RADIUS}
+          fill="#475569"
+          listening={false}
+        />
+        <Circle
+          x={pointB.x}
+          y={pointB.y}
+          radius={VERTEX_RADIUS}
+          fill="#475569"
+          listening={false}
+        />
+        <Circle
+          x={controlPoint.x}
+          y={controlPoint.y}
+          radius={3}
+          fill="#007bff"
+          listening={false}
+        />
       </>
     );
   }

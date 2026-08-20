@@ -9,7 +9,13 @@ interface GridLayerProps {
   opacity: number;
 }
 
-export function GridLayer({ width, height, spacing, color, opacity }: GridLayerProps) {
+export function GridLayer({
+  width,
+  height,
+  spacing,
+  color,
+  opacity,
+}: GridLayerProps) {
   const lines = useMemo(() => {
     const result: { points: number[]; key: string }[] = [];
 
@@ -28,7 +34,7 @@ export function GridLayer({ width, height, spacing, color, opacity }: GridLayerP
 
   return (
     <>
-      {lines.map((line) => (
+      {lines.map(line => (
         <Line
           key={line.key}
           points={line.points}

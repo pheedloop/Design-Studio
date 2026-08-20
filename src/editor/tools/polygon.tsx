@@ -12,7 +12,7 @@ export const polygonTool: ToolDefinition<PolygonToolState> = {
   icon: <PiPolygon size={20} />,
   cursor: "crosshair",
 
-  useInteraction: (ctx) =>
+  useInteraction: ctx =>
     usePolygonInteraction(ctx, (polygon, { defaults }) => ({
       type: "element",
       element: {

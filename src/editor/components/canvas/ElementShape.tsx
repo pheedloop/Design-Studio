@@ -64,10 +64,12 @@ function ElementShapeImpl({
     ? "#dc2626"
     : isHovered
       ? "#007bff"
-      : (element.properties.strokeColor || "#888888");
-  const strokeWidth = (isOverlapping || isHovered)
-    ? Math.max((element.properties.strokeWidth ?? 1) * 1.5, 2)
-    : (element.properties.strokeWidth ?? (geo.shape === "line" || geo.shape === "arrow" ? 2 : 1));
+      : element.properties.strokeColor || "#888888";
+  const strokeWidth =
+    isOverlapping || isHovered
+      ? Math.max((element.properties.strokeWidth ?? 1) * 1.5, 2)
+      : (element.properties.strokeWidth ??
+        (geo.shape === "line" || geo.shape === "arrow" ? 2 : 1));
 
   const x = "x" in geo ? geo.x : 0;
   const y = "y" in geo ? geo.y : 0;
@@ -82,12 +84,12 @@ function ElementShapeImpl({
       opacity={isDimmed ? 0.35 : (element.properties.opacity ?? 1)}
       listening={!isDimmed}
       draggable={isSelectMode && !isDimmed}
-      onClick={(e) => {
+      onClick={e => {
         if (!isSelectMode) return;
         e.cancelBubble = true;
         onSelect(element.id, e.evt.shiftKey);
       }}
-      onDblClick={(e) => {
+      onDblClick={e => {
         if (!isSelectMode) return;
         e.cancelBubble = true;
         onDoubleClick?.(element.id);
@@ -95,13 +97,13 @@ function ElementShapeImpl({
       onDragStart={() => {
         onDragStart(element.id);
       }}
-      onDragMove={(e) => {
+      onDragMove={e => {
         onDragMove(element.id, e.target.x(), e.target.y());
       }}
-      onDragEnd={(e) => {
+      onDragEnd={e => {
         onDragEnd(element.id, e.target.x(), e.target.y());
       }}
-      onContextMenu={(e) => {
+      onContextMenu={e => {
         e.evt.preventDefault();
         e.cancelBubble = true;
         onContextMenu(element.id, e.evt.clientX, e.evt.clientY);
@@ -109,46 +111,62 @@ function ElementShapeImpl({
       onMouseEnter={onMouseEnter ? () => onMouseEnter(element.id) : undefined}
       onMouseLeave={onMouseLeave ? () => onMouseLeave(element.id) : undefined}
     >
-      {element.type === "booth" && (geo.shape === "rect" || geo.shape === "polygon" || geo.shape === "ellipse" || geo.shape === "circle") && (
-        <BoothShape
-          geo={geo}
-          color={color}
-          strokeColor={strokeColor}
-          strokeWidth={strokeWidth}
-          properties={element.properties}
-          isLinked={isLinked}
-        />
-      )}
-      {element.type === "session_area" && (geo.shape === "rect" || geo.shape === "polygon" || geo.shape === "ellipse" || geo.shape === "circle") && (
-        <SessionAreaShape
-          geo={geo}
-          color={color}
-          strokeColor={strokeColor}
-          strokeWidth={strokeWidth}
-          properties={element.properties}
-          isLinked={isLinked}
-        />
-      )}
-      {element.type === "meeting_room" && (geo.shape === "rect" || geo.shape === "polygon" || geo.shape === "ellipse" || geo.shape === "circle") && (
-        <MeetingRoomShape
-          geo={geo}
-          color={color}
-          strokeColor={strokeColor}
-          strokeWidth={strokeWidth}
-          properties={element.properties}
-          isLinked={isLinked}
-        />
-      )}
-      {element.type === "table" && (geo.shape === "rect" || geo.shape === "polygon" || geo.shape === "ellipse" || geo.shape === "circle") && (
-        <TableShape
-          geo={geo}
-          color={color}
-          strokeColor={strokeColor}
-          strokeWidth={strokeWidth}
-          properties={element.properties}
-          isLinked={isLinked}
-        />
-      )}
+      {element.type === "booth" &&
+        (geo.shape === "rect" ||
+          geo.shape === "polygon" ||
+          geo.shape === "ellipse" ||
+          geo.shape === "circle") && (
+          <BoothShape
+            geo={geo}
+            color={color}
+            strokeColor={strokeColor}
+            strokeWidth={strokeWidth}
+            properties={element.properties}
+            isLinked={isLinked}
+          />
+        )}
+      {element.type === "session_area" &&
+        (geo.shape === "rect" ||
+          geo.shape === "polygon" ||
+          geo.shape === "ellipse" ||
+          geo.shape === "circle") && (
+          <SessionAreaShape
+            geo={geo}
+            color={color}
+            strokeColor={strokeColor}
+            strokeWidth={strokeWidth}
+            properties={element.properties}
+            isLinked={isLinked}
+          />
+        )}
+      {element.type === "meeting_room" &&
+        (geo.shape === "rect" ||
+          geo.shape === "polygon" ||
+          geo.shape === "ellipse" ||
+          geo.shape === "circle") && (
+          <MeetingRoomShape
+            geo={geo}
+            color={color}
+            strokeColor={strokeColor}
+            strokeWidth={strokeWidth}
+            properties={element.properties}
+            isLinked={isLinked}
+          />
+        )}
+      {element.type === "table" &&
+        (geo.shape === "rect" ||
+          geo.shape === "polygon" ||
+          geo.shape === "ellipse" ||
+          geo.shape === "circle") && (
+          <TableShape
+            geo={geo}
+            color={color}
+            strokeColor={strokeColor}
+            strokeWidth={strokeWidth}
+            properties={element.properties}
+            isLinked={isLinked}
+          />
+        )}
       {element.type === "label" && geo.shape === "rect" && (
         <TextShape
           geo={geo}
@@ -161,15 +179,45 @@ function ElementShapeImpl({
           textAlign={element.properties.textAlign ?? "left"}
         />
       )}
-      {element.type === "icon" && geo.shape === "rect" && element.properties.iconName && (
-        <IconShape geo={geo} iconName={element.properties.iconName} color={color} />
-      )}
-      {element.type !== "booth" && element.type !== "session_area" && element.type !== "meeting_room" && element.type !== "table" && element.type !== "label" && element.type !== "icon" && geo.shape === "rect" && (
-        <RectShape geo={geo} color={color} strokeColor={strokeColor} strokeWidth={strokeWidth} label={label} properties={element.properties} />
-      )}
-      {geo.shape === "ellipse" && element.type !== "booth" && element.type !== "session_area" && element.type !== "meeting_room" && element.type !== "table" && (
-        <EllipseShape geo={geo} color={color} strokeColor={strokeColor} strokeWidth={strokeWidth} label={label} properties={element.properties} />
-      )}
+      {element.type === "icon" &&
+        geo.shape === "rect" &&
+        element.properties.iconName && (
+          <IconShape
+            geo={geo}
+            iconName={element.properties.iconName}
+            color={color}
+          />
+        )}
+      {element.type !== "booth" &&
+        element.type !== "session_area" &&
+        element.type !== "meeting_room" &&
+        element.type !== "table" &&
+        element.type !== "label" &&
+        element.type !== "icon" &&
+        geo.shape === "rect" && (
+          <RectShape
+            geo={geo}
+            color={color}
+            strokeColor={strokeColor}
+            strokeWidth={strokeWidth}
+            label={label}
+            properties={element.properties}
+          />
+        )}
+      {geo.shape === "ellipse" &&
+        element.type !== "booth" &&
+        element.type !== "session_area" &&
+        element.type !== "meeting_room" &&
+        element.type !== "table" && (
+          <EllipseShape
+            geo={geo}
+            color={color}
+            strokeColor={strokeColor}
+            strokeWidth={strokeWidth}
+            label={label}
+            properties={element.properties}
+          />
+        )}
       {geo.shape === "line" && (
         <LineShape geo={geo} color={color} strokeWidth={strokeWidth} />
       )}
@@ -178,15 +226,26 @@ function ElementShapeImpl({
           geo={geo}
           color={color}
           strokeWidth={strokeWidth}
-          arrowHead={element.properties.arrowHead ?? { style: "triangle", size: 12 }}
+          arrowHead={
+            element.properties.arrowHead ?? { style: "triangle", size: 12 }
+          }
         />
       )}
       {geo.shape === "arc" && (
         <ArcShape geo={geo} color={color} strokeWidth={strokeWidth} />
       )}
-      {geo.shape === "polygon" && element.type !== "booth" && element.type !== "session_area" && element.type !== "meeting_room" && element.type !== "table" && (
-        <PolygonShape geo={geo} color={color} strokeColor={strokeColor} strokeWidth={strokeWidth} />
-      )}
+      {geo.shape === "polygon" &&
+        element.type !== "booth" &&
+        element.type !== "session_area" &&
+        element.type !== "meeting_room" &&
+        element.type !== "table" && (
+          <PolygonShape
+            geo={geo}
+            color={color}
+            strokeColor={strokeColor}
+            strokeWidth={strokeWidth}
+          />
+        )}
     </Group>
   );
 }

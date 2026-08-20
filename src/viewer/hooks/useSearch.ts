@@ -5,18 +5,18 @@ import { displayName, type ViewerElementType } from "../utils/elementTypes";
 import { useT } from "../i18n";
 
 export interface SearchResult {
-  elementId: string;           // element.id UUID — use as React key and for canvas highlight lookup
+  elementId: string; // element.id UUID — use as React key and for canvas highlight lookup
   elementType: ViewerElementType;
   /** The element's own name. May be "" — resolve for display with displayName(). */
   name: string;
-  code?: string | null;        // boothCode (EXHBOT...) / meetingRoomId (MEL...) / sessionId (LOCA...)
+  code?: string | null; // boothCode (EXHBOT...) / meetingRoomId (MEL...) / sessionId (LOCA...)
   exhibitorName?: string | null;
 }
 
 export function useSearch(
   elements: FloorPlanElement[],
   exhibitors: Exhibitor[],
-  options?: { boothsOnly?: boolean }
+  options?: { boothsOnly?: boolean },
 ) {
   const boothsOnly = options?.boothsOnly ?? false;
   const [query, setQuery] = useState("");
@@ -68,12 +68,15 @@ export function useSearch(
     const q = query.trim().toLowerCase();
     if (!q) return [];
 
-    return allEntries.filter((entry) => {
+    return allEntries.filter(entry => {
       // Match what the user can actually read, so an unnamed room stays findable
       // by its type name — in whatever language it is currently shown in.
       if (displayName(entry, t).toLowerCase().includes(q)) return true;
       if (boothsOnly) return false;
-      if (entry.exhibitorName && entry.exhibitorName.toLowerCase().includes(q)) {
+      if (
+        entry.exhibitorName &&
+        entry.exhibitorName.toLowerCase().includes(q)
+      ) {
         return true;
       }
       // Booth `code` is the internal boothSlug (EXHBOT…), never shown to users,
@@ -87,8 +90,8 @@ export function useSearch(
   }, [query, allEntries, boothsOnly, t]);
 
   const matchedElementIds = useMemo(
-    () => new Set(results.map((r) => r.elementId)),
-    [results]
+    () => new Set(results.map(r => r.elementId)),
+    [results],
   );
 
   return {

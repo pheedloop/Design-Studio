@@ -23,11 +23,5 @@ export function IconShape({ geo, iconName, color }: IconShapeProps) {
 
   if (!image) return null;
 
-  return (
-    <KonvaImage
-      image={image}
-      width={geo.width}
-      height={geo.height}
-    />
-  );
+  return <KonvaImage image={image} width={geo.width} height={geo.height} />;
 }

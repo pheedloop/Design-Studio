@@ -21,22 +21,20 @@ export function LegendDialog({ legend, onSave, onClose }: LegendDialogProps) {
   const t = useT();
   const [local, setLocal] = useState<Legend>(() => ({
     ...legend,
-    entries: legend.entries.map((e) => ({ ...e })),
+    entries: legend.entries.map(e => ({ ...e })),
   }));
 
   const initialSnapshot = useRef(JSON.stringify(legend));
 
   const updateEntry = (id: string, updates: Partial<LegendEntry>) => {
-    setLocal((prev) => ({
+    setLocal(prev => ({
       ...prev,
-      entries: prev.entries.map((e) =>
-        e.id === id ? { ...e, ...updates } : e,
-      ),
+      entries: prev.entries.map(e => (e.id === id ? { ...e, ...updates } : e)),
     }));
   };
 
   const addEntry = () => {
-    setLocal((prev) => ({
+    setLocal(prev => ({
       ...prev,
       entries: [
         ...prev.entries,
@@ -46,16 +44,16 @@ export function LegendDialog({ legend, onSave, onClose }: LegendDialogProps) {
   };
 
   const removeEntry = (id: string) => {
-    setLocal((prev) => ({
+    setLocal(prev => ({
       ...prev,
-      entries: prev.entries.filter((e) => e.id !== id),
+      entries: prev.entries.filter(e => e.id !== id),
     }));
   };
 
   const moveEntry = (id: string, direction: "up" | "down") => {
-    setLocal((prev) => {
+    setLocal(prev => {
       const entries = [...prev.entries];
-      const idx = entries.findIndex((e) => e.id === id);
+      const idx = entries.findIndex(e => e.id === id);
       if (idx === -1) return prev;
       const target = direction === "up" ? idx - 1 : idx + 1;
       if (target < 0 || target >= entries.length) return prev;
@@ -89,12 +87,14 @@ export function LegendDialog({ legend, onSave, onClose }: LegendDialogProps) {
           <input
             type="checkbox"
             checked={local.visible}
-            onChange={(e) =>
-              setLocal((prev) => ({ ...prev, visible: e.target.checked }))
+            onChange={e =>
+              setLocal(prev => ({ ...prev, visible: e.target.checked }))
             }
             className="cursor-pointer"
           />
-          <span className="text-xs text-gray-700">{t("editor.legend.showOnMap")}</span>
+          <span className="text-xs text-gray-700">
+            {t("editor.legend.showOnMap")}
+          </span>
         </label>
 
         {/* Entry list */}
@@ -105,12 +105,12 @@ export function LegendDialog({ legend, onSave, onClose }: LegendDialogProps) {
                 <ColorSwatch
                   label=""
                   value={entry.color}
-                  onChange={(c) => updateEntry(entry.id, { color: c })}
+                  onChange={c => updateEntry(entry.id, { color: c })}
                 />
                 <div className="flex-1">
                   <TextInput
                     value={entry.label}
-                    onChange={(e) =>
+                    onChange={e =>
                       updateEntry(entry.id, { label: e.target.value })
                     }
                     placeholder={t("editor.legend.labelPlaceholder")}
@@ -121,7 +121,11 @@ export function LegendDialog({ legend, onSave, onClose }: LegendDialogProps) {
                   onClick={() =>
                     updateEntry(entry.id, { visible: !entry.visible })
                   }
-                  title={entry.visible ? t("editor.legend.hideEntry") : t("editor.legend.showEntry")}
+                  title={
+                    entry.visible
+                      ? t("editor.legend.hideEntry")
+                      : t("editor.legend.showEntry")
+                  }
                 >
                   {entry.visible ? (
                     <PiEye size={15} />

@@ -1,6 +1,10 @@
 import { Ellipse, Group } from "react-konva";
 import type { EllipseGeometry, ElementProperties } from "../../../../types";
-import { getLabelXY, getLabelFontStyle, getLabelRenderProps } from "./labelUtils";
+import {
+  getLabelXY,
+  getLabelFontStyle,
+  getLabelRenderProps,
+} from "./labelUtils";
 import { LabelWithBackground } from "./LabelWithBackground";
 
 interface EllipseShapeProps {
@@ -12,7 +16,14 @@ interface EllipseShapeProps {
   properties: ElementProperties;
 }
 
-export function EllipseShape({ geo, color, strokeColor, strokeWidth, label, properties }: EllipseShapeProps) {
+export function EllipseShape({
+  geo,
+  color,
+  strokeColor,
+  strokeWidth,
+  label,
+  properties,
+}: EllipseShapeProps) {
   const lp = getLabelRenderProps(properties);
   const w = geo.radiusX * 2;
   const h = geo.radiusY * 2;

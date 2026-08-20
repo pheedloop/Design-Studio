@@ -84,11 +84,14 @@ function sampleArc(
   cy: number,
   r: number,
   startAngle: number,
-  endAngle: number
+  endAngle: number,
 ): number[] {
   let sweep = endAngle - startAngle;
   if (sweep <= 0) sweep += Math.PI * 2;
-  const steps = Math.max(2, Math.ceil((sweep / (Math.PI * 2)) * SEGMENTS_PER_CIRCLE));
+  const steps = Math.max(
+    2,
+    Math.ceil((sweep / (Math.PI * 2)) * SEGMENTS_PER_CIRCLE),
+  );
   const pts: number[] = [];
   for (let i = 0; i <= steps; i++) {
     const a = startAngle + (sweep * i) / steps;
@@ -108,7 +111,10 @@ function sampleEllipse(e: IEllipseEntity): number[] {
   const minY = majX * e.axisRatio;
   let sweep = e.endAngle - e.startAngle;
   if (sweep <= 0) sweep += Math.PI * 2;
-  const steps = Math.max(2, Math.ceil((sweep / (Math.PI * 2)) * SEGMENTS_PER_CIRCLE));
+  const steps = Math.max(
+    2,
+    Math.ceil((sweep / (Math.PI * 2)) * SEGMENTS_PER_CIRCLE),
+  );
   const pts: number[] = [];
   for (let i = 0; i <= steps; i++) {
     const a = e.startAngle + (sweep * i) / steps;
@@ -133,27 +139,47 @@ function stripMtextCodes(raw: string): string {
 function entityToPrimitives(
   entity: IEntity,
   layer: string,
-  t: Transform | null
+  t: Transform | null,
 ): DxfPrimitive[] {
   switch (entity.type) {
     case "LINE": {
       const e = entity as ILineEntity;
-      const pts = e.vertices.flatMap((v) => [v.x, v.y]);
+      const pts = e.vertices.flatMap(v => [v.x, v.y]);
       return [{ kind: "line", layer, points: transformPoints(pts, t) }];
     }
     case "LWPOLYLINE": {
       const e = entity as ILwpolylineEntity;
-      const pts = e.vertices.flatMap((v) => [v.x, v.y]);
-      return [{ kind: "polyline", layer, points: transformPoints(pts, t), closed: e.shape }];
+      const pts = e.vertices.flatMap(v => [v.x, v.y]);
+      return [
+        {
+          kind: "polyline",
+          layer,
+          points: transformPoints(pts, t),
+          closed: e.shape,
+        },
+      ];
     }
     case "POLYLINE": {
       const e = entity as IPolylineEntity;
-      const pts = e.vertices.flatMap((v) => [v.x, v.y]);
-      return [{ kind: "polyline", layer, points: transformPoints(pts, t), closed: e.shape }];
+      const pts = e.vertices.flatMap(v => [v.x, v.y]);
+      return [
+        {
+          kind: "polyline",
+          layer,
+          points: transformPoints(pts, t),
+          closed: e.shape,
+        },
+      ];
     }
     case "ARC": {
       const e = entity as IArcEntity;
-      const pts = sampleArc(e.center.x, e.center.y, e.radius, e.startAngle, e.endAngle);
+      const pts = sampleArc(
+        e.center.x,
+        e.center.y,
+        e.radius,
+        e.startAngle,
+        e.endAngle,
+      );
       return [{ kind: "polyline", layer, points: transformPoints(pts, t) }];
     }
     case "ELLIPSE": {
@@ -162,10 +188,17 @@ function entityToPrimitives(
     }
     case "SPLINE": {
       const e = entity as ISplineEntity;
-      const src = e.fitPoints?.length ? e.fitPoints : e.controlPoints ?? [];
+      const src = e.fitPoints?.length ? e.fitPoints : (e.controlPoints ?? []);
       if (src.length < 2) return [];
       const pts = src.flatMap((p: IPoint) => [p.x, p.y]);
-      return [{ kind: "polyline", layer, points: transformPoints(pts, t), closed: e.closed }];
+      return [
+        {
+          kind: "polyline",
+          layer,
+          points: transformPoints(pts, t),
+          closed: e.closed,
+        },
+      ];
     }
     case "CIRCLE": {
       const e = entity as ICircleEntity;
@@ -173,35 +206,52 @@ function entityToPrimitives(
       // top-level circle (no transform) stays native: compact and flip-safe.
       if (t) {
         const pts = sampleArc(e.center.x, e.center.y, e.radius, 0, Math.PI * 2);
-        return [{ kind: "polyline", layer, points: transformPoints(pts, t), closed: true }];
+        return [
+          {
+            kind: "polyline",
+            layer,
+            points: transformPoints(pts, t),
+            closed: true,
+          },
+        ];
       }
-      return [{ kind: "circle", layer, cx: e.center.x, cy: e.center.y, r: e.radius }];
+      return [
+        { kind: "circle", layer, cx: e.center.x, cy: e.center.y, r: e.radius },
+      ];
     }
     case "TEXT": {
       const e = entity as ITextEntity;
-      const [x, y] = t ? applyTransform(e.startPoint.x, e.startPoint.y, t) : [e.startPoint.x, e.startPoint.y];
-      return [{
-        kind: "text",
-        layer,
-        x,
-        y,
-        text: e.text ?? "",
-        height: e.textHeight * (t ? Math.abs(t.sy) : 1),
-        rotation: deg2rad(e.rotation ?? 0) + (t?.rot ?? 0),
-      }];
+      const [x, y] = t
+        ? applyTransform(e.startPoint.x, e.startPoint.y, t)
+        : [e.startPoint.x, e.startPoint.y];
+      return [
+        {
+          kind: "text",
+          layer,
+          x,
+          y,
+          text: e.text ?? "",
+          height: e.textHeight * (t ? Math.abs(t.sy) : 1),
+          rotation: deg2rad(e.rotation ?? 0) + (t?.rot ?? 0),
+        },
+      ];
     }
     case "MTEXT": {
       const e = entity as IMtextEntity;
-      const [x, y] = t ? applyTransform(e.position.x, e.position.y, t) : [e.position.x, e.position.y];
-      return [{
-        kind: "text",
-        layer,
-        x,
-        y,
-        text: stripMtextCodes(e.text ?? ""),
-        height: e.height * (t ? Math.abs(t.sy) : 1),
-        rotation: deg2rad(e.rotation ?? 0) + (t?.rot ?? 0),
-      }];
+      const [x, y] = t
+        ? applyTransform(e.position.x, e.position.y, t)
+        : [e.position.x, e.position.y];
+      return [
+        {
+          kind: "text",
+          layer,
+          x,
+          y,
+          text: stripMtextCodes(e.text ?? ""),
+          height: e.height * (t ? Math.abs(t.sy) : 1),
+          rotation: deg2rad(e.rotation ?? 0) + (t?.rot ?? 0),
+        },
+      ];
     }
     default:
       return [];
@@ -212,15 +262,22 @@ function entityToPrimitives(
  *  (block contents are defined relative to the block base point). */
 function shiftEntity(entity: IEntity, base: IPoint): IEntity {
   if (!base.x && !base.y) return entity;
-  const shiftPt = (p: IPoint): IPoint => ({ x: p.x - base.x, y: p.y - base.y, z: p.z });
+  const shiftPt = (p: IPoint): IPoint => ({
+    x: p.x - base.x,
+    y: p.y - base.y,
+    z: p.z,
+  });
   const src = entity as unknown as Record<string, unknown>;
   const clone: Record<string, unknown> = { ...src };
-  if (Array.isArray(src.vertices)) clone.vertices = (src.vertices as IPoint[]).map(shiftPt);
+  if (Array.isArray(src.vertices))
+    clone.vertices = (src.vertices as IPoint[]).map(shiftPt);
   if (src.center) clone.center = shiftPt(src.center as IPoint);
   if (src.startPoint) clone.startPoint = shiftPt(src.startPoint as IPoint);
   if (src.position) clone.position = shiftPt(src.position as IPoint);
-  if (Array.isArray(src.fitPoints)) clone.fitPoints = (src.fitPoints as IPoint[]).map(shiftPt);
-  if (Array.isArray(src.controlPoints)) clone.controlPoints = (src.controlPoints as IPoint[]).map(shiftPt);
+  if (Array.isArray(src.fitPoints))
+    clone.fitPoints = (src.fitPoints as IPoint[]).map(shiftPt);
+  if (Array.isArray(src.controlPoints))
+    clone.controlPoints = (src.controlPoints as IPoint[]).map(shiftPt);
   return clone as unknown as IEntity;
 }
 
@@ -263,12 +320,19 @@ export function parseDxf(text: string): ParsedDxf {
   for (const entity of dxf.entities ?? []) emit(entity, null, 0);
 
   const bounds = computeBounds(primitives);
-  const layers = [...new Set(primitives.map((p) => p.layer))].sort();
+  const layers = [...new Set(primitives.map(p => p.layer))].sort();
   const insunits = dxf.header?.["$INSUNITS"];
   const sourceUnits = insunitsToUnit(insunits);
   const unitsPerRealUnit = insunitsScaleToUnit(insunits);
 
-  return { primitives, layers, bounds, sourceUnits, unitsPerRealUnit, unsupportedCount };
+  return {
+    primitives,
+    layers,
+    bounds,
+    sourceUnits,
+    unitsPerRealUnit,
+    unsupportedCount,
+  };
 }
 
 function computeBounds(primitives: DxfPrimitive[]): {

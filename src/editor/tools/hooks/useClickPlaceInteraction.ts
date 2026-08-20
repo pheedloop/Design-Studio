@@ -9,7 +9,10 @@ import { getCanvasPoint, isEmptySpaceClick } from "../../utils/canvas";
  */
 export function useClickPlaceInteraction(
   ctx: ToolContext,
-  createResult: (point: { x: number; y: number }, ctx: ToolContext) => ToolResult
+  createResult: (
+    point: { x: number; y: number },
+    ctx: ToolContext,
+  ) => ToolResult,
 ): ToolInteraction<null> {
   const handleMouseDown = useCallback(
     (e: Konva.KonvaEventObject<MouseEvent>) => {
@@ -24,7 +27,7 @@ export function useClickPlaceInteraction(
       const result = createResult(point, ctx);
       ctx.onComplete(result);
     },
-    [ctx, createResult]
+    [ctx, createResult],
   );
 
   return {

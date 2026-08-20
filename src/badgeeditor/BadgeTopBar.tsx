@@ -35,9 +35,9 @@ export function BadgeTopBar({
       <div className="relative">
         <MenuButton
           open={open === id}
-          onMouseDown={(e) => {
+          onMouseDown={e => {
             e.stopPropagation();
-            setOpen((prev) => (prev === id ? null : id));
+            setOpen(prev => (prev === id ? null : id));
           }}
         >
           {label}
@@ -59,7 +59,10 @@ export function BadgeTopBar({
         <div className="flex items-center gap-3 px-3">{rightActions}</div>
       )}
       {debug && (
-        <MenuButton onClick={onDebugClick} title="Debug: View badge_layout JSON">
+        <MenuButton
+          onClick={onDebugClick}
+          title="Debug: View badge_layout JSON"
+        >
           <PiBug size={16} />
           <span className="text-[11px]">Debug</span>
         </MenuButton>

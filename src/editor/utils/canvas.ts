@@ -7,7 +7,7 @@ import type Konva from "konva";
 export function getCanvasPoint(
   stage: Konva.Stage,
   position: { x: number; y: number },
-  scale: number
+  scale: number,
 ): { x: number; y: number } | null {
   const pointer = stage.getPointerPosition();
   if (!pointer) return null;
@@ -21,7 +21,9 @@ export function getCanvasPoint(
  * Check if a Konva event target is empty space (stage or background),
  * as opposed to an interactive element.
  */
-export function isEmptySpaceClick(e: Konva.KonvaEventObject<MouseEvent>): boolean {
+export function isEmptySpaceClick(
+  e: Konva.KonvaEventObject<MouseEvent>,
+): boolean {
   const clickedOnStage = e.target === e.target.getStage();
   const clickedOnBackground = e.target.attrs?.id === "background";
   return clickedOnStage || clickedOnBackground;
@@ -32,7 +34,7 @@ export function isEmptySpaceClick(e: Konva.KonvaEventObject<MouseEvent>): boolea
  */
 export function snapToAngle(
   start: { x: number; y: number },
-  end: { x: number; y: number }
+  end: { x: number; y: number },
 ): { x: number; y: number } {
   const dx = end.x - start.x;
   const dy = end.y - start.y;

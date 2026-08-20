@@ -8,7 +8,12 @@ interface NumberInputProps {
   step?: number;
 }
 
-export function NumberInput({ value, onChange, disabled, step = 1 }: NumberInputProps) {
+export function NumberInput({
+  value,
+  onChange,
+  disabled,
+  step = 1,
+}: NumberInputProps) {
   // A draft exists only while the field is being edited, so free-form input
   // ("", "-", "12.") is possible without the displayed value ever drifting from
   // the prop — the rest of the time it is derived, not stored.
@@ -39,9 +44,9 @@ export function NumberInput({ value, onChange, disabled, step = 1 }: NumberInput
       <input
         type="number"
         value={display}
-        onChange={(e) => setDraft(e.target.value)}
+        onChange={e => setDraft(e.target.value)}
         onBlur={commit}
-        onKeyDown={(e) => {
+        onKeyDown={e => {
           if (e.key === "Enter") {
             commit();
             (e.target as HTMLInputElement).blur();

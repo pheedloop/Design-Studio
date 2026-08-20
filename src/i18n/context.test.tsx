@@ -21,8 +21,8 @@ function Locale() {
   return <span data-testid="locale">{useLocale() ?? "(none)"}</span>;
 }
 
-const shout: Translate = (key) => `SHOUT:${key}`;
-const whisper: Translate = (key) => `whisper:${key}`;
+const shout: Translate = key => `SHOUT:${key}`;
+const whisper: Translate = key => `whisper:${key}`;
 
 const label = () => screen.getByTestId("label").textContent;
 

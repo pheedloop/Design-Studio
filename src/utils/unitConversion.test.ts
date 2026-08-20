@@ -11,7 +11,9 @@ import {
   formatWalkingTime,
 } from "./unitConversion";
 
-const { defaultTranslate: t, resolveEnglish } = createSurfaceI18n({ common: COMMON });
+const { defaultTranslate: t, resolveEnglish } = createSurfaceI18n({
+  common: COMMON,
+});
 
 /** The host adapter shape from the README, over a catalogue keyed by English. */
 const adapt =
@@ -21,9 +23,24 @@ const adapt =
     return interpolate(catalogue[english] ?? english, vars);
   };
 
-const px: Dimensions = { width: 100, height: 100, unit: "px", pixelsPerUnit: 1 };
-const feet: Dimensions = { width: 100, height: 100, unit: "ft", pixelsPerUnit: 10 };
-const metres: Dimensions = { width: 100, height: 100, unit: "m", pixelsPerUnit: 10 };
+const px: Dimensions = {
+  width: 100,
+  height: 100,
+  unit: "px",
+  pixelsPerUnit: 1,
+};
+const feet: Dimensions = {
+  width: 100,
+  height: 100,
+  unit: "ft",
+  pixelsPerUnit: 10,
+};
+const metres: Dimensions = {
+  width: 100,
+  height: 100,
+  unit: "m",
+  pixelsPerUnit: 10,
+};
 
 describe("formatMeasurement", () => {
   it("rounds pixels and uses the px unit", () => {
@@ -100,6 +117,8 @@ describe("translator wiring", () => {
 
   it("translates both walking-time forms", () => {
     expect(formatWalkingTime({ minutes: 0, seconds: 5 }, fr)).toBe("< 1 min");
-    expect(formatWalkingTime({ minutes: 4, seconds: 0 }, fr)).toBe("~4 minutes");
+    expect(formatWalkingTime({ minutes: 4, seconds: 0 }, fr)).toBe(
+      "~4 minutes",
+    );
   });
 });

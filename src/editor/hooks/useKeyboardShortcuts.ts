@@ -134,5 +134,18 @@ export function useKeyboardShortcuts({
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [setActiveTool, onDeselect, onDelete, onCopy, onPaste, onDuplicate, onSelectAll, onUndo, onRedo, isPathingMode, setPathingTool, isToolEnabled]);
+  }, [
+    setActiveTool,
+    onDeselect,
+    onDelete,
+    onCopy,
+    onPaste,
+    onDuplicate,
+    onSelectAll,
+    onUndo,
+    onRedo,
+    isPathingMode,
+    setPathingTool,
+    isToolEnabled,
+  ]);
 }

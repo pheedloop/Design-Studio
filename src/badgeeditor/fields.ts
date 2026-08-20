@@ -40,7 +40,9 @@ export const UNEDITABLE_FIELDS = [
 /** Mirror of NewBadgeDesigner/helper.js `isUserFieldEditableEnable`. */
 export const isUserFieldEditable = (field: string | undefined): boolean => {
   if (!field) return false;
-  return !UNEDITABLE_FIELDS.includes(field as (typeof UNEDITABLE_FIELDS)[number]);
+  return !UNEDITABLE_FIELDS.includes(
+    field as (typeof UNEDITABLE_FIELDS)[number],
+  );
 };
 
 /**
@@ -64,18 +66,26 @@ export const FIELD_DEFS: FieldDef[] = [
   { field: "address_country", label: "Country", kind: "text" },
   { field: "address_state", label: "State/Province", kind: "text" },
   { field: "city_state", label: "City+State/Provinces", kind: "text" },
-  { field: "session_schedule", label: "Session Schedule", kind: "sessionSchedule" },
+  {
+    field: "session_schedule",
+    label: "Session Schedule",
+    kind: "sessionSchedule",
+  },
   { field: "custom_text", label: "Custom Text Field", kind: "text" },
   { field: "tickets", label: "Tickets", kind: "tickets" },
   { field: "code_internal", label: "Internal Code", kind: "text" },
   { field: "table_number", label: "Table Number", kind: "text" },
-  { field: "dietary_restrictions", label: "Dietary Restrictions", kind: "text" },
+  {
+    field: "dietary_restrictions",
+    label: "Dietary Restrictions",
+    kind: "text",
+  },
   // Placed via the image gallery, not the field menu.
   { field: "image", label: "Image", kind: "image", inPalette: false },
 ];
 
 const FIELD_DEF_BY_KEY: Record<string, FieldDef> = Object.fromEntries(
-  FIELD_DEFS.map((d) => [d.field, d]),
+  FIELD_DEFS.map(d => [d.field, d]),
 );
 
 export const getFieldDef = (field: string): FieldDef | undefined =>

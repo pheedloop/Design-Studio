@@ -12,7 +12,14 @@ interface LocationPopoverProps {
   onGetDirections?: () => void;
 }
 
-export function LocationPopover({ name, type, x, y, onClose, onGetDirections }: LocationPopoverProps) {
+export function LocationPopover({
+  name,
+  type,
+  x,
+  y,
+  onClose,
+  onGetDirections,
+}: LocationPopoverProps) {
   const t = useT();
   const { ref, pos } = usePopoverPosition(x, y);
 
@@ -49,9 +56,7 @@ export function LocationPopover({ name, type, x, y, onClose, onGetDirections }: 
       <div className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
         {t(TYPE_NAME[type])}
       </div>
-      <div className="mt-1 text-sm font-medium text-gray-900">
-        {name}
-      </div>
+      <div className="mt-1 text-sm font-medium text-gray-900">{name}</div>
       {onGetDirections && (
         <button
           onClick={onGetDirections}

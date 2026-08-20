@@ -98,7 +98,10 @@ export interface SeatPlanViewerProps {
   onTableOpen?: (tableCode: string) => void;
 
   // Mutations
-  onAssign: (input: { tableCode: string; purchaseCodes: string[] }) => Promise<void> | void;
+  onAssign: (input: {
+    tableCode: string;
+    purchaseCodes: string[];
+  }) => Promise<void> | void;
   onUnassign: (input: { seatSelectionCode: number }) => Promise<void> | void;
 
   // Attendee-mode constraints (mirror Charmander flags)

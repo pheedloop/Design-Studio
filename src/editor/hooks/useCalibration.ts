@@ -64,7 +64,7 @@ export function useCalibration({
       // Prevent stage drag during calibration
       e.evt.preventDefault();
 
-      setState((prev) => {
+      setState(prev => {
         if (prev.step === "pickingP1") {
           return { ...prev, step: "pickingP2", p1: point, mousePos: point };
         }
@@ -89,7 +89,7 @@ export function useCalibration({
       if (!point) return;
 
       mousePosRef.current = point;
-      setState((prev) => {
+      setState(prev => {
         if (prev.step === "pickingP2" && prev.p1) {
           // Shift-snap preview to horizontal/vertical/45°
           if (e.evt.shiftKey) {

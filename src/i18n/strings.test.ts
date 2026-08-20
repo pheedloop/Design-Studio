@@ -1,8 +1,17 @@
 import { describe, expect, it } from "vitest";
 import { createSurfaceI18n } from "./context";
-import { COMMON, EDITOR, SEATVIEWER, VIEWER, flattenNamespaces } from "./strings";
+import {
+  COMMON,
+  EDITOR,
+  SEATVIEWER,
+  VIEWER,
+  flattenNamespaces,
+} from "./strings";
 
-const { defaultTranslate: t } = createSurfaceI18n({ common: COMMON, editor: EDITOR });
+const { defaultTranslate: t } = createSurfaceI18n({
+  common: COMMON,
+  editor: EDITOR,
+});
 
 describe("editor plurals", () => {
   // Was `element{count > 1 ? "s" : ""}`, a count ternary at the call site.
@@ -36,7 +45,7 @@ describe("the manifest", () => {
 
   it("pairs every _one with an _other", () => {
     const keys = Object.keys(flat);
-    const singulars = keys.filter((key) => key.endsWith("_one"));
+    const singulars = keys.filter(key => key.endsWith("_one"));
     expect(singulars.length).toBeGreaterThan(0);
     for (const key of singulars) {
       expect(keys).toContain(`${key.slice(0, -"_one".length)}_other`);

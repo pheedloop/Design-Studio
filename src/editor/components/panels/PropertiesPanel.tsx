@@ -75,7 +75,7 @@ function getCommonValue<T>(
   if (elements.length === 0) return undefined;
   const vals = elements.map(getter);
   const first = JSON.stringify(vals[0]);
-  return vals.every((v) => JSON.stringify(v) === first) ? vals[0] : undefined;
+  return vals.every(v => JSON.stringify(v) === first) ? vals[0] : undefined;
 }
 
 function getDimensions(element: FloorPlanElement): {
@@ -115,7 +115,10 @@ function getDimensions(element: FloorPlanElement): {
   return { width: 0, height: 0, length: 0 };
 }
 
-function extractTypeDefaults(props: ElementProperties, geometry: Geometry): ElementTypeDefaults {
+function extractTypeDefaults(
+  props: ElementProperties,
+  geometry: Geometry,
+): ElementTypeDefaults {
   let defaultWidth: number | undefined;
   let defaultHeight: number | undefined;
   if (geometry.shape === "rect") {
@@ -176,7 +179,7 @@ export function PropertiesPanel({
 
   if (!element && selectedCount > 1) {
     // Elements that support labels (rects and ellipses, excluding text labels and icons)
-    const labelableElements = selectedElements.filter((el) => {
+    const labelableElements = selectedElements.filter(el => {
       const s = el.geometry.shape;
       return (
         (s === "rect" || s === "ellipse") &&
@@ -191,45 +194,45 @@ export function PropertiesPanel({
       ? {
           labelPositionV: getCommonValue(
             labelableElements,
-            (el) => el.properties.labelPositionV ?? "middle",
+            el => el.properties.labelPositionV ?? "middle",
           ) as ElementProperties["labelPositionV"],
           labelPositionH: getCommonValue(
             labelableElements,
-            (el) => el.properties.labelPositionH ?? "center",
+            el => el.properties.labelPositionH ?? "center",
           ) as ElementProperties["labelPositionH"],
           labelColor: getCommonValue(
             labelableElements,
-            (el) => el.properties.labelColor ?? "#ffffff",
+            el => el.properties.labelColor ?? "#ffffff",
           ),
           labelFontSize: getCommonValue(
             labelableElements,
-            (el) => el.properties.labelFontSize ?? 12,
+            el => el.properties.labelFontSize ?? 12,
           ),
           labelBold: getCommonValue(
             labelableElements,
-            (el) => el.properties.labelBold ?? true,
+            el => el.properties.labelBold ?? true,
           ),
           labelItalic: getCommonValue(
             labelableElements,
-            (el) => el.properties.labelItalic ?? false,
+            el => el.properties.labelItalic ?? false,
           ),
           labelUnderline: getCommonValue(
             labelableElements,
-            (el) => el.properties.labelUnderline ?? false,
+            el => el.properties.labelUnderline ?? false,
           ),
-          labelVisible: getCommonValue(labelableElements, (el) =>
+          labelVisible: getCommonValue(labelableElements, el =>
             el.properties.labelVisible !== false ? true : false,
           ),
           labelBackground: getCommonValue(
             labelableElements,
-            (el) => el.properties.labelBackground,
+            el => el.properties.labelBackground,
           ),
         }
       : {};
 
     const commonOpacity = getCommonValue(
       selectedElements,
-      (el) => el.properties.opacity ?? 1,
+      el => el.properties.opacity ?? 1,
     );
 
     return (
@@ -257,7 +260,7 @@ export function PropertiesPanel({
                   ? Math.round(commonOpacity * 100)
                   : 100
               }
-              onChange={(e) =>
+              onChange={e =>
                 onBatchUpdateProperties({
                   opacity: Number(e.target.value) / 100,
                 })
@@ -270,7 +273,7 @@ export function PropertiesPanel({
             <>
               <LabelSection
                 properties={mixedProps as ElementProperties}
-                onChange={(updates) => onBatchUpdateProperties(updates)}
+                onChange={updates => onBatchUpdateProperties(updates)}
               />
               <div className="flex gap-2">
                 <Button
@@ -326,7 +329,7 @@ export function PropertiesPanel({
               <ColorSwatch
                 label=""
                 value={backgroundColor ?? "#ffffff"}
-                onChange={(c) => onBackgroundColorChange?.(c)}
+                onChange={c => onBackgroundColorChange?.(c)}
               />
             </div>
 
@@ -351,7 +354,9 @@ export function PropertiesPanel({
                   )}
                   <div className="flex flex-col gap-1.5">
                     <div className="flex items-center justify-between">
-                      <span className="text-[11px] text-gray-500">{t("editor.field.opacity")}</span>
+                      <span className="text-[11px] text-gray-500">
+                        {t("editor.field.opacity")}
+                      </span>
                       <span className="text-[11px] text-gray-400">
                         {Math.round(background.opacity * 100)}%
                       </span>
@@ -360,7 +365,7 @@ export function PropertiesPanel({
                       min={0}
                       max={100}
                       value={Math.round(background.opacity * 100)}
-                      onChange={(e) =>
+                      onChange={e =>
                         onBackgroundOpacityChange?.(
                           Number(e.target.value) / 100,
                         )
@@ -371,17 +376,26 @@ export function PropertiesPanel({
 
                   {background.kind === "dxf" && (
                     <div className="flex flex-col gap-1">
-                      <span className="text-[11px] text-gray-500">{t("editor.field.layers")}</span>
+                      <span className="text-[11px] text-gray-500">
+                        {t("editor.field.layers")}
+                      </span>
                       <div className="max-h-32 overflow-y-auto flex flex-col gap-1 border border-gray-200 rounded-md p-2">
-                        {background.layers.map((layer) => (
-                          <label key={layer} className="flex items-center gap-2 cursor-pointer text-[11px]">
+                        {background.layers.map(layer => (
+                          <label
+                            key={layer}
+                            className="flex items-center gap-2 cursor-pointer text-[11px]"
+                          >
                             <input
                               type="checkbox"
-                              checked={!background.hiddenLayers?.includes(layer)}
+                              checked={
+                                !background.hiddenLayers?.includes(layer)
+                              }
                               onChange={() => onToggleDxfLayer?.(layer)}
                               className="accent-primary-600"
                             />
-                            <span className="flex-1 text-gray-700 truncate">{layer}</span>
+                            <span className="flex-1 text-gray-700 truncate">
+                              {layer}
+                            </span>
                           </label>
                         ))}
                       </div>
@@ -423,7 +437,9 @@ export function PropertiesPanel({
 
     return (
       <div className="w-60 shrink-0 border-l border-gray-200 bg-white p-4">
-        <p className="text-xs text-gray-400">{t("editor.properties.noSelection")}</p>
+        <p className="text-xs text-gray-400">
+          {t("editor.properties.noSelection")}
+        </p>
       </div>
     );
   }
@@ -461,7 +477,7 @@ export function PropertiesPanel({
               { id: "debug", label: t("editor.tab.debug") },
             ]}
             value={tab}
-            onChange={(id) => setTab(id as typeof tab)}
+            onChange={id => setTab(id as typeof tab)}
             itemClassName="px-1.5 py-0.5 text-[10px]"
           />
         )}
@@ -493,7 +509,7 @@ export function PropertiesPanel({
               <SectionLabel>{t("editor.field.name")}</SectionLabel>
               <TextInput
                 value={element.properties.name || ""}
-                onChange={(e) =>
+                onChange={e =>
                   onUpdateProperties(element.id, { name: e.target.value })
                 }
               />
@@ -516,7 +532,7 @@ export function PropertiesPanel({
                   opacity: element.properties.opacity ?? 1,
                 });
               }}
-              onChange={(e) => {
+              onChange={e => {
                 // Live preview without undo entries
                 onPreviewProperties(element.id, {
                   opacity: Number(e.target.value) / 100,
@@ -538,7 +554,7 @@ export function PropertiesPanel({
                   labelPositionV: element.properties.labelPositionV ?? "middle",
                   labelPositionH: element.properties.labelPositionH ?? "center",
                 }}
-                onChange={(updates) => onUpdateProperties(element.id, updates)}
+                onChange={updates => onUpdateProperties(element.id, updates)}
               />
             )}
 
@@ -548,7 +564,7 @@ export function PropertiesPanel({
               <TextArea
                 value={element.properties.text || ""}
                 rows={2}
-                onChange={(e) =>
+                onChange={e =>
                   onUpdateProperties(element.id, { text: e.target.value })
                 }
               />
@@ -560,7 +576,7 @@ export function PropertiesPanel({
               <SectionLabel>{t("editor.field.fontSize")}</SectionLabel>
               <NumberInput
                 value={element.properties.fontSize ?? 16}
-                onChange={(v) =>
+                onChange={v =>
                   onUpdateProperties(element.id, { fontSize: Math.max(1, v) })
                 }
               />
@@ -635,7 +651,7 @@ export function PropertiesPanel({
             <div className="flex flex-col gap-1.5">
               <SectionLabel>{t("editor.field.alignment")}</SectionLabel>
               <div className="flex">
-                {(["left", "center", "right"] as const).map((align) => (
+                {(["left", "center", "right"] as const).map(align => (
                   <Button
                     key={align}
                     variant="outline"
@@ -688,9 +704,7 @@ export function PropertiesPanel({
               <FieldRow label="°">
                 <NumberInput
                   value={"rotation" in geo ? (geo.rotation ?? 0) : 0}
-                  onChange={(r) =>
-                    onUpdateGeometry(element.id, { rotation: r })
-                  }
+                  onChange={r => onUpdateGeometry(element.id, { rotation: r })}
                 />
               </FieldRow>
             </div>
@@ -718,7 +732,7 @@ export function PropertiesPanel({
             <div className="flex flex-col gap-1.5">
               <SectionLabel>{t("editor.field.arrowStyle")}</SectionLabel>
               <div className="flex">
-                {(["triangle", "chevron"] as const).map((style) => (
+                {(["triangle", "chevron"] as const).map(style => (
                   <Button
                     key={style}
                     variant="outline"
@@ -746,7 +760,7 @@ export function PropertiesPanel({
               <FieldRow label={t("common.unit.px")}>
                 <NumberInput
                   value={element.properties.arrowHead.size}
-                  onChange={(v) =>
+                  onChange={v =>
                     onUpdateProperties(element.id, {
                       arrowHead: {
                         ...element.properties.arrowHead!,

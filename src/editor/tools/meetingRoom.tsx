@@ -11,7 +11,7 @@ export const meetingRoomTool: ToolDefinition<DrawingRect | null> = {
   icon: <PiDoor size={20} />,
   cursor: "crosshair",
 
-  useInteraction: (ctx) =>
+  useInteraction: ctx =>
     useClickDragInteraction(ctx, (rect, { defaults }) => ({
       type: "element",
       element: {
@@ -41,6 +41,14 @@ export const meetingRoomTool: ToolDefinition<DrawingRect | null> = {
   ownsElementType: "meeting_room",
   ownsGeometry: ["rect", "polygon"],
   optionsBar: ["fill", "stroke", "strokeWidth"],
-  propertiesPanel: ["name", "capacity", "meetingRoomId", "width", "height", "rotation", "area"],
+  propertiesPanel: [
+    "name",
+    "capacity",
+    "meetingRoomId",
+    "width",
+    "height",
+    "rotation",
+    "area",
+  ],
   contextMenu: ["delete"],
 };

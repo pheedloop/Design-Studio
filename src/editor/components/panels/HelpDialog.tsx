@@ -57,32 +57,77 @@ const shortcuts: { categoryKey: StringKey; items: Shortcut[] }[] = [
     items: [
       { keys: `${mod}+G`, descriptionKey: "editor.help.shortcut.group" },
       { keys: `${mod}+Shift+G`, descriptionKey: "editor.group.ungroup" },
-      { keysKey: "editor.help.keys.doubleClick", descriptionKey: "editor.help.shortcut.enterGroup" },
+      {
+        keysKey: "editor.help.keys.doubleClick",
+        descriptionKey: "editor.help.shortcut.enterGroup",
+      },
       { keys: "Escape", descriptionKey: "editor.help.shortcut.exitGroup" },
     ],
   },
   {
     categoryKey: "editor.help.category.canvas",
     items: [
-      { keysKey: "editor.help.keys.scroll", descriptionKey: "editor.help.shortcut.zoom" },
-      { keysKey: "editor.help.keys.handThenDrag", descriptionKey: "editor.help.shortcut.panHand" },
-      { keysKey: "editor.help.keys.spaceDrag", descriptionKey: "editor.help.shortcut.pan" },
-      { keysKey: "editor.help.keys.shiftDrag", descriptionKey: "editor.help.shortcut.constrain" },
-      { keysKey: "editor.help.keys.shiftRotate", descriptionKey: "editor.help.shortcut.snapRotate" },
-      { keysKey: "editor.help.keys.shiftLineArrow", descriptionKey: "editor.help.shortcut.snapLine" },
-      { keysKey: "editor.help.keys.shiftPolygon", descriptionKey: "editor.help.shortcut.snapPolygon" },
-      { keysKey: "editor.help.keys.shiftMeasure", descriptionKey: "editor.help.shortcut.snapMeasure" },
-      { keysKey: "editor.help.keys.shiftCalibrate", descriptionKey: "editor.help.shortcut.snapCalibrate" },
+      {
+        keysKey: "editor.help.keys.scroll",
+        descriptionKey: "editor.help.shortcut.zoom",
+      },
+      {
+        keysKey: "editor.help.keys.handThenDrag",
+        descriptionKey: "editor.help.shortcut.panHand",
+      },
+      {
+        keysKey: "editor.help.keys.spaceDrag",
+        descriptionKey: "editor.help.shortcut.pan",
+      },
+      {
+        keysKey: "editor.help.keys.shiftDrag",
+        descriptionKey: "editor.help.shortcut.constrain",
+      },
+      {
+        keysKey: "editor.help.keys.shiftRotate",
+        descriptionKey: "editor.help.shortcut.snapRotate",
+      },
+      {
+        keysKey: "editor.help.keys.shiftLineArrow",
+        descriptionKey: "editor.help.shortcut.snapLine",
+      },
+      {
+        keysKey: "editor.help.keys.shiftPolygon",
+        descriptionKey: "editor.help.shortcut.snapPolygon",
+      },
+      {
+        keysKey: "editor.help.keys.shiftMeasure",
+        descriptionKey: "editor.help.shortcut.snapMeasure",
+      },
+      {
+        keysKey: "editor.help.keys.shiftCalibrate",
+        descriptionKey: "editor.help.shortcut.snapCalibrate",
+      },
     ],
   },
   {
     categoryKey: "editor.help.category.selection",
     items: [
-      { keysKey: "editor.help.keys.click", descriptionKey: "editor.help.shortcut.selectElement" },
-      { keysKey: "editor.help.keys.clickGroupMember", descriptionKey: "editor.help.shortcut.selectGroup" },
-      { keysKey: "editor.help.keys.shiftClick", descriptionKey: "editor.help.shortcut.addRemove" },
-      { keysKey: "editor.help.keys.dragEmpty", descriptionKey: "editor.help.shortcut.dragSelect" },
-      { keysKey: "editor.help.keys.rightClick", descriptionKey: "editor.help.shortcut.contextMenu" },
+      {
+        keysKey: "editor.help.keys.click",
+        descriptionKey: "editor.help.shortcut.selectElement",
+      },
+      {
+        keysKey: "editor.help.keys.clickGroupMember",
+        descriptionKey: "editor.help.shortcut.selectGroup",
+      },
+      {
+        keysKey: "editor.help.keys.shiftClick",
+        descriptionKey: "editor.help.shortcut.addRemove",
+      },
+      {
+        keysKey: "editor.help.keys.dragEmpty",
+        descriptionKey: "editor.help.shortcut.dragSelect",
+      },
+      {
+        keysKey: "editor.help.keys.rightClick",
+        descriptionKey: "editor.help.shortcut.contextMenu",
+      },
     ],
   },
 ];
@@ -90,7 +135,11 @@ const shortcuts: { categoryKey: StringKey; items: Shortcut[] }[] = [
 const menus: { nameKey: StringKey; itemKeys: StringKey[] }[] = [
   {
     nameKey: "editor.menu.file",
-    itemKeys: ["editor.menu.exportPng", "editor.menu.exportJson", "editor.menu.importJson"],
+    itemKeys: [
+      "editor.menu.exportPng",
+      "editor.menu.exportJson",
+      "editor.menu.importJson",
+    ],
   },
   {
     nameKey: "editor.menu.edit",
@@ -113,7 +162,11 @@ const menus: { nameKey: StringKey; itemKeys: StringKey[] }[] = [
   },
   {
     nameKey: "editor.menu.tools",
-    itemKeys: ["editor.menu.configureGrid", "editor.menu.canvasSize", "editor.menu.setScale"],
+    itemKeys: [
+      "editor.menu.configureGrid",
+      "editor.menu.canvasSize",
+      "editor.menu.setScale",
+    ],
   },
 ];
 
@@ -203,7 +256,12 @@ export function HelpDialog({ onClose }: HelpDialogProps) {
   const [tab, setTab] = useState<HelpTab>("start");
 
   return (
-    <Dialog title={t("editor.help.title")} onClose={onClose} width="520px" maxHeight="80vh">
+    <Dialog
+      title={t("editor.help.title")}
+      onClose={onClose}
+      width="520px"
+      maxHeight="80vh"
+    >
       <div className="px-4 pt-3 border-b border-gray-200">
         <TabBar
           tabs={[
@@ -212,7 +270,7 @@ export function HelpDialog({ onClose }: HelpDialogProps) {
             { id: "menus", label: t("editor.help.tab.menus") },
           ]}
           value={tab}
-          onChange={(id) => setTab(id as HelpTab)}
+          onChange={id => setTab(id as HelpTab)}
           itemClassName="px-3 py-1.5 text-xs"
         />
       </div>
@@ -227,7 +285,7 @@ export function HelpDialog({ onClose }: HelpDialogProps) {
                 {t(section.headingKey)}
               </h3>
               <ul className="text-xs text-gray-600 space-y-1.5">
-                {section.bulletKeys.map((bulletKey) => (
+                {section.bulletKeys.map(bulletKey => (
                   <li key={bulletKey}>{t(bulletKey, { mod })}</li>
                 ))}
               </ul>
@@ -235,18 +293,20 @@ export function HelpDialog({ onClose }: HelpDialogProps) {
           ))}
 
         {tab === "shortcuts" &&
-          shortcuts.map((section) => (
+          shortcuts.map(section => (
             <div key={section.categoryKey} className="mb-4">
               <div className="text-[10px] font-medium text-gray-400 uppercase tracking-wide mb-1.5">
                 {t(section.categoryKey)}
               </div>
               <div className="space-y-1">
-                {section.items.map((item) => (
+                {section.items.map(item => (
                   <div
                     key={item.descriptionKey}
                     className="flex items-center justify-between py-0.5"
                   >
-                    <span className="text-xs text-gray-600">{t(item.descriptionKey)}</span>
+                    <span className="text-xs text-gray-600">
+                      {t(item.descriptionKey)}
+                    </span>
                     <kbd className="text-[10px] font-mono text-gray-500 bg-gray-100 border border-gray-200 rounded px-1.5 py-0.5">
                       {item.keysKey ? t(item.keysKey) : item.keys}
                     </kbd>
@@ -258,15 +318,20 @@ export function HelpDialog({ onClose }: HelpDialogProps) {
 
         {tab === "menus" && (
           <>
-            <p className="text-xs text-gray-500 mb-4">{t("editor.help.menusIntro")}</p>
-            {menus.map((menu) => (
+            <p className="text-xs text-gray-500 mb-4">
+              {t("editor.help.menusIntro")}
+            </p>
+            {menus.map(menu => (
               <div key={menu.nameKey} className="mb-4">
                 <div className="text-[10px] font-medium text-gray-400 uppercase tracking-wide mb-1.5">
                   {t(menu.nameKey)}
                 </div>
                 <div className="space-y-1">
-                  {menu.itemKeys.map((itemKey) => (
-                    <div key={itemKey} className="text-xs text-gray-600 py-0.5 pl-2">
+                  {menu.itemKeys.map(itemKey => (
+                    <div
+                      key={itemKey}
+                      className="text-xs text-gray-600 py-0.5 pl-2"
+                    >
                       {t(itemKey)}
                     </div>
                   ))}

@@ -1,9 +1,20 @@
 import { useState, useRef } from "react";
-import { PiMagnifyingGlass, PiX, PiArrowsDownUp, PiFootprints } from "react-icons/pi";
+import {
+  PiMagnifyingGlass,
+  PiX,
+  PiArrowsDownUp,
+  PiFootprints,
+} from "react-icons/pi";
 import type { SearchResult } from "../hooks/useSearch";
 import type { DirectionsLocation, RouteStatus } from "../hooks/useDirections";
 import type { Dimensions } from "../../types";
-import { formatRouteDistance, pathDistance, pxToReal, estimateWalkingTime, formatWalkingTime } from "../../utils/unitConversion";
+import {
+  formatRouteDistance,
+  pathDistance,
+  pxToReal,
+  estimateWalkingTime,
+  formatWalkingTime,
+} from "../../utils/unitConversion";
 import { TYPE_BADGE, displayName, locationLabel } from "../utils/elementTypes";
 import { useLocale, useT } from "../i18n";
 import type { T } from "../i18n";
@@ -78,7 +89,7 @@ function LocationField({
           ref={inputRef}
           type="text"
           value={query}
-          onChange={(e) => setQuery(e.target.value)}
+          onChange={e => setQuery(e.target.value)}
           onFocus={() => setFocused(true)}
           onBlur={() => setTimeout(() => setFocused(false), 150)}
           placeholder={placeholder}
@@ -89,9 +100,11 @@ function LocationField({
       {showDropdown && (
         <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-44 overflow-y-auto">
           {results.length === 0 ? (
-            <div className="px-3 py-2 text-xs text-gray-400">{t("viewer.search.noResults")}</div>
+            <div className="px-3 py-2 text-xs text-gray-400">
+              {t("viewer.search.noResults")}
+            </div>
           ) : (
-            results.map((result) => {
+            results.map(result => {
               const badge = TYPE_BADGE[result.elementType];
               return (
                 <button
@@ -107,7 +120,9 @@ function LocationField({
                     <span className="text-xs font-medium text-gray-800 truncate">
                       {result.exhibitorName || displayName(result, t)}
                     </span>
-                    <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded shrink-0 ${badge.className}`}>
+                    <span
+                      className={`text-[10px] font-medium px-1.5 py-0.5 rounded shrink-0 ${badge.className}`}
+                    >
                       {t(badge.labelKey)}
                     </span>
                   </div>
@@ -139,7 +154,9 @@ export function DirectionsPanel({
   return (
     <div className="flex flex-col gap-2 p-3">
       <div className="flex items-center justify-between">
-        <span className="text-xs font-semibold text-gray-700">{t("viewer.directions.title")}</span>
+        <span className="text-xs font-semibold text-gray-700">
+          {t("viewer.directions.title")}
+        </span>
         <button
           onClick={onClose}
           className="text-gray-400 hover:text-gray-600 cursor-pointer"
@@ -197,7 +214,11 @@ export function DirectionsPanel({
             const pxDist = pathDistance(routePath);
             const realDist = pxToReal(pxDist, dimensions.pixelsPerUnit);
             const est = estimateWalkingTime(realDist, dimensions.unit);
-            return est ? <span className="text-gray-400">&middot; {formatWalkingTime(est, t)}</span> : null;
+            return est ? (
+              <span className="text-gray-400">
+                &middot; {formatWalkingTime(est, t)}
+              </span>
+            ) : null;
           })()}
         </div>
       )}

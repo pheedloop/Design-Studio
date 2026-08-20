@@ -4,7 +4,12 @@
 
 import { v4 as uuid } from "uuid";
 import { pxToInch, type BadgeField } from "./model";
-import { getFieldDef, isLiteralTextField, isUserFieldEditable, kindForField } from "./fields";
+import {
+  getFieldDef,
+  isLiteralTextField,
+  isUserFieldEditable,
+  kindForField,
+} from "./fields";
 
 /** Display string shown on the canvas for a field (label or literal text). */
 export function fieldDisplayText(field: BadgeField): string {

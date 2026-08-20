@@ -21,7 +21,10 @@ export function getGeometryBounds(geo: Geometry): GeometryBounds {
   }
   if (geo.shape === "polygon") {
     const pts = geo.points;
-    let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+    let minX = Infinity,
+      maxX = -Infinity,
+      minY = Infinity,
+      maxY = -Infinity;
     for (let i = 0; i < pts.length; i += 2) {
       if (pts[i] < minX) minX = pts[i];
       if (pts[i] > maxX) maxX = pts[i];
@@ -39,7 +42,10 @@ export function getGeometryBounds(geo: Geometry): GeometryBounds {
   // line, arrow, arc — use points extent
   if ("points" in geo) {
     const pts = geo.points;
-    let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+    let minX = Infinity,
+      maxX = -Infinity,
+      minY = Infinity,
+      maxY = -Infinity;
     for (let i = 0; i < pts.length; i += 2) {
       if (pts[i] < minX) minX = pts[i];
       if (pts[i] > maxX) maxX = pts[i];
@@ -94,7 +100,10 @@ export function getElementBounds(element: FloorPlanElement): ElementBounds {
 
   if (geo.shape === "polygon") {
     const pts = geo.points;
-    let left = Infinity, right = -Infinity, top = Infinity, bottom = -Infinity;
+    let left = Infinity,
+      right = -Infinity,
+      top = Infinity,
+      bottom = -Infinity;
     for (let i = 0; i < pts.length; i += 2) {
       const ax = geo.x + pts[i];
       const ay = geo.y + pts[i + 1];
@@ -144,8 +153,14 @@ export function getElementBounds(element: FloorPlanElement): ElementBounds {
 
 /** Check if a line segment intersects an axis-aligned rectangle. */
 export function lineIntersectsRect(
-  x1: number, y1: number, x2: number, y2: number,
-  rx: number, ry: number, rw: number, rh: number
+  x1: number,
+  y1: number,
+  x2: number,
+  y2: number,
+  rx: number,
+  ry: number,
+  rw: number,
+  rh: number,
 ): boolean {
   // If either endpoint is inside the rect, it intersects
   if (x1 >= rx && x1 <= rx + rw && y1 >= ry && y1 <= ry + rh) return true;
@@ -153,9 +168,9 @@ export function lineIntersectsRect(
 
   // Check if line segment intersects any of the 4 rect edges
   const edges: [number, number, number, number][] = [
-    [rx, ry, rx + rw, ry],           // top
+    [rx, ry, rx + rw, ry], // top
     [rx, ry + rh, rx + rw, ry + rh], // bottom
-    [rx, ry, rx, ry + rh],           // left
+    [rx, ry, rx, ry + rh], // left
     [rx + rw, ry, rx + rw, ry + rh], // right
   ];
 
@@ -166,16 +181,24 @@ export function lineIntersectsRect(
 }
 
 function segmentsIntersect(
-  ax1: number, ay1: number, ax2: number, ay2: number,
-  bx1: number, by1: number, bx2: number, by2: number
+  ax1: number,
+  ay1: number,
+  ax2: number,
+  ay2: number,
+  bx1: number,
+  by1: number,
+  bx2: number,
+  by2: number,
 ): boolean {
   const d1 = cross(bx1, by1, bx2, by2, ax1, ay1);
   const d2 = cross(bx1, by1, bx2, by2, ax2, ay2);
   const d3 = cross(ax1, ay1, ax2, ay2, bx1, by1);
   const d4 = cross(ax1, ay1, ax2, ay2, bx2, by2);
 
-  if (((d1 > 0 && d2 < 0) || (d1 < 0 && d2 > 0)) &&
-      ((d3 > 0 && d4 < 0) || (d3 < 0 && d4 > 0))) {
+  if (
+    ((d1 > 0 && d2 < 0) || (d1 < 0 && d2 > 0)) &&
+    ((d3 > 0 && d4 < 0) || (d3 < 0 && d4 > 0))
+  ) {
     return true;
   }
 
@@ -187,11 +210,29 @@ function segmentsIntersect(
   return false;
 }
 
-function cross(ox: number, oy: number, ax: number, ay: number, bx: number, by: number): number {
+function cross(
+  ox: number,
+  oy: number,
+  ax: number,
+  ay: number,
+  bx: number,
+  by: number,
+): number {
   return (ax - ox) * (by - oy) - (ay - oy) * (bx - ox);
 }
 
-function onSegment(px: number, py: number, qx: number, qy: number, rx: number, ry: number): boolean {
-  return rx >= Math.min(px, qx) && rx <= Math.max(px, qx) &&
-         ry >= Math.min(py, qy) && ry <= Math.max(py, qy);
+function onSegment(
+  px: number,
+  py: number,
+  qx: number,
+  qy: number,
+  rx: number,
+  ry: number,
+): boolean {
+  return (
+    rx >= Math.min(px, qx) &&
+    rx <= Math.max(px, qx) &&
+    ry >= Math.min(py, qy) &&
+    ry <= Math.max(py, qy)
+  );
 }

@@ -12,7 +12,14 @@ interface StatusBarProps {
   onUnitChange: (unit: Unit) => void;
 }
 
-export function StatusBar({ scale, onZoomReset, unit, isCalibrated, showUnit = true, onUnitChange }: StatusBarProps) {
+export function StatusBar({
+  scale,
+  onZoomReset,
+  unit,
+  isCalibrated,
+  showUnit = true,
+  onUnitChange,
+}: StatusBarProps) {
   const t = useT();
 
   return (
@@ -21,7 +28,7 @@ export function StatusBar({ scale, onZoomReset, unit, isCalibrated, showUnit = t
         {isCalibrated && showUnit && (
           <select
             value={unit}
-            onChange={(e) => onUnitChange(e.target.value as Unit)}
+            onChange={e => onUnitChange(e.target.value as Unit)}
             className="px-1.5 py-0.5 text-xs border border-gray-200 rounded bg-white cursor-pointer hover:border-gray-300"
             title={t("editor.statusBar.displayUnit")}
           >

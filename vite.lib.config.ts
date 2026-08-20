@@ -40,16 +40,20 @@ const scopeCssPlugin: postcss.PluginCreator<undefined> = () => ({
     let hasLayer = true;
     while (hasLayer) {
       hasLayer = false;
-      root.walkAtRules("layer", (at) => {
+      root.walkAtRules("layer", at => {
         hasLayer = true;
         if (at.nodes) at.replaceWith(...at.nodes);
         else at.remove();
       });
     }
-    root.walkRules((rule) => {
+    root.walkRules(rule => {
       const parent = rule.parent;
       // Leave @keyframes step selectors (`0%`, `to`, …) untouched.
-      if (parent && parent.type === "atrule" && /keyframes$/i.test((parent as postcss.AtRule).name)) {
+      if (
+        parent &&
+        parent.type === "atrule" &&
+        /keyframes$/i.test((parent as postcss.AtRule).name)
+      ) {
         return;
       }
       const scoped = new Set<string>();
@@ -135,13 +139,13 @@ export default defineConfig({
       external: [
         "react",
         "react-dom",
-        /^react-dom\//,   // react-dom/server, react-dom/client, etc.
+        /^react-dom\//, // react-dom/server, react-dom/client, etc.
         "react/jsx-runtime",
         "konva",
         "react-konva",
       ],
       output: {
-        assetFileNames: (info) =>
+        assetFileNames: info =>
           info.name?.endsWith(".css") ? "style.css" : "assets/[name][extname]",
       },
     },

@@ -7,7 +7,10 @@ export const TYPE_BADGE: Record<
   ViewerElementType,
   { labelKey: StringKey; className: string }
 > = {
-  booth: { labelKey: "common.type.booth", className: "bg-gray-100 text-gray-500" },
+  booth: {
+    labelKey: "common.type.booth",
+    className: "bg-gray-100 text-gray-500",
+  },
   session_area: {
     labelKey: "viewer.type.sessionShort",
     className: "bg-green-100 text-green-700",

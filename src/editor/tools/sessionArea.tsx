@@ -11,7 +11,7 @@ export const sessionAreaTool: ToolDefinition<DrawingRect | null> = {
   icon: <PiMicrophone size={20} />,
   cursor: "crosshair",
 
-  useInteraction: (ctx) =>
+  useInteraction: ctx =>
     useClickDragInteraction(ctx, (rect, { defaults }) => ({
       type: "element",
       element: {

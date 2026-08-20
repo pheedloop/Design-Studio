@@ -1,5 +1,12 @@
 import { useState } from "react";
-import { Button, Dialog, Slider, SectionLabel, NumberInput, ColorSwatch } from "../ui";
+import {
+  Button,
+  Dialog,
+  Slider,
+  SectionLabel,
+  NumberInput,
+  ColorSwatch,
+} from "../ui";
 import { useT } from "../../i18n";
 
 export interface GridSettings {
@@ -16,7 +23,11 @@ interface GridSettingsDialogProps {
   onClose: () => void;
 }
 
-export function GridSettingsDialog({ settings, onSave, onClose }: GridSettingsDialogProps) {
+export function GridSettingsDialog({
+  settings,
+  onSave,
+  onClose,
+}: GridSettingsDialogProps) {
   const t = useT();
   const [local, setLocal] = useState<GridSettings>({ ...settings });
 
@@ -26,8 +37,19 @@ export function GridSettingsDialog({ settings, onSave, onClose }: GridSettingsDi
       onClose={onClose}
       footer={
         <>
-          <Button variant="outline" color="neutral" onClick={onClose}>{t("editor.action.cancel")}</Button>
-          <Button variant="solid" color="primary" onClick={() => { onSave(local); onClose(); }}>{t("editor.action.apply")}</Button>
+          <Button variant="outline" color="neutral" onClick={onClose}>
+            {t("editor.action.cancel")}
+          </Button>
+          <Button
+            variant="solid"
+            color="primary"
+            onClick={() => {
+              onSave(local);
+              onClose();
+            }}
+          >
+            {t("editor.action.apply")}
+          </Button>
         </>
       }
     >
@@ -36,7 +58,9 @@ export function GridSettingsDialog({ settings, onSave, onClose }: GridSettingsDi
           <SectionLabel>{t("editor.field.spacingPx")}</SectionLabel>
           <NumberInput
             value={local.gridSpacing}
-            onChange={(v) => setLocal((s) => ({ ...s, gridSpacing: Math.max(5, v) }))}
+            onChange={v =>
+              setLocal(s => ({ ...s, gridSpacing: Math.max(5, v) }))
+            }
           />
         </div>
 
@@ -45,7 +69,7 @@ export function GridSettingsDialog({ settings, onSave, onClose }: GridSettingsDi
           <ColorSwatch
             label=""
             value={local.gridColor}
-            onChange={(c) => setLocal((s) => ({ ...s, gridColor: c }))}
+            onChange={c => setLocal(s => ({ ...s, gridColor: c }))}
           />
         </div>
 
@@ -56,7 +80,12 @@ export function GridSettingsDialog({ settings, onSave, onClose }: GridSettingsDi
               min={5}
               max={100}
               value={Math.round(local.gridOpacity * 100)}
-              onChange={(e) => setLocal((s) => ({ ...s, gridOpacity: Number(e.target.value) / 100 }))}
+              onChange={e =>
+                setLocal(s => ({
+                  ...s,
+                  gridOpacity: Number(e.target.value) / 100,
+                }))
+              }
               className="flex-1"
             />
             <span className="text-xs text-gray-400 w-8 text-right">

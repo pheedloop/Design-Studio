@@ -1,7 +1,11 @@
 import { useState, useRef, useCallback } from "react";
 import type Konva from "konva";
 import type { ToolContext, ToolInteraction, ToolResult } from "../types";
-import { getCanvasPoint, isEmptySpaceClick, snapToAngle } from "../../utils/canvas";
+import {
+  getCanvasPoint,
+  isEmptySpaceClick,
+  snapToAngle,
+} from "../../utils/canvas";
 
 export interface LinePreviewState {
   x1: number;
@@ -18,7 +22,7 @@ const MIN_LENGTH = 5;
  */
 export function useLineInteraction(
   ctx: ToolContext,
-  createResult: (line: LinePreviewState, ctx: ToolContext) => ToolResult
+  createResult: (line: LinePreviewState, ctx: ToolContext) => ToolResult,
 ): ToolInteraction<LinePreviewState | null> {
   const [preview, setPreview] = useState<LinePreviewState | null>(null);
   const origin = useRef<{ x: number; y: number } | null>(null);
@@ -36,7 +40,7 @@ export function useLineInteraction(
       origin.current = point;
       setPreview({ x1: point.x, y1: point.y, x2: point.x, y2: point.y });
     },
-    [ctx.stageRef, ctx.position, ctx.scale]
+    [ctx.stageRef, ctx.position, ctx.scale],
   );
 
   const handleMouseMove = useCallback(
@@ -58,7 +62,7 @@ export function useLineInteraction(
         y2: end.y,
       });
     },
-    [ctx.stageRef, ctx.position, ctx.scale]
+    [ctx.stageRef, ctx.position, ctx.scale],
   );
 
   const handleMouseUp = useCallback(() => {

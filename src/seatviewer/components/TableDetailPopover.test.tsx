@@ -15,7 +15,10 @@ const table = (over: Partial<SeatTableState> = {}): SeatTableState => ({
   ...over,
 });
 
-function show(props: Partial<Parameters<typeof TableDetailPopover>[0]> = {}, translate?: Translate) {
+function show(
+  props: Partial<Parameters<typeof TableDetailPopover>[0]> = {},
+  translate?: Translate,
+) {
   return render(
     <I18nProvider translate={translate}>
       <TableDetailPopover
@@ -57,7 +60,8 @@ describe("seats free", () => {
 });
 
 describe("occupant heading", () => {
-  const heading = () => screen.getByText(/Loading|Seated here|Locked|No one seated yet/);
+  const heading = () =>
+    screen.getByText(/Loading|Seated here|Locked|No one seated yet/);
 
   it("shows each state", () => {
     const { unmount } = show({ occupantsLoading: true });
@@ -85,7 +89,9 @@ describe("occupant heading", () => {
 describe("assign button", () => {
   it("shows the host-supplied label, and its own in-flight text", () => {
     const { unmount } = show({ assignLabel: "Assign Ada here" });
-    expect(screen.getByRole("button", { name: "Assign Ada here" })).toBeTruthy();
+    expect(
+      screen.getByRole("button", { name: "Assign Ada here" }),
+    ).toBeTruthy();
     unmount();
 
     show({ assigning: true });
@@ -95,7 +101,7 @@ describe("assign button", () => {
 
 describe("translation", () => {
   it("routes its own strings through the host translator", () => {
-    const keys: Translate = (key) => `[${key}]`;
+    const keys: Translate = key => `[${key}]`;
     show({ table: table({ seatCount: 8, occupancy: 7 }) }, keys);
 
     // The plural base is what reaches the host, not the _one variant.

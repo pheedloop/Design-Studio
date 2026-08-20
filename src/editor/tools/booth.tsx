@@ -11,7 +11,7 @@ export const boothTool: ToolDefinition<DrawingRect | null> = {
   icon: <PiStorefront size={20} />,
   cursor: "crosshair",
 
-  useInteraction: (ctx) =>
+  useInteraction: ctx =>
     useClickDragInteraction(ctx, (rect, { defaults }) => ({
       type: "element",
       element: {

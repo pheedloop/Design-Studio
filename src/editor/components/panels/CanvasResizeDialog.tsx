@@ -4,14 +4,23 @@ import type { FloorPlanElement, Dimensions } from "../../../types";
 import { formatMeasurement } from "../../../utils/unitConversion";
 import { useLocale, useT, type StringKey } from "../../i18n";
 import { getElementBounds } from "../../utils/bounds";
-import { anchorOffset, type ResizeMode, type ResizeAnchor } from "../../hooks/useEditorState";
+import {
+  anchorOffset,
+  type ResizeMode,
+  type ResizeAnchor,
+} from "../../hooks/useEditorState";
 
 interface CanvasResizeDialogProps {
   width: number;
   height: number;
   dimensions: Dimensions;
   elements: FloorPlanElement[];
-  onConfirm: (width: number, height: number, mode: ResizeMode, anchor: ResizeAnchor) => void;
+  onConfirm: (
+    width: number,
+    height: number,
+    mode: ResizeMode,
+    anchor: ResizeAnchor,
+  ) => void;
   /** Closes the dialog and enters interactive crop mode on the canvas. */
   onStartCrop?: () => void;
   onClose: () => void;
@@ -19,20 +28,26 @@ interface CanvasResizeDialogProps {
 
 // 3×3 anchor grid, laid out visually (row-major, top→bottom).
 const ANCHOR_GRID: ResizeAnchor[] = [
-  "top-left", "top", "top-right",
-  "left", "center", "right",
-  "bottom-left", "bottom", "bottom-right",
+  "top-left",
+  "top",
+  "top-right",
+  "left",
+  "center",
+  "right",
+  "bottom-left",
+  "bottom",
+  "bottom-right",
 ];
 
 const ANCHOR_LABEL_KEYS: Record<ResizeAnchor, StringKey> = {
   "top-left": "editor.anchor.topLeft",
-  "top": "editor.anchor.top",
+  top: "editor.anchor.top",
   "top-right": "editor.anchor.topRight",
-  "left": "editor.anchor.left",
-  "center": "editor.anchor.center",
-  "right": "editor.anchor.right",
+  left: "editor.anchor.left",
+  center: "editor.anchor.center",
+  right: "editor.anchor.right",
   "bottom-left": "editor.anchor.bottomLeft",
-  "bottom": "editor.anchor.bottom",
+  bottom: "editor.anchor.bottom",
   "bottom-right": "editor.anchor.bottomRight",
 };
 
@@ -69,17 +84,28 @@ export function CanvasResizeDialog({
 
   const selectMode = (m: ResizeMode) => {
     setMode(m);
-    if (m === "scale") setNewHeight(Math.max(100, Math.round(newWidth / aspect)));
+    if (m === "scale")
+      setNewHeight(Math.max(100, Math.round(newWidth / aspect)));
   };
 
   // Count elements pushed outside the new bounds after the anchor shift (advisory).
   const clippedCount = useMemo(() => {
     if (mode === "scale") return 0;
-    const { dx, dy } = anchorOffset(anchor, newWidth - width, newHeight - height);
-    if (dx === 0 && dy === 0 && newWidth >= width && newHeight >= height) return 0;
-    return elements.filter((el) => {
+    const { dx, dy } = anchorOffset(
+      anchor,
+      newWidth - width,
+      newHeight - height,
+    );
+    if (dx === 0 && dy === 0 && newWidth >= width && newHeight >= height)
+      return 0;
+    return elements.filter(el => {
       const b = getElementBounds(el);
-      return b.left + dx < 0 || b.top + dy < 0 || b.right + dx > newWidth || b.bottom + dy > newHeight;
+      return (
+        b.left + dx < 0 ||
+        b.top + dy < 0 ||
+        b.right + dx > newWidth ||
+        b.bottom + dy > newHeight
+      );
     }).length;
   }, [elements, newWidth, newHeight, width, height, mode, anchor]);
 
@@ -90,8 +116,19 @@ export function CanvasResizeDialog({
       onClose={onClose}
       footer={
         <>
-          <Button variant="outline" color="neutral" onClick={onClose}>{t("editor.action.cancel")}</Button>
-          <Button variant="solid" color="primary" onClick={() => { onConfirm(newWidth, newHeight, mode, anchor); onClose(); }}>{t("editor.action.apply")}</Button>
+          <Button variant="outline" color="neutral" onClick={onClose}>
+            {t("editor.action.cancel")}
+          </Button>
+          <Button
+            variant="solid"
+            color="primary"
+            onClick={() => {
+              onConfirm(newWidth, newHeight, mode, anchor);
+              onClose();
+            }}
+          >
+            {t("editor.action.apply")}
+          </Button>
         </>
       }
     >
@@ -100,23 +137,47 @@ export function CanvasResizeDialog({
           <SectionLabel>{t("editor.field.widthPx")}</SectionLabel>
           <NumberInput value={newWidth} onChange={setW} />
           {dimensions.unit !== "px" && (
-            <span className="text-[11px] text-gray-400">{formatMeasurement(newWidth, dimensions, t, locale)}</span>
+            <span className="text-[11px] text-gray-400">
+              {formatMeasurement(newWidth, dimensions, t, locale)}
+            </span>
           )}
         </div>
 
         <div className="flex flex-col gap-1.5">
           <SectionLabel>{t("editor.field.heightPx")}</SectionLabel>
-          <NumberInput value={newHeight} onChange={setH} disabled={mode === "scale"} />
+          <NumberInput
+            value={newHeight}
+            onChange={setH}
+            disabled={mode === "scale"}
+          />
           {dimensions.unit !== "px" && (
-            <span className="text-[11px] text-gray-400">{formatMeasurement(newHeight, dimensions, t, locale)}</span>
+            <span className="text-[11px] text-gray-400">
+              {formatMeasurement(newHeight, dimensions, t, locale)}
+            </span>
           )}
         </div>
 
         <div className="flex flex-col gap-1.5">
           <SectionLabel>{t("editor.field.content")}</SectionLabel>
           <div className="flex gap-2">
-            <Button variant="outline" color="neutral" active={mode === "preserve"} className="flex-1" onClick={() => selectMode("preserve")}>{t("editor.resize.keepSize")}</Button>
-            <Button variant="outline" color="neutral" active={mode === "scale"} className="flex-1" onClick={() => selectMode("scale")}>{t("editor.resize.scaleToFit")}</Button>
+            <Button
+              variant="outline"
+              color="neutral"
+              active={mode === "preserve"}
+              className="flex-1"
+              onClick={() => selectMode("preserve")}
+            >
+              {t("editor.resize.keepSize")}
+            </Button>
+            <Button
+              variant="outline"
+              color="neutral"
+              active={mode === "scale"}
+              className="flex-1"
+              onClick={() => selectMode("scale")}
+            >
+              {t("editor.resize.scaleToFit")}
+            </Button>
           </div>
           <span className="text-[11px] text-gray-400">
             {mode === "scale"
@@ -129,7 +190,7 @@ export function CanvasResizeDialog({
           <div className="flex flex-col gap-2">
             <SectionLabel>{t("editor.resize.anchor")}</SectionLabel>
             <div className="grid grid-cols-3 gap-1 w-max">
-              {ANCHOR_GRID.map((a) => {
+              {ANCHOR_GRID.map(a => {
                 const selected = anchor === a;
                 return (
                   <button

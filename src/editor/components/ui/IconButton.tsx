@@ -16,7 +16,8 @@ const sizes = {
 };
 
 const activeStyle = "bg-primary-600 text-white hover:bg-primary-700";
-const inactiveStyle = "text-gray-500 hover:bg-gray-100 hover:text-gray-700 disabled:text-gray-300 disabled:hover:bg-transparent";
+const inactiveStyle =
+  "text-gray-500 hover:bg-gray-100 hover:text-gray-700 disabled:text-gray-300 disabled:hover:bg-transparent";
 
 export function IconButton({
   active,
@@ -28,7 +29,12 @@ export function IconButton({
   return (
     <button
       type="button"
-      className={[base, sizes[size], active ? activeStyle : inactiveStyle, className]
+      className={[
+        base,
+        sizes[size],
+        active ? activeStyle : inactiveStyle,
+        className,
+      ]
         .filter(Boolean)
         .join(" ")}
       {...props}

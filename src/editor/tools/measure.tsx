@@ -11,7 +11,7 @@ export const measureTool: ToolDefinition<MeasureState> = {
   icon: <PiRuler size={20} />,
   cursor: "crosshair",
 
-  useInteraction: (ctx) => useMeasureInteraction(ctx),
+  useInteraction: ctx => useMeasureInteraction(ctx),
 
   PreviewComponent: MeasurePreview,
 

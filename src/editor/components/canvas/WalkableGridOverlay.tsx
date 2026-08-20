@@ -53,13 +53,19 @@ export function WalkableGridOverlay({
         context.fill();
 
         // Hover highlight
-        if (hoverCell && hoverCell.col >= 0 && hoverCell.col < cols && hoverCell.row >= 0 && hoverCell.row < rows) {
+        if (
+          hoverCell &&
+          hoverCell.col >= 0 &&
+          hoverCell.col < cols &&
+          hoverCell.row >= 0 &&
+          hoverCell.row < rows
+        ) {
           context.fillStyle = "rgba(255, 255, 255, 0.4)";
           context.fillRect(
             hoverCell.col * cellSize,
             hoverCell.row * cellSize,
             cellSize,
-            cellSize
+            cellSize,
           );
         }
 

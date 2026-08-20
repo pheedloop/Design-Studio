@@ -1,5 +1,14 @@
 import { useState, useEffect, useRef } from "react";
-import { Group, Rect, Text, Ellipse, Line, Arrow, Shape, Image as KonvaImage } from "react-konva";
+import {
+  Group,
+  Rect,
+  Text,
+  Ellipse,
+  Line,
+  Arrow,
+  Shape,
+  Image as KonvaImage,
+} from "react-konva";
 import type Konva from "konva";
 import type {
   FloorPlanElement,
@@ -12,7 +21,17 @@ import type {
 import { getIconEntry } from "../../editor/utils/iconRegistry";
 import { iconToImage } from "../../editor/utils/iconToImage";
 
-export function ViewerIcon({ iconName, color, width, height }: { iconName: string; color: string; width: number; height: number }) {
+export function ViewerIcon({
+  iconName,
+  color,
+  width,
+  height,
+}: {
+  iconName: string;
+  color: string;
+  width: number;
+  height: number;
+}) {
   const [image, setImage] = useState<HTMLImageElement | null>(null);
   useEffect(() => {
     const entry = getIconEntry(iconName);
@@ -79,7 +98,9 @@ export function ViewerElement({
   const label = getLabel(element);
   const color = overrideColor || element.properties.color;
   const active = isHighlighted || isHovered;
-  const strokeColor = active ? "#007bff" : (element.properties.strokeColor || "#888888");
+  const strokeColor = active
+    ? "#007bff"
+    : element.properties.strokeColor || "#888888";
   const strokeWidth = active
     ? Math.max((element.properties.strokeWidth ?? 1) * 2, 3)
     : (element.properties.strokeWidth ?? (geo.shape === "line" ? 2 : 1));
@@ -96,14 +117,14 @@ export function ViewerElement({
       y={y}
       rotation={rotation}
       opacity={opacity}
-      onMouseEnter={(e) => {
+      onMouseEnter={e => {
         if (onMouseEnter) {
           const stage = e.target.getStage();
           if (stage) stage.container().style.cursor = "pointer";
           onMouseEnter({ screenX: e.evt.clientX, screenY: e.evt.clientY });
         }
       }}
-      onMouseLeave={(e) => {
+      onMouseLeave={e => {
         if (onMouseLeave) {
           const stage = e.target.getStage();
           if (stage) stage.container().style.cursor = "default";
@@ -113,34 +134,41 @@ export function ViewerElement({
       onClick={handleActivate}
       onTap={handleActivate}
     >
-      {geo.shape === "rect" && element.type !== "icon" && element.type !== "label" && (
-        <>
-          <Rect
-            width={geo.width}
-            height={(geo as RectGeometry).height}
-            fill={color}
-            stroke={strokeColor}
-            strokeWidth={strokeWidth}
-            cornerRadius={2}
-            opacity={0.9}
-          />
-          {label && element.properties.labelVisible !== false && (
-            <Text
-              text={label}
+      {geo.shape === "rect" &&
+        element.type !== "icon" &&
+        element.type !== "label" && (
+          <>
+            <Rect
               width={geo.width}
               height={(geo as RectGeometry).height}
-              align={element.properties.labelPositionH ?? "center"}
-              verticalAlign={element.properties.labelPositionV ?? "middle"}
-              padding={4}
-              fontSize={element.properties.labelFontSize ?? 12}
-              fill={element.properties.labelColor ?? "#fff"}
-              fontStyle={`${element.properties.labelBold !== false ? "bold" : ""}${element.properties.labelItalic ? " italic" : ""}`.trim() || "normal"}
-              textDecoration={element.properties.labelUnderline ? "underline" : ""}
-              listening={false}
+              fill={color}
+              stroke={strokeColor}
+              strokeWidth={strokeWidth}
+              cornerRadius={2}
+              opacity={0.9}
             />
-          )}
-        </>
-      )}
+            {label && element.properties.labelVisible !== false && (
+              <Text
+                text={label}
+                width={geo.width}
+                height={(geo as RectGeometry).height}
+                align={element.properties.labelPositionH ?? "center"}
+                verticalAlign={element.properties.labelPositionV ?? "middle"}
+                padding={4}
+                fontSize={element.properties.labelFontSize ?? 12}
+                fill={element.properties.labelColor ?? "#fff"}
+                fontStyle={
+                  `${element.properties.labelBold !== false ? "bold" : ""}${element.properties.labelItalic ? " italic" : ""}`.trim() ||
+                  "normal"
+                }
+                textDecoration={
+                  element.properties.labelUnderline ? "underline" : ""
+                }
+                listening={false}
+              />
+            )}
+          </>
+        )}
       {geo.shape === "ellipse" && (
         <>
           <Ellipse
@@ -163,8 +191,13 @@ export function ViewerElement({
               text={label}
               fontSize={element.properties.labelFontSize ?? 12}
               fill={element.properties.labelColor ?? "#fff"}
-              fontStyle={`${element.properties.labelBold !== false ? "bold" : ""}${element.properties.labelItalic ? " italic" : ""}`.trim() || "normal"}
-              textDecoration={element.properties.labelUnderline ? "underline" : ""}
+              fontStyle={
+                `${element.properties.labelBold !== false ? "bold" : ""}${element.properties.labelItalic ? " italic" : ""}`.trim() ||
+                "normal"
+              }
+              textDecoration={
+                element.properties.labelUnderline ? "underline" : ""
+              }
               listening={false}
             />
           )}
@@ -189,131 +222,163 @@ export function ViewerElement({
           lineCap="round"
         />
       )}
-      {geo.shape === "arrow" && (() => {
-        const arrowGeo = geo as import("../../types").ArrowGeometry;
-        const pts = arrowGeo.points;
-        const arrowHead = element.properties.arrowHead ?? { style: "triangle" as const, size: 12 };
-        if (arrowHead.style === "chevron" && pts.length >= 4) {
-          const n = pts.length;
-          const x2 = pts[n - 2], y2 = pts[n - 1];
-          const x1 = pts[n - 4], y1 = pts[n - 3];
-          const theta = Math.atan2(y2 - y1, x2 - x1);
-          const wing = Math.PI / 5;
-          const s = arrowHead.size;
+      {geo.shape === "arrow" &&
+        (() => {
+          const arrowGeo = geo as import("../../types").ArrowGeometry;
+          const pts = arrowGeo.points;
+          const arrowHead = element.properties.arrowHead ?? {
+            style: "triangle" as const,
+            size: 12,
+          };
+          if (arrowHead.style === "chevron" && pts.length >= 4) {
+            const n = pts.length;
+            const x2 = pts[n - 2],
+              y2 = pts[n - 1];
+            const x1 = pts[n - 4],
+              y1 = pts[n - 3];
+            const theta = Math.atan2(y2 - y1, x2 - x1);
+            const wing = Math.PI / 5;
+            const s = arrowHead.size;
+            return (
+              <>
+                <Line
+                  points={pts}
+                  stroke={color}
+                  strokeWidth={strokeWidth}
+                  lineCap="round"
+                />
+                <Line
+                  points={[
+                    x2 - s * Math.cos(theta - wing),
+                    y2 - s * Math.sin(theta - wing),
+                    x2,
+                    y2,
+                    x2 - s * Math.cos(theta + wing),
+                    y2 - s * Math.sin(theta + wing),
+                  ]}
+                  stroke={color}
+                  strokeWidth={strokeWidth}
+                  lineCap="round"
+                  lineJoin="round"
+                />
+              </>
+            );
+          }
+          return (
+            <Arrow
+              points={[...pts]}
+              stroke={color}
+              strokeWidth={strokeWidth}
+              fill={color}
+              pointerLength={arrowHead.size}
+              pointerWidth={arrowHead.size * 0.8}
+              lineCap="round"
+            />
+          );
+        })()}
+      {geo.shape === "arc" &&
+        (() => {
+          const arcGeo = geo as ArcGeometry;
+          const [x1, y1, cx, cy, x2, y2] = arcGeo.points;
+          return (
+            <Shape
+              sceneFunc={(ctx, shape) => {
+                ctx.beginPath();
+                ctx.moveTo(x1, y1);
+                ctx.quadraticCurveTo(cx, cy, x2, y2);
+                ctx.fillStrokeShape(shape);
+              }}
+              stroke={color}
+              strokeWidth={strokeWidth}
+              lineCap="round"
+            />
+          );
+        })()}
+      {geo.shape === "polygon" &&
+        (() => {
+          const pts = (geo as PolygonGeometry).points;
+          let minX = Infinity,
+            minY = Infinity,
+            maxX = -Infinity,
+            maxY = -Infinity;
+          for (let i = 0; i < pts.length; i += 2) {
+            if (pts[i] < minX) minX = pts[i];
+            if (pts[i] > maxX) maxX = pts[i];
+            if (pts[i + 1] < minY) minY = pts[i + 1];
+            if (pts[i + 1] > maxY) maxY = pts[i + 1];
+          }
+          const polyW = maxX - minX;
+          const polyH = maxY - minY;
           return (
             <>
-              <Line points={pts} stroke={color} strokeWidth={strokeWidth} lineCap="round" />
               <Line
-                points={[
-                  x2 - s * Math.cos(theta - wing), y2 - s * Math.sin(theta - wing),
-                  x2, y2,
-                  x2 - s * Math.cos(theta + wing), y2 - s * Math.sin(theta + wing),
-                ]}
-                stroke={color}
+                points={[...pts]}
+                closed
+                fill={color}
+                stroke={strokeColor}
                 strokeWidth={strokeWidth}
-                lineCap="round"
-                lineJoin="round"
               />
+              {label && element.properties.labelVisible !== false && (
+                <Text
+                  x={isFinite(minX) ? minX : 0}
+                  y={isFinite(minY) ? minY : 0}
+                  width={isFinite(polyW) ? polyW : 0}
+                  height={isFinite(polyH) ? polyH : 0}
+                  align={element.properties.labelPositionH ?? "center"}
+                  verticalAlign={element.properties.labelPositionV ?? "middle"}
+                  padding={4}
+                  text={label}
+                  fontSize={element.properties.labelFontSize ?? 12}
+                  fill={element.properties.labelColor ?? "#fff"}
+                  fontStyle={
+                    `${element.properties.labelBold !== false ? "bold" : ""}${element.properties.labelItalic ? " italic" : ""}`.trim() ||
+                    "normal"
+                  }
+                  textDecoration={
+                    element.properties.labelUnderline ? "underline" : ""
+                  }
+                  listening={false}
+                />
+              )}
             </>
           );
-        }
-        return (
-          <Arrow
-            points={[...pts]}
-            stroke={color}
-            strokeWidth={strokeWidth}
-            fill={color}
-            pointerLength={arrowHead.size}
-            pointerWidth={arrowHead.size * 0.8}
-            lineCap="round"
-          />
-        );
-      })()}
-      {geo.shape === "arc" && (() => {
-        const arcGeo = geo as ArcGeometry;
-        const [x1, y1, cx, cy, x2, y2] = arcGeo.points;
-        return (
-          <Shape
-            sceneFunc={(ctx, shape) => {
-              ctx.beginPath();
-              ctx.moveTo(x1, y1);
-              ctx.quadraticCurveTo(cx, cy, x2, y2);
-              ctx.fillStrokeShape(shape);
-            }}
-            stroke={color}
-            strokeWidth={strokeWidth}
-            lineCap="round"
-          />
-        );
-      })()}
-      {geo.shape === "polygon" && (() => {
-        const pts = (geo as PolygonGeometry).points;
-        let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
-        for (let i = 0; i < pts.length; i += 2) {
-          if (pts[i] < minX) minX = pts[i];
-          if (pts[i] > maxX) maxX = pts[i];
-          if (pts[i + 1] < minY) minY = pts[i + 1];
-          if (pts[i + 1] > maxY) maxY = pts[i + 1];
-        }
-        const polyW = maxX - minX;
-        const polyH = maxY - minY;
-        return (
-          <>
-            <Line
-              points={[...pts]}
-              closed
+        })()}
+      {element.type === "label" &&
+        geo.shape === "rect" &&
+        (() => {
+          const g = geo as RectGeometry;
+          const parts: string[] = [];
+          if (element.properties.fontWeight === "bold") parts.push("bold");
+          if (element.properties.fontStyle === "italic") parts.push("italic");
+          return (
+            <Text
+              text={element.properties.text ?? ""}
+              width={g.width}
+              height={g.height}
               fill={color}
-              stroke={strokeColor}
-              strokeWidth={strokeWidth}
+              fontSize={element.properties.fontSize ?? 14}
+              fontStyle={parts.length > 0 ? parts.join(" ") : "normal"}
+              textDecoration={
+                element.properties.textDecoration === "underline"
+                  ? "underline"
+                  : ""
+              }
+              align={element.properties.textAlign ?? "left"}
+              verticalAlign="middle"
+              listening={false}
             />
-            {label && element.properties.labelVisible !== false && (
-              <Text
-                x={isFinite(minX) ? minX : 0}
-                y={isFinite(minY) ? minY : 0}
-                width={isFinite(polyW) ? polyW : 0}
-                height={isFinite(polyH) ? polyH : 0}
-                align={element.properties.labelPositionH ?? "center"}
-                verticalAlign={element.properties.labelPositionV ?? "middle"}
-                padding={4}
-                text={label}
-                fontSize={element.properties.labelFontSize ?? 12}
-                fill={element.properties.labelColor ?? "#fff"}
-                fontStyle={`${element.properties.labelBold !== false ? "bold" : ""}${element.properties.labelItalic ? " italic" : ""}`.trim() || "normal"}
-                textDecoration={element.properties.labelUnderline ? "underline" : ""}
-                listening={false}
-              />
-            )}
-          </>
-        );
-      })()}
-      {element.type === "label" && geo.shape === "rect" && (() => {
-        const g = geo as RectGeometry;
-        const parts: string[] = [];
-        if (element.properties.fontWeight === "bold") parts.push("bold");
-        if (element.properties.fontStyle === "italic") parts.push("italic");
-        return (
-          <Text
-            text={element.properties.text ?? ""}
-            width={g.width}
-            height={g.height}
-            fill={color}
-            fontSize={element.properties.fontSize ?? 14}
-            fontStyle={parts.length > 0 ? parts.join(" ") : "normal"}
-            textDecoration={element.properties.textDecoration === "underline" ? "underline" : ""}
-            align={element.properties.textAlign ?? "left"}
-            verticalAlign="middle"
-            listening={false}
+          );
+        })()}
+      {element.type === "icon" &&
+        geo.shape === "rect" &&
+        element.properties.iconName && (
+          <ViewerIcon
+            iconName={element.properties.iconName}
+            color={color}
+            width={geo.width}
+            height={(geo as RectGeometry).height}
           />
-        );
-      })()}
-      {element.type === "icon" && geo.shape === "rect" && element.properties.iconName && (
-        <ViewerIcon
-          iconName={element.properties.iconName}
-          color={color}
-          width={geo.width}
-          height={(geo as RectGeometry).height}
-        />
-      )}
+        )}
     </Group>
   );
 }

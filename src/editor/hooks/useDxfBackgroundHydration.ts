@@ -103,5 +103,12 @@ export function useDxfBackgroundHydration({
         onError?.("Couldn't load the DXF background. Reopen the map to retry.");
       }
     })();
-  }, [background, canvasWidth, canvasHeight, setBackground, updateDimensions, onError]);
+  }, [
+    background,
+    canvasWidth,
+    canvasHeight,
+    setBackground,
+    updateDimensions,
+    onError,
+  ]);
 }

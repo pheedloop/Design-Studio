@@ -3,7 +3,11 @@ import { Stage, Layer, Group, Rect } from "react-konva";
 import type Konva from "konva";
 import type { FloorPlanData, LayerDefinition, LayerId } from "../../../types";
 import { ELEMENT_TYPE_TO_LAYER } from "../../../types";
-import type { ToolDefinition, ToolInteraction, ToolContext } from "../../tools/types";
+import type {
+  ToolDefinition,
+  ToolInteraction,
+  ToolContext,
+} from "../../tools/types";
 import { findToolForElement } from "../../tools/registry";
 import { isEmptySpaceClick, getCanvasPoint } from "../../utils/canvas";
 import { ElementShape } from "./ElementShape";
@@ -98,9 +102,12 @@ interface CanvasProps {
     y: number,
     width: number,
     height: number,
-    rotation: number
+    rotation: number,
   ) => void;
-  onGeometryUpdate: (id: string, updates: Partial<import("../../../types").Geometry>) => void;
+  onGeometryUpdate: (
+    id: string,
+    updates: Partial<import("../../../types").Geometry>,
+  ) => void;
   onElementContextMenu: (id: string, screenX: number, screenY: number) => void;
   gridSettings: {
     showGrid: boolean;
@@ -118,7 +125,12 @@ interface CanvasProps {
   onPathingMouseMove?: () => void;
   onPathingMouseUp?: () => void;
   isPathingMode?: boolean;
-  pathingRectPreview?: { startCol: number; startRow: number; endCol: number; endRow: number } | null;
+  pathingRectPreview?: {
+    startCol: number;
+    startRow: number;
+    endCol: number;
+    endRow: number;
+  } | null;
   pendingCells?: Set<string>;
   pendingValue?: 0 | 1;
   // Scale calibration
@@ -136,7 +148,12 @@ interface CanvasProps {
   overlappingElementIds?: Set<string>;
   activeGroupId?: string | null;
   onDoubleClick?: (id: string) => void;
-  onGroupTransformEnd?: (updates: Array<{ id: string; geometry: Partial<import("../../../types").Geometry> }>) => void;
+  onGroupTransformEnd?: (
+    updates: Array<{
+      id: string;
+      geometry: Partial<import("../../../types").Geometry>;
+    }>,
+  ) => void;
 }
 
 export function Canvas({
@@ -199,7 +216,13 @@ export function Canvas({
   const [isStageDragging, setIsStageDragging] = useState(false);
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
-      if (e.code === "Space" && !(e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement)) {
+      if (
+        e.code === "Space" &&
+        !(
+          e.target instanceof HTMLInputElement ||
+          e.target instanceof HTMLTextAreaElement
+        )
+      ) {
         e.preventDefault();
         setSpaceHeld(true);
       }
@@ -233,7 +256,12 @@ export function Canvas({
   // Middle-click pan state
   const [isMiddlePanning, setIsMiddlePanning] = useState(false);
   const isMiddlePanningRef = useRef(false);
-  const middlePanStartRef = useRef<{ clientX: number; clientY: number; stageX: number; stageY: number } | null>(null);
+  const middlePanStartRef = useRef<{
+    clientX: number;
+    clientY: number;
+    stageX: number;
+    stageY: number;
+  } | null>(null);
 
   // Release middle-click pan if mouse-up happens outside the Stage
   useEffect(() => {
@@ -251,12 +279,19 @@ export function Canvas({
   }, [isMiddlePanning, stageRef, onPositionChange]);
 
   // Drag-select rectangle state
-  const [dragSelectRect, setDragSelectRect] = useState<{ x: number; y: number; width: number; height: number } | null>(null);
+  const [dragSelectRect, setDragSelectRect] = useState<{
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+  } | null>(null);
   const dragSelectOrigin = useRef<{ x: number; y: number } | null>(null);
 
   // Multi-drag tracking
   const [isMultiDragging, setIsMultiDragging] = useState(false);
-  const dragStartPositions = useRef<Map<string, { x: number; y: number }>>(new Map());
+  const dragStartPositions = useRef<Map<string, { x: number; y: number }>>(
+    new Map(),
+  );
 
   // Tool interaction ref — updated by ToolHost on each render
   const toolInteractionRef = useRef<ToolInteraction | null>(null);
@@ -272,7 +307,9 @@ export function Canvas({
     }
   }, [isSelectMode]);
 
-  const { activeGuides, startDrag, endDrag, snapPosition } = useAlignmentGuides(data.elements);
+  const { activeGuides, startDrag, endDrag, snapPosition } = useAlignmentGuides(
+    data.elements,
+  );
 
   // These derived views only depend on the floor-plan data/layer config, never
   // on scale/position — memoized so panning and zooming (which re-render this
@@ -281,15 +318,15 @@ export function Canvas({
   const sortedElements = useMemo(
     () =>
       [...data.elements].sort(
-        (a, b) => (a.properties.zIndex ?? 0) - (b.properties.zIndex ?? 0)
+        (a, b) => (a.properties.zIndex ?? 0) - (b.properties.zIndex ?? 0),
       ),
-    [data.elements]
+    [data.elements],
   );
 
   // Build a visibility lookup from layers prop
   const layerVisibility = useMemo(
-    () => new Map(layers.map((l) => [l.id, l.visible])),
-    [layers]
+    () => new Map(layers.map(l => [l.id, l.visible])),
+    [layers],
   );
 
   // Group sorted elements by layer
@@ -308,9 +345,10 @@ export function Canvas({
   }, [sortedElements]);
 
   // Selected element + handle lookup from registry
-  const selectedElement = selectedIds.size === 1
-    ? data.elements.find((el) => selectedIds.has(el.id))
-    : undefined;
+  const selectedElement =
+    selectedIds.size === 1
+      ? data.elements.find(el => selectedIds.has(el.id))
+      : undefined;
   const handleDef = selectedElement
     ? findToolForElement(selectedElement.geometry.shape, selectedElement.type)
     : undefined;
@@ -325,28 +363,32 @@ export function Canvas({
   const groupSelectionGroupId = useMemo(() => {
     if (selectedIds.size < 2 || activeGroupId) return null;
     const firstId = [...selectedIds][0];
-    const gid = data.elements.find((el) => el.id === firstId)?.properties.groupId;
+    const gid = data.elements.find(el => el.id === firstId)?.properties.groupId;
     if (!gid) return null;
     return [...selectedIds].every(
-      (id) => data.elements.find((el) => el.id === id)?.properties.groupId === gid
-    ) ? gid : null;
+      id => data.elements.find(el => el.id === id)?.properties.groupId === gid,
+    )
+      ? gid
+      : null;
   }, [selectedIds, activeGroupId, data.elements]);
 
   const groupMemberElements = useMemo(
     () =>
       groupSelectionGroupId
-        ? data.elements.filter((el) => el.properties.groupId === groupSelectionGroupId)
+        ? data.elements.filter(
+            el => el.properties.groupId === groupSelectionGroupId,
+          )
         : null,
-    [groupSelectionGroupId, data.elements]
+    [groupSelectionGroupId, data.elements],
   );
 
   // Elements in the active group (for boundary overlay)
   const activeGroupElements = useMemo(
     () =>
       activeGroupId
-        ? data.elements.filter((el) => el.properties.groupId === activeGroupId)
+        ? data.elements.filter(el => el.properties.groupId === activeGroupId)
         : null,
-    [activeGroupId, data.elements]
+    [activeGroupId, data.elements],
   );
 
   // --- Mouse event handlers ---
@@ -407,7 +449,10 @@ export function Canvas({
       const stage = stageRef.current;
       if (!stage) return;
       const { clientX, clientY, stageX, stageY } = middlePanStartRef.current;
-      stage.position({ x: stageX + (e.evt.clientX - clientX), y: stageY + (e.evt.clientY - clientY) });
+      stage.position({
+        x: stageX + (e.evt.clientX - clientX),
+        y: stageY + (e.evt.clientY - clientY),
+      });
       return;
     }
 
@@ -430,7 +475,8 @@ export function Canvas({
       const point = getCanvasPoint(stage, position, scale);
       if (!point) return;
       const o = dragSelectOrigin.current;
-      const snapV = (v: number) => Math.round(v / gridSettings.gridSpacing) * gridSettings.gridSpacing;
+      const snapV = (v: number) =>
+        Math.round(v / gridSettings.gridSpacing) * gridSettings.gridSpacing;
       const px = gridSettings.snapToGrid ? snapV(point.x) : point.x;
       const py = gridSettings.snapToGrid ? snapV(point.y) : point.y;
       const ox = gridSettings.snapToGrid ? snapV(o.x) : o.x;
@@ -470,7 +516,7 @@ export function Canvas({
       if (dragSelectRect.width > 5 && dragSelectRect.height > 5) {
         const rect = dragSelectRect;
         const OVERLAP_THRESHOLD = 0.9;
-        const enclosed = data.elements.filter((el) => {
+        const enclosed = data.elements.filter(el => {
           const elLayer = el.layer ?? ELEMENT_TYPE_TO_LAYER[el.type];
           if (elLayer !== activeLayerId) return false;
 
@@ -481,8 +527,14 @@ export function Canvas({
             const geo = el.geometry;
             const [x1, y1, x2, y2] = geo.points;
             return lineIntersectsRect(
-              geo.x + x1, geo.y + y1, geo.x + x2, geo.y + y2,
-              rect.x, rect.y, rect.width, rect.height
+              geo.x + x1,
+              geo.y + y1,
+              geo.x + x2,
+              geo.y + y2,
+              rect.x,
+              rect.y,
+              rect.width,
+              rect.height,
             );
           }
 
@@ -491,8 +543,26 @@ export function Canvas({
             const geo = el.geometry;
             const [x1, y1, cx, cy, x2, y2] = geo.points;
             return (
-              lineIntersectsRect(geo.x+x1, geo.y+y1, geo.x+cx, geo.y+cy, rect.x, rect.y, rect.width, rect.height) ||
-              lineIntersectsRect(geo.x+cx, geo.y+cy, geo.x+x2, geo.y+y2, rect.x, rect.y, rect.width, rect.height)
+              lineIntersectsRect(
+                geo.x + x1,
+                geo.y + y1,
+                geo.x + cx,
+                geo.y + cy,
+                rect.x,
+                rect.y,
+                rect.width,
+                rect.height,
+              ) ||
+              lineIntersectsRect(
+                geo.x + cx,
+                geo.y + cy,
+                geo.x + x2,
+                geo.y + y2,
+                rect.x,
+                rect.y,
+                rect.width,
+                rect.height,
+              )
             );
           }
 
@@ -502,11 +572,19 @@ export function Canvas({
             const pts = geo.points;
             for (let i = 0; i < pts.length; i += 2) {
               const ni = (i + 2) % pts.length;
-              if (lineIntersectsRect(
-                geo.x + pts[i], geo.y + pts[i + 1],
-                geo.x + pts[ni], geo.y + pts[ni + 1],
-                rect.x, rect.y, rect.width, rect.height
-              )) return true;
+              if (
+                lineIntersectsRect(
+                  geo.x + pts[i],
+                  geo.y + pts[i + 1],
+                  geo.x + pts[ni],
+                  geo.y + pts[ni + 1],
+                  rect.x,
+                  rect.y,
+                  rect.width,
+                  rect.height,
+                )
+              )
+                return true;
             }
             return false;
           }
@@ -517,8 +595,14 @@ export function Canvas({
           const elHeight = b.bottom - b.top;
           if (elWidth <= 0 || elHeight <= 0) return false;
 
-          const overlapX = Math.max(0, Math.min(b.right, rect.x + rect.width) - Math.max(b.left, rect.x));
-          const overlapY = Math.max(0, Math.min(b.bottom, rect.y + rect.height) - Math.max(b.top, rect.y));
+          const overlapX = Math.max(
+            0,
+            Math.min(b.right, rect.x + rect.width) - Math.max(b.left, rect.x),
+          );
+          const overlapY = Math.max(
+            0,
+            Math.min(b.bottom, rect.y + rect.height) - Math.max(b.top, rect.y),
+          );
           const overlapArea = overlapX * overlapY;
           const elArea = elWidth * elHeight;
 
@@ -526,7 +610,7 @@ export function Canvas({
         });
         if (enclosed.length > 0) {
           // Expand selection to include all members of any partially captured group
-          const enclosedIds = new Set(enclosed.map((el) => el.id));
+          const enclosedIds = new Set(enclosed.map(el => el.id));
           for (const el of enclosed) {
             const gid = el.properties.groupId;
             if (gid) {
@@ -573,7 +657,7 @@ export function Canvas({
         dragStartPositions.current = new Map();
       }
     },
-    [startDrag, selectedIds, stageRef]
+    [startDrag, selectedIds, stageRef],
   );
 
   const handleElementDragMove = useCallback(
@@ -599,7 +683,7 @@ export function Canvas({
           }
         }
       } else {
-        const element = data.elements.find((el) => el.id === id);
+        const element = data.elements.find(el => el.id === id);
         if (!element) return;
 
         let finalX = x;
@@ -652,7 +736,14 @@ export function Canvas({
         }
       }
     },
-    [data.elements, snapPosition, stageRef, selectedIds, gridSettings, snapToObjects]
+    [
+      data.elements,
+      snapPosition,
+      stageRef,
+      selectedIds,
+      gridSettings,
+      snapToObjects,
+    ],
   );
 
   const handleElementDragEnd = useCallback(
@@ -682,23 +773,24 @@ export function Canvas({
         }
       }
     },
-    [endDrag, selectedIds, stageRef, onMultiMove, onElementMove]
+    [endDrag, selectedIds, stageRef, onMultiMove, onElementMove],
   );
 
   // --- Cursor ---
-  const cursor = isMiddlePanning || (isPanMode && isStageDragging)
-    ? "grabbing"
-    : isPanMode
-    ? "grab"
-    : isCalibrating
-      ? "crosshair"
-      : isPathingMode
-        ? "crosshair"
-        : activeTool
-          ? activeTool.cursor
-          : hoveredElementId && isSelectMode
-            ? "move"
-            : "default";
+  const cursor =
+    isMiddlePanning || (isPanMode && isStageDragging)
+      ? "grabbing"
+      : isPanMode
+        ? "grab"
+        : isCalibrating
+          ? "crosshair"
+          : isPathingMode
+            ? "crosshair"
+            : activeTool
+              ? activeTool.cursor
+              : hoveredElementId && isSelectMode
+                ? "move"
+                : "default";
 
   return (
     <div
@@ -714,12 +806,15 @@ export function Canvas({
         scaleY={scale}
         x={position.x}
         y={position.y}
-        draggable={!isCropping && (isPanMode || (!isPathingMode && isSelectMode && !dragSelectRect))}
+        draggable={
+          !isCropping &&
+          (isPanMode || (!isPathingMode && isSelectMode && !dragSelectRect))
+        }
         onWheel={onWheel}
-        onDragStart={(e) => {
+        onDragStart={e => {
           if (e.target === stageRef.current) setIsStageDragging(true);
         }}
-        onDragEnd={(e) => {
+        onDragEnd={e => {
           if (e.target === stageRef.current) setIsStageDragging(false);
           onDragEnd(e);
         }}
@@ -730,7 +825,12 @@ export function Canvas({
       >
         {/* Background layer: color fill, image, grid */}
         <Layer
-          clip={{ x: 0, y: 0, width: data.dimensions.width, height: data.dimensions.height }}
+          clip={{
+            x: 0,
+            y: 0,
+            width: data.dimensions.width,
+            height: data.dimensions.height,
+          }}
         >
           <Rect
             id="background"
@@ -742,12 +842,14 @@ export function Canvas({
             stroke="#d1d5db"
             strokeWidth={1}
           />
-          {data.background?.kind === "image" && layerVisibility.get("background") !== false && (
-            <BackgroundImage config={data.background} />
-          )}
-          {data.background?.kind === "dxf" && layerVisibility.get("background") !== false && (
-            <DxfDrawing config={data.background} />
-          )}
+          {data.background?.kind === "image" &&
+            layerVisibility.get("background") !== false && (
+              <BackgroundImage config={data.background} />
+            )}
+          {data.background?.kind === "dxf" &&
+            layerVisibility.get("background") !== false && (
+              <DxfDrawing config={data.background} />
+            )}
           {gridSettings.showGrid && !isPathingMode && (
             <Group name={CAPTURE_EXCLUDE_NAME}>
               <GridLayer
@@ -767,39 +869,54 @@ export function Canvas({
          *  just keeps the stage's total layer count within Konva's recommended
          *  3-5 (see the "stage has N layers" perf warning). */}
         <Layer>
-          {elementLayerOrder.map((layerId) => {
+          {elementLayerOrder.map(layerId => {
             const isActiveLayer = layerId === activeLayerId;
             return (
-              <Group key={layerId} visible={layerVisibility.get(layerId) !== false} listening={isActiveLayer}>
+              <Group
+                key={layerId}
+                visible={layerVisibility.get(layerId) !== false}
+                listening={isActiveLayer}
+              >
                 {layerId === "pathing" && data.walkableLayer && (
                   <Group name={CAPTURE_EXCLUDE_NAME}>
                     <WalkableGridOverlay
                       grid={data.walkableLayer}
                       showGridLines={activeLayerId === "pathing"}
                       opacity={walkableGridOpacity}
-                      hoverCell={activeLayerId === "pathing" ? walkableHoverCell : null}
+                      hoverCell={
+                        activeLayerId === "pathing" ? walkableHoverCell : null
+                      }
                       pendingCells={pendingCells}
                       pendingValue={pendingValue}
                     />
                   </Group>
                 )}
-                {(elementsByLayer.get(layerId) ?? []).map((element) => (
+                {(elementsByLayer.get(layerId) ?? []).map(element => (
                   <ElementShape
                     key={element.id}
                     element={element}
                     isSelectMode={isSelectMode && isActiveLayer}
                     isLinked={!unlinkedElementIds?.has(element.id)}
                     isHovered={isSelectMode && hoveredElementId === element.id}
-                    isOverlapping={overlappingElementIds?.has(element.id) ?? false}
-                    isDimmed={activeGroupId != null && element.properties.groupId !== activeGroupId}
+                    isOverlapping={
+                      overlappingElementIds?.has(element.id) ?? false
+                    }
+                    isDimmed={
+                      activeGroupId != null &&
+                      element.properties.groupId !== activeGroupId
+                    }
                     onSelect={onSelect}
                     onDoubleClick={onDoubleClick}
                     onDragStart={handleElementDragStart}
                     onDragMove={handleElementDragMove}
                     onDragEnd={handleElementDragEnd}
                     onContextMenu={onElementContextMenu}
-                    onMouseEnter={isSelectMode ? handleElementMouseEnter : undefined}
-                    onMouseLeave={isSelectMode ? handleElementMouseLeave : undefined}
+                    onMouseEnter={
+                      isSelectMode ? handleElementMouseEnter : undefined
+                    }
+                    onMouseLeave={
+                      isSelectMode ? handleElementMouseLeave : undefined
+                    }
                   />
                 ))}
               </Group>
@@ -809,7 +926,9 @@ export function Canvas({
 
         {/* Selection overlay: transformer, multi-select bounds, handles */}
         <Layer name={CAPTURE_EXCLUDE_NAME}>
-          {groupSelectionGroupId && groupMemberElements && onGroupTransformEnd ? (
+          {groupSelectionGroupId &&
+          groupMemberElements &&
+          onGroupTransformEnd ? (
             <GroupTransformer
               groupId={groupSelectionGroupId}
               memberElements={groupMemberElements}
@@ -833,23 +952,35 @@ export function Canvas({
             </>
           )}
           {/* Boundary outline shown while inside an entered group */}
-          {activeGroupElements && activeGroupElements.length > 0 && (() => {
-            let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
-            for (const el of activeGroupElements) {
-              const b = getElementBounds(el);
-              minX = Math.min(minX, b.left); minY = Math.min(minY, b.top);
-              maxX = Math.max(maxX, b.right); maxY = Math.max(maxY, b.bottom);
-            }
-            const pad = 6;
-            return (
-              <Rect
-                x={minX - pad} y={minY - pad}
-                width={maxX - minX + pad * 2} height={maxY - minY + pad * 2}
-                stroke="#007bff" strokeWidth={1} opacity={0.4}
-                dash={[6, 4]} listening={false}
-              />
-            );
-          })()}
+          {activeGroupElements &&
+            activeGroupElements.length > 0 &&
+            (() => {
+              let minX = Infinity,
+                minY = Infinity,
+                maxX = -Infinity,
+                maxY = -Infinity;
+              for (const el of activeGroupElements) {
+                const b = getElementBounds(el);
+                minX = Math.min(minX, b.left);
+                minY = Math.min(minY, b.top);
+                maxX = Math.max(maxX, b.right);
+                maxY = Math.max(maxY, b.bottom);
+              }
+              const pad = 6;
+              return (
+                <Rect
+                  x={minX - pad}
+                  y={minY - pad}
+                  width={maxX - minX + pad * 2}
+                  height={maxY - minY + pad * 2}
+                  stroke="#007bff"
+                  strokeWidth={1}
+                  opacity={0.4}
+                  dash={[6, 4]}
+                  listening={false}
+                />
+              );
+            })()}
           {HandleComponent && selectedElement && (
             <HandleComponent
               element={selectedElement}
@@ -892,10 +1023,32 @@ export function Canvas({
           )}
           {pathingRectPreview && data.walkableLayer && (
             <Rect
-              x={Math.min(pathingRectPreview.startCol, pathingRectPreview.endCol) * data.walkableLayer.cellSize}
-              y={Math.min(pathingRectPreview.startRow, pathingRectPreview.endRow) * data.walkableLayer.cellSize}
-              width={(Math.abs(pathingRectPreview.endCol - pathingRectPreview.startCol) + 1) * data.walkableLayer.cellSize}
-              height={(Math.abs(pathingRectPreview.endRow - pathingRectPreview.startRow) + 1) * data.walkableLayer.cellSize}
+              x={
+                Math.min(
+                  pathingRectPreview.startCol,
+                  pathingRectPreview.endCol,
+                ) * data.walkableLayer.cellSize
+              }
+              y={
+                Math.min(
+                  pathingRectPreview.startRow,
+                  pathingRectPreview.endRow,
+                ) * data.walkableLayer.cellSize
+              }
+              width={
+                (Math.abs(
+                  pathingRectPreview.endCol - pathingRectPreview.startCol,
+                ) +
+                  1) *
+                data.walkableLayer.cellSize
+              }
+              height={
+                (Math.abs(
+                  pathingRectPreview.endRow - pathingRectPreview.startRow,
+                ) +
+                  1) *
+                data.walkableLayer.cellSize
+              }
               fill="rgba(34, 197, 94, 0.2)"
               stroke="rgba(34, 197, 94, 0.8)"
               strokeWidth={1}

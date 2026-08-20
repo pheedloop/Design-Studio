@@ -24,8 +24,9 @@
   }
 
   code {
-    font-family: "Consolas", "Menlo", "Inconsolata", "Roboto Mono",
-      "Courier New", Courier, "Lucida Console", "Monaco", monospace;
+    font-family:
+      "Consolas", "Menlo", "Inconsolata", "Roboto Mono", "Courier New", Courier,
+      "Lucida Console", "Monaco", monospace;
   }
 
   button {

@@ -26,7 +26,10 @@ interface BakeOptions {
 
 /** Transform DXF-space primitives into canvas pixels: uniform fit scale, Y-flip
  *  (DXF is Y-up, canvas is Y-down), and centering per the fit mode. */
-export function bakeDrawing(primitives: DxfPrimitive[], opts: BakeOptions): BakeResult {
+export function bakeDrawing(
+  primitives: DxfPrimitive[],
+  opts: BakeOptions,
+): BakeResult {
   const { box, bounds, mode } = opts;
   const fill = opts.fill ?? 1;
   const dxfW = Math.max(bounds.maxX - bounds.minX, 1e-6);

@@ -13,7 +13,11 @@ interface AttendeePickerProps {
  * server-side search (like raichu's AttendeeSelect), built from primitives so
  * the library carries no react-select dependency.
  */
-export function AttendeePicker({ provider, value, onChange }: AttendeePickerProps) {
+export function AttendeePicker({
+  provider,
+  value,
+  onChange,
+}: AttendeePickerProps) {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<AttendeeOption[]>([]);
@@ -28,7 +32,7 @@ export function AttendeePicker({ provider, value, onChange }: AttendeePickerProp
     const t = setTimeout(() => {
       provider
         .search(query)
-        .then((r) => setResults(r))
+        .then(r => setResults(r))
         .finally(() => setLoading(false));
     }, 200);
     return () => clearTimeout(t);
@@ -57,7 +61,7 @@ export function AttendeePicker({ provider, value, onChange }: AttendeePickerProp
         <button
           type="button"
           onClick={() =>
-            setOpen((o) => {
+            setOpen(o => {
               const next = !o;
               if (next) setLoading(true);
               return next;
@@ -65,7 +69,11 @@ export function AttendeePicker({ provider, value, onChange }: AttendeePickerProp
           }
           className="min-w-[9rem] max-w-[14rem] truncate text-left text-gray-700"
         >
-          {value ? value.name : <span className="text-gray-400">Preview data…</span>}
+          {value ? (
+            value.name
+          ) : (
+            <span className="text-gray-400">Preview data…</span>
+          )}
         </button>
         {value ? (
           <button
@@ -87,7 +95,7 @@ export function AttendeePicker({ provider, value, onChange }: AttendeePickerProp
             <input
               autoFocus
               value={query}
-              onChange={(e) => {
+              onChange={e => {
                 setQuery(e.target.value);
                 setLoading(true);
               }}
@@ -99,9 +107,11 @@ export function AttendeePicker({ provider, value, onChange }: AttendeePickerProp
             {loading ? (
               <div className="px-3 py-2 text-xs text-gray-400">Searching…</div>
             ) : results.length === 0 ? (
-              <div className="px-3 py-2 text-xs text-gray-400">No attendees found</div>
+              <div className="px-3 py-2 text-xs text-gray-400">
+                No attendees found
+              </div>
             ) : (
-              results.map((o) => (
+              results.map(o => (
                 <button
                   key={o.id}
                   type="button"
@@ -113,7 +123,9 @@ export function AttendeePicker({ provider, value, onChange }: AttendeePickerProp
                 >
                   <div className="text-xs text-gray-800 truncate">{o.name}</div>
                   {o.subtitle && (
-                    <div className="text-[11px] text-gray-400 truncate">{o.subtitle}</div>
+                    <div className="text-[11px] text-gray-400 truncate">
+                      {o.subtitle}
+                    </div>
                   )}
                 </button>
               ))

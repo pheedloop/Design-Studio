@@ -7,10 +7,13 @@ interface MultiSelectBoundsProps {
   selectedIds: Set<string>;
 }
 
-export function MultiSelectBounds({ elements, selectedIds }: MultiSelectBoundsProps) {
+export function MultiSelectBounds({
+  elements,
+  selectedIds,
+}: MultiSelectBoundsProps) {
   if (selectedIds.size < 2) return null;
 
-  const selected = elements.filter((el) => selectedIds.has(el.id));
+  const selected = elements.filter(el => selectedIds.has(el.id));
   if (selected.length < 2) return null;
 
   let minX = Infinity;

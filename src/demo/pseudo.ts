@@ -1,10 +1,56 @@
 const ACCENTS: Record<string, string> = {
-  a: "á", b: "ƀ", c: "ç", d: "ð", e: "é", f: "ƒ", g: "ğ", h: "ĥ", i: "í",
-  j: "ĵ", k: "ķ", l: "ł", m: "ɱ", n: "ñ", o: "ó", p: "ƥ", q: "ɋ", r: "ŕ",
-  s: "ş", t: "ţ", u: "ú", v: "ṽ", w: "ŵ", x: "ẋ", y: "ý", z: "ż",
-  A: "Á", B: "Ɓ", C: "Ç", D: "Ð", E: "É", F: "Ƒ", G: "Ğ", H: "Ĥ", I: "Í",
-  J: "Ĵ", K: "Ķ", L: "Ł", M: "Ɱ", N: "Ñ", O: "Ó", P: "Ƥ", Q: "Ɋ", R: "Ŕ",
-  S: "Ş", T: "Ţ", U: "Ú", V: "Ṽ", W: "Ŵ", X: "Ẋ", Y: "Ý", Z: "Ż",
+  a: "á",
+  b: "ƀ",
+  c: "ç",
+  d: "ð",
+  e: "é",
+  f: "ƒ",
+  g: "ğ",
+  h: "ĥ",
+  i: "í",
+  j: "ĵ",
+  k: "ķ",
+  l: "ł",
+  m: "ɱ",
+  n: "ñ",
+  o: "ó",
+  p: "ƥ",
+  q: "ɋ",
+  r: "ŕ",
+  s: "ş",
+  t: "ţ",
+  u: "ú",
+  v: "ṽ",
+  w: "ŵ",
+  x: "ẋ",
+  y: "ý",
+  z: "ż",
+  A: "Á",
+  B: "Ɓ",
+  C: "Ç",
+  D: "Ð",
+  E: "É",
+  F: "Ƒ",
+  G: "Ğ",
+  H: "Ĥ",
+  I: "Í",
+  J: "Ĵ",
+  K: "Ķ",
+  L: "Ł",
+  M: "Ɱ",
+  N: "Ñ",
+  O: "Ó",
+  P: "Ƥ",
+  Q: "Ɋ",
+  R: "Ŕ",
+  S: "Ş",
+  T: "Ţ",
+  U: "Ú",
+  V: "Ṽ",
+  W: "Ŵ",
+  X: "Ẋ",
+  Y: "Ý",
+  Z: "Ż",
 };
 
 const PLACEHOLDER = /(\{\{\s*[A-Za-z0-9_]+\s*\}\})/g;
@@ -21,10 +67,10 @@ const EXPANSION = 0.4;
 export function pseudoLocalize(template: string): string {
   const accented = template
     .split(PLACEHOLDER)
-    .map((part) =>
+    .map(part =>
       IS_PLACEHOLDER.test(part)
         ? part
-        : part.replace(/[A-Za-z]/g, (ch) => ACCENTS[ch] ?? ch),
+        : part.replace(/[A-Za-z]/g, ch => ACCENTS[ch] ?? ch),
     )
     .join("");
 

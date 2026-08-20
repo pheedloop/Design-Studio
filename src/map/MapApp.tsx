@@ -110,8 +110,8 @@ export function MapApp() {
         iconColor: "#3b82f6",
         iconShape: "rect",
         defaultShape: "rect",
-        getRecordId: (r) => r.slug,
-        getPrimaryLabel: (r) => r.code,
+        getRecordId: r => r.slug,
+        getPrimaryLabel: r => r.code,
       }),
       definePlacementCategory<SessionLocation>({
         id: "sessions",
@@ -123,8 +123,8 @@ export function MapApp() {
         iconShape: "oval",
         defaultShape: "rect",
         // SessionLocation.id is an integer PK; element sessionId refs are strings.
-        getRecordId: (r) => String(r.id),
-        getPrimaryLabel: (r) => r.title,
+        getRecordId: r => String(r.id),
+        getPrimaryLabel: r => r.title,
       }),
       definePlacementCategory<MeetingRoom>({
         id: "meetingRooms",
@@ -135,11 +135,11 @@ export function MapApp() {
         iconColor: "#f59e0b",
         iconShape: "rect",
         defaultShape: "rect",
-        getRecordId: (r) => r.id,
-        getPrimaryLabel: (r) => r.name,
-        getSecondaryLabel: (r) =>
+        getRecordId: r => r.id,
+        getPrimaryLabel: r => r.name,
+        getSecondaryLabel: r =>
           r.capacity != null ? `${r.capacity} cap.` : null,
-        getExtraProps: (r) =>
+        getExtraProps: r =>
           r.capacity != null ? { capacity: r.capacity } : {},
       }),
     ],
@@ -150,9 +150,7 @@ export function MapApp() {
     <a
       href={`#${m}`}
       className={`px-3 py-1 rounded transition-colors ${
-        mode === m
-          ? "bg-white/15 text-white"
-          : "text-gray-400 hover:text-white"
+        mode === m ? "bg-white/15 text-white" : "text-gray-400 hover:text-white"
       }`}
     >
       {label}
@@ -169,7 +167,7 @@ export function MapApp() {
 
         <div className="w-px h-4 bg-gray-700 mx-1" />
         <span className="text-gray-500 mr-0.5">Tier:</span>
-        {(["basic", "advanced", "premium"] as Tier[]).map((t) => (
+        {(["basic", "advanced", "premium"] as Tier[]).map(t => (
           <button
             key={t}
             onClick={() => setTier(t)}

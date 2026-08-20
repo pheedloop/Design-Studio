@@ -14,7 +14,13 @@ interface TabBarProps {
   className?: string;
 }
 
-export function TabBar({ tabs, value, onChange, itemClassName, className }: TabBarProps) {
+export function TabBar({
+  tabs,
+  value,
+  onChange,
+  itemClassName,
+  className,
+}: TabBarProps) {
   return (
     <div className={["flex", className].filter(Boolean).join(" ")}>
       {tabs.map((tab, i) => {
@@ -23,8 +29,8 @@ export function TabBar({ tabs, value, onChange, itemClassName, className }: TabB
         const shapeClass = isFirst
           ? "rounded-r-none"
           : isLast
-          ? "rounded-l-none border-l-0"
-          : "rounded-none border-l-0";
+            ? "rounded-l-none border-l-0"
+            : "rounded-none border-l-0";
         return (
           <Button
             key={tab.id}

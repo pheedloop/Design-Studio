@@ -33,7 +33,11 @@ export function JsonDebugView({ data, label }: JsonDebugViewProps) {
         theme={theme}
         invertTheme={false}
         hideRoot={!label}
-        labelRenderer={label ? ([key]) => <strong>{key === "root" ? label : key}:</strong> : undefined}
+        labelRenderer={
+          label
+            ? ([key]) => <strong>{key === "root" ? label : key}:</strong>
+            : undefined
+        }
         shouldExpandNodeInitially={(_keyPath, _data, level) => level < 2}
       />
     </div>

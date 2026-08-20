@@ -77,7 +77,8 @@ export function resolveEnglishPairFrom(
 ): { lookup: string; fallback: string } {
   const fallback = selectFrom(strings, key, vars, ENGLISH);
   return {
-    lookup: locale === undefined ? fallback : selectFrom(strings, key, vars, locale),
+    lookup:
+      locale === undefined ? fallback : selectFrom(strings, key, vars, locale),
     fallback,
   };
 }

@@ -16,6 +16,8 @@ describe("canonicalLocale", () => {
     expect(canonicalLocale("fr_CA")).toBeUndefined();
     expect(canonicalLocale("")).toBeUndefined();
     expect(() => formatNumber(1.5, canonicalLocale("fr_CA"), 1)).not.toThrow();
-    expect(() => formatList(["a", "b"], canonicalLocale("fr_CA"))).not.toThrow();
+    expect(() =>
+      formatList(["a", "b"], canonicalLocale("fr_CA")),
+    ).not.toThrow();
   });
 });

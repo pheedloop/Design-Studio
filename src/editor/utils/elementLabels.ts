@@ -26,7 +26,11 @@ const SHAPE_LABEL: Record<Geometry["shape"], StringKey> = {
 
 /** A shape is named by its geometry; an arrowhead makes a line an arrow. */
 export function elementTypeLabel(
-  element: { type: ElementType; geometry: Geometry; properties: { arrowHead?: unknown } },
+  element: {
+    type: ElementType;
+    geometry: Geometry;
+    properties: { arrowHead?: unknown };
+  },
   t: T,
 ): string {
   if (element.type !== "shape") return t(ELEMENT_TYPE_LABEL[element.type]);

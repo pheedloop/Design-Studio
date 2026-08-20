@@ -27,9 +27,14 @@ export function PathingOptionsBar({
   return (
     <div className="flex items-center gap-4 px-3 py-2 bg-white border-b border-gray-200">
       <div className="flex items-center gap-1.5">
-        <span className="text-[11px] text-gray-500">{t("editor.field.cellSize")}</span>
-        <Select value={cellSize} onChange={(e) => onCellSizeChange(Number(e.target.value))}>
-          {CELL_SIZE_OPTIONS.map((s) => (
+        <span className="text-[11px] text-gray-500">
+          {t("editor.field.cellSize")}
+        </span>
+        <Select
+          value={cellSize}
+          onChange={e => onCellSizeChange(Number(e.target.value))}
+        >
+          {CELL_SIZE_OPTIONS.map(s => (
             <option key={s} value={s}>
               {t("common.measurement", { value: s, unit: t("common.unit.px") })}
             </option>
@@ -38,21 +43,31 @@ export function PathingOptionsBar({
       </div>
 
       <div className="flex items-center gap-1.5">
-        <span className="text-[11px] text-gray-500">{t("editor.field.opacity")}</span>
+        <span className="text-[11px] text-gray-500">
+          {t("editor.field.opacity")}
+        </span>
         <Slider
           min={0.1}
           max={0.8}
           step={0.05}
           value={opacity}
-          onChange={(e) => onOpacityChange(Number(e.target.value))}
+          onChange={e => onOpacityChange(Number(e.target.value))}
           className="w-16 h-1 accent-green-500"
         />
-        <span className="text-[10px] text-gray-400 w-7">{Math.round(opacity * 100)}%</span>
+        <span className="text-[10px] text-gray-400 w-7">
+          {Math.round(opacity * 100)}%
+        </span>
       </div>
 
       <div className="h-4 w-px bg-gray-200" />
 
-      <Button variant="ghost" color="positive" className="gap-1" onClick={onAutoMarkWalkable} title={t("editor.pathing.autoAislesHint")}>
+      <Button
+        variant="ghost"
+        color="positive"
+        className="gap-1"
+        onClick={onAutoMarkWalkable}
+        title={t("editor.pathing.autoAislesHint")}
+      >
         <PiPath size={14} />
         {t("editor.pathing.autoAisles")}
       </Button>
@@ -68,7 +83,12 @@ export function PathingOptionsBar({
 
       <div className="h-4 w-px bg-gray-200" />
 
-      <Button variant="ghost" color="negative" onClick={onClearGrid} title={t("editor.pathing.clearHint")}>
+      <Button
+        variant="ghost"
+        color="negative"
+        onClick={onClearGrid}
+        title={t("editor.pathing.clearHint")}
+      >
         {t("editor.pathing.clear")}
       </Button>
     </div>

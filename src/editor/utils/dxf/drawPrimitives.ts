@@ -15,7 +15,14 @@ export interface DrawContext {
   lineTo(x: number, y: number): void;
   closePath(): void;
   stroke(): void;
-  arc(x: number, y: number, r: number, start: number, end: number, ccw?: boolean): void;
+  arc(
+    x: number,
+    y: number,
+    r: number,
+    start: number,
+    end: number,
+    ccw?: boolean,
+  ): void;
   fillText(text: string, x: number, y: number): void;
   save(): void;
   restore(): void;
@@ -39,7 +46,7 @@ export interface DrawOptions {
 export function drawPrimitives(
   ctx: DrawContext,
   primitives: DxfPrimitive[],
-  opts: DrawOptions = {}
+  opts: DrawOptions = {},
 ): void {
   const stroke = opts.stroke ?? DEFAULT_DXF_STROKE;
   const lineWidth = opts.lineWidth ?? 1;

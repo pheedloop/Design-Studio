@@ -83,7 +83,7 @@ function FilterBar({
     } else {
       setTimeout(() => searchRef.current?.focus(), 0);
     }
-    setSearchOpen((v) => !v);
+    setSearchOpen(v => !v);
     setFilterOpen(false);
   };
 
@@ -96,7 +96,7 @@ function FilterBar({
           <button
             type="button"
             onClick={() => {
-              setShapeOpen((v) => !v);
+              setShapeOpen(v => !v);
               setFilterOpen(false);
             }}
             className="flex items-center gap-1 text-xs text-gray-600 border border-gray-200 rounded px-1.5 py-0.5 hover:bg-gray-50 transition-colors"
@@ -110,7 +110,7 @@ function FilterBar({
           </button>
           {shapeOpen && (
             <div className="absolute top-full left-0 mt-0.5 bg-white border border-gray-200 rounded shadow-md z-20 py-0.5 w-28">
-              {(["rect", "ellipse"] as const).map((s) => (
+              {(["rect", "ellipse"] as const).map(s => (
                 <button
                   key={s}
                   type="button"
@@ -158,7 +158,7 @@ function FilterBar({
           <button
             type="button"
             onClick={() => {
-              setFilterOpen((v) => !v);
+              setFilterOpen(v => !v);
               setShapeOpen(false);
             }}
             className={[
@@ -178,7 +178,7 @@ function FilterBar({
               <div className="px-2.5 pb-1 text-[10px] uppercase tracking-wider text-gray-400 font-medium">
                 {t("editor.placement.status")}
               </div>
-              {(["all", "unplaced", "placed"] as const).map((f) => (
+              {(["all", "unplaced", "placed"] as const).map(f => (
                 <label
                   key={f}
                   className="flex items-center gap-2 px-2.5 py-1.5 text-xs cursor-pointer hover:bg-gray-50 transition-colors"
@@ -215,7 +215,7 @@ function FilterBar({
               ref={searchRef}
               type="text"
               value={query}
-              onChange={(e) => onQueryChange(e.target.value)}
+              onChange={e => onQueryChange(e.target.value)}
               placeholder={t("editor.placement.searchPlaceholder")}
               className="w-full pl-2.5 pr-6 py-1 text-xs border border-gray-200 rounded bg-gray-50 focus:bg-white focus:outline-none focus:ring-1 focus:ring-primary-400 transition"
             />
@@ -321,7 +321,7 @@ function Section({
               ? t("editor.placement.autoPlace", { count: totalUnplaced })
               : t("editor.placement.noUnplaced")
           }
-          onClick={(e) => {
+          onClick={e => {
             e.stopPropagation();
             if (totalUnplaced > 0) onAutoArrange?.();
           }}
@@ -464,7 +464,10 @@ interface PlacementPanelProps {
   ) => void;
 }
 
-export function PlacementPanel({ records, onAutoArrange }: PlacementPanelProps) {
+export function PlacementPanel({
+  records,
+  onAutoArrange,
+}: PlacementPanelProps) {
   // Section state is keyed by category id so it adapts to whatever categories
   // the active product passes in.
   const [openSection, setOpenSection] = useState<string | null>(null);
@@ -479,22 +482,22 @@ export function PlacementPanel({ records, onAutoArrange }: PlacementPanelProps) 
   const filterOf = (id: string) => sectionFilters[id] ?? emptyFilter;
 
   const updateFilter = (id: string, patch: Partial<SectionFilter>) =>
-    setSectionFilters((prev) => ({
+    setSectionFilters(prev => ({
       ...prev,
       [id]: { ...(prev[id] ?? emptyFilter), ...patch },
     }));
 
   const setShape = (id: string) => (s: "rect" | "ellipse") =>
-    setSectionShapes((prev) => ({ ...prev, [id]: s }));
+    setSectionShapes(prev => ({ ...prev, [id]: s }));
 
   const toggle = (id: string) =>
-    setOpenSection((prev) => (prev === id ? null : id));
+    setOpenSection(prev => (prev === id ? null : id));
 
   const applyFilter = (group: CategoryRecords, f: SectionFilter) => {
     const q = f.query.trim().toLowerCase();
     const getText = group.category.getPrimaryLabel;
     return group.records.filter(
-      (r) =>
+      r =>
         (!q || getText(r.record).toLowerCase().includes(q)) &&
         (f.status === "all" ||
           (f.status === "placed" ? r.isPlaced : !r.isPlaced)),
@@ -504,7 +507,7 @@ export function PlacementPanel({ records, onAutoArrange }: PlacementPanelProps) 
   return (
     <div className="flex flex-col h-full overflow-hidden">
       <div className="flex-1 overflow-y-auto">
-        {records.map((group) => {
+        {records.map(group => {
           const { category } = group;
           const id = category.id;
           const filter = filterOf(id);
@@ -515,23 +518,23 @@ export function PlacementPanel({ records, onAutoArrange }: PlacementPanelProps) 
               title={category.title}
               iconShape={category.iconShape}
               iconColor={category.iconColor}
-              placed={filtered.filter((r) => r.isPlaced).length}
-              unplaced={filtered.filter((r) => !r.isPlaced).length}
+              placed={filtered.filter(r => r.isPlaced).length}
+              unplaced={filtered.filter(r => !r.isPlaced).length}
               totalUnplaced={group.counts.unplaced}
               isOpen={openSection === id}
               onToggle={() => toggle(id)}
               defaultShape={shapeOf(id)}
               onDefaultShapeChange={setShape(id)}
               query={filter.query}
-              onQueryChange={(q) => updateFilter(id, { query: q })}
+              onQueryChange={q => updateFilter(id, { query: q })}
               statusFilter={filter.status}
-              onStatusFilterChange={(s) => updateFilter(id, { status: s })}
+              onStatusFilterChange={s => updateFilter(id, { status: s })}
               onAutoArrange={() =>
                 onAutoArrange(
                   category,
                   group.records
-                    .filter((r) => !r.isPlaced)
-                    .map((r) => ({
+                    .filter(r => !r.isPlaced)
+                    .map(r => ({
                       recordId: category.getRecordId(r.record),
                       recordName: category.getPrimaryLabel(r.record),
                     })),

@@ -21,7 +21,7 @@ export function MapSidebar({
   const t = useT();
   const sessionElements = useMemo(
     () =>
-      [...elements.filter((el) => el.type === "session_area")].sort((a, b) =>
+      [...elements.filter(el => el.type === "session_area")].sort((a, b) =>
         (a.properties.name || "").localeCompare(b.properties.name || ""),
       ),
     [elements],
@@ -29,7 +29,7 @@ export function MapSidebar({
 
   const meetingRoomElements = useMemo(
     () =>
-      [...elements.filter((el) => el.type === "meeting_room")].sort((a, b) =>
+      [...elements.filter(el => el.type === "meeting_room")].sort((a, b) =>
         (a.properties.name || "").localeCompare(b.properties.name || ""),
       ),
     [elements],
@@ -70,7 +70,7 @@ export function MapSidebar({
             count: meetingRoomElements.length,
           },
         ] as const
-      ).filter((tab) => tab.count > 0),
+      ).filter(tab => tab.count > 0),
     [exhibitors.length, sessionElements.length, meetingRoomElements.length, t],
   );
 
@@ -78,7 +78,7 @@ export function MapSidebar({
     () => visibleTabs[0]?.id ?? "exhibitors",
   );
 
-  const currentTab = visibleTabs.some((t) => t.id === activeTab)
+  const currentTab = visibleTabs.some(t => t.id === activeTab)
     ? activeTab
     : (visibleTabs[0]?.id ?? "exhibitors");
 
@@ -87,7 +87,7 @@ export function MapSidebar({
       {/* Tab bar — only shown when there are multiple tabs */}
       {visibleTabs.length > 1 && (
         <div className="flex border-b border-gray-200">
-          {visibleTabs.map((tab) => (
+          {visibleTabs.map(tab => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
@@ -117,7 +117,7 @@ export function MapSidebar({
 
       <div className="flex-1 overflow-y-auto">
         {currentTab === "exhibitors" &&
-          sortedExhibitors.map((exhibitor) => {
+          sortedExhibitors.map(exhibitor => {
             const boothEl = boothBySlug.get(exhibitor.boothSlug);
             const isSelected = boothEl
               ? selectedItem?.elementId === boothEl.id
@@ -151,7 +151,9 @@ export function MapSidebar({
                     </div>
                     <div className="text-[11px] text-gray-400">
                       {boothEl?.properties.name
-                        ? t("viewer.boothLabel", { code: boothEl.properties.name })
+                        ? t("viewer.boothLabel", {
+                            code: boothEl.properties.name,
+                          })
                         : ""}
                     </div>
                   </div>
@@ -161,7 +163,7 @@ export function MapSidebar({
           })}
 
         {currentTab === "sessions" &&
-          sessionElements.map((el) => {
+          sessionElements.map(el => {
             const isSelected = selectedItem?.elementId === el.id;
             return (
               <button
@@ -185,7 +187,7 @@ export function MapSidebar({
           })}
 
         {currentTab === "meetingRooms" &&
-          meetingRoomElements.map((el) => {
+          meetingRoomElements.map(el => {
             const isSelected = selectedItem?.elementId === el.id;
             return (
               <button

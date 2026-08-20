@@ -1,7 +1,11 @@
 import { useState, useCallback, useRef, useLayoutEffect } from "react";
 import type Konva from "konva";
 import type { ToolContext, ToolInteraction, ToolResult } from "../types";
-import { getCanvasPoint, isEmptySpaceClick, snapToAngle } from "../../utils/canvas";
+import {
+  getCanvasPoint,
+  isEmptySpaceClick,
+  snapToAngle,
+} from "../../utils/canvas";
 
 export interface PolygonToolState {
   vertices: Array<{ x: number; y: number }>;
@@ -25,8 +29,8 @@ export function usePolygonInteraction(
   ctx: ToolContext,
   createResult: (
     polygon: { points: number[]; anchorX: number; anchorY: number },
-    ctx: ToolContext
-  ) => ToolResult
+    ctx: ToolContext,
+  ) => ToolResult,
 ): ToolInteraction<PolygonToolState> {
   const [state, setState] = useState<PolygonToolState>(INITIAL_STATE);
   const stateRef = useRef(state);
@@ -85,13 +89,13 @@ export function usePolygonInteraction(
         }
       }
 
-      setState((prev) => ({
+      setState(prev => ({
         vertices: [...prev.vertices, finalPoint],
         previewPoint: finalPoint,
         isDrawing: true,
       }));
     },
-    [ctx, closePolygon]
+    [ctx, closePolygon],
   );
 
   const handleMouseMove = useCallback(
@@ -110,21 +114,21 @@ export function usePolygonInteraction(
         finalPoint = snapToAngle(lastVertex, point);
       }
 
-      setState((prev) => ({ ...prev, previewPoint: finalPoint }));
+      setState(prev => ({ ...prev, previewPoint: finalPoint }));
     },
-    [ctx.stageRef, ctx.position, ctx.scale]
+    [ctx.stageRef, ctx.position, ctx.scale],
   );
 
   const handleDoubleClick = useCallback(
     (e: Konva.KonvaEventObject<MouseEvent>) => {
       if (!isEmptySpaceClick(e)) return;
-      setState((prev) => ({
+      setState(prev => ({
         ...prev,
         vertices: prev.vertices.slice(0, -1),
       }));
       setTimeout(() => closePolygon(), 0);
     },
-    [closePolygon]
+    [closePolygon],
   );
 
   const handleKeyDown = useCallback(
@@ -135,7 +139,7 @@ export function usePolygonInteraction(
         closePolygon();
       }
     },
-    [cancel, closePolygon]
+    [cancel, closePolygon],
   );
 
   return {

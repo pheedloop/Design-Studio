@@ -10,12 +10,13 @@ import type { DxfPrimitive } from "../../../types";
 /** Visit every (x, y) coordinate of a primitive in source order. */
 export function forEachPoint(
   p: DxfPrimitive,
-  fn: (x: number, y: number) => void
+  fn: (x: number, y: number) => void,
 ): void {
   switch (p.kind) {
     case "line":
     case "polyline":
-      for (let i = 0; i < p.points.length; i += 2) fn(p.points[i], p.points[i + 1]);
+      for (let i = 0; i < p.points.length; i += 2)
+        fn(p.points[i], p.points[i + 1]);
       return;
     case "circle":
       // Bounding extents rather than the center, so callers accumulating bounds
@@ -57,7 +58,7 @@ export function primitiveBounds(p: DxfPrimitive): {
 export function mapPrimitive(
   p: DxfPrimitive,
   fn: (x: number, y: number) => [number, number],
-  scalar = 1
+  scalar = 1,
 ): DxfPrimitive {
   switch (p.kind) {
     case "line":

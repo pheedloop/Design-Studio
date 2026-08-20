@@ -1,6 +1,10 @@
 import { Circle } from "react-konva";
 import type Konva from "konva";
-import type { FloorPlanElement, Geometry, PolygonGeometry } from "../../../types";
+import type {
+  FloorPlanElement,
+  Geometry,
+  PolygonGeometry,
+} from "../../../types";
 
 interface PolygonVertexHandlesProps {
   element: FloorPlanElement;
@@ -26,7 +30,7 @@ export function PolygonVertexHandles({
 
   const handleDrag = (
     vertexIndex: number,
-    e: Konva.KonvaEventObject<DragEvent>
+    e: Konva.KonvaEventObject<DragEvent>,
   ) => {
     e.cancelBubble = true;
     const newPoints = [...geometry.points];
@@ -37,7 +41,7 @@ export function PolygonVertexHandles({
 
   return (
     <>
-      {vertices.map((v) => (
+      {vertices.map(v => (
         <Circle
           key={v.index}
           x={v.x}
@@ -47,7 +51,7 @@ export function PolygonVertexHandles({
           stroke="#007bff"
           strokeWidth={1.5}
           draggable
-          onDragMove={(e) => handleDrag(v.index, e)}
+          onDragMove={e => handleDrag(v.index, e)}
         />
       ))}
     </>

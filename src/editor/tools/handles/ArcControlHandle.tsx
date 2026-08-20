@@ -23,10 +23,17 @@ export function ArcControlHandle({
 
   const handleDrag = (
     pointIndex: 0 | 1 | 2,
-    e: Konva.KonvaEventObject<DragEvent>
+    e: Konva.KonvaEventObject<DragEvent>,
   ) => {
     e.cancelBubble = true;
-    const newPoints = [...geometry.points] as [number, number, number, number, number, number];
+    const newPoints = [...geometry.points] as [
+      number,
+      number,
+      number,
+      number,
+      number,
+      number,
+    ];
     const pos = { x: e.target.x(), y: e.target.y() };
 
     if (pointIndex === 0) {
@@ -52,7 +59,7 @@ export function ArcControlHandle({
         stroke="#007bff"
         strokeWidth={1.5}
         draggable
-        onDragMove={(e) => handleDrag(0, e)}
+        onDragMove={e => handleDrag(0, e)}
       />
       <Circle
         x={absEnd.x}
@@ -62,7 +69,7 @@ export function ArcControlHandle({
         stroke="#007bff"
         strokeWidth={1.5}
         draggable
-        onDragMove={(e) => handleDrag(1, e)}
+        onDragMove={e => handleDrag(1, e)}
       />
       <Circle
         x={absControl.x}
@@ -72,7 +79,7 @@ export function ArcControlHandle({
         stroke="#fff"
         strokeWidth={1.5}
         draggable
-        onDragMove={(e) => handleDrag(2, e)}
+        onDragMove={e => handleDrag(2, e)}
       />
     </>
   );

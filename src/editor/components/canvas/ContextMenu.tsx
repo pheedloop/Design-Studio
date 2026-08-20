@@ -59,7 +59,7 @@ export function ContextMenu({ x, y, items, onClose }: ContextMenuProps) {
           >
             {item.label}
           </Button>
-        )
+        ),
       )}
     </div>
   );

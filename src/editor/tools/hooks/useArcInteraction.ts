@@ -25,9 +25,16 @@ const INITIAL_STATE: ArcToolState = {
 export function useArcInteraction(
   ctx: ToolContext,
   createResult: (
-    arc: { x1: number; y1: number; cx: number; cy: number; x2: number; y2: number },
-    ctx: ToolContext
-  ) => ToolResult
+    arc: {
+      x1: number;
+      y1: number;
+      cx: number;
+      cy: number;
+      x2: number;
+      y2: number;
+    },
+    ctx: ToolContext,
+  ) => ToolResult,
 ): ToolInteraction<ArcToolState> {
   const [state, setState] = useState<ArcToolState>(INITIAL_STATE);
   const stateRef = useRef(state);
@@ -81,57 +88,58 @@ export function useArcInteraction(
             x2: current.pointB!.x,
             y2: current.pointB!.y,
           },
-          ctx
+          ctx,
         );
         ctx.onComplete(result);
         setState(INITIAL_STATE);
       }
     },
-    [ctx, createResult]
+    [ctx, createResult],
   );
 
-  const handleMouseMove = useCallback(
-    () => {
-      const stage = ctx.stageRef.current;
-      if (!stage) return;
-      const point = getCanvasPoint(stage, ctx.position, ctx.scale);
-      if (!point) return;
+  const handleMouseMove = useCallback(() => {
+    const stage = ctx.stageRef.current;
+    if (!stage) return;
+    const point = getCanvasPoint(stage, ctx.position, ctx.scale);
+    if (!point) return;
 
-      const current = stateRef.current;
+    const current = stateRef.current;
 
-      if (current.phase === "pickEnd" && current.pointA) {
-        setState((prev) => ({ ...prev, pointB: point }));
-      } else if (current.phase === "setCurvature" && current.pointA && current.pointB) {
-        const a = current.pointA;
-        const b = current.pointB;
-        const mid = { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 };
+    if (current.phase === "pickEnd" && current.pointA) {
+      setState(prev => ({ ...prev, pointB: point }));
+    } else if (
+      current.phase === "setCurvature" &&
+      current.pointA &&
+      current.pointB
+    ) {
+      const a = current.pointA;
+      const b = current.pointB;
+      const mid = { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 };
 
-        const dx = b.x - a.x;
-        const dy = b.y - a.y;
-        const chordLen = Math.sqrt(dx * dx + dy * dy);
+      const dx = b.x - a.x;
+      const dy = b.y - a.y;
+      const chordLen = Math.sqrt(dx * dx + dy * dy);
 
-        if (chordLen < 1) {
-          setState((prev) => ({ ...prev, controlPoint: point }));
-          return;
-        }
-
-        const perpX = -dy / chordLen;
-        const perpY = dx / chordLen;
-        const mx = point.x - mid.x;
-        const my = point.y - mid.y;
-        const projLen = mx * perpX + my * perpY;
-
-        setState((prev) => ({
-          ...prev,
-          controlPoint: {
-            x: mid.x + perpX * projLen,
-            y: mid.y + perpY * projLen,
-          },
-        }));
+      if (chordLen < 1) {
+        setState(prev => ({ ...prev, controlPoint: point }));
+        return;
       }
-    },
-    [ctx.stageRef, ctx.position, ctx.scale]
-  );
+
+      const perpX = -dy / chordLen;
+      const perpY = dx / chordLen;
+      const mx = point.x - mid.x;
+      const my = point.y - mid.y;
+      const projLen = mx * perpX + my * perpY;
+
+      setState(prev => ({
+        ...prev,
+        controlPoint: {
+          x: mid.x + perpX * projLen,
+          y: mid.y + perpY * projLen,
+        },
+      }));
+    }
+  }, [ctx.stageRef, ctx.position, ctx.scale]);
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
@@ -139,7 +147,7 @@ export function useArcInteraction(
         cancel();
       }
     },
-    [cancel]
+    [cancel],
   );
 
   return {

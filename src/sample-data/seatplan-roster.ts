@@ -1,14 +1,60 @@
 import type { SeatTableState, SeatTicket } from "../seatviewer/types";
 
 const FIRST = [
-  "Olivia", "Liam", "Emma", "Noah", "Ava", "Ethan", "Sophia", "Mason", "Isabella", "Lucas",
-  "Mia", "Diego", "Amara", "Yuki", "Omar", "Hannah", "Mateo", "Chloe", "Raj", "Ingrid",
-  "Marcus", "Fatima", "Daniel", "Grace", "Pablo", "Mei", "Aisha", "Sven",
+  "Olivia",
+  "Liam",
+  "Emma",
+  "Noah",
+  "Ava",
+  "Ethan",
+  "Sophia",
+  "Mason",
+  "Isabella",
+  "Lucas",
+  "Mia",
+  "Diego",
+  "Amara",
+  "Yuki",
+  "Omar",
+  "Hannah",
+  "Mateo",
+  "Chloe",
+  "Raj",
+  "Ingrid",
+  "Marcus",
+  "Fatima",
+  "Daniel",
+  "Grace",
+  "Pablo",
+  "Mei",
+  "Aisha",
+  "Sven",
 ];
 const LAST = [
-  "Reyes", "Cole", "Haddad", "Lin", "Larsson", "Tan", "Ortiz", "Berg", "Mehta", "Dubois",
-  "Silva", "Khan", "Nguyen", "Rossi", "Bennett", "Adeyemi", "Patel", "Kim", "Hernández",
-  "Walsh", "Moreau", "Costa", "Ivanov", "Park",
+  "Reyes",
+  "Cole",
+  "Haddad",
+  "Lin",
+  "Larsson",
+  "Tan",
+  "Ortiz",
+  "Berg",
+  "Mehta",
+  "Dubois",
+  "Silva",
+  "Khan",
+  "Nguyen",
+  "Rossi",
+  "Bennett",
+  "Adeyemi",
+  "Patel",
+  "Kim",
+  "Hernández",
+  "Walsh",
+  "Moreau",
+  "Costa",
+  "Ivanov",
+  "Park",
 ];
 
 const TICKET_LABEL: Record<string, string> = {
@@ -31,7 +77,12 @@ function make(
     code,
     ticketCode,
     ticketName: TICKET_LABEL[ticketCode] ?? ticketCode,
-    attendee: { firstName: first, lastName: last, email: `${slug}@example.com`, organization: "—" },
+    attendee: {
+      firstName: first,
+      lastName: last,
+      email: `${slug}@example.com`,
+      organization: "—",
+    },
     tableCode,
     seatSelectionCode,
     attendeeTags,
@@ -70,7 +121,16 @@ export function buildSeatPlanRoster(tables: SeatTableState[]): SeatTicket[] {
       const first = FIRST[n % FIRST.length];
       const last = LAST[(n * 7 + 5) % LAST.length];
       n++;
-      out.push(make(`PUR-${1000 + out.length}`, ticketCode, first, last, t.tableCode, sel++));
+      out.push(
+        make(
+          `PUR-${1000 + out.length}`,
+          ticketCode,
+          first,
+          last,
+          t.tableCode,
+          sel++,
+        ),
+      );
     }
   }
 
