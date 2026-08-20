@@ -3,7 +3,7 @@
 # All Node-running targets go through scripts/with-node.sh, which installs and
 # uses the version pinned in .nvmrc — so you don't have to `nvm use` yourself.
 
-.PHONY: help start watch-lib build build-lib lint test test-watch preview clean install release
+.PHONY: help start watch-lib build build-lib lint format format-check test test-watch preview clean install release
 
 WITH_NODE := ./scripts/with-node.sh
 BUMP ?= patch
@@ -28,6 +28,12 @@ build-lib: ## Build the publishable library (dist/)
 
 lint: ## Run ESLint
 	$(WITH_NODE) npm run lint
+
+format: ## Format the repo with Prettier
+	$(WITH_NODE) npm run format
+
+format-check: ## Check the repo is Prettier-formatted (what CI runs)
+	$(WITH_NODE) npm run format:check
 
 test: ## Run the test suite once
 	$(WITH_NODE) npm test
