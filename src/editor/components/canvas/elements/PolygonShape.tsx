@@ -1,5 +1,5 @@
 import { Line } from "react-konva";
-import type { PolygonGeometry } from "../../../../types";
+import type { PolygonGeometry } from "@/types";
 
 interface PolygonShapeProps {
   geo: PolygonGeometry;

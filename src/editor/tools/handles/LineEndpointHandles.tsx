@@ -1,7 +1,7 @@
 import { Circle } from "react-konva";
 import type Konva from "konva";
-import type { FloorPlanElement, Geometry, LineGeometry } from "../../../types";
-import { snapToAngle } from "../../utils/canvas";
+import type { FloorPlanElement, Geometry, LineGeometry } from "@/types";
+import { snapToAngle } from "@/editor/utils/canvas";
 
 interface LineEndpointHandlesProps {
   element: FloorPlanElement;

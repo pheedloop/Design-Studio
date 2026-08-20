@@ -1,4 +1,4 @@
-import type { ElementType, ElementProperties } from "../../types";
+import type { ElementType, ElementProperties } from "@/types";
 
 // ---------------------------------------------------------------------------
 // Placement categories

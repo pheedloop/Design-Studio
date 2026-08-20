@@ -1,7 +1,7 @@
 import { useState } from "react";
-import type { Legend } from "../../types";
+import type { Legend } from "@/types";
 import { PiCaretUp, PiCaretDown } from "react-icons/pi";
-import { useT } from "../i18n";
+import { useT } from "@/viewer/i18n";
 
 interface ViewerLegendProps {
   legend: Legend;

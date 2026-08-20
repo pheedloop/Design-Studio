@@ -1,6 +1,6 @@
 import { useMemo } from "react";
-import type { FloorPlanData } from "../../types";
-import type { PlacementCategory } from "../placement/types";
+import type { FloorPlanData } from "@/types";
+import type { PlacementCategory } from "@/editor/placement/types";
 
 // ---------------------------------------------------------------------------
 // Public types

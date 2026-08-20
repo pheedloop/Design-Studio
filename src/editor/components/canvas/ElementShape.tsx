@@ -1,7 +1,7 @@
 import { memo } from "react";
 import { Group } from "react-konva";
-import type { FloorPlanElement } from "../../../types";
-import { useT } from "../../i18n";
+import type { FloorPlanElement } from "@/types";
+import { useT } from "@/editor/i18n";
 import { RectShape } from "./elements/RectShape";
 import { EllipseShape } from "./elements/EllipseShape";
 import { LineShape } from "./elements/LineShape";

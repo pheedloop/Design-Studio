@@ -1,4 +1,4 @@
-import type { SessionLocation } from "../viewer/types";
+import type { SessionLocation } from "@/viewer/types";
 
 /**
  * Sample SessionLocation records mirroring the PheedLoop DB.

@@ -7,13 +7,13 @@ import {
 } from "react";
 import type Konva from "konva";
 import { Stage, Layer, Rect } from "react-konva";
-import type { FloorPlanData } from "../../types";
-import { useCanvasControls } from "../../editor/hooks/useCanvasControls";
-import { BackgroundImage } from "../../editor/components/canvas/BackgroundImage";
-import { DxfDrawing } from "../../editor/components/canvas/DxfDrawing";
-import { ViewerElement } from "../../viewer/components/ViewerElement";
-import { I18nProvider } from "../../i18n/I18nProvider";
-import type { Translate } from "../i18n";
+import type { FloorPlanData } from "@/types";
+import { useCanvasControls } from "@/editor/hooks/useCanvasControls";
+import { BackgroundImage } from "@/editor/components/canvas/BackgroundImage";
+import { DxfDrawing } from "@/editor/components/canvas/DxfDrawing";
+import { ViewerElement } from "@/viewer/components/ViewerElement";
+import { I18nProvider } from "@/i18n/I18nProvider";
+import type { Translate } from "@/seatviewer/i18n";
 
 export interface SeatPlanCanvasProps {
   data: FloorPlanData;

@@ -9,17 +9,17 @@ import {
   PiPencilSimple,
   PiStorefront,
 } from "react-icons/pi";
-import type { ActiveTool, EditorMode, PathingTool } from "../../types";
-import { TOOL_REGISTRY } from "../../tools/registry";
-import type { FeatureMap } from "../../../tiers";
-import { showTrophy } from "../../../tiers";
-import { IconButton, TrophyIcon } from "../ui";
+import type { ActiveTool, EditorMode, PathingTool } from "@/editor/types";
+import { TOOL_REGISTRY } from "@/editor/tools/registry";
+import type { FeatureMap } from "@/tiers";
+import { showTrophy } from "@/tiers";
+import { IconButton, TrophyIcon } from "@/editor/components/ui";
 import { IconPicker } from "./IconPicker";
-import { getIconEntry } from "../../utils/iconRegistry";
-import type { PlacementRecords } from "../../hooks/usePlacementRecords";
-import type { PlacementCategory } from "../../placement/types";
-import type { StringKey } from "../../i18n";
-import { useT } from "../../i18n";
+import { getIconEntry } from "@/editor/utils/iconRegistry";
+import type { PlacementRecords } from "@/editor/hooks/usePlacementRecords";
+import type { PlacementCategory } from "@/editor/placement/types";
+import type { StringKey } from "@/editor/i18n";
+import { useT } from "@/editor/i18n";
 import { PlacementPanel } from "./PlacementPanel";
 import type { AutoArrangeRecord } from "./PlacementPanel";
 

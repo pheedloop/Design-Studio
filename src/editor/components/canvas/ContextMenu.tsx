@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { Button } from "../ui";
+import { Button } from "@/editor/components/ui";
 
 export interface ContextMenuAction {
   label: string;

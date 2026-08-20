@@ -1,6 +1,6 @@
 import { Shape } from "react-konva";
 import type { Context } from "konva/lib/Context";
-import type { WalkableGrid } from "../../../types";
+import type { WalkableGrid } from "@/types";
 
 interface WalkableGridOverlayProps {
   grid: WalkableGrid;

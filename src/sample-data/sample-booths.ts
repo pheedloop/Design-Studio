@@ -1,4 +1,4 @@
-import type { ExhibitorBooth } from "../viewer/types";
+import type { ExhibitorBooth } from "@/viewer/types";
 
 /**
  * Sample ExhibitorBooth records mirroring the PheedLoop DB.

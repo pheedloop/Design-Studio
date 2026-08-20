@@ -1,4 +1,4 @@
-import { productHref, type Product } from "../routes/productRouter";
+import { productHref, type Product } from "@/routes/productRouter";
 
 const PRODUCTS: { id: Product; label: string }[] = [
   { id: "maps", label: "Maps" },

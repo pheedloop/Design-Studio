@@ -1,4 +1,4 @@
-import type { FloorPlanElement, Geometry } from "../../types";
+import type { FloorPlanElement, Geometry } from "@/types";
 import { getElementBounds, type ElementBounds } from "./bounds";
 
 export type AlignmentUpdate = { id: string; geometry: Partial<Geometry> };

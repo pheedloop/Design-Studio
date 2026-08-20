@@ -2,7 +2,7 @@ import { useState } from "react";
 import { PiMapTrifold, PiBug, PiQuestion } from "react-icons/pi";
 import { DropdownMenu, MenuButton } from "./ui";
 import type { MenuEntry } from "./ui";
-import { useT } from "../i18n";
+import { useT } from "@/editor/i18n";
 
 interface TopBarProps {
   debug?: boolean;

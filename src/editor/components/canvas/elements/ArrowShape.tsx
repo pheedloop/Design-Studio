@@ -1,5 +1,5 @@
 import { Arrow, Line } from "react-konva";
-import type { LineGeometry, ArrowGeometry } from "../../../../types";
+import type { LineGeometry, ArrowGeometry } from "@/types";
 
 interface ArrowShapeProps {
   geo: LineGeometry | ArrowGeometry;

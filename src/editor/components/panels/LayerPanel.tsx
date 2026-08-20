@@ -1,10 +1,10 @@
 import { useState, useRef, useEffect } from "react";
 import { PiStack, PiEye, PiEyeSlash } from "react-icons/pi";
-import type { LayerDefinition, LayerId } from "../../../types";
-import type { FeatureMap } from "../../../tiers";
-import { showTrophy } from "../../../tiers";
-import { IconButton, TrophyIcon } from "../ui";
-import { useT } from "../../i18n";
+import type { LayerDefinition, LayerId } from "@/types";
+import type { FeatureMap } from "@/tiers";
+import { showTrophy } from "@/tiers";
+import { IconButton, TrophyIcon } from "@/editor/components/ui";
+import { useT } from "@/editor/i18n";
 
 interface LayerPanelProps {
   layers: LayerDefinition[];

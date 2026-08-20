@@ -1,6 +1,6 @@
 import { IconButton } from "./ui";
-import { useT } from "../i18n";
-import type { Unit } from "../../types";
+import { useT } from "@/editor/i18n";
+import type { Unit } from "@/types";
 
 interface StatusBarProps {
   scale: number;

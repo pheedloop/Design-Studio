@@ -1,14 +1,14 @@
 import { useState, useMemo, useCallback } from "react";
-import type { FloorPlanData } from "../../types";
-import type { Exhibitor } from "../types";
+import type { FloorPlanData } from "@/types";
+import type { Exhibitor } from "@/viewer/types";
 import type { SearchResult } from "./useSearch";
-import { findPath, smoothPath } from "../utils/pathfinding";
-import { displayName } from "../utils/elementTypes";
-import { useT } from "../i18n";
+import { findPath, smoothPath } from "@/viewer/utils/pathfinding";
+import { displayName } from "@/viewer/utils/elementTypes";
+import { useT } from "@/viewer/i18n";
 import {
   findNearestWalkableCell,
   resolveBoothToCell,
-} from "../utils/snapToGrid";
+} from "@/viewer/utils/snapToGrid";
 
 export interface DirectionsLocation {
   type: "booth" | "exhibitor" | "session_area" | "meeting_room" | "point";

@@ -2,8 +2,8 @@
 // never ships.
 
 import { useCallback, useState } from "react";
-import { STRINGS, interpolate, type Translate, type Vars } from "../i18n";
-import { resolveEnglishFrom } from "../i18n/interpolate";
+import { STRINGS, interpolate, type Translate, type Vars } from "@/i18n";
+import { resolveEnglishFrom } from "@/i18n/interpolate";
 import { pseudoLocalize } from "./pseudo";
 
 export type DemoLocale = "en" | "pseudo" | "keys";

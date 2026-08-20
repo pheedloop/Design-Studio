@@ -1,5 +1,5 @@
 import { Line } from "react-konva";
-import type { GuideLine } from "../../hooks/useAlignmentGuides";
+import type { GuideLine } from "@/editor/hooks/useAlignmentGuides";
 
 interface AlignmentGuidesProps {
   guides: GuideLine[];

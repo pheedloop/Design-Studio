@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { useT } from "../../i18n";
+import { useT } from "@/editor/i18n";
 
 interface DialogProps {
   title: string;

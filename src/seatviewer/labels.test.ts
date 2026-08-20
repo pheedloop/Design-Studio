@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { createSurfaceI18n } from "../i18n/context";
-import { COMMON, SEATVIEWER } from "../i18n/strings";
+import { createSurfaceI18n } from "@/i18n/context";
+import { COMMON, SEATVIEWER } from "@/i18n/strings";
 import { occupantHeading } from "./labels";
 
 const { defaultTranslate: t } = createSurfaceI18n({

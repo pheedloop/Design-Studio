@@ -15,15 +15,15 @@ import type {
   Legend,
   ViewerAppearance,
   GroupDefinition,
-} from "../../types";
+} from "@/types";
 import {
   ELEMENT_TYPE_TO_LAYER,
   DEFAULT_TYPE_STYLES,
   DEFAULT_VIEWER_APPEARANCE,
-} from "../../types";
-import { createWalkableGrid } from "../utils/walkableGrid";
-import { mapPrimitive, primitiveBounds } from "../utils/dxf/primitiveOps";
-import { derivePixelsPerUnit } from "../../utils/unitConversion";
+} from "@/types";
+import { createWalkableGrid } from "@/editor/utils/walkableGrid";
+import { mapPrimitive, primitiveBounds } from "@/editor/utils/dxf/primitiveOps";
+import { derivePixelsPerUnit } from "@/utils/unitConversion";
 import { useHistory } from "./useHistory";
 
 export const DEFAULT_PERSIST_KEY = "map-editor:floorplan";

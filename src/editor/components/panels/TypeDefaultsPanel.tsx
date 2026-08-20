@@ -1,11 +1,16 @@
 import { useState } from "react";
-import type { TypeStyles, ElementTypeDefaults } from "../../../types";
-import { DEFAULT_TYPE_STYLES } from "../../../types";
-import { SectionLabel, ColorSwatch, NumberInput, Slider } from "../ui";
+import type { TypeStyles, ElementTypeDefaults } from "@/types";
+import { DEFAULT_TYPE_STYLES } from "@/types";
+import {
+  SectionLabel,
+  ColorSwatch,
+  NumberInput,
+  Slider,
+} from "@/editor/components/ui";
 import { LabelSection } from "./LabelSection";
-import type { ElementProperties } from "../../../types";
+import type { ElementProperties } from "@/types";
 import { PiCaretDown, PiCaretRight } from "react-icons/pi";
-import { useT } from "../../i18n";
+import { useT } from "@/editor/i18n";
 
 const TYPE_DISPLAY_NAMES: Record<string, string> = {
   booth: "Booth",

@@ -13,7 +13,7 @@ import {
 } from "react-konva";
 import type Konva from "konva";
 import { DPI, type BadgeField, type BadgePage, type SlotType } from "./model";
-import { GridLayer } from "../editor/components/canvas/GridLayer";
+import { GridLayer } from "@/editor/components/canvas/GridLayer";
 import { fieldDisplayText } from "./factory";
 import { fieldSizePx, useBadgeGuides } from "./useBadgeGuides";
 import { fieldQrUrl, fieldValueText, type BadgeData } from "./badgeData";

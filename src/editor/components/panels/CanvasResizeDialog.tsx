@@ -1,14 +1,19 @@
 import { useState, useMemo } from "react";
-import { Button, Dialog, SectionLabel, NumberInput } from "../ui";
-import type { FloorPlanElement, Dimensions } from "../../../types";
-import { formatMeasurement } from "../../../utils/unitConversion";
-import { useLocale, useT, type StringKey } from "../../i18n";
-import { getElementBounds } from "../../utils/bounds";
+import {
+  Button,
+  Dialog,
+  SectionLabel,
+  NumberInput,
+} from "@/editor/components/ui";
+import type { FloorPlanElement, Dimensions } from "@/types";
+import { formatMeasurement } from "@/utils/unitConversion";
+import { useLocale, useT, type StringKey } from "@/editor/i18n";
+import { getElementBounds } from "@/editor/utils/bounds";
 import {
   anchorOffset,
   type ResizeMode,
   type ResizeAnchor,
-} from "../../hooks/useEditorState";
+} from "@/editor/hooks/useEditorState";
 
 interface CanvasResizeDialogProps {
   width: number;

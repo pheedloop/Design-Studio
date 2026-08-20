@@ -1,6 +1,6 @@
 import { useLayoutEffect, useRef } from "react";
 import { Stage, Layer, Rect, Group, Line } from "react-konva";
-import { useCanvasControls } from "../editor/hooks/useCanvasControls";
+import { useCanvasControls } from "@/editor/hooks/useCanvasControls";
 import { StaticField, Slots, PPI, PANEL_CORNER_IN } from "./BadgeCanvas";
 import { BadgeRulers } from "./BadgeRulers";
 import { foldInvertForPage } from "./serialize";

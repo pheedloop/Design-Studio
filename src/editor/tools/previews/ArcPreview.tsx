@@ -1,5 +1,5 @@
 import { Line, Shape, Circle } from "react-konva";
-import type { ArcToolState } from "../hooks/useArcInteraction";
+import type { ArcToolState } from "@/editor/tools/hooks/useArcInteraction";
 
 const linePreviewStyle = {
   stroke: "#475569",

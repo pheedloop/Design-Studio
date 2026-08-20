@@ -5,26 +5,26 @@ import {
   PiUser,
   PiStorefront,
 } from "react-icons/pi";
-import { MapEditor, definePlacementCategory, type Tier } from "../editor";
+import { MapEditor, definePlacementCategory, type Tier } from "@/editor";
 // The merged translator, not either surface's: this shell drives both the editor
 // and the viewer, and each surface's own `Translate` covers only its own keys.
-import type { Translate } from "../i18n";
-import { LocaleSwitcher } from "../demo/LocaleSwitcher";
-import { useDemoLocale } from "../demo/useDemoLocale";
-import { MapViewer } from "../viewer";
-import { ProductSwitcher } from "../components/ProductSwitcher";
-import { exhibitionHallMap } from "../sample-data/exhibition-hall-map";
-import { conferenceExpoExhibitors } from "../sample-data/sample-exhibitors";
-import { conferenceExpoBooths } from "../sample-data/sample-booths";
-import { sampleSessionLocations } from "../sample-data/sample-session-locations";
-import { sampleMeetingRooms } from "../sample-data/sample-meeting-rooms";
-import type { FloorPlanData } from "../types";
+import type { Translate } from "@/i18n";
+import { LocaleSwitcher } from "@/demo/LocaleSwitcher";
+import { useDemoLocale } from "@/demo/useDemoLocale";
+import { MapViewer } from "@/viewer";
+import { ProductSwitcher } from "@/components/ProductSwitcher";
+import { exhibitionHallMap } from "@/sample-data/exhibition-hall-map";
+import { conferenceExpoExhibitors } from "@/sample-data/sample-exhibitors";
+import { conferenceExpoBooths } from "@/sample-data/sample-booths";
+import { sampleSessionLocations } from "@/sample-data/sample-session-locations";
+import { sampleMeetingRooms } from "@/sample-data/sample-meeting-rooms";
+import type { FloorPlanData } from "@/types";
 import type {
   ViewerMode,
   ExhibitorBooth,
   SessionLocation,
   MeetingRoom,
-} from "../viewer/types";
+} from "@/viewer/types";
 
 type Mode = "editor" | "viewer";
 type Viewport = "desktop" | "mobile";

@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { createSurfaceI18n } from "../../i18n/context";
-import { COMMON, VIEWER } from "../../i18n/strings";
-import type { FloorPlanElement } from "../../types";
+import { createSurfaceI18n } from "@/i18n/context";
+import { COMMON, VIEWER } from "@/i18n/strings";
+import type { FloorPlanElement } from "@/types";
 import { buildSearchPlaceholder } from "./searchPlaceholder";
 
 const { defaultTranslate: t } = createSurfaceI18n({

@@ -1,4 +1,4 @@
-import type { DxfPrimitive } from "../../../types";
+import type { DxfPrimitive } from "@/types";
 
 /**
  * Coordinate transforms over baked DXF primitives. All variants store their

@@ -1,11 +1,11 @@
 import { useCallback, useLayoutEffect, useRef, useState } from "react";
 import { Stage, Layer, Rect } from "react-konva";
-import type { FloorPlanData } from "../../types";
-import { useCanvasControls } from "../../editor/hooks/useCanvasControls";
-import { isEmptySpaceClick } from "../../editor/utils/canvas";
-import { BackgroundImage } from "../../editor/components/canvas/BackgroundImage";
-import { DxfDrawing } from "../../editor/components/canvas/DxfDrawing";
-import type { ViewerMode, HoveredItem } from "../types";
+import type { FloorPlanData } from "@/types";
+import { useCanvasControls } from "@/editor/hooks/useCanvasControls";
+import { isEmptySpaceClick } from "@/editor/utils/canvas";
+import { BackgroundImage } from "@/editor/components/canvas/BackgroundImage";
+import { DxfDrawing } from "@/editor/components/canvas/DxfDrawing";
+import type { ViewerMode, HoveredItem } from "@/viewer/types";
 import { ViewerElement } from "./ViewerElement";
 import { RouteOverlay } from "./RouteOverlay";
 import { ScaleBar } from "./ScaleBar";

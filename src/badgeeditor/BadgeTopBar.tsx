@@ -1,7 +1,7 @@
 import { useState, type ReactNode } from "react";
 import { PiIdentificationBadge, PiBug } from "react-icons/pi";
-import { DropdownMenu, MenuButton } from "../editor/components/ui";
-import type { MenuEntry } from "../editor/components/ui";
+import { DropdownMenu, MenuButton } from "@/editor/components/ui";
+import type { MenuEntry } from "@/editor/components/ui";
 
 interface BadgeTopBarProps {
   fileMenuItems?: MenuEntry[];

@@ -1,10 +1,10 @@
 import { useMemo } from "react";
 import { Shape } from "react-konva";
-import type { BackgroundDxfData } from "../../../types";
+import type { BackgroundDxfData } from "@/types";
 import {
   drawPrimitives,
   type DrawContext,
-} from "../../utils/dxf/drawPrimitives";
+} from "@/editor/utils/dxf/drawPrimitives";
 
 interface DxfDrawingProps {
   config: BackgroundDxfData;

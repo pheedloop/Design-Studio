@@ -1,8 +1,8 @@
-import type { Exhibitor, HoveredItem } from "../types";
-import { usePopoverPosition } from "../hooks/usePopoverPosition";
+import type { Exhibitor, HoveredItem } from "@/viewer/types";
+import { usePopoverPosition } from "@/viewer/hooks/usePopoverPosition";
 import { ExhibitorLogo } from "./ExhibitorLogo";
-import { TYPE_NAME } from "../utils/elementTypes";
-import { useT } from "../i18n";
+import { TYPE_NAME } from "@/viewer/utils/elementTypes";
+import { useT } from "@/viewer/i18n";
 
 interface HoverTooltipProps {
   item: HoveredItem;

@@ -1,10 +1,6 @@
 import { Circle } from "react-konva";
 import type Konva from "konva";
-import type {
-  FloorPlanElement,
-  Geometry,
-  PolygonGeometry,
-} from "../../../types";
+import type { FloorPlanElement, Geometry, PolygonGeometry } from "@/types";
 
 interface PolygonVertexHandlesProps {
   element: FloorPlanElement;

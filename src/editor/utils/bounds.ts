@@ -1,4 +1,4 @@
-import type { FloorPlanElement, Geometry } from "../../types";
+import type { FloorPlanElement, Geometry } from "@/types";
 
 export interface ElementBounds {
   left: number;

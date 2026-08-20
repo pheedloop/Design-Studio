@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { Image as KonvaImage } from "react-konva";
-import type { RectGeometry } from "../../../../types";
-import { getIconEntry } from "../../../utils/iconRegistry";
-import { iconToImage } from "../../../utils/iconToImage";
+import type { RectGeometry } from "@/types";
+import { getIconEntry } from "@/editor/utils/iconRegistry";
+import { iconToImage } from "@/editor/utils/iconToImage";
 
 interface IconShapeProps {
   geo: RectGeometry;

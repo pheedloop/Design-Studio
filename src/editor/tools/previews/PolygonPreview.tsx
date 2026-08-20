@@ -1,5 +1,5 @@
 import { Line, Circle } from "react-konva";
-import type { PolygonToolState } from "../hooks/usePolygonInteraction";
+import type { PolygonToolState } from "@/editor/tools/hooks/usePolygonInteraction";
 
 const linePreviewStyle = {
   stroke: "#475569",

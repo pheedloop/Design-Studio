@@ -1,8 +1,8 @@
 import { Circle, Group, Line, Rect, Text } from "react-konva";
-import type { MeasureState } from "../hooks/useMeasureInteraction";
-import type { Dimensions } from "../../../types";
-import { formatMeasurement } from "../../../utils/unitConversion";
-import { useLocale, useT } from "../../i18n";
+import type { MeasureState } from "@/editor/tools/hooks/useMeasureInteraction";
+import type { Dimensions } from "@/types";
+import { formatMeasurement } from "@/utils/unitConversion";
+import { useLocale, useT } from "@/editor/i18n";
 
 interface MeasurePreviewProps {
   state: MeasureState;

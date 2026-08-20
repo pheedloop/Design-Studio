@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import type { Unit } from "../../../types";
+import type { Unit } from "@/types";
 import { parseDxf } from "./parseDxf";
 
 // --- Fixture builders -------------------------------------------------------

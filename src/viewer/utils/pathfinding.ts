@@ -1,4 +1,4 @@
-import type { WalkableGrid } from "../../types";
+import type { WalkableGrid } from "@/types";
 
 interface Cell {
   col: number;

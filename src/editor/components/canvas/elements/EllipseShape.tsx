@@ -1,5 +1,5 @@
 import { Ellipse, Group } from "react-konva";
-import type { EllipseGeometry, ElementProperties } from "../../../../types";
+import type { EllipseGeometry, ElementProperties } from "@/types";
 import {
   getLabelXY,
   getLabelFontStyle,

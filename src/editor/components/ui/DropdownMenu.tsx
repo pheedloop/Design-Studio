@@ -1,6 +1,6 @@
 import { useRef, useEffect } from "react";
 import { TrophyIcon } from "./TrophyIcon";
-import { useT } from "../../i18n";
+import { useT } from "@/editor/i18n";
 
 export interface MenuItemConfig {
   label: string;

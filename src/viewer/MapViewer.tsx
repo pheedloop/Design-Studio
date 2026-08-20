@@ -7,7 +7,7 @@ import {
   type ReactNode,
 } from "react";
 import { PiPath } from "react-icons/pi";
-import type { FloorPlanData } from "../types";
+import type { FloorPlanData } from "@/types";
 import type {
   Exhibitor,
   HoveredItem,
@@ -26,11 +26,11 @@ import { BoothPopover } from "./components/BoothPopover";
 import { LocationPopover } from "./components/LocationPopover";
 import { HoverTooltip } from "./components/HoverTooltip";
 import { DirectionsPanel } from "./components/DirectionsPanel";
-import { resolveFeatures } from "../tiers";
-import type { Tier, FeatureKey, FeatureOverride } from "../tiers";
-import { I18nProvider } from "../i18n/I18nProvider";
-import { translateExhibitors, translateFloorPlan } from "../i18n/content";
-import type { TranslateContent } from "../i18n/content";
+import { resolveFeatures } from "@/tiers";
+import type { Tier, FeatureKey, FeatureOverride } from "@/tiers";
+import { I18nProvider } from "@/i18n/I18nProvider";
+import { translateExhibitors, translateFloorPlan } from "@/i18n/content";
+import type { TranslateContent } from "@/i18n/content";
 import { useLocale, useT } from "./i18n";
 import type { Translate } from "./i18n";
 

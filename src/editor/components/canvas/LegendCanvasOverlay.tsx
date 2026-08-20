@@ -1,5 +1,5 @@
-import type { Legend } from "../../../types";
-import { useT } from "../../i18n";
+import type { Legend } from "@/types";
+import { useT } from "@/editor/i18n";
 
 interface LegendCanvasOverlayProps {
   legend: Legend;

@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
 import { render, screen } from "@testing-library/react";
-import { I18nProvider } from "../../i18n/I18nProvider";
-import type { Translate } from "../../i18n";
-import type { SeatTableState } from "../types";
+import { I18nProvider } from "@/i18n/I18nProvider";
+import type { Translate } from "@/i18n";
+import type { SeatTableState } from "@/seatviewer/types";
 import { TableDetailPopover } from "./TableDetailPopover";
 
 const table = (over: Partial<SeatTableState> = {}): SeatTableState => ({

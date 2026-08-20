@@ -1,6 +1,11 @@
 import { useState } from "react";
-import { Button, Dialog, NumberInput, SectionLabel } from "../ui";
-import { useT } from "../../i18n";
+import {
+  Button,
+  Dialog,
+  NumberInput,
+  SectionLabel,
+} from "@/editor/components/ui";
+import { useT } from "@/editor/i18n";
 
 interface ArrangeGridDialogProps {
   elementCount: number;

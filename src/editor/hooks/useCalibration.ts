@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect, useRef } from "react";
 import type Konva from "konva";
-import type { Point, ScaleCalibration, Unit } from "../../types";
-import { getCanvasPoint, snapToAngle } from "../utils/canvas";
+import type { Point, ScaleCalibration, Unit } from "@/types";
+import { getCanvasPoint, snapToAngle } from "@/editor/utils/canvas";
 
 export type CalibrationStep = "idle" | "pickingP1" | "pickingP2" | "confirming";
 

@@ -1,6 +1,6 @@
-import type { WalkableGrid, FloorPlanElement, Geometry } from "../../types";
-import type { Exhibitor } from "../types";
-import { canvasToCellCoord } from "../../editor/utils/walkableGrid";
+import type { WalkableGrid, FloorPlanElement, Geometry } from "@/types";
+import type { Exhibitor } from "@/viewer/types";
+import { canvasToCellCoord } from "@/editor/utils/walkableGrid";
 
 interface Cell {
   col: number;

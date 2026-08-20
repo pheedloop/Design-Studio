@@ -1,4 +1,4 @@
-import type { Exhibitor } from "../viewer/types";
+import type { Exhibitor } from "@/viewer/types";
 
 import logoAcme from "./logos/acme-corp.svg";
 import logoTechflow from "./logos/techflow.svg";

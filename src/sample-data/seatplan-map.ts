@@ -1,4 +1,4 @@
-import type { FloorPlanData } from "../types";
+import type { FloorPlanData } from "@/types";
 import bgImage from "./Banquet Hall.png";
 
 const BG_WIDTH = 735;

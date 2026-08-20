@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { createSurfaceI18n } from "../i18n/context";
-import { interpolate } from "../i18n/interpolate";
-import type { CommonT } from "../i18n/types";
-import { COMMON } from "../i18n/strings";
-import type { Dimensions } from "../types";
+import { createSurfaceI18n } from "@/i18n/context";
+import { interpolate } from "@/i18n/interpolate";
+import type { CommonT } from "@/i18n/types";
+import { COMMON } from "@/i18n/strings";
+import type { Dimensions } from "@/types";
 import {
   formatArea,
   formatMeasurement,

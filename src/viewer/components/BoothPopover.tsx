@@ -1,8 +1,8 @@
 import { useEffect } from "react";
-import type { Exhibitor } from "../types";
-import { usePopoverPosition } from "../hooks/usePopoverPosition";
+import type { Exhibitor } from "@/viewer/types";
+import { usePopoverPosition } from "@/viewer/hooks/usePopoverPosition";
 import { ExhibitorLogo } from "./ExhibitorLogo";
-import { useT } from "../i18n";
+import { useT } from "@/viewer/i18n";
 
 interface BoothPopoverProps {
   boothCode: string;

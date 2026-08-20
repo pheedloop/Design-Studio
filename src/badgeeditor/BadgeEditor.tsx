@@ -7,21 +7,21 @@ import {
   useState,
 } from "react";
 import { v4 as uuid } from "uuid";
-import { useCanvasControls } from "../editor/hooks/useCanvasControls";
-import { useHistory } from "../editor/hooks/useHistory";
+import { useCanvasControls } from "@/editor/hooks/useCanvasControls";
+import { useHistory } from "@/editor/hooks/useHistory";
 import {
   Button,
   IconButton,
   TabBar,
   type MenuEntry,
-} from "../editor/components/ui";
+} from "@/editor/components/ui";
 import { BadgeTopBar } from "./BadgeTopBar";
-import { modKey } from "../editor/utils/platform";
-import { I18nProvider } from "../i18n/I18nProvider";
+import { modKey } from "@/editor/utils/platform";
+import { I18nProvider } from "@/i18n/I18nProvider";
 import type { Translate } from "./i18n";
 import { BadgeCanvas } from "./BadgeCanvas";
 import { BadgeRulers } from "./BadgeRulers";
-import { AlignmentControls } from "../editor/components/panels/AlignmentControls";
+import { AlignmentControls } from "@/editor/components/panels/AlignmentControls";
 import {
   alignLeft,
   alignCenterH,

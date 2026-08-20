@@ -1,6 +1,6 @@
-import type { Dimensions, Point, Unit } from "../types/FloorPlanData";
-import { formatNumber } from "../i18n/format";
-import type { CommonKey, CommonT as T } from "../i18n/types";
+import type { Dimensions, Point, Unit } from "@/types/FloorPlanData";
+import { formatNumber } from "@/i18n/format";
+import type { CommonKey, CommonT as T } from "@/i18n/types";
 
 // ~1.0 m/s indoor event pace (accounts for crowds, turns, stopping)
 const INDOOR_WALKING_SPEED_MPS = 1.0;

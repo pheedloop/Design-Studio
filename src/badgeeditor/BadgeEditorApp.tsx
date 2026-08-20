@@ -1,8 +1,8 @@
-import { ProductSwitcher } from "../components/ProductSwitcher";
+import { ProductSwitcher } from "@/components/ProductSwitcher";
 import { BadgeEditor } from "./BadgeEditor";
 import { sampleAttendeeProvider } from "./sample-attendees";
-import { LocaleSwitcher } from "../demo/LocaleSwitcher";
-import { useDemoLocale } from "../demo/useDemoLocale";
+import { LocaleSwitcher } from "@/demo/LocaleSwitcher";
+import { useDemoLocale } from "@/demo/useDemoLocale";
 
 /**
  * Badge product shell (demo). Mirrors SeatplannerApp — only an editor mode for

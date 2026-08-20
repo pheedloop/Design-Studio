@@ -1,7 +1,11 @@
 import { useCallback } from "react";
 import type Konva from "konva";
-import type { ToolContext, ToolInteraction, ToolResult } from "../types";
-import { getCanvasPoint, isEmptySpaceClick } from "../../utils/canvas";
+import type {
+  ToolContext,
+  ToolInteraction,
+  ToolResult,
+} from "@/editor/tools/types";
+import { getCanvasPoint, isEmptySpaceClick } from "@/editor/utils/canvas";
 
 /**
  * Single-click placement interaction for tools like text and icon.

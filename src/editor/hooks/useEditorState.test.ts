@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { act, renderHook } from "@testing-library/react";
-import type { DxfPrimitive, FloorPlanData } from "../../types";
+import type { DxfPrimitive, FloorPlanData } from "@/types";
 import { useEditorState } from "./useEditorState";
 
 /** The crop rectangle every test below applies: a 100 × 100 window whose origin

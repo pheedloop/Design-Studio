@@ -1,4 +1,4 @@
-import type { SeatTableState, SeatTicket } from "../seatviewer/types";
+import type { SeatTableState, SeatTicket } from "@/seatviewer/types";
 
 const FIRST = [
   "Olivia",

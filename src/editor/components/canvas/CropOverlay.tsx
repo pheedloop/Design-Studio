@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import { Group, Rect, Transformer } from "react-konva";
 import type Konva from "konva";
-import type { CropRect } from "../../hooks/useCrop";
+import type { CropRect } from "@/editor/hooks/useCrop";
 
 interface CropOverlayProps {
   rect: CropRect;

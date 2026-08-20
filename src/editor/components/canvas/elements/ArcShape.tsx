@@ -1,5 +1,5 @@
 import { Shape } from "react-konva";
-import type { ArcGeometry } from "../../../../types";
+import type { ArcGeometry } from "@/types";
 
 interface ArcShapeProps {
   geo: ArcGeometry;

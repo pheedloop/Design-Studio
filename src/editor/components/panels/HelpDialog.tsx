@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { Dialog, TabBar } from "../ui";
-import { useT, type StringKey, type T } from "../../i18n";
+import { Dialog, TabBar } from "@/editor/components/ui";
+import { useT, type StringKey, type T } from "@/editor/i18n";
 
 const isMac = navigator.platform.toUpperCase().includes("MAC");
 const mod = isMac ? "⌘" : "Ctrl";

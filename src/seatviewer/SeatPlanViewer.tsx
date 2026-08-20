@@ -5,8 +5,8 @@ import { SeatPlanCanvas } from "./components/SeatPlanCanvas";
 import { TicketPanel } from "./components/TicketPanel";
 import { TableDetailPopover } from "./components/TableDetailPopover";
 import { OccupancyLegend } from "./components/OccupancyLegend";
-import { I18nProvider } from "../i18n/I18nProvider";
-import { translateFloorPlan } from "../i18n/content";
+import { I18nProvider } from "@/i18n/I18nProvider";
+import { translateFloorPlan } from "@/i18n/content";
 import { useT } from "./i18n";
 import { assignCta } from "./labels";
 

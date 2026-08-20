@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
-import type { Legend, LegendEntry } from "../../../types";
-import { Dialog, Button, TextInput, ColorSwatch } from "../ui";
+import type { Legend, LegendEntry } from "@/types";
+import { Dialog, Button, TextInput, ColorSwatch } from "@/editor/components/ui";
 import {
   PiEye,
   PiEyeSlash,
@@ -9,7 +9,7 @@ import {
   PiTrash,
   PiPlus,
 } from "react-icons/pi";
-import { useT } from "../../i18n";
+import { useT } from "@/editor/i18n";
 
 interface LegendDialogProps {
   legend: Legend;

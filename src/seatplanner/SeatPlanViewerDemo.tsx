@@ -1,17 +1,17 @@
 import { useMemo, useRef, useState, useCallback } from "react";
-import { SeatPlanViewer } from "../seatviewer";
+import { SeatPlanViewer } from "@/seatviewer";
 import type {
   SeatOccupant,
   SeatPlanMode,
   SeatTicket,
   Translate,
-} from "../seatviewer";
-import { seatPlanMap } from "../sample-data/seatplan-map";
-import { seatPlanState } from "../sample-data/seatplan-state";
+} from "@/seatviewer";
+import { seatPlanMap } from "@/sample-data/seatplan-map";
+import { seatPlanState } from "@/sample-data/seatplan-state";
 import {
   buildSeatPlanRoster,
   MY_TICKET_CODES,
-} from "../sample-data/seatplan-roster";
+} from "@/sample-data/seatplan-roster";
 
 const MINE = new Set<string>(MY_TICKET_CODES);
 

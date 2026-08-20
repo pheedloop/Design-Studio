@@ -1,6 +1,6 @@
 import { Circle } from "react-konva";
 import type Konva from "konva";
-import type { FloorPlanElement, Geometry, ArcGeometry } from "../../../types";
+import type { FloorPlanElement, Geometry, ArcGeometry } from "@/types";
 
 interface ArcControlHandleProps {
   element: FloorPlanElement;
