@@ -24,9 +24,10 @@ export function BadgeEditorApp() {
           debug
           translate={translate}
           attendeeProvider={sampleAttendeeProvider}
-          onSave={(_doc, flattened) =>
-            console.log("[badge] saved", flattened.layout)
-          }
+          // The demo has no backend. Save stays wired so the File menu keeps
+          // its Save entry (it only renders when onSave is passed), and the
+          // flattened badge_layout is already inspectable via `debug`.
+          onSave={() => {}}
         />
       </div>
     </div>

@@ -162,7 +162,7 @@ This satisfies both consumers: ditto gets structured keys, Charmander keeps Engl
 
 ### Skills required before opening a PR
 
-- No `console.log`, no commented-out code, no `TODO` without a Linear ticket reference.
+- No `console.log` (lint-enforced by `no-console`, which still allows `warn`/`error` for deliberate diagnostics on a failure path), no commented-out code, no `TODO` without a Linear ticket reference.
 - `npm run lint` clean.
 - `npm test` green, and `tsc -b --noEmit` clean. The pre-commit hook enforces both; don't `--no-verify` past it.
 - No user-visible string literal left in a component — every one goes through `t()`.
