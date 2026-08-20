@@ -73,7 +73,7 @@ describe("translateFloorPlan", () => {
     expect(before.elements[0].properties.name).toBe("Casual Play Hall");
   });
 
-  it("leaves an unnamed element unnamed rather than translating \"\"", () => {
+  it('leaves an unnamed element unnamed rather than translating ""', () => {
     const source = plan();
     source.elements[0].properties.name = "";
     const out = translateFloorPlan(source, translate);

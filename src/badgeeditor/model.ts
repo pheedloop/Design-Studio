@@ -36,7 +36,8 @@ export type TextAlign = "left" | "center" | "right" | "justify";
  * exposes, and how it serializes. Mirrors the legacy Fabric subclasses
  * (BadgeText / BadgeQRCode / BadgeImage / BadgeTickets) plus session_schedule.
  */
-export type FieldKind = "text" | "qrCode" | "tickets" | "image" | "sessionSchedule";
+export type FieldKind =
+  "text" | "qrCode" | "tickets" | "image" | "sessionSchedule";
 
 export interface BadgeField {
   /** Stable client id (uuid). Not serialized to the legacy layout. */

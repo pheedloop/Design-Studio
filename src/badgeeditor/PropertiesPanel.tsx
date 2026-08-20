@@ -88,7 +88,7 @@ export function PropertiesPanel({
             <SectionLabel>Text</SectionLabel>
             <TextInput
               value={field.text ?? ""}
-              onChange={(e) => onChange({ text: e.target.value })}
+              onChange={e => onChange({ text: e.target.value })}
             />
           </div>
         )}
@@ -99,9 +99,9 @@ export function PropertiesPanel({
               <Select
                 className="w-full"
                 value={field.fontSize ?? 20}
-                onChange={(e) => setFontSize(Number(e.target.value))}
+                onChange={e => setFontSize(Number(e.target.value))}
               >
-                {FONT_SIZES.map((s) => (
+                {FONT_SIZES.map(s => (
                   <option key={s} value={s}>
                     {s}
                   </option>
@@ -110,7 +110,7 @@ export function PropertiesPanel({
             </FieldRow>
             <FieldRow label="Align">
               <div className="flex gap-1">
-                {ALIGNMENTS.map((a) => (
+                {ALIGNMENTS.map(a => (
                   <IconButton
                     key={a.value}
                     size="sm"
@@ -131,9 +131,9 @@ export function PropertiesPanel({
             <Select
               className="w-full"
               value={field.numRows ?? 3}
-              onChange={(e) => onChange({ numRows: Number(e.target.value) })}
+              onChange={e => onChange({ numRows: Number(e.target.value) })}
             >
-              {ROW_COUNTS.map((n) => (
+              {ROW_COUNTS.map(n => (
                 <option key={n} value={n}>
                   {n}
                 </option>
@@ -147,13 +147,13 @@ export function PropertiesPanel({
             <Checkbox
               label="Invert (180°)"
               checked={Boolean(field.inverted)}
-              onChange={(v) => onChange({ inverted: v })}
+              onChange={v => onChange({ inverted: v })}
             />
             {isText && isUserFieldEditable(field.field) && (
               <Checkbox
                 label="Attendee editable"
                 checked={field.userEditable ?? true}
-                onChange={(v) => onChange({ userEditable: v })}
+                onChange={v => onChange({ userEditable: v })}
               />
             )}
           </div>
@@ -163,7 +163,7 @@ export function PropertiesPanel({
           <div className="flex flex-col gap-1.5">
             <SectionLabel>Insert token</SectionLabel>
             <div className="flex flex-wrap gap-1">
-              {TOKENS.map((t) => (
+              {TOKENS.map(t => (
                 <button
                   key={t}
                   type="button"
@@ -203,7 +203,7 @@ function Checkbox({
       <input
         type="checkbox"
         checked={checked}
-        onChange={(e) => onChange(e.target.checked)}
+        onChange={e => onChange(e.target.checked)}
       />
       <span className="text-xs text-gray-600">{label}</span>
     </label>

@@ -23,7 +23,8 @@ export function getElementCenter(geometry: Geometry): { x: number; y: number } {
       const pts = geometry.points;
       const count = pts.length / 2;
       if (count === 0) return { x: geometry.x, y: geometry.y };
-      let sx = 0, sy = 0;
+      let sx = 0,
+        sy = 0;
       for (let i = 0; i < pts.length; i += 2) {
         sx += pts[i];
         sy += pts[i + 1];
@@ -52,7 +53,7 @@ export function findNearestWalkableCell(
   grid: WalkableGrid,
   canvasX: number,
   canvasY: number,
-  maxRadius: number = 50
+  maxRadius: number = 50,
 ): Cell | null {
   const origin = canvasToCellCoord(canvasX, canvasY, grid.cellSize);
 
@@ -78,7 +79,7 @@ export function findNearestWalkableCell(
     // Check distance from origin
     const dist = Math.max(
       Math.abs(cell.col - origin.col),
-      Math.abs(cell.row - origin.row)
+      Math.abs(cell.row - origin.row),
     );
     if (dist > maxRadius) continue;
 
@@ -114,7 +115,7 @@ export function findNearestWalkableCell(
 /** Resolve a booth element to its nearest walkable cell. */
 export function resolveBoothToCell(
   grid: WalkableGrid,
-  element: FloorPlanElement
+  element: FloorPlanElement,
 ): Cell | null {
   const center = getElementCenter(element.geometry);
   return findNearestWalkableCell(grid, center.x, center.y);
@@ -124,10 +125,11 @@ export function resolveBoothToCell(
 export function resolveExhibitorToCell(
   grid: WalkableGrid,
   exhibitor: Exhibitor,
-  elements: FloorPlanElement[]
+  elements: FloorPlanElement[],
 ): Cell | null {
   const booth = elements.find(
-    (el) => el.type === "booth" && el.properties.boothSlug === exhibitor.boothSlug
+    el =>
+      el.type === "booth" && el.properties.boothSlug === exhibitor.boothSlug,
   );
   if (!booth) return null;
   return resolveBoothToCell(grid, booth);

@@ -14,7 +14,11 @@ const POINT_RADIUS = 4;
 const COLOR = "#0d9488"; // teal-600
 const LINE_DASH = [6, 4];
 
-export function MeasurePreview({ state, scale, dimensions }: MeasurePreviewProps) {
+export function MeasurePreview({
+  state,
+  scale,
+  dimensions,
+}: MeasurePreviewProps) {
   // Hooks must precede the early returns below.
   const t = useT();
   const locale = useLocale();
@@ -39,7 +43,7 @@ export function MeasurePreview({ state, scale, dimensions }: MeasurePreviewProps
         points={[p1.x, p1.y, p2.x, p2.y]}
         stroke={COLOR}
         strokeWidth={1.5 * inverseScale}
-        dash={LINE_DASH.map((d) => d * inverseScale)}
+        dash={LINE_DASH.map(d => d * inverseScale)}
         listening={false}
       />
       <Circle
@@ -61,7 +65,7 @@ export function MeasurePreview({ state, scale, dimensions }: MeasurePreviewProps
         listening={false}
       />
       <Rect
-        x={midX - (label.length * 3.5 * inverseScale)}
+        x={midX - label.length * 3.5 * inverseScale}
         y={midY - 10 * inverseScale}
         width={label.length * 7 * inverseScale}
         height={18 * inverseScale}
@@ -71,7 +75,7 @@ export function MeasurePreview({ state, scale, dimensions }: MeasurePreviewProps
         listening={false}
       />
       <Text
-        x={midX - (label.length * 3.5 * inverseScale)}
+        x={midX - label.length * 3.5 * inverseScale}
         y={midY - 7 * inverseScale}
         width={label.length * 7 * inverseScale}
         text={label}

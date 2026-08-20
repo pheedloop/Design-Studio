@@ -65,7 +65,10 @@ const TOKEN_TO_VALUE_KEY: Record<string, string> = {
   dietary_restrictions: "dietary_restrictions",
 };
 
-function substituteTokens(text: string, values: Record<string, string>): string {
+function substituteTokens(
+  text: string,
+  values: Record<string, string>,
+): string {
   return text.replace(/\{\{\s*(\w+)\s*\}\}/g, (_, token: string) => {
     const key = TOKEN_TO_VALUE_KEY[token];
     return (key && values[key]) || "";
@@ -87,6 +90,11 @@ export function fieldValueText(field: BadgeField, data: BadgeData): string {
 }
 
 /** The image URL a QR-kind field should display for this attendee, if any. */
-export function fieldQrUrl(field: BadgeField, data: BadgeData): string | undefined {
-  return field.field === "externalQRCodeUrl" ? data.externalQRCodeUrl : data.qrCode;
+export function fieldQrUrl(
+  field: BadgeField,
+  data: BadgeData,
+): string | undefined {
+  return field.field === "externalQRCodeUrl"
+    ? data.externalQRCodeUrl
+    : data.qrCode;
 }

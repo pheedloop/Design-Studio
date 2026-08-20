@@ -20,7 +20,9 @@ export function LabelSection({ properties, onChange }: LabelSectionProps) {
         <SectionLabel>{t("editor.field.label")}</SectionLabel>
         <button
           className={`p-1 rounded transition-colors cursor-pointer ${
-            visible ? "text-gray-500 hover:text-gray-700" : "text-red-400 hover:text-red-600"
+            visible
+              ? "text-gray-500 hover:text-gray-700"
+              : "text-red-400 hover:text-red-600"
           }`}
           onClick={() => onChange({ labelVisible: !visible })}
           title={visible ? t("editor.label.hide") : t("editor.label.show")}
@@ -38,7 +40,7 @@ export function LabelSection({ properties, onChange }: LabelSectionProps) {
       <ColorSwatch
         label={t("editor.field.color")}
         value={properties.labelColor ?? "#ffffff"}
-        onChange={(c) => onChange({ labelColor: c })}
+        onChange={c => onChange({ labelColor: c })}
       />
 
       <div className="flex flex-col gap-1.5">
@@ -46,7 +48,7 @@ export function LabelSection({ properties, onChange }: LabelSectionProps) {
         <div className="w-20">
           <NumberInput
             value={properties.labelFontSize ?? 12}
-            onChange={(v) => onChange({ labelFontSize: Math.max(6, v) })}
+            onChange={v => onChange({ labelFontSize: Math.max(6, v) })}
           />
         </div>
       </div>
@@ -77,7 +79,9 @@ export function LabelSection({ properties, onChange }: LabelSectionProps) {
             color="neutral"
             active={properties.labelUnderline === true}
             className="w-8 h-8 p-0 underline"
-            onClick={() => onChange({ labelUnderline: !properties.labelUnderline })}
+            onClick={() =>
+              onChange({ labelUnderline: !properties.labelUnderline })
+            }
           >
             U
           </Button>
@@ -90,9 +94,11 @@ export function LabelSection({ properties, onChange }: LabelSectionProps) {
           <input
             type="checkbox"
             checked={hasBg}
-            onChange={(e) => {
+            onChange={e => {
               if (e.target.checked) {
-                onChange({ labelBackground: { color: "#000000", opacity: 0.5 } });
+                onChange({
+                  labelBackground: { color: "#000000", opacity: 0.5 },
+                });
               } else {
                 onChange({ labelBackground: undefined });
               }
@@ -105,17 +111,28 @@ export function LabelSection({ properties, onChange }: LabelSectionProps) {
             <ColorSwatch
               label=""
               value={properties.labelBackground.color}
-              onChange={(c) => onChange({ labelBackground: { ...properties.labelBackground!, color: c } })}
+              onChange={c =>
+                onChange({
+                  labelBackground: { ...properties.labelBackground!, color: c },
+                })
+              }
             />
             <div className="flex items-center gap-1.5">
-              <span className="text-[11px] text-gray-500">{t("editor.field.opacity")}</span>
+              <span className="text-[11px] text-gray-500">
+                {t("editor.field.opacity")}
+              </span>
               <Slider
                 min={0}
                 max={100}
                 value={Math.round(properties.labelBackground.opacity * 100)}
-                onChange={(e) => onChange({
-                  labelBackground: { ...properties.labelBackground!, opacity: Number(e.target.value) / 100 },
-                })}
+                onChange={e =>
+                  onChange({
+                    labelBackground: {
+                      ...properties.labelBackground!,
+                      opacity: Number(e.target.value) / 100,
+                    },
+                  })
+                }
                 className="flex-1"
               />
               <span className="text-[10px] text-gray-400 w-7 text-right">

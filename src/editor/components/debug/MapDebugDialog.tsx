@@ -20,7 +20,7 @@ export function MapDebugDialog({ data, onClose }: MapDebugDialogProps) {
         { id: "raw", label: t("editor.debug.raw") },
       ]}
       value={tab}
-      onChange={(id) => setTab(id as typeof tab)}
+      onChange={id => setTab(id as typeof tab)}
       itemClassName="px-2 py-1"
     />
   );
@@ -33,7 +33,14 @@ export function MapDebugDialog({ data, onClose }: MapDebugDialogProps) {
       maxHeight="80vh"
       headerActions={tabs}
       footer={
-        <Button variant="ghost" color="primary" className="px-0" onClick={() => navigator.clipboard.writeText(JSON.stringify(data, null, 2))}>
+        <Button
+          variant="ghost"
+          color="primary"
+          className="px-0"
+          onClick={() =>
+            navigator.clipboard.writeText(JSON.stringify(data, null, 2))
+          }
+        >
           {t("editor.debug.copy")}
         </Button>
       }

@@ -21,7 +21,7 @@ const INITIAL_STATE: MeasureState = {
  * Does not create elements — the preview IS the output.
  */
 export function useMeasureInteraction(
-  ctx: ToolContext
+  ctx: ToolContext,
 ): ToolInteraction<MeasureState> {
   const [state, setState] = useState<MeasureState>(INITIAL_STATE);
   const measuringRef = useRef(false);
@@ -37,7 +37,7 @@ export function useMeasureInteraction(
       measuringRef.current = true;
       setState({ p1: point, p2: point, measuring: true });
     },
-    [ctx.stageRef, ctx.position, ctx.scale]
+    [ctx.stageRef, ctx.position, ctx.scale],
   );
 
   const handleMouseMove = useCallback(
@@ -48,7 +48,7 @@ export function useMeasureInteraction(
       let point = getCanvasPoint(stage, ctx.position, ctx.scale);
       if (!point) return;
 
-      setState((prev) => {
+      setState(prev => {
         if (!prev.p1 || !prev.measuring) return prev;
         if (e.evt.shiftKey) {
           point = snapToAngle(prev.p1, point!);
@@ -56,12 +56,12 @@ export function useMeasureInteraction(
         return { ...prev, p2: point };
       });
     },
-    [ctx.stageRef, ctx.position, ctx.scale]
+    [ctx.stageRef, ctx.position, ctx.scale],
   );
 
   const handleMouseUp = useCallback(() => {
     measuringRef.current = false;
-    setState((prev) => ({ ...prev, measuring: false }));
+    setState(prev => ({ ...prev, measuring: false }));
   }, []);
 
   const cancel = useCallback(() => {

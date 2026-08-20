@@ -11,7 +11,7 @@ export const ellipseTool: ToolDefinition<DrawingRect | null> = {
   icon: <PiCircle size={20} />,
   cursor: "crosshair",
 
-  useInteraction: (ctx) =>
+  useInteraction: ctx =>
     useClickDragInteraction(ctx, (rect, { defaults }) => ({
       type: "element",
       element: {

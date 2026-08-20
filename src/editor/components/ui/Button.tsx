@@ -19,30 +19,44 @@ const sizes = {
 
 const styles = {
   solid: {
-    primary:  "bg-primary-600 text-white hover:bg-primary-700 disabled:bg-gray-200 disabled:text-gray-400",
-    neutral:  "bg-gray-200 text-gray-700 hover:bg-gray-300 disabled:bg-gray-100 disabled:text-gray-400",
-    negative: "bg-red-600 text-white hover:bg-red-700 disabled:bg-gray-200 disabled:text-gray-400",
-    positive: "bg-green-600 text-white hover:bg-green-700 disabled:bg-gray-200 disabled:text-gray-400",
+    primary:
+      "bg-primary-600 text-white hover:bg-primary-700 disabled:bg-gray-200 disabled:text-gray-400",
+    neutral:
+      "bg-gray-200 text-gray-700 hover:bg-gray-300 disabled:bg-gray-100 disabled:text-gray-400",
+    negative:
+      "bg-red-600 text-white hover:bg-red-700 disabled:bg-gray-200 disabled:text-gray-400",
+    positive:
+      "bg-green-600 text-white hover:bg-green-700 disabled:bg-gray-200 disabled:text-gray-400",
   },
   outline: {
-    primary:  "border border-primary-200 text-primary-600 hover:bg-primary-50 disabled:border-gray-200 disabled:text-gray-400 disabled:hover:bg-transparent",
-    neutral:  "border border-gray-200 text-gray-600 hover:bg-gray-50 disabled:border-gray-200 disabled:text-gray-400 disabled:hover:bg-transparent",
-    negative: "border border-red-200 text-red-600 hover:bg-red-50 disabled:border-gray-200 disabled:text-gray-400 disabled:hover:bg-transparent",
-    positive: "border border-green-200 text-green-600 hover:bg-green-50 disabled:border-gray-200 disabled:text-gray-400 disabled:hover:bg-transparent",
+    primary:
+      "border border-primary-200 text-primary-600 hover:bg-primary-50 disabled:border-gray-200 disabled:text-gray-400 disabled:hover:bg-transparent",
+    neutral:
+      "border border-gray-200 text-gray-600 hover:bg-gray-50 disabled:border-gray-200 disabled:text-gray-400 disabled:hover:bg-transparent",
+    negative:
+      "border border-red-200 text-red-600 hover:bg-red-50 disabled:border-gray-200 disabled:text-gray-400 disabled:hover:bg-transparent",
+    positive:
+      "border border-green-200 text-green-600 hover:bg-green-50 disabled:border-gray-200 disabled:text-gray-400 disabled:hover:bg-transparent",
   },
   ghost: {
-    primary:  "text-primary-600 hover:bg-primary-50 disabled:text-gray-400 disabled:hover:bg-transparent",
-    neutral:  "text-gray-600 hover:bg-gray-100 disabled:text-gray-400 disabled:hover:bg-transparent",
-    negative: "text-red-600 hover:bg-red-50 disabled:text-gray-400 disabled:hover:bg-transparent",
-    positive: "text-green-600 hover:bg-green-50 disabled:text-gray-400 disabled:hover:bg-transparent",
+    primary:
+      "text-primary-600 hover:bg-primary-50 disabled:text-gray-400 disabled:hover:bg-transparent",
+    neutral:
+      "text-gray-600 hover:bg-gray-100 disabled:text-gray-400 disabled:hover:bg-transparent",
+    negative:
+      "text-red-600 hover:bg-red-50 disabled:text-gray-400 disabled:hover:bg-transparent",
+    positive:
+      "text-green-600 hover:bg-green-50 disabled:text-gray-400 disabled:hover:bg-transparent",
   },
 };
 
 const activeStyles = {
-  primary:  "bg-primary-600 text-white border border-primary-600 hover:bg-primary-600",
-  neutral:  "bg-gray-700 text-white border border-gray-700 hover:bg-gray-700",
+  primary:
+    "bg-primary-600 text-white border border-primary-600 hover:bg-primary-600",
+  neutral: "bg-gray-700 text-white border border-gray-700 hover:bg-gray-700",
   negative: "bg-red-600 text-white border border-red-600 hover:bg-red-600",
-  positive: "bg-green-600 text-white border border-green-600 hover:bg-green-600",
+  positive:
+    "bg-green-600 text-white border border-green-600 hover:bg-green-600",
 };
 
 export function Button({
@@ -57,7 +71,12 @@ export function Button({
   return (
     <button
       type="button"
-      className={[base, sizes[size], active ? activeStyles[color] : styles[variant][color], className]
+      className={[
+        base,
+        sizes[size],
+        active ? activeStyles[color] : styles[variant][color],
+        className,
+      ]
         .filter(Boolean)
         .join(" ")}
       {...props}

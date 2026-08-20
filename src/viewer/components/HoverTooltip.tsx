@@ -61,11 +61,17 @@ export function HoverTooltip({
                 {t("viewer.booth.reserved")}
               </div>
             ) : (
-              <div className="mt-0.5 text-[11px] text-gray-400">{t("viewer.booth.unoccupied")}</div>
+              <div className="mt-0.5 text-[11px] text-gray-400">
+                {t("viewer.booth.unoccupied")}
+              </div>
             )
           ) : (
             <div className="mt-0.5 text-[11px] font-medium text-gray-400 uppercase tracking-wide">
-              {t(TYPE_NAME[item.type === "session_area" ? "session_area" : "meeting_room"])}
+              {t(
+                TYPE_NAME[
+                  item.type === "session_area" ? "session_area" : "meeting_room"
+                ],
+              )}
             </div>
           )}
         </>

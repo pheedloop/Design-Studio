@@ -1,7 +1,10 @@
 import { useMemo } from "react";
 import { MapEditor, definePlacementCategory } from "../editor";
 import { seatPlanMap } from "../sample-data/seatplan-map";
-import { seatPlanTables, type TableRecord } from "../sample-data/seatplan-tables";
+import {
+  seatPlanTables,
+  type TableRecord,
+} from "../sample-data/seatplan-tables";
 
 /**
  * Seatplanner editor — the shared MapEditor configured for the seatplanner
@@ -20,10 +23,10 @@ export function SeatPlanEditor() {
         iconColor: "#14b8a6",
         iconShape: "oval",
         defaultShape: "ellipse",
-        getRecordId: (r) => r.code,
-        getPrimaryLabel: (r) => r.identifier,
-        getSecondaryLabel: (r) => `${r.seatCount} seats`,
-        getExtraProps: (r) => ({ capacity: r.seatCount }),
+        getRecordId: r => r.code,
+        getPrimaryLabel: r => r.identifier,
+        getSecondaryLabel: r => `${r.seatCount} seats`,
+        getExtraProps: r => ({ capacity: r.seatCount }),
       }),
     ],
     [],

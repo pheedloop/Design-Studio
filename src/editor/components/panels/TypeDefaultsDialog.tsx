@@ -7,14 +7,27 @@ interface TypeDefaultsDialogProps {
   typeStyles: TypeStyles;
   /** Object type keys to show defaults for (the active product's categories). */
   typeKeys: string[];
-  onUpdateTypeStyles: (key: string, updates: Partial<ElementTypeDefaults>) => void;
+  onUpdateTypeStyles: (
+    key: string,
+    updates: Partial<ElementTypeDefaults>,
+  ) => void;
   onClose: () => void;
 }
 
-export function TypeDefaultsDialog({ typeStyles, typeKeys, onUpdateTypeStyles, onClose }: TypeDefaultsDialogProps) {
+export function TypeDefaultsDialog({
+  typeStyles,
+  typeKeys,
+  onUpdateTypeStyles,
+  onClose,
+}: TypeDefaultsDialogProps) {
   const t = useT();
   return (
-    <Dialog title={t("editor.dialog.elementDefaults")} onClose={onClose} width="400px" maxHeight="80vh">
+    <Dialog
+      title={t("editor.dialog.elementDefaults")}
+      onClose={onClose}
+      width="400px"
+      maxHeight="80vh"
+    >
       <div className="overflow-y-auto flex-1 p-4 flex flex-col gap-3">
         <p className="text-xs text-gray-500 leading-snug">
           {t("editor.dialog.elementDefaultsHint")}

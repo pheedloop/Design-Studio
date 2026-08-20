@@ -12,7 +12,13 @@ interface SearchBarProps {
   onResultSelect: (result: SearchResult) => void;
 }
 
-export function SearchBar({ query, results, placeholder, onQueryChange, onResultSelect }: SearchBarProps) {
+export function SearchBar({
+  query,
+  results,
+  placeholder,
+  onQueryChange,
+  onResultSelect,
+}: SearchBarProps) {
   const t = useT();
   const [focused, setFocused] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -26,7 +32,7 @@ export function SearchBar({ query, results, placeholder, onQueryChange, onResult
           ref={inputRef}
           type="text"
           value={query}
-          onChange={(e) => onQueryChange(e.target.value)}
+          onChange={e => onQueryChange(e.target.value)}
           onFocus={() => setFocused(true)}
           onBlur={() => {
             // Delay to allow dropdown click to register
@@ -55,7 +61,7 @@ export function SearchBar({ query, results, placeholder, onQueryChange, onResult
               {t("viewer.search.noResults")}
             </div>
           ) : (
-            results.map((result) => {
+            results.map(result => {
               const badge = TYPE_BADGE[result.elementType];
               return (
                 <button
@@ -71,12 +77,16 @@ export function SearchBar({ query, results, placeholder, onQueryChange, onResult
                     <span className="text-xs font-medium text-gray-800 truncate">
                       {result.exhibitorName || displayName(result, t)}
                     </span>
-                    <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded shrink-0 ${badge.className}`}>
+                    <span
+                      className={`text-[10px] font-medium px-1.5 py-0.5 rounded shrink-0 ${badge.className}`}
+                    >
                       {t(badge.labelKey)}
                     </span>
                   </div>
                   {result.exhibitorName && (
-                    <div className="text-[11px] text-gray-400">{displayName(result, t)}</div>
+                    <div className="text-[11px] text-gray-400">
+                      {displayName(result, t)}
+                    </div>
                   )}
                 </button>
               );

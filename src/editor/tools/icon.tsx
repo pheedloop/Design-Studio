@@ -9,7 +9,7 @@ export const iconTool: ToolDefinition<null> = {
   icon: <PiSticker size={20} />,
   cursor: "crosshair",
 
-  useInteraction: (ctx) =>
+  useInteraction: ctx =>
     useClickPlaceInteraction(ctx, (point, toolCtx) => {
       if (!toolCtx.activeIconName) return { type: "none" };
       return {

@@ -52,7 +52,10 @@ export function BadgePreview({
   useLayoutEffect(() => {
     if (didFit.current || !hasMeasured) return;
     didFit.current = true;
-    fitToBounds({ width: panelW, height: totalH }, { padding: 48, maxScale: 1 });
+    fitToBounds(
+      { width: panelW, height: totalH },
+      { padding: 48, maxScale: 1 },
+    );
   }, [hasMeasured, fitToBounds, panelW, totalH]);
 
   return (
@@ -98,7 +101,9 @@ export function BadgePreview({
           {doc.pages.map((page, i) => {
             const offsetTop = i * panelH;
             const inverted = page.inverted ?? foldInvertForPage(doc.fold, i);
-            const stubs = page.tearaway ? Math.max(1, page.tearawayCount ?? 3) : 0;
+            const stubs = page.tearaway
+              ? Math.max(1, page.tearawayCount ?? 3)
+              : 0;
             return (
               <Group key={page.id} x={0} y={offsetTop}>
                 <Group
@@ -106,7 +111,7 @@ export function BadgePreview({
                   y={inverted ? panelH : 0}
                   rotation={inverted ? 180 : 0}
                 >
-                  {page.fields.map((f) => (
+                  {page.fields.map(f => (
                     <StaticField key={f.id} field={f} data={data} />
                   ))}
                   {stubs > 1 &&

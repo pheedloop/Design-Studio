@@ -20,15 +20,20 @@ describe("occupantHeading", () => {
     expect(occupantHeading(state({ loading: true }), t)).toBe("Loading…");
     // Loading wins even when the table is locked and already has people.
     expect(
-      occupantHeading(state({ loading: true, hasOccupants: true, locked: true }), t),
+      occupantHeading(
+        state({ loading: true, hasOccupants: true, locked: true }),
+        t,
+      ),
     ).toBe("Loading…");
   });
 
   it("names the occupants when there are any, locked or not", () => {
-    expect(occupantHeading(state({ hasOccupants: true }), t)).toBe("Seated here");
-    expect(occupantHeading(state({ hasOccupants: true, locked: true }), t)).toBe(
+    expect(occupantHeading(state({ hasOccupants: true }), t)).toBe(
       "Seated here",
     );
+    expect(
+      occupantHeading(state({ hasOccupants: true, locked: true }), t),
+    ).toBe("Seated here");
   });
 
   it("reports a locked empty table as locked", () => {

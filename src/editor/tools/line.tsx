@@ -12,7 +12,7 @@ export const lineTool: ToolDefinition<LinePreviewState | null> = {
   icon: <PiLineSegment size={20} />,
   cursor: "crosshair",
 
-  useInteraction: (ctx) =>
+  useInteraction: ctx =>
     useLineInteraction(ctx, (line, { defaults }) => {
       const anchorX = (line.x1 + line.x2) / 2;
       const anchorY = (line.y1 + line.y2) / 2;

@@ -56,10 +56,16 @@ export function formatMeasurement(
 ): string {
   const unit = unitLabel(dims.unit, t);
   if (dims.unit === "px") {
-    return t("common.measurement", { value: formatNumber(Math.round(px), locale, 0), unit });
+    return t("common.measurement", {
+      value: formatNumber(Math.round(px), locale, 0),
+      unit,
+    });
   }
   const real = pxToReal(px, dims.pixelsPerUnit);
-  return t("common.measurement", { value: formatNumber(real, locale, 1), unit });
+  return t("common.measurement", {
+    value: formatNumber(real, locale, 1),
+    unit,
+  });
 }
 
 /** Format a rectangular area (width × height in px) as a real-world string (e.g. "150.0 sq ft"). */

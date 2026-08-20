@@ -13,7 +13,7 @@ interface SelectionTransformerProps {
     y: number,
     width: number,
     height: number,
-    rotation: number
+    rotation: number,
   ) => void;
   visible?: boolean;
 }
@@ -47,7 +47,7 @@ export function SelectionTransformer({
   const isSingle = selectedIds.size === 1;
   const selectedId = isSingle ? [...selectedIds][0] : null;
   const selectedElement = selectedId
-    ? elements.find((el) => el.id === selectedId)
+    ? elements.find(el => el.id === selectedId)
     : null;
   const isLine = selectedElement?.geometry.shape === "line";
   const isArrow = selectedElement?.geometry.shape === "arrow";
@@ -55,9 +55,10 @@ export function SelectionTransformer({
   const isPolygon = selectedElement?.geometry.shape === "polygon";
 
   // Geometry key for re-attaching transformer after state updates
-  const geoKey = isSingle && selectedElement
-    ? JSON.stringify(selectedElement.geometry)
-    : [...selectedIds].sort().join(",");
+  const geoKey =
+    isSingle && selectedElement
+      ? JSON.stringify(selectedElement.geometry)
+      : [...selectedIds].sort().join(",");
 
   useEffect(() => {
     const tr = trRef.current;
@@ -76,7 +77,18 @@ export function SelectionTransformer({
       tr.nodes([node]);
       tr.getLayer()?.batchDraw();
     }
-  }, [selectedIds, selectedId, stageRef, geoKey, isLine, isArrow, isArc, isPolygon, isSingle, elements]);
+  }, [
+    selectedIds,
+    selectedId,
+    stageRef,
+    geoKey,
+    isLine,
+    isArrow,
+    isArc,
+    isPolygon,
+    isSingle,
+    elements,
+  ]);
 
   const handleTransformEnd = useCallback(() => {
     const tr = trRef.current;
@@ -129,14 +141,21 @@ export function SelectionTransformer({
     // Also update rect text label if present alongside rect
     if (rect) {
       const rectText = group.find("Text");
-      rectText.forEach((t) => {
+      rectText.forEach(t => {
         t.width(newWidth);
         t.height(newHeight);
       });
     }
 
     const rotation = node.rotation();
-    onTransformEnd(selectedId, node.x(), node.y(), newWidth, newHeight, rotation);
+    onTransformEnd(
+      selectedId,
+      node.x(),
+      node.y(),
+      newWidth,
+      newHeight,
+      rotation,
+    );
   }, [isSingle, selectedId, onTransformEnd]);
 
   if (!visible) return null;
@@ -147,7 +166,9 @@ export function SelectionTransformer({
       rotateEnabled={isSingle}
       resizeEnabled={isSingle}
       rotateAnchorOffset={20}
-      rotationSnaps={shiftHeld ? Array.from({ length: 24 }, (_, i) => i * 15) : []}
+      rotationSnaps={
+        shiftHeld ? Array.from({ length: 24 }, (_, i) => i * 15) : []
+      }
       rotationSnapTolerance={shiftHeld ? 10 : 0}
       borderStroke="#007bff"
       borderStrokeWidth={1.5}
@@ -161,7 +182,10 @@ export function SelectionTransformer({
           return _oldBox;
         }
         if (shiftHeld) {
-          const size = Math.max(Math.abs(newBox.width), Math.abs(newBox.height));
+          const size = Math.max(
+            Math.abs(newBox.width),
+            Math.abs(newBox.height),
+          );
           return {
             ...newBox,
             width: size * Math.sign(newBox.width),

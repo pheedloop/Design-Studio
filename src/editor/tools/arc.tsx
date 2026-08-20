@@ -12,7 +12,7 @@ export const arcTool: ToolDefinition<ArcToolState> = {
   icon: <PiBezierCurve size={20} />,
   cursor: "crosshair",
 
-  useInteraction: (ctx) =>
+  useInteraction: ctx =>
     useArcInteraction(ctx, (arc, { defaults }) => ({
       type: "element",
       element: {
@@ -22,7 +22,14 @@ export const arcTool: ToolDefinition<ArcToolState> = {
           shape: "arc",
           x: arc.x1,
           y: arc.y1,
-          points: [0, 0, arc.cx - arc.x1, arc.cy - arc.y1, arc.x2 - arc.x1, arc.y2 - arc.y1],
+          points: [
+            0,
+            0,
+            arc.cx - arc.x1,
+            arc.cy - arc.y1,
+            arc.x2 - arc.x1,
+            arc.y2 - arc.y1,
+          ],
         },
         properties: {
           name: "Arc",

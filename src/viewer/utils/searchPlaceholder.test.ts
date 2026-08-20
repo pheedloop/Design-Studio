@@ -9,7 +9,8 @@ const { defaultTranslate: t } = createSurfaceI18n({
   viewer: VIEWER,
 });
 
-const el = (type: string) => ({ type, properties: {} }) as unknown as FloorPlanElement;
+const el = (type: string) =>
+  ({ type, properties: {} }) as unknown as FloorPlanElement;
 
 const booth = el("booth");
 const session = el("session_area");
@@ -25,7 +26,9 @@ describe("buildSearchPlaceholder", () => {
 
   it("names the single type present", () => {
     expect(buildSearchPlaceholder([booth, wall], t)).toBe("Search booths");
-    expect(buildSearchPlaceholder([session], t)).toBe("Search session locations");
+    expect(buildSearchPlaceholder([session], t)).toBe(
+      "Search session locations",
+    );
     expect(buildSearchPlaceholder([room], t)).toBe("Search meeting rooms");
   });
 
@@ -55,6 +58,8 @@ describe("buildSearchPlaceholder", () => {
   });
 
   it("does not duplicate a type that appears many times", () => {
-    expect(buildSearchPlaceholder([booth, booth, booth], t)).toBe("Search booths");
+    expect(buildSearchPlaceholder([booth, booth, booth], t)).toBe(
+      "Search booths",
+    );
   });
 });

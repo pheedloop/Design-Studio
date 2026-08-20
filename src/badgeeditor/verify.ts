@@ -47,7 +47,9 @@ function diffEntry(
     if (typeof a === "number" && typeof b === "number") {
       if (Math.abs(a - b) > EPS) errs.push(`[${name}#${i}] ${k}: ${a} != ${b}`);
     } else if (a !== b) {
-      errs.push(`[${name}#${i}] ${k}: ${JSON.stringify(a)} != ${JSON.stringify(b)}`);
+      errs.push(
+        `[${name}#${i}] ${k}: ${JSON.stringify(a)} != ${JSON.stringify(b)}`,
+      );
     }
   }
   return errs;
@@ -70,7 +72,7 @@ for (const [name, original] of Object.entries(FIXTURES)) {
   if (errs.length) {
     failures += errs.length;
     console.error(`✗ ${name}: ${errs.length} mismatch(es)`);
-    errs.forEach((e) => console.error("   " + e));
+    errs.forEach(e => console.error("   " + e));
   } else {
     console.log(`✓ ${name}: ${original.length} fields round-trip exactly`);
   }
@@ -127,20 +129,25 @@ for (const [name, original] of Object.entries(FIXTURES)) {
   const { layout, width, height } = flatten(doc);
   const errs: string[] = [];
   if (width !== 3.64) errs.push(`fold width ${width} != 3.64`);
-  if (height !== PANEL_H * 2) errs.push(`fold height ${height} != ${PANEL_H * 2}`);
+  if (height !== PANEL_H * 2)
+    errs.push(`fold height ${height} != ${PANEL_H * 2}`);
   // Front panel: unchanged, upright.
-  if (Math.abs(layout[0].top - 0.3) > EPS) errs.push(`front top ${layout[0].top} != 0.3`);
-  if (layout[0].inverted !== false) errs.push(`front inverted ${layout[0].inverted} != false`);
+  if (Math.abs(layout[0].top - 0.3) > EPS)
+    errs.push(`front top ${layout[0].top} != 0.3`);
+  if (layout[0].inverted !== false)
+    errs.push(`front inverted ${layout[0].inverted} != false`);
   // Back panel: offset by panel height, auto-inverted, NO coordinate shift.
   if (Math.abs(layout[1].top - (0.3 + PANEL_H)) > EPS)
     errs.push(`back top ${layout[1].top} != ${0.3 + PANEL_H}`);
-  if (Math.abs(layout[1].left - 0.5) > EPS) errs.push(`back left ${layout[1].left} != 0.5`);
-  if (layout[1].inverted !== true) errs.push(`back inverted ${layout[1].inverted} != true`);
+  if (Math.abs(layout[1].left - 0.5) > EPS)
+    errs.push(`back left ${layout[1].left} != 0.5`);
+  if (layout[1].inverted !== true)
+    errs.push(`back inverted ${layout[1].inverted} != true`);
 
   if (errs.length) {
     failures += errs.length;
     console.error(`✗ fold(single): ${errs.length} issue(s)`);
-    errs.forEach((e) => console.error("   " + e));
+    errs.forEach(e => console.error("   " + e));
   } else {
     console.log("✓ fold(single): back panel offset + auto-inverted, no shift");
   }
@@ -148,6 +155,8 @@ for (const [name, original] of Object.entries(FIXTURES)) {
 
 if (failures) {
   // Non-zero exit via throw (avoids a Node type dependency in the lib tsconfig).
-  throw new Error(`${failures} mismatch(es) — badge_layout compatibility BROKEN`);
+  throw new Error(
+    `${failures} mismatch(es) — badge_layout compatibility BROKEN`,
+  );
 }
 console.log("\nAll fixtures round-trip exactly — badge_layout compatible.");

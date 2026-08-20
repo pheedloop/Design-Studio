@@ -22,7 +22,7 @@ const MIN_SIZE = 5;
  */
 export function useClickDragInteraction(
   ctx: ToolContext,
-  createResult: (rect: DrawingRect, ctx: ToolContext) => ToolResult
+  createResult: (rect: DrawingRect, ctx: ToolContext) => ToolResult,
 ): ToolInteraction<DrawingRect | null> {
   const [preview, setPreview] = useState<DrawingRect | null>(null);
   const origin = useRef<{ x: number; y: number } | null>(null);
@@ -40,7 +40,7 @@ export function useClickDragInteraction(
       origin.current = point;
       setPreview({ x: point.x, y: point.y, width: 0, height: 0 });
     },
-    [ctx.stageRef, ctx.position, ctx.scale]
+    [ctx.stageRef, ctx.position, ctx.scale],
   );
 
   const handleMouseMove = useCallback(
@@ -71,7 +71,7 @@ export function useClickDragInteraction(
         height,
       });
     },
-    [ctx.stageRef, ctx.position, ctx.scale]
+    [ctx.stageRef, ctx.position, ctx.scale],
   );
 
   const handleMouseUp = useCallback(() => {

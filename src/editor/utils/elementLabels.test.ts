@@ -5,10 +5,17 @@ import { COMMON, EDITOR } from "../../i18n/strings";
 import type { ElementType, Geometry } from "../../types";
 import type { T } from "../i18n";
 
-const { defaultTranslate } = createSurfaceI18n({ common: COMMON, editor: EDITOR });
+const { defaultTranslate } = createSurfaceI18n({
+  common: COMMON,
+  editor: EDITOR,
+});
 const t = defaultTranslate as T;
 
-const element = (type: ElementType, shape: Geometry["shape"], arrowHead = false) =>
+const element = (
+  type: ElementType,
+  shape: Geometry["shape"],
+  arrowHead = false,
+) =>
   ({
     type,
     geometry: { shape } as Geometry,

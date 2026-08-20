@@ -13,29 +13,34 @@ interface MapSheetProps {
 
 type TabId = "exhibitors" | "sessions" | "meetingRooms";
 
-export function MapSheet({ elements, exhibitors, selectedItem, onSelect }: MapSheetProps) {
+export function MapSheet({
+  elements,
+  exhibitors,
+  selectedItem,
+  onSelect,
+}: MapSheetProps) {
   const t = useT();
   const [expanded, setExpanded] = useState(false);
 
   const sessionElements = useMemo(
     () =>
-      [...elements.filter((el) => el.type === "session_area")].sort((a, b) =>
-        (a.properties.name || "").localeCompare(b.properties.name || "")
+      [...elements.filter(el => el.type === "session_area")].sort((a, b) =>
+        (a.properties.name || "").localeCompare(b.properties.name || ""),
       ),
-    [elements]
+    [elements],
   );
 
   const meetingRoomElements = useMemo(
     () =>
-      [...elements.filter((el) => el.type === "meeting_room")].sort((a, b) =>
-        (a.properties.name || "").localeCompare(b.properties.name || "")
+      [...elements.filter(el => el.type === "meeting_room")].sort((a, b) =>
+        (a.properties.name || "").localeCompare(b.properties.name || ""),
       ),
-    [elements]
+    [elements],
   );
 
   const sortedExhibitors = useMemo(
     () => [...exhibitors].sort((a, b) => a.name.localeCompare(b.name)),
-    [exhibitors]
+    [exhibitors],
   );
 
   const boothBySlug = useMemo(() => {
@@ -50,17 +55,35 @@ export function MapSheet({ elements, exhibitors, selectedItem, onSelect }: MapSh
 
   const visibleTabs = useMemo(
     () =>
-      ([
-        { id: "exhibitors" as TabId, label: t("viewer.tab.exhibitors"), count: exhibitors.length },
-        { id: "sessions" as TabId, label: t("viewer.tab.sessions"), count: sessionElements.length },
-        { id: "meetingRooms" as TabId, label: t("viewer.tab.rooms"), count: meetingRoomElements.length },
-      ] as const).filter((tab) => tab.count > 0),
-    [exhibitors.length, sessionElements.length, meetingRoomElements.length, t]
+      (
+        [
+          {
+            id: "exhibitors" as TabId,
+            label: t("viewer.tab.exhibitors"),
+            count: exhibitors.length,
+          },
+          {
+            id: "sessions" as TabId,
+            label: t("viewer.tab.sessions"),
+            count: sessionElements.length,
+          },
+          {
+            id: "meetingRooms" as TabId,
+            label: t("viewer.tab.rooms"),
+            count: meetingRoomElements.length,
+          },
+        ] as const
+      ).filter(tab => tab.count > 0),
+    [exhibitors.length, sessionElements.length, meetingRoomElements.length, t],
   );
 
-  const [activeTab, setActiveTab] = useState<TabId>(() => visibleTabs[0]?.id ?? "exhibitors");
+  const [activeTab, setActiveTab] = useState<TabId>(
+    () => visibleTabs[0]?.id ?? "exhibitors",
+  );
 
-  const currentTab = visibleTabs.some((t) => t.id === activeTab) ? activeTab : (visibleTabs[0]?.id ?? "exhibitors");
+  const currentTab = visibleTabs.some(t => t.id === activeTab)
+    ? activeTab
+    : (visibleTabs[0]?.id ?? "exhibitors");
   const hasTabs = visibleTabs.length > 1;
 
   return (
@@ -73,13 +96,15 @@ export function MapSheet({ elements, exhibitors, selectedItem, onSelect }: MapSh
           type="button"
           onClick={() => setExpanded(!expanded)}
           aria-expanded={expanded}
-          aria-label={expanded ? t("viewer.sheet.collapse") : t("viewer.sheet.expand")}
+          aria-label={
+            expanded ? t("viewer.sheet.collapse") : t("viewer.sheet.expand")
+          }
           className="absolute inset-0 w-full cursor-pointer"
         />
         <div className="relative flex items-center justify-between w-full px-4 py-3 pointer-events-none">
           {hasTabs ? (
             <div className="flex gap-3 pointer-events-auto">
-              {visibleTabs.map((tab) => (
+              {visibleTabs.map(tab => (
                 <button
                   key={tab.id}
                   type="button"
@@ -114,17 +139,26 @@ export function MapSheet({ elements, exhibitors, selectedItem, onSelect }: MapSh
       </div>
 
       {expanded && (
-        <div className="overflow-y-auto" style={{ maxHeight: "calc(60vh - 56px)" }}>
+        <div
+          className="overflow-y-auto"
+          style={{ maxHeight: "calc(60vh - 56px)" }}
+        >
           {currentTab === "exhibitors" &&
-            sortedExhibitors.map((exhibitor) => {
+            sortedExhibitors.map(exhibitor => {
               const boothEl = boothBySlug.get(exhibitor.boothSlug);
-              const isSelected = boothEl ? selectedItem?.elementId === boothEl.id : false;
+              const isSelected = boothEl
+                ? selectedItem?.elementId === boothEl.id
+                : false;
               return (
                 <button
                   key={exhibitor.id}
                   onClick={() => {
                     if (!boothEl) return;
-                    onSelect({ type: "booth", elementId: boothEl.id, boothSlug: exhibitor.boothSlug });
+                    onSelect({
+                      type: "booth",
+                      elementId: boothEl.id,
+                      boothSlug: exhibitor.boothSlug,
+                    });
                   }}
                   className={`w-full text-left px-4 py-2.5 border-t border-gray-100 cursor-pointer transition-colors ${
                     isSelected ? "bg-primary-100" : "hover:bg-gray-50"
@@ -132,13 +166,21 @@ export function MapSheet({ elements, exhibitors, selectedItem, onSelect }: MapSh
                 >
                   <div className="flex items-center gap-2">
                     {exhibitor.logo && (
-                      <img src={exhibitor.logo} alt="" className="w-7 h-7 shrink-0 rounded-md border border-gray-200 bg-white object-contain p-0.5" />
+                      <img
+                        src={exhibitor.logo}
+                        alt=""
+                        className="w-7 h-7 shrink-0 rounded-md border border-gray-200 bg-white object-contain p-0.5"
+                      />
                     )}
                     <div>
-                      <div className="text-xs font-medium text-gray-800">{exhibitor.name}</div>
+                      <div className="text-xs font-medium text-gray-800">
+                        {exhibitor.name}
+                      </div>
                       <div className="text-[11px] text-gray-400">
                         {boothEl?.properties.name
-                          ? t("viewer.boothLabel", { code: boothEl.properties.name })
+                          ? t("viewer.boothLabel", {
+                              code: boothEl.properties.name,
+                            })
                           : ""}
                       </div>
                     </div>
@@ -148,12 +190,18 @@ export function MapSheet({ elements, exhibitors, selectedItem, onSelect }: MapSh
             })}
 
           {currentTab === "sessions" &&
-            sessionElements.map((el) => {
+            sessionElements.map(el => {
               const isSelected = selectedItem?.elementId === el.id;
               return (
                 <button
                   key={el.id}
-                  onClick={() => onSelect({ type: "session_area", elementId: el.id, sessionId: el.properties.sessionId ?? null })}
+                  onClick={() =>
+                    onSelect({
+                      type: "session_area",
+                      elementId: el.id,
+                      sessionId: el.properties.sessionId ?? null,
+                    })
+                  }
                   className={`w-full text-left px-4 py-2.5 border-t border-gray-100 cursor-pointer transition-colors ${
                     isSelected ? "bg-primary-100" : "hover:bg-gray-50"
                   }`}
@@ -166,12 +214,18 @@ export function MapSheet({ elements, exhibitors, selectedItem, onSelect }: MapSh
             })}
 
           {currentTab === "meetingRooms" &&
-            meetingRoomElements.map((el) => {
+            meetingRoomElements.map(el => {
               const isSelected = selectedItem?.elementId === el.id;
               return (
                 <button
                   key={el.id}
-                  onClick={() => onSelect({ type: "meeting_room", elementId: el.id, meetingRoomId: el.properties.meetingRoomId ?? null })}
+                  onClick={() =>
+                    onSelect({
+                      type: "meeting_room",
+                      elementId: el.id,
+                      meetingRoomId: el.properties.meetingRoomId ?? null,
+                    })
+                  }
                   className={`w-full text-left px-4 py-2.5 border-t border-gray-100 cursor-pointer transition-colors ${
                     isSelected ? "bg-primary-100" : "hover:bg-gray-50"
                   }`}

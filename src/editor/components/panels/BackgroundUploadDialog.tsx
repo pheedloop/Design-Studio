@@ -3,7 +3,10 @@ import { Button, Dialog } from "../ui";
 import type { Background, DxfPrimitive, Unit } from "../../../types";
 import { parseDxf, type ParsedDxf } from "../../utils/dxf/parseDxf";
 import { bakeDrawing, type FitMode } from "../../utils/dxf/bakeDrawing";
-import { drawPrimitives, type DrawContext } from "../../utils/dxf/drawPrimitives";
+import {
+  drawPrimitives,
+  type DrawContext,
+} from "../../utils/dxf/drawPrimitives";
 import { useT, type StringKey, type T } from "../../i18n";
 
 /** Serialized-size budget for the imported DXF primitives. pikachu caps the
@@ -58,7 +61,8 @@ function measureImage(url: string): Promise<{ width: number; height: number }> {
   return new Promise((resolve, reject) => {
     const img = new Image();
     img.crossOrigin = "anonymous";
-    img.onload = () => resolve({ width: img.naturalWidth, height: img.naturalHeight });
+    img.onload = () =>
+      resolve({ width: img.naturalWidth, height: img.naturalHeight });
     img.onerror = () => reject(new Error("Could not load image"));
     img.src = url;
   });
@@ -83,7 +87,10 @@ export function BackgroundUploadDialog({
 
   // Image-specific
   const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const [imageSize, setImageSize] = useState<{ width: number; height: number } | null>(null);
+  const [imageSize, setImageSize] = useState<{
+    width: number;
+    height: number;
+  } | null>(null);
 
   // DXF-specific
   const [parsed, setParsed] = useState<ParsedDxf | null>(null);
@@ -147,18 +154,21 @@ export function BackgroundUploadDialog({
 
   const layerCounts = useMemo(() => {
     const counts = new Map<string, number>();
-    parsed?.primitives.forEach((p) => counts.set(p.layer, (counts.get(p.layer) ?? 0) + 1));
+    parsed?.primitives.forEach(p =>
+      counts.set(p.layer, (counts.get(p.layer) ?? 0) + 1),
+    );
     return counts;
   }, [parsed]);
 
   const selectedPrimitives = useMemo<DxfPrimitive[]>(
-    () => parsed?.primitives.filter((p) => selectedLayers.has(p.layer)) ?? [],
-    [parsed, selectedLayers]
+    () => parsed?.primitives.filter(p => selectedLayers.has(p.layer)) ?? [],
+    [parsed, selectedLayers],
   );
 
   const estimatedBytes = useMemo(
-    () => (selectedPrimitives.length ? JSON.stringify(selectedPrimitives).length : 0),
-    [selectedPrimitives]
+    () =>
+      selectedPrimitives.length ? JSON.stringify(selectedPrimitives).length : 0,
+    [selectedPrimitives],
   );
   const tooLarge = estimatedBytes > MAX_BYTES;
 
@@ -183,7 +193,7 @@ export function BackgroundUploadDialog({
   }, [kind, parsed, selectedPrimitives, opacity]);
 
   const toggleLayer = (layer: string) => {
-    setSelectedLayers((prev) => {
+    setSelectedLayers(prev => {
       const next = new Set(prev);
       if (next.has(layer)) next.delete(layer);
       else next.add(layer);
@@ -230,7 +240,13 @@ export function BackgroundUploadDialog({
         const targetWidth = mode === "resize" ? width : canvasWidth;
         const targetHeight = mode === "resize" ? height : canvasHeight;
         onConfirm({
-          background: { kind: "image", url, width: targetWidth, height: targetHeight, opacity },
+          background: {
+            kind: "image",
+            url,
+            width: targetWidth,
+            height: targetHeight,
+            opacity,
+          },
           resizeCanvasTo: mode === "resize" ? { width, height } : undefined,
         });
       } else {
@@ -244,7 +260,9 @@ export function BackgroundUploadDialog({
         // way. Without a host callback (e.g. the standalone demo), fall back
         // to a client-side object URL: fine for this session, but it won't
         // survive a reload without a real backend storing the file.
-        const url = onUpload ? (await onUpload(file)).url : URL.createObjectURL(file);
+        const url = onUpload
+          ? (await onUpload(file)).url
+          : URL.createObjectURL(file);
         const result: BackgroundUploadResult = {
           background: {
             kind: "dxf",
@@ -281,11 +299,23 @@ export function BackgroundUploadDialog({
       width="480px"
       footer={
         <>
-          <Button variant="outline" color="neutral" onClick={onClose} disabled={pending}>
+          <Button
+            variant="outline"
+            color="neutral"
+            onClick={onClose}
+            disabled={pending}
+          >
             {t("editor.action.cancel")}
           </Button>
-          <Button variant="solid" color="primary" onClick={handleConfirm} disabled={!canConfirm || pending}>
-            {pending ? t("editor.background.uploading") : t("editor.background.upload")}
+          <Button
+            variant="solid"
+            color="primary"
+            onClick={handleConfirm}
+            disabled={!canConfirm || pending}
+          >
+            {pending
+              ? t("editor.background.uploading")
+              : t("editor.background.upload")}
           </Button>
         </>
       }
@@ -296,8 +326,12 @@ export function BackgroundUploadDialog({
             onClick={() => fileRef.current?.click()}
             className="flex flex-col items-center justify-center h-40 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-primary-400 hover:bg-gray-50 transition-colors"
           >
-            <span className="text-sm text-gray-500">{t("editor.background.chooseFile")}</span>
-            <span className="text-xs text-gray-400 mt-1">{t("editor.background.fileTypes")}</span>
+            <span className="text-sm text-gray-500">
+              {t("editor.background.chooseFile")}
+            </span>
+            <span className="text-xs text-gray-400 mt-1">
+              {t("editor.background.fileTypes")}
+            </span>
             <input
               ref={fileRef}
               type="file"
@@ -311,10 +345,17 @@ export function BackgroundUploadDialog({
           !parsed ? (
             <>
               <div className="flex items-center justify-center h-40 bg-gray-100 rounded-lg">
-                <span className="text-xs text-gray-500 px-4 text-center truncate">{file.name}</span>
+                <span className="text-xs text-gray-500 px-4 text-center truncate">
+                  {file.name}
+                </span>
               </div>
               {error && <p className="text-xs text-red-600">{t(error)}</p>}
-              <Button variant="ghost" color="neutral" className="px-0 self-start" onClick={reset}>
+              <Button
+                variant="ghost"
+                color="neutral"
+                className="px-0 self-start"
+                onClick={reset}
+              >
                 {t("editor.background.chooseDifferent")}
               </Button>
             </>
@@ -328,44 +369,67 @@ export function BackgroundUploadDialog({
               />
 
               <div className="flex flex-col gap-1">
-                <span className="text-xs font-medium text-gray-700">{t("editor.background.layersToImport")}</span>
+                <span className="text-xs font-medium text-gray-700">
+                  {t("editor.background.layersToImport")}
+                </span>
                 <div className="max-h-40 overflow-y-auto flex flex-col gap-1 border border-gray-200 rounded-md p-2">
-                  {parsed.layers.map((layer) => (
-                    <label key={layer} className="flex items-center gap-2 cursor-pointer text-xs">
+                  {parsed.layers.map(layer => (
+                    <label
+                      key={layer}
+                      className="flex items-center gap-2 cursor-pointer text-xs"
+                    >
                       <input
                         type="checkbox"
                         checked={selectedLayers.has(layer)}
                         onChange={() => toggleLayer(layer)}
                         className="accent-primary-600"
                       />
-                      <span className="flex-1 text-gray-700 truncate">{layer}</span>
-                      <span className="text-gray-400">{layerCounts.get(layer) ?? 0}</span>
+                      <span className="flex-1 text-gray-700 truncate">
+                        {layer}
+                      </span>
+                      <span className="text-gray-400">
+                        {layerCounts.get(layer) ?? 0}
+                      </span>
                     </label>
                   ))}
                 </div>
               </div>
 
               <div className="flex items-center gap-2">
-                <span className="text-xs font-medium text-gray-700 w-16">{t("editor.field.opacity")}</span>
+                <span className="text-xs font-medium text-gray-700 w-16">
+                  {t("editor.field.opacity")}
+                </span>
                 <input
                   type="range"
                   min={0.1}
                   max={1}
                   step={0.05}
                   value={opacity}
-                  onChange={(e) => setOpacity(Number(e.target.value))}
+                  onChange={e => setOpacity(Number(e.target.value))}
                   className="accent-primary-600 cursor-pointer flex-1"
                 />
-                <span className="text-xs text-gray-500 w-8 text-right">{Math.round(opacity * 100)}%</span>
+                <span className="text-xs text-gray-500 w-8 text-right">
+                  {Math.round(opacity * 100)}%
+                </span>
               </div>
 
               <FitModeRadios mode={mode} onChange={setMode} t={t} />
 
               <div className="text-xs text-gray-500 flex flex-col gap-1">
                 {parsed.unsupportedCount > 0 && (
-                  <span>{t("editor.background.skipped", { count: parsed.unsupportedCount })}</span>
+                  <span>
+                    {t("editor.background.skipped", {
+                      count: parsed.unsupportedCount,
+                    })}
+                  </span>
                 )}
-                {parsed.sourceUnits && <span>{t("editor.background.dxfUnits", { units: parsed.sourceUnits })}</span>}
+                {parsed.sourceUnits && (
+                  <span>
+                    {t("editor.background.dxfUnits", {
+                      units: parsed.sourceUnits,
+                    })}
+                  </span>
+                )}
                 {tooLarge ? (
                   <span className="text-red-600">
                     {t("editor.background.tooLarge", {
@@ -383,7 +447,13 @@ export function BackgroundUploadDialog({
 
               {error && <p className="text-xs text-red-600">{t(error)}</p>}
 
-              <Button variant="ghost" color="neutral" className="px-0 self-start" onClick={reset} disabled={pending}>
+              <Button
+                variant="ghost"
+                color="neutral"
+                className="px-0 self-start"
+                onClick={reset}
+                disabled={pending}
+              >
                 {t("editor.background.chooseDifferent")}
               </Button>
             </>
@@ -392,9 +462,15 @@ export function BackgroundUploadDialog({
           <>
             <div className="flex items-center justify-center h-40 bg-gray-100 rounded-lg overflow-hidden">
               {imagePreview ? (
-                <img src={imagePreview} alt={t("editor.background.preview")} className="max-h-full max-w-full object-contain" />
+                <img
+                  src={imagePreview}
+                  alt={t("editor.background.preview")}
+                  className="max-h-full max-w-full object-contain"
+                />
               ) : (
-                <span className="text-xs text-gray-500 px-4 text-center truncate">{file.name}</span>
+                <span className="text-xs text-gray-500 px-4 text-center truncate">
+                  {file.name}
+                </span>
               )}
             </div>
 
@@ -406,28 +482,41 @@ export function BackgroundUploadDialog({
                     canvasWidth,
                     canvasHeight,
                   })
-                : t("editor.background.canvasDimensions", { canvasWidth, canvasHeight })}
+                : t("editor.background.canvasDimensions", {
+                    canvasWidth,
+                    canvasHeight,
+                  })}
             </div>
 
             <div className="flex items-center gap-2">
-              <span className="text-xs font-medium text-gray-700 w-16">{t("editor.field.opacity")}</span>
+              <span className="text-xs font-medium text-gray-700 w-16">
+                {t("editor.field.opacity")}
+              </span>
               <input
                 type="range"
                 min={0.1}
                 max={1}
                 step={0.05}
                 value={opacity}
-                onChange={(e) => setOpacity(Number(e.target.value))}
+                onChange={e => setOpacity(Number(e.target.value))}
                 className="accent-primary-600 cursor-pointer flex-1"
               />
-              <span className="text-xs text-gray-500 w-8 text-right">{Math.round(opacity * 100)}%</span>
+              <span className="text-xs text-gray-500 w-8 text-right">
+                {Math.round(opacity * 100)}%
+              </span>
             </div>
 
             <FitModeRadios mode={mode} onChange={setMode} t={t} />
 
             {error && <p className="text-xs text-red-600">{t(error)}</p>}
 
-            <Button variant="ghost" color="neutral" className="px-0 self-start" onClick={reset} disabled={pending}>
+            <Button
+              variant="ghost"
+              color="neutral"
+              className="px-0 self-start"
+              onClick={reset}
+              disabled={pending}
+            >
               {t("editor.background.chooseDifferent")}
             </Button>
           </>
@@ -457,8 +546,12 @@ function FitModeRadios({
           className="accent-primary-600"
         />
         <div>
-          <span className="text-xs font-medium text-gray-700">{t("editor.background.fitToCanvas")}</span>
-          <p className="text-[11px] text-gray-400">{t("editor.background.fitToCanvasHint")}</p>
+          <span className="text-xs font-medium text-gray-700">
+            {t("editor.background.fitToCanvas")}
+          </span>
+          <p className="text-[11px] text-gray-400">
+            {t("editor.background.fitToCanvasHint")}
+          </p>
         </div>
       </label>
       <label className="flex items-center gap-2 cursor-pointer">
@@ -470,8 +563,12 @@ function FitModeRadios({
           className="accent-primary-600"
         />
         <div>
-          <span className="text-xs font-medium text-gray-700">{t("editor.background.resizeToFile")}</span>
-          <p className="text-[11px] text-gray-400">{t("editor.background.resizeToFileHint")}</p>
+          <span className="text-xs font-medium text-gray-700">
+            {t("editor.background.resizeToFile")}
+          </span>
+          <p className="text-[11px] text-gray-400">
+            {t("editor.background.resizeToFileHint")}
+          </p>
         </div>
       </label>
     </div>

@@ -8,7 +8,8 @@ const typedData = rawData as unknown as FloorPlanData;
 
 export const exhibitionHallMap: FloorPlanData = {
   ...typedData,
-  background: typedData.background?.kind === "image"
-    ? { ...typedData.background, url: bgImage }
-    : typedData.background,
+  background:
+    typedData.background?.kind === "image"
+      ? { ...typedData.background, url: bgImage }
+      : typedData.background,
 };

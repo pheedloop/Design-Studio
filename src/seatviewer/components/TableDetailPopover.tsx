@@ -65,7 +65,9 @@ export function TableDetailPopover({
     >
       <div className="flex items-start gap-2 p-3 border-b border-gray-200">
         <div className="flex-1 min-w-0">
-          <h3 className="m-0 text-base font-medium text-gray-700">{tableName}</h3>
+          <h3 className="m-0 text-base font-medium text-gray-700">
+            {tableName}
+          </h3>
           <span className="text-xs text-gray-400 tabular-nums">
             {t("seatviewer.table.seatsFree", {
               count: seatsFree,
@@ -73,10 +75,17 @@ export function TableDetailPopover({
             })}
           </span>
         </div>
-        <span className={`text-xs font-medium tabular-nums px-2 py-0.5 rounded-full whitespace-nowrap ${OCC_BADGE[level]}`}>
+        <span
+          className={`text-xs font-medium tabular-nums px-2 py-0.5 rounded-full whitespace-nowrap ${OCC_BADGE[level]}`}
+        >
           {table.occupancy}/{table.seatCount}
         </span>
-        <button type="button" aria-label={t("seatviewer.table.close")} onClick={onClose} className="text-gray-400 hover:text-gray-700 p-0.5 rounded cursor-pointer leading-none">
+        <button
+          type="button"
+          aria-label={t("seatviewer.table.close")}
+          onClick={onClose}
+          className="text-gray-400 hover:text-gray-700 p-0.5 rounded cursor-pointer leading-none"
+        >
           <PiX size={16} />
         </button>
       </div>
@@ -84,20 +93,27 @@ export function TableDetailPopover({
       {!hideAttendeeDetails && (
         <div className="max-h-44 overflow-y-auto scrollbar">
           <div className="px-3 pt-2.5 pb-1 text-[10px] tracking-wider uppercase text-gray-400 font-semibold">
-            {occupantHeading({
-              loading: !!occupantsLoading,
-              hasOccupants: occupants.length > 0,
-              locked: table.isLocked,
-            }, t)}
+            {occupantHeading(
+              {
+                loading: !!occupantsLoading,
+                hasOccupants: occupants.length > 0,
+                locked: table.isLocked,
+              },
+              t,
+            )}
           </div>
-          {occupants.map((o) => (
+          {occupants.map(o => (
             <div key={o.code} className="flex items-center gap-2.5 px-3 py-1.5">
               <span className="size-6 shrink-0 grid place-items-center rounded-full text-[10px] font-semibold bg-primary-100 text-primary-600">
                 {initials(o)}
               </span>
               <span className="flex-1 min-w-0">
-                <span className="block text-sm font-medium text-gray-700 truncate">{o.firstName} {o.lastName}</span>
-                <span className="block text-xs text-gray-500 truncate">{o.organization || o.email}</span>
+                <span className="block text-sm font-medium text-gray-700 truncate">
+                  {o.firstName} {o.lastName}
+                </span>
+                <span className="block text-xs text-gray-500 truncate">
+                  {o.organization || o.email}
+                </span>
               </span>
               {allowUnassign && o.seatSelectionCode != null && (
                 <button
@@ -122,7 +138,11 @@ export function TableDetailPopover({
         >
           {assigning ? t("seatviewer.table.assigning") : assignLabel}
         </button>
-        {assignHint && <p className="text-xs text-gray-500 text-center mt-2 m-0">{assignHint}</p>}
+        {assignHint && (
+          <p className="text-xs text-gray-500 text-center mt-2 m-0">
+            {assignHint}
+          </p>
+        )}
       </div>
     </div>
   );

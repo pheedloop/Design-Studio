@@ -13,7 +13,7 @@ export function getLabelXY(
   h: HPos,
   elWidth: number,
   elHeight: number,
-  padding: number = 4
+  padding: number = 4,
 ) {
   return {
     x: 0,
@@ -34,10 +34,12 @@ export function getLabelTagPosition(
   h: HPos,
   elWidth: number,
   elHeight: number,
-  padding: number = 4
+  padding: number = 4,
 ) {
-  const x = h === "left" ? padding : h === "right" ? elWidth - padding : elWidth / 2;
-  const y = v === "top" ? padding : v === "bottom" ? elHeight - padding : elHeight / 2;
+  const x =
+    h === "left" ? padding : h === "right" ? elWidth - padding : elWidth / 2;
+  const y =
+    v === "top" ? padding : v === "bottom" ? elHeight - padding : elHeight / 2;
   return { x, y };
 }
 
@@ -63,7 +65,9 @@ export interface LabelRenderProps {
 }
 
 /** Extract label props with defaults from element properties. */
-export function getLabelRenderProps(props: ElementProperties): LabelRenderProps {
+export function getLabelRenderProps(
+  props: ElementProperties,
+): LabelRenderProps {
   return {
     labelPositionV: props.labelPositionV ?? "middle",
     labelPositionH: props.labelPositionH ?? "center",

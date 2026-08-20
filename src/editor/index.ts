@@ -5,8 +5,17 @@ export {
 } from "./utils/captureThumbnail";
 export { definePlacementCategory } from "./placement/types";
 export type { PlacementCategory } from "./placement/types";
-export type { FloorPlanData, Background, BackgroundImageData, BackgroundDxfData } from "../types";
-export type { ExhibitorBooth, SessionLocation, MeetingRoom } from "../viewer/types";
+export type {
+  FloorPlanData,
+  Background,
+  BackgroundImageData,
+  BackgroundDxfData,
+} from "../types";
+export type {
+  ExhibitorBooth,
+  SessionLocation,
+  MeetingRoom,
+} from "../viewer/types";
 export type { Tier, FeatureKey, FeatureOverride } from "../tiers";
 
 export {

@@ -1,7 +1,10 @@
 import { useMemo } from "react";
 import { Shape } from "react-konva";
 import type { BackgroundDxfData } from "../../../types";
-import { drawPrimitives, type DrawContext } from "../../utils/dxf/drawPrimitives";
+import {
+  drawPrimitives,
+  type DrawContext,
+} from "../../utils/dxf/drawPrimitives";
 
 interface DxfDrawingProps {
   config: BackgroundDxfData;
@@ -16,15 +19,18 @@ interface DxfDrawingProps {
  *  filter — nothing is re-parsed or re-baked to toggle a layer's visibility. */
 export function DxfDrawing({ config }: DxfDrawingProps) {
   const hiddenLayers = useMemo(
-    () => (config.hiddenLayers?.length ? new Set(config.hiddenLayers) : undefined),
-    [config.hiddenLayers]
+    () =>
+      config.hiddenLayers?.length ? new Set(config.hiddenLayers) : undefined,
+    [config.hiddenLayers],
   );
   return (
     <Shape
       listening={false}
       opacity={config.opacity}
-      sceneFunc={(ctx) => {
-        drawPrimitives(ctx as unknown as DrawContext, config.primitives, { hiddenLayers });
+      sceneFunc={ctx => {
+        drawPrimitives(ctx as unknown as DrawContext, config.primitives, {
+          hiddenLayers,
+        });
       }}
     />
   );

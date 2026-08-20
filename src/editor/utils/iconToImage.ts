@@ -12,7 +12,7 @@ export function iconToImage(
   Icon: IconType,
   color: string,
   size: number,
-  onLoad: (img: HTMLImageElement) => void
+  onLoad: (img: HTMLImageElement) => void,
 ): void {
   const cacheKey = `${Icon.name || Icon.toString()}-${color}-${size}`;
   const cached = imageCache.get(cacheKey);
@@ -21,9 +21,7 @@ export function iconToImage(
     return;
   }
 
-  const svgString = renderToStaticMarkup(
-    createElement(Icon, { size, color })
-  );
+  const svgString = renderToStaticMarkup(createElement(Icon, { size, color }));
 
   const blob = new Blob([svgString], { type: "image/svg+xml" });
   const url = URL.createObjectURL(blob);

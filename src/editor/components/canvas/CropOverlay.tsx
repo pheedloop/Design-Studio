@@ -15,7 +15,12 @@ const DIM = "rgba(0,0,0,0.4)";
 /** Interactive crop rectangle drawn over the canvas: a draggable/resizable box
  *  (Konva Transformer, no rotate) with a dimmed mask over everything outside
  *  it. Emits the new rect on drag/resize end. */
-export function CropOverlay({ rect, canvasWidth, canvasHeight, onChange }: CropOverlayProps) {
+export function CropOverlay({
+  rect,
+  canvasWidth,
+  canvasHeight,
+  onChange,
+}: CropOverlayProps) {
   const rectRef = useRef<Konva.Rect>(null);
   const trRef = useRef<Konva.Transformer>(null);
 
@@ -42,10 +47,38 @@ export function CropOverlay({ rect, canvasWidth, canvasHeight, onChange }: CropO
   return (
     <Group>
       {/* Dim mask over everything outside the crop rectangle. */}
-      <Rect x={0} y={0} width={canvasWidth} height={rect.y} fill={DIM} listening={false} />
-      <Rect x={0} y={rect.y + rect.height} width={canvasWidth} height={bottomH} fill={DIM} listening={false} />
-      <Rect x={0} y={rect.y} width={rect.x} height={rect.height} fill={DIM} listening={false} />
-      <Rect x={rect.x + rect.width} y={rect.y} width={rightW} height={rect.height} fill={DIM} listening={false} />
+      <Rect
+        x={0}
+        y={0}
+        width={canvasWidth}
+        height={rect.y}
+        fill={DIM}
+        listening={false}
+      />
+      <Rect
+        x={0}
+        y={rect.y + rect.height}
+        width={canvasWidth}
+        height={bottomH}
+        fill={DIM}
+        listening={false}
+      />
+      <Rect
+        x={0}
+        y={rect.y}
+        width={rect.x}
+        height={rect.height}
+        fill={DIM}
+        listening={false}
+      />
+      <Rect
+        x={rect.x + rect.width}
+        y={rect.y}
+        width={rightW}
+        height={rect.height}
+        fill={DIM}
+        listening={false}
+      />
 
       <Rect
         ref={rectRef}

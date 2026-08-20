@@ -11,7 +11,7 @@ export const rectangleTool: ToolDefinition<DrawingRect | null> = {
   icon: <PiRectangle size={20} />,
   cursor: "crosshair",
 
-  useInteraction: (ctx) =>
+  useInteraction: ctx =>
     useClickDragInteraction(ctx, (rect, { defaults }) => ({
       type: "element",
       element: {

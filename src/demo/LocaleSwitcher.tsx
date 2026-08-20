@@ -14,7 +14,7 @@ export function LocaleSwitcher({
     <>
       <div className="w-px h-4 bg-gray-700 mx-1" />
       <span className="text-gray-500 mr-0.5">Lang:</span>
-      {DEMO_LOCALES.map((l) => (
+      {DEMO_LOCALES.map(l => (
         <button
           key={l.id}
           onClick={() => setLocale(l.id)}

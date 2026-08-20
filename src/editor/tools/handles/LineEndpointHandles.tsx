@@ -22,7 +22,7 @@ export function LineEndpointHandles({
 
   const handleDrag = (
     pointIndex: 0 | 1,
-    e: Konva.KonvaEventObject<DragEvent>
+    e: Konva.KonvaEventObject<DragEvent>,
   ) => {
     e.cancelBubble = true;
 
@@ -56,7 +56,7 @@ export function LineEndpointHandles({
         stroke="#007bff"
         strokeWidth={1.5}
         draggable
-        onDragMove={(e) => handleDrag(0, e)}
+        onDragMove={e => handleDrag(0, e)}
       />
       <Circle
         x={abs2.x}
@@ -66,7 +66,7 @@ export function LineEndpointHandles({
         stroke="#007bff"
         strokeWidth={1.5}
         draggable
-        onDragMove={(e) => handleDrag(1, e)}
+        onDragMove={e => handleDrag(1, e)}
       />
     </>
   );

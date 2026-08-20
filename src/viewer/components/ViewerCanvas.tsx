@@ -32,7 +32,19 @@ interface ViewerCanvasProps {
   ) => void;
 }
 
-export function ViewerCanvas({ data, mode, occupiedBoothSlugs, selectedBoothSlugs, reservedBoothSlugs, highlightedElementId, searchMatchIds, routePath, onElementClick, onEmptySpaceClick, onElementHover }: ViewerCanvasProps) {
+export function ViewerCanvas({
+  data,
+  mode,
+  occupiedBoothSlugs,
+  selectedBoothSlugs,
+  reservedBoothSlugs,
+  highlightedElementId,
+  searchMatchIds,
+  routePath,
+  onElementClick,
+  onEmptySpaceClick,
+  onElementHover,
+}: ViewerCanvasProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [hoveredElementId, setHoveredElementId] = useState<string | null>(null);
   const isSearching = !!searchMatchIds && searchMatchIds.size > 0;
@@ -76,7 +88,6 @@ export function ViewerCanvas({ data, mode, occupiedBoothSlugs, selectedBoothSlug
       { padding: 48, maxScale: 1 },
     );
     setIsFitted(true);
-
   }, [
     hasMeasured,
     stageSize.width,
@@ -88,7 +99,7 @@ export function ViewerCanvas({ data, mode, occupiedBoothSlugs, selectedBoothSlug
   ]);
 
   const sortedElements = [...data.elements].sort(
-    (a, b) => (a.properties.zIndex ?? 0) - (b.properties.zIndex ?? 0)
+    (a, b) => (a.properties.zIndex ?? 0) - (b.properties.zIndex ?? 0),
   );
 
   const hasHighlight = highlightedElementId !== null;
@@ -100,122 +111,159 @@ export function ViewerCanvas({ data, mode, occupiedBoothSlugs, selectedBoothSlug
       style={{ touchAction: "none" }}
     >
       {isFitted && (
-      <Stage
-        ref={stageRef}
-        width={stageSize.width}
-        height={stageSize.height}
-        scaleX={scale}
-        scaleY={scale}
-        x={position.x}
-        y={position.y}
-        draggable
-        onWheel={(e) => {
-          markViewMoved();
-          handleWheel(e);
-        }}
-        onDragStart={markViewMoved}
-        onDragEnd={handleDragEnd}
-        onTouchMove={(e) => {
-          if (e.evt.touches.length > 1) markViewMoved();
-          handleTouchMove(e);
-        }}
-        onTouchEnd={handleTouchEnd}
-        onMouseDown={(e) => {
-          if (isEmptySpaceClick(e)) onEmptySpaceClick?.();
-        }}
-      >
-        <Layer
-          clip={{ x: 0, y: 0, width: data.dimensions.width, height: data.dimensions.height }}
+        <Stage
+          ref={stageRef}
+          width={stageSize.width}
+          height={stageSize.height}
+          scaleX={scale}
+          scaleY={scale}
+          x={position.x}
+          y={position.y}
+          draggable
+          onWheel={e => {
+            markViewMoved();
+            handleWheel(e);
+          }}
+          onDragStart={markViewMoved}
+          onDragEnd={handleDragEnd}
+          onTouchMove={e => {
+            if (e.evt.touches.length > 1) markViewMoved();
+            handleTouchMove(e);
+          }}
+          onTouchEnd={handleTouchEnd}
+          onMouseDown={e => {
+            if (isEmptySpaceClick(e)) onEmptySpaceClick?.();
+          }}
         >
-          <Rect
-            id="background"
-            x={0}
-            y={0}
-            width={data.dimensions.width}
-            height={data.dimensions.height}
-            fill="#ffffff"
-            stroke="#d1d5db"
-            strokeWidth={1}
-          />
-          {data.background?.kind === "image" && (
-            <BackgroundImage config={data.background} />
-          )}
-          {data.background?.kind === "dxf" && <DxfDrawing config={data.background} />}
-        </Layer>
+          <Layer
+            clip={{
+              x: 0,
+              y: 0,
+              width: data.dimensions.width,
+              height: data.dimensions.height,
+            }}
+          >
+            <Rect
+              id="background"
+              x={0}
+              y={0}
+              width={data.dimensions.width}
+              height={data.dimensions.height}
+              fill="#ffffff"
+              stroke="#d1d5db"
+              strokeWidth={1}
+            />
+            {data.background?.kind === "image" && (
+              <BackgroundImage config={data.background} />
+            )}
+            {data.background?.kind === "dxf" && (
+              <DxfDrawing config={data.background} />
+            )}
+          </Layer>
 
-        <Layer>
-          {sortedElements.map((element) => {
-            const isBooth = element.type === "booth";
-            const isSessionArea = element.type === "session_area";
-            const isMeetingRoom = element.type === "meeting_room";
-            const isInteractive = isBooth || isSessionArea || isMeetingRoom;
-            const boothSlug = element.properties.boothSlug ?? "";
-            const isOccupied = isBooth && boothSlug ? occupiedBoothSlugs.has(boothSlug) : false;
+          <Layer>
+            {sortedElements.map(element => {
+              const isBooth = element.type === "booth";
+              const isSessionArea = element.type === "session_area";
+              const isMeetingRoom = element.type === "meeting_room";
+              const isInteractive = isBooth || isSessionArea || isMeetingRoom;
+              const boothSlug = element.properties.boothSlug ?? "";
+              const isOccupied =
+                isBooth && boothSlug
+                  ? occupiedBoothSlugs.has(boothSlug)
+                  : false;
 
-            // In attendee mode, unoccupied booths are faded and non-interactive
-            const isInert = mode === "attendee" && isBooth && !isOccupied;
+              // In attendee mode, unoccupied booths are faded and non-interactive
+              const isInert = mode === "attendee" && isBooth && !isOccupied;
 
-            const isSelectedBooth = isBooth && !!boothSlug && !!selectedBoothSlugs?.has(boothSlug);
-            const isReservedBooth = isBooth && !!boothSlug && !!reservedBoothSlugs?.has(boothSlug);
+              const isSelectedBooth =
+                isBooth && !!boothSlug && !!selectedBoothSlugs?.has(boothSlug);
+              const isReservedBooth =
+                isBooth && !!boothSlug && !!reservedBoothSlugs?.has(boothSlug);
 
-            const isSelected = element.id === highlightedElementId;
-            const isSearchMatch = isInteractive && isSearching && searchMatchIds!.has(element.id);
-            const isHovered = element.id === hoveredElementId;
-            const highlighted = isSelected || !!isSearchMatch;
-            const dimmed =
-              !isSelectedBooth &&
-              (isInert ||
-                (mode === "exhibitor" && isBooth && isOccupied && !highlighted) ||
-                (hasHighlight && !isSelected) ||
-                (isSearching && !isSearchMatch && !isSelected));
-            const overrideColor = isSelectedBooth
-              ? SELECTED_BOOTH_COLOR
-              : isReservedBooth
-                ? RESERVED_BOOTH_COLOR
-                : undefined;
+              const isSelected = element.id === highlightedElementId;
+              const isSearchMatch =
+                isInteractive && isSearching && searchMatchIds!.has(element.id);
+              const isHovered = element.id === hoveredElementId;
+              const highlighted = isSelected || !!isSearchMatch;
+              const dimmed =
+                !isSelectedBooth &&
+                (isInert ||
+                  (mode === "exhibitor" &&
+                    isBooth &&
+                    isOccupied &&
+                    !highlighted) ||
+                  (hasHighlight && !isSelected) ||
+                  (isSearching && !isSearchMatch && !isSelected));
+              const overrideColor = isSelectedBooth
+                ? SELECTED_BOOTH_COLOR
+                : isReservedBooth
+                  ? RESERVED_BOOTH_COLOR
+                  : undefined;
 
-            const buildClickItem = (): HoveredItem | null => {
-              if (isBooth && boothSlug) {
-                return { type: "booth", elementId: element.id, boothSlug };
-              }
-              if (isSessionArea) {
-                return { type: "session_area", elementId: element.id, sessionId: element.properties.sessionId ?? null };
-              }
-              if (isMeetingRoom) {
-                return { type: "meeting_room", elementId: element.id, meetingRoomId: element.properties.meetingRoomId ?? null };
-              }
-              return null;
-            };
+              const buildClickItem = (): HoveredItem | null => {
+                if (isBooth && boothSlug) {
+                  return { type: "booth", elementId: element.id, boothSlug };
+                }
+                if (isSessionArea) {
+                  return {
+                    type: "session_area",
+                    elementId: element.id,
+                    sessionId: element.properties.sessionId ?? null,
+                  };
+                }
+                if (isMeetingRoom) {
+                  return {
+                    type: "meeting_room",
+                    elementId: element.id,
+                    meetingRoomId: element.properties.meetingRoomId ?? null,
+                  };
+                }
+                return null;
+              };
 
-            return (
-              <ViewerElement
-                key={element.id}
-                element={element}
-                isHighlighted={highlighted}
-                isDimmed={dimmed}
-                overrideColor={overrideColor}
-                isHovered={isHovered && !highlighted && !isInert}
+              return (
+                <ViewerElement
+                  key={element.id}
+                  element={element}
+                  isHighlighted={highlighted}
+                  isDimmed={dimmed}
+                  overrideColor={overrideColor}
+                  isHovered={isHovered && !highlighted && !isInert}
 
-                onMouseEnter={!isInert && isInteractive ? (e) => {
-                  setHoveredElementId(element.id);
-                  const item = buildClickItem();
-                  if (item) onElementHover?.(item, e.screenX, e.screenY);
-                } : undefined}
-                onMouseLeave={!isInert && isInteractive ? () => {
-                  setHoveredElementId(null);
-                  onElementHover?.(null, 0, 0);
-                } : undefined}
-                onClick={!isInert && isInteractive ? (e) => {
-                  const item = buildClickItem();
-                  if (item) onElementClick(item, e.screenX, e.screenY);
-                } : undefined}
-              />
-            );
-          })}
-        </Layer>
+                  onMouseEnter={
+                    !isInert && isInteractive
+                      ? e => {
+                          setHoveredElementId(element.id);
+                          const item = buildClickItem();
+                          if (item)
+                            onElementHover?.(item, e.screenX, e.screenY);
+                        }
+                      : undefined
+                  }
+                  onMouseLeave={
+                    !isInert && isInteractive
+                      ? () => {
+                          setHoveredElementId(null);
+                          onElementHover?.(null, 0, 0);
+                        }
+                      : undefined
+                  }
+                  onClick={
+                    !isInert && isInteractive
+                      ? e => {
+                          const item = buildClickItem();
+                          if (item) onElementClick(item, e.screenX, e.screenY);
+                        }
+                      : undefined
+                  }
+                />
+              );
+            })}
+          </Layer>
 
-        {routePath && <RouteOverlay path={routePath} />}
-      </Stage>
+          {routePath && <RouteOverlay path={routePath} />}
+        </Stage>
       )}
       {isFitted && <ScaleBar dimensions={data.dimensions} scale={scale} />}
       <ViewerLegend legend={data.legend} />

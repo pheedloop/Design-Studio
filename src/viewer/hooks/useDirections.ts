@@ -27,14 +27,15 @@ export interface DirectionsLocation {
 
 export type RouteStatus = "idle" | "ready" | "no-route" | "same-location";
 
-export function useDirections(
-  data: FloorPlanData,
-  exhibitors: Exhibitor[]
-) {
+export function useDirections(data: FloorPlanData, exhibitors: Exhibitor[]) {
   const t = useT();
   const [active, setActive] = useState(false);
-  const [startLocation, setStartLocation] = useState<DirectionsLocation | null>(null);
-  const [endLocation, setEndLocation] = useState<DirectionsLocation | null>(null);
+  const [startLocation, setStartLocation] = useState<DirectionsLocation | null>(
+    null,
+  );
+  const [endLocation, setEndLocation] = useState<DirectionsLocation | null>(
+    null,
+  );
 
   const grid = data.walkableLayer;
   const hasGrid = !!grid && grid.enabled;
@@ -84,13 +85,14 @@ export function useDirections(
       const q = query.trim().toLowerCase();
       if (!q) return [];
       return searchEntries.filter(
-        (entry) =>
+        entry =>
           displayName(entry, t).toLowerCase().includes(q) ||
           (entry.code && entry.code.toLowerCase().includes(q)) ||
-          (entry.exhibitorName && entry.exhibitorName.toLowerCase().includes(q))
+          (entry.exhibitorName &&
+            entry.exhibitorName.toLowerCase().includes(q)),
       );
     },
-    [searchEntries, t]
+    [searchEntries, t],
   );
 
   const locationFromResult = useCallback(
@@ -117,7 +119,7 @@ export function useDirections(
         elementId: result.elementId,
       };
     },
-    []
+    [],
   );
 
   const { routePath, routeStatus } = useMemo(() => {
@@ -146,13 +148,13 @@ export function useDirections(
       }
       // elementId-based lookup (session_area, meeting_room, and booths with elementId)
       if (loc.elementId) {
-        const el = data.elements.find((e) => e.id === loc.elementId);
+        const el = data.elements.find(e => e.id === loc.elementId);
         if (el) return resolveBoothToCell(grid, el);
       }
       // Legacy slug-based lookup
       if (loc.boothSlug) {
         const el = data.elements.find(
-          (e) => e.type === "booth" && e.properties.boothSlug === loc.boothSlug
+          e => e.type === "booth" && e.properties.boothSlug === loc.boothSlug,
         );
         if (el) return resolveBoothToCell(grid, el);
       }
@@ -184,7 +186,7 @@ export function useDirections(
   }, []);
 
   const swap = useCallback(() => {
-    setStartLocation((prev) => {
+    setStartLocation(prev => {
       setEndLocation(prev);
       return endLocation;
     });
@@ -193,7 +195,7 @@ export function useDirections(
   /** Open directions with a pre-set destination (e.g. from a popover) */
   const navigateTo = useCallback(
     (elementId: string) => {
-      const el = data.elements.find((e) => e.id === elementId);
+      const el = data.elements.find(e => e.id === elementId);
       if (!el) return;
 
       let location: DirectionsLocation;
@@ -225,7 +227,7 @@ export function useDirections(
       setStartLocation(null);
       setActive(true);
     },
-    [exhibitorsByBooth, data.elements]
+    [exhibitorsByBooth, data.elements],
   );
 
   return {

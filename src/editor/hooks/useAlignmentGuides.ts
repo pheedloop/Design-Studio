@@ -15,7 +15,7 @@ export function useAlignmentGuides(elements: FloorPlanElement[]) {
 
   // Precompute snap points for all elements
   const allSnapPoints = useMemo(() => {
-    return elements.map((el) => ({
+    return elements.map(el => ({
       id: el.id,
       bounds: getElementBounds(el),
     }));
@@ -31,8 +31,11 @@ export function useAlignmentGuides(elements: FloorPlanElement[]) {
   }, []);
 
   const snapPosition = useCallback(
-    (id: string, bounds: ElementBounds): { x: number; y: number; guides: GuideLine[] } => {
-      const others = allSnapPoints.filter((sp) => sp.id !== id);
+    (
+      id: string,
+      bounds: ElementBounds,
+    ): { x: number; y: number; guides: GuideLine[] } => {
+      const others = allSnapPoints.filter(sp => sp.id !== id);
       const guides: GuideLine[] = [];
 
       // The dragged element's 5 x-snap points (left, center, right)
@@ -55,8 +58,16 @@ export function useAlignmentGuides(elements: FloorPlanElement[]) {
       let bestDy = SNAP_THRESHOLD + 1;
 
       for (const other of others) {
-        const targetXValues = [other.bounds.left, other.bounds.centerX, other.bounds.right];
-        const targetYValues = [other.bounds.top, other.bounds.centerY, other.bounds.bottom];
+        const targetXValues = [
+          other.bounds.left,
+          other.bounds.centerX,
+          other.bounds.right,
+        ];
+        const targetYValues = [
+          other.bounds.top,
+          other.bounds.centerY,
+          other.bounds.bottom,
+        ];
 
         for (const dragPoint of dragXPoints) {
           for (const targetX of targetXValues) {
@@ -67,7 +78,7 @@ export function useAlignmentGuides(elements: FloorPlanElement[]) {
               // Replace x guides with this one
               const newGuide: GuideLine = { axis: "x", position: targetX };
               // Remove old x guides and add new
-              const filtered = guides.filter((g) => g.axis !== "x");
+              const filtered = guides.filter(g => g.axis !== "x");
               filtered.push(newGuide);
               guides.length = 0;
               guides.push(...filtered);
@@ -82,7 +93,7 @@ export function useAlignmentGuides(elements: FloorPlanElement[]) {
               bestDy = dy;
               snappedY = targetY - dragPoint.offset;
               const newGuide: GuideLine = { axis: "y", position: targetY };
-              const filtered = guides.filter((g) => g.axis !== "y");
+              const filtered = guides.filter(g => g.axis !== "y");
               filtered.push(newGuide);
               guides.length = 0;
               guides.push(...filtered);
@@ -94,13 +105,13 @@ export function useAlignmentGuides(elements: FloorPlanElement[]) {
       // Only keep guides that are within threshold
       if (bestDx > SNAP_THRESHOLD) {
         snappedX = null;
-        const filtered = guides.filter((g) => g.axis !== "x");
+        const filtered = guides.filter(g => g.axis !== "x");
         guides.length = 0;
         guides.push(...filtered);
       }
       if (bestDy > SNAP_THRESHOLD) {
         snappedY = null;
-        const filtered = guides.filter((g) => g.axis !== "y");
+        const filtered = guides.filter(g => g.axis !== "y");
         guides.length = 0;
         guides.push(...filtered);
       }
@@ -113,7 +124,7 @@ export function useAlignmentGuides(elements: FloorPlanElement[]) {
         guides,
       };
     },
-    [allSnapPoints]
+    [allSnapPoints],
   );
 
   return {

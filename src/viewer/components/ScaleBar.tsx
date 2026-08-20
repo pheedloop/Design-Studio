@@ -31,12 +31,14 @@ export function ScaleBar({ dimensions, scale }: ScaleBarProps) {
   const barWidthPx = niceUnits * pxPerUnit;
 
   return (
-    <div
-      className="absolute bottom-4 left-4 z-10 flex flex-col items-start gap-0.5 pointer-events-none select-none"
-    >
+    <div className="absolute bottom-4 left-4 z-10 flex flex-col items-start gap-0.5 pointer-events-none select-none">
       <span className="text-[10px] font-medium text-gray-600 bg-white/80 px-1 rounded">
         {t("common.measurement", {
-          value: formatNumber(niceUnits, locale, Number.isInteger(niceUnits) ? 0 : 1),
+          value: formatNumber(
+            niceUnits,
+            locale,
+            Number.isInteger(niceUnits) ? 0 : 1,
+          ),
           unit: unitLabel(dimensions.unit, t),
         })}
       </span>

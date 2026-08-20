@@ -1,6 +1,10 @@
 import { Rect, Line, Ellipse, Circle, Text, Group } from "react-konva";
 import type { Geometry, ElementProperties } from "../../../../types";
-import { getLabelXY, getLabelFontStyle, getLabelRenderProps } from "./labelUtils";
+import {
+  getLabelXY,
+  getLabelFontStyle,
+  getLabelRenderProps,
+} from "./labelUtils";
 import { LabelWithBackground } from "./LabelWithBackground";
 import { UnlinkedBadge } from "./UnlinkedBadge";
 import { getGeometryBounds } from "../../../utils/bounds";
@@ -14,22 +18,42 @@ interface SessionAreaShapeProps {
   isLinked: boolean;
 }
 
-export function SessionAreaShape({ geo, color, strokeColor, strokeWidth, properties, isLinked }: SessionAreaShapeProps) {
+export function SessionAreaShape({
+  geo,
+  color,
+  strokeColor,
+  strokeWidth,
+  properties,
+  isLinked,
+}: SessionAreaShapeProps) {
   const lp = getLabelRenderProps(properties);
   const bounds = getGeometryBounds(geo);
-  const rawLabelPos = getLabelXY(lp.labelPositionV, lp.labelPositionH, bounds.width, bounds.height);
+  const rawLabelPos = getLabelXY(
+    lp.labelPositionV,
+    lp.labelPositionH,
+    bounds.width,
+    bounds.height,
+  );
   const fontStyle = getLabelFontStyle(lp.labelBold, lp.labelItalic);
   const displayName = properties.name ?? "Session";
 
-  const labelPos = geo.shape === "polygon" ? (() => {
-    const pts = geo.points;
-    let minX = Infinity, minY = Infinity;
-    for (let i = 0; i < pts.length; i += 2) {
-      if (pts[i] < minX) minX = pts[i];
-      if (pts[i + 1] < minY) minY = pts[i + 1];
-    }
-    return { ...rawLabelPos, x: rawLabelPos.x + (isFinite(minX) ? minX : 0), y: rawLabelPos.y + (isFinite(minY) ? minY : 0) };
-  })() : rawLabelPos;
+  const labelPos =
+    geo.shape === "polygon"
+      ? (() => {
+          const pts = geo.points;
+          let minX = Infinity,
+            minY = Infinity;
+          for (let i = 0; i < pts.length; i += 2) {
+            if (pts[i] < minX) minX = pts[i];
+            if (pts[i + 1] < minY) minY = pts[i + 1];
+          }
+          return {
+            ...rawLabelPos,
+            x: rawLabelPos.x + (isFinite(minX) ? minX : 0),
+            y: rawLabelPos.y + (isFinite(minY) ? minY : 0),
+          };
+        })()
+      : rawLabelPos;
 
   const shapeStroke = isLinked ? strokeColor : "#ef4444";
   const shapeDash = isLinked ? undefined : [8, 4];
@@ -83,13 +107,7 @@ export function SessionAreaShape({ geo, color, strokeColor, strokeWidth, propert
           opacity={isLinked ? 0.9 : 0.5}
         />
       )}
-      <Text
-        text="🎤"
-        x={3}
-        y={2}
-        fontSize={10}
-        listening={false}
-      />
+      <Text text="🎤" x={3} y={2} fontSize={10} listening={false} />
       {!isLinked && <UnlinkedBadge />}
       {displayName && (
         <Group opacity={lp.labelVisible ? 1 : 0.35} listening={false}>

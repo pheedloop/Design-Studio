@@ -17,10 +17,11 @@ export function buildSearchPlaceholder(
   locale?: string,
 ): string {
   const nouns: string[] = [];
-  if (elements.some((el) => el.type === "booth")) nouns.push(t("viewer.search.nounBooths"));
-  if (elements.some((el) => el.type === "session_area"))
+  if (elements.some(el => el.type === "booth"))
+    nouns.push(t("viewer.search.nounBooths"));
+  if (elements.some(el => el.type === "session_area"))
     nouns.push(t("viewer.search.nounSessionLocations"));
-  if (elements.some((el) => el.type === "meeting_room"))
+  if (elements.some(el => el.type === "meeting_room"))
     nouns.push(t("viewer.search.nounMeetingRooms"));
 
   if (nouns.length === 0) return t("viewer.search.empty");

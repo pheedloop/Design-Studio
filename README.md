@@ -55,10 +55,18 @@ files, no language state. It exports a manifest of stable keys and their English
 and takes a translator from the host:
 
 ```tsx
-import { MapViewer, designStudioStrings } from "@pheedloop/design-studio/viewer";
+import {
+  MapViewer,
+  designStudioStrings,
+} from "@pheedloop/design-studio/viewer";
 import type { Translate } from "@pheedloop/design-studio/viewer";
 
-<MapViewer data={data} exhibitors={exhibitors} translate={translate} locale={language} />
+<MapViewer
+  data={data}
+  exhibitors={exhibitors}
+  translate={translate}
+  locale={language}
+/>;
 ```
 
 **Pass nothing and you get English.** The prop is optional and the manifest value
@@ -81,7 +89,11 @@ key suffixes, so a catalog authored for i18next drops in unchanged.
 
 ```tsx
 const translate = useCallback<Translate>(
-  (key, opts) => i18nT(`designStudio.${key}`, { defaultValue: resolveEnglish(key, opts), ...opts }),
+  (key, opts) =>
+    i18nT(`designStudio.${key}`, {
+      defaultValue: resolveEnglish(key, opts),
+      ...opts,
+    }),
   [i18nT],
 );
 ```
@@ -90,7 +102,10 @@ Seed the catalog from the merged manifest at **build** time:
 
 ```ts
 import { STRINGS } from "@pheedloop/design-studio/i18n";
-writeFileSync("src/locales/en-CA.json", JSON.stringify({ designStudio: STRINGS }, null, 2));
+writeFileSync(
+  "src/locales/en-CA.json",
+  JSON.stringify({ designStudio: STRINGS }, null, 2),
+);
 ```
 
 **English-as-key + user-supplied translations (Charmander).** Where the catalog is
@@ -114,7 +129,7 @@ match and silently falls back to English.
 The pair exists because those two strings differ once a plural is involved:
 
 - **`lookup`** is the row to fetch. Your catalog holds one row per English form, so
-  the *target* locale's rules decide which one you want — French is singular at a
+  the _target_ locale's rules decide which one you want — French is singular at a
   count of 0, Russian at 21, where English is not.
 - **`fallback`** is what to render when that row is missing. It follows English
   rules, because a miss means the user sees English, and "0 seat free" is not
@@ -131,7 +146,7 @@ the memoized closure keeps resolving against a stale locale.
 > text — reaching the full CLDR set needs the structured-key setup above.
 
 If your catalog lives in an i18next instance configured with
-`keySeparator: false, nsSeparator: false`, the English *is* the key and i18next
+`keySeparator: false, nsSeparator: false`, the English _is_ the key and i18next
 does both steps:
 
 ```tsx

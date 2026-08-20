@@ -33,7 +33,12 @@ import type { DrawingDefaults } from "./components/panels/OptionsBar";
 import type { ToolContext } from "./tools/types";
 import { TOOL_MAP } from "./tools/registry";
 import { useCanvasControls } from "./hooks/useCanvasControls";
-import { useEditorState, DEFAULT_PERSIST_KEY, type ResizeMode, type ResizeAnchor } from "./hooks/useEditorState";
+import {
+  useEditorState,
+  DEFAULT_PERSIST_KEY,
+  type ResizeMode,
+  type ResizeAnchor,
+} from "./hooks/useEditorState";
 import { useDxfBackgroundHydration } from "./hooks/useDxfBackgroundHydration";
 import { useCrop } from "./hooks/useCrop";
 import { useKeyboardShortcuts } from "./hooks/useKeyboardShortcuts";
@@ -55,7 +60,10 @@ import {
 import { modKey } from "./utils/platform";
 import { captureFloorPlanThumbnail } from "./utils/captureThumbnail";
 import { MapDebugDialog } from "./components/debug";
-import { BackgroundUploadDialog, type BackgroundUploadResult } from "./components/panels/BackgroundUploadDialog";
+import {
+  BackgroundUploadDialog,
+  type BackgroundUploadResult,
+} from "./components/panels/BackgroundUploadDialog";
 import { GridSettingsDialog } from "./components/panels/GridSettingsDialog";
 import { HelpDialog } from "./components/panels/HelpDialog";
 import { CanvasResizeDialog } from "./components/panels/CanvasResizeDialog";
@@ -101,10 +109,7 @@ interface MapEditorProps {
   initialData: FloorPlanData;
   /** Records-backed object categories available for placement (booths, tables, …). */
   placementCategories?: PlacementCategory[];
-  onSave?: (
-    data: FloorPlanData,
-    thumbnail: Blob | null,
-  ) => Promise<void>;
+  onSave?: (data: FloorPlanData, thumbnail: Blob | null) => Promise<void>;
   onDirtyChange?: (isDirty: boolean) => void;
   /** Delegates the raw background file (image or DXF — PDF later) to the host,
    *  e.g. uploading it to the single `background_image` FileField on the
@@ -163,7 +168,10 @@ function MapEditorInner({
 
   // Resolve usage-tier capabilities once. Tri-state per feature:
   // "enabled" | "locked" (disabled + trophy) | "hidden" (not rendered).
-  const featureMap = useMemo(() => resolveFeatures(tier, features), [tier, features]);
+  const featureMap = useMemo(
+    () => resolveFeatures(tier, features),
+    [tier, features],
+  );
 
   const {
     data,
@@ -205,7 +213,7 @@ function MapEditorInner({
   } = useEditorState(initialData, { persist, persistKey });
   // Layer state (editor-only, not persisted in FloorPlanData)
   const [layers, setLayers] = useState<LayerDefinition[]>(() =>
-    DEFAULT_LAYERS.map((l) => ({ ...l })),
+    DEFAULT_LAYERS.map(l => ({ ...l })),
   );
   const [activeLayerId, _setActiveLayerId] = useState<LayerId>("content");
   // Default to the hand (pan) tool so the first interaction is dragging to move
@@ -259,7 +267,9 @@ function MapEditorInner({
   const [showBackgroundDialog, setShowBackgroundDialog] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
   const [activeIconName, setActiveIconName] = useState<string | null>(null);
-  const [dxfHydrationError, setDxfHydrationError] = useState<string | null>(null);
+  const [dxfHydrationError, setDxfHydrationError] = useState<string | null>(
+    null,
+  );
 
   const setActiveLayerId = useCallback(
     (id: LayerId) => {
@@ -288,8 +298,8 @@ function MapEditorInner({
   );
 
   const toggleLayerVisibility = useCallback((id: LayerId) => {
-    setLayers((prev) =>
-      prev.map((l) => (l.id === id ? { ...l, visible: !l.visible } : l)),
+    setLayers(prev =>
+      prev.map(l => (l.id === id ? { ...l, visible: !l.visible } : l)),
     );
   }, []);
   const [gridSettings, setGridSettings] = useState({
@@ -305,7 +315,7 @@ function MapEditorInner({
   // here would render once with a stale set before correcting itself.
   const overlappingElementIds = useMemo(() => {
     const contentEls = data.elements.filter(
-      (el) => (el.layer ?? ELEMENT_TYPE_TO_LAYER[el.type]) === "content",
+      el => (el.layer ?? ELEMENT_TYPE_TO_LAYER[el.type]) === "content",
     );
     const ids = new Set<string>();
     for (let i = 0; i < contentEls.length; i++) {
@@ -419,7 +429,7 @@ function MapEditorInner({
 
   // Derived selection helpers
   const selectedElements = useMemo(
-    () => data.elements.filter((el) => selectedIds.has(el.id)),
+    () => data.elements.filter(el => selectedIds.has(el.id)),
     [data.elements, selectedIds],
   );
   const selectedElement =
@@ -437,7 +447,7 @@ function MapEditorInner({
   }, []);
 
   const toggleSelect = useCallback((id: string) => {
-    setSelectedIds((prev) => {
+    setSelectedIds(prev => {
       const next = new Set(prev);
       if (next.has(id)) {
         next.delete(id);
@@ -453,10 +463,10 @@ function MapEditorInner({
       new Set(
         data.elements
           .filter(
-            (el) =>
+            el =>
               (el.layer ?? ELEMENT_TYPE_TO_LAYER[el.type]) === activeLayerId,
           )
-          .map((el) => el.id),
+          .map(el => el.id),
       ),
     );
   }, [data.elements, activeLayerId]);
@@ -467,14 +477,14 @@ function MapEditorInner({
 
   const getGroupMembers = useCallback(
     (groupId: string) =>
-      data.elements.filter((el) => el.properties.groupId === groupId),
+      data.elements.filter(el => el.properties.groupId === groupId),
     [data.elements],
   );
 
   const handleLocateOverlapping = useCallback(() => {
     if (overlappingElementIds.size === 0) return;
-    const els = data.elements.filter((el) => overlappingElementIds.has(el.id));
-    selectMany(els.map((el) => el.id));
+    const els = data.elements.filter(el => overlappingElementIds.has(el.id));
+    selectMany(els.map(el => el.id));
 
     // Compute bounding box of all overlapping elements
     let left = Infinity,
@@ -530,7 +540,7 @@ function MapEditorInner({
     position,
     scale,
     isActive: isCalibrating,
-    onComplete: (cal) => {
+    onComplete: cal => {
       setCalibration(cal);
       setIsCalibrating(false);
     },
@@ -562,7 +572,7 @@ function MapEditorInner({
   const crop = useCrop({
     canvasWidth: data.dimensions.width,
     canvasHeight: data.dimensions.height,
-    onComplete: (rect) => {
+    onComplete: rect => {
       applyCrop(rect);
       setIsCropping(false);
     },
@@ -592,7 +602,7 @@ function MapEditorInner({
     const newElements = paste();
     if (newElements.length > 0) {
       addElements(newElements);
-      setSelectedIds(new Set(newElements.map((el) => el.id)));
+      setSelectedIds(new Set(newElements.map(el => el.id)));
     }
   }, [paste, addElements]);
 
@@ -602,7 +612,7 @@ function MapEditorInner({
       const newElements = paste();
       if (newElements.length > 0) {
         addElements(newElements);
-        setSelectedIds(new Set(newElements.map((el) => el.id)));
+        setSelectedIds(new Set(newElements.map(el => el.id)));
       }
     }
   }, [selectedElements, copy, paste, addElements]);
@@ -664,12 +674,11 @@ function MapEditorInner({
   // Group action state for options bar
   const optionsBarGroupId = (() => {
     if (selectedIds.size < 2 || activeGroupId) return null;
-    const first = data.elements.find((el) => el.id === [...selectedIds][0]);
+    const first = data.elements.find(el => el.id === [...selectedIds][0]);
     const gid = first?.properties.groupId;
     if (!gid) return null;
     return [...selectedIds].every(
-      (id) =>
-        data.elements.find((el) => el.id === id)?.properties.groupId === gid,
+      id => data.elements.find(el => el.id === id)?.properties.groupId === gid,
     )
       ? gid
       : null;
@@ -678,14 +687,14 @@ function MapEditorInner({
     isMultiSelect &&
     !optionsBarGroupId &&
     [...selectedIds].every(
-      (id) => !data.elements.find((el) => el.id === id)?.properties.groupId,
+      id => !data.elements.find(el => el.id === id)?.properties.groupId,
     );
 
   // When editing inside a group, strip groupId so each member is its own alignment unit
   const elementsForAlignment = useMemo(
     () =>
       activeGroupId
-        ? selectedElements.map((el) => ({
+        ? selectedElements.map(el => ({
             ...el,
             properties: { ...el.properties, groupId: undefined },
           }))
@@ -707,11 +716,11 @@ function MapEditorInner({
 
   const handleDefaultsChange = useCallback(
     (updates: Partial<DrawingDefaults>) => {
-      setDefaults((prev) => ({ ...prev, ...updates }));
+      setDefaults(prev => ({ ...prev, ...updates }));
 
       // Update all selected elements
       for (const id of selectedIds) {
-        const el = data.elements.find((e) => e.id === id);
+        const el = data.elements.find(e => e.id === id);
         if (!el) continue;
         const isLine = el.geometry.shape === "line";
         if (updates.fill !== undefined) {
@@ -816,7 +825,7 @@ function MapEditorInner({
       height: number,
       rotation: number,
     ) => {
-      const element = data.elements.find((el) => el.id === id);
+      const element = data.elements.find(el => el.id === id);
       if (element?.geometry.shape === "ellipse") {
         updateElement(id, {
           x,
@@ -833,7 +842,12 @@ function MapEditorInner({
   );
 
   const handleCanvasResize = useCallback(
-    (newWidth: number, newHeight: number, mode: ResizeMode, anchor: ResizeAnchor) => {
+    (
+      newWidth: number,
+      newHeight: number,
+      mode: ResizeMode,
+      anchor: ResizeAnchor,
+    ) => {
       resizeCanvas({ width: newWidth, height: newHeight, mode, anchor });
     },
     [resizeCanvas],
@@ -869,14 +883,14 @@ function MapEditorInner({
 
   const handleElementContextMenu = useCallback(
     (elementId: string, screenX: number, screenY: number) => {
-      const element = data.elements.find((el) => el.id === elementId);
+      const element = data.elements.find(el => el.id === elementId);
       const groupId = element?.properties.groupId;
       if (groupId && !activeGroupId) {
         // Right-clicking a group member: select the whole group
         selectMany(
           data.elements
-            .filter((el) => el.properties.groupId === groupId)
-            .map((el) => el.id),
+            .filter(el => el.properties.groupId === groupId)
+            .map(el => el.id),
         );
       } else if (!selectedIds.has(elementId)) {
         selectOne(elementId);
@@ -888,7 +902,7 @@ function MapEditorInner({
 
   const contextMenuItems: ContextMenuItem[] = (() => {
     if (!contextMenu) return [];
-    const element = data.elements.find((el) => el.id === contextMenu.elementId);
+    const element = data.elements.find(el => el.id === contextMenu.elementId);
     if (!element) return [];
 
     const config = getToolUIConfig(element.geometry.shape, element.type);
@@ -941,7 +955,7 @@ function MapEditorInner({
     } else if (
       selectedIds.size >= 2 &&
       [...selectedIds].every(
-        (id) => !data.elements.find((el) => el.id === id)?.properties.groupId,
+        id => !data.elements.find(el => el.id === id)?.properties.groupId,
       )
     ) {
       items.push({
@@ -998,10 +1012,10 @@ function MapEditorInner({
         return;
       }
       // Normal mode: if element belongs to a group, select all members
-      const element = data.elements.find((el) => el.id === id);
+      const element = data.elements.find(el => el.id === id);
       const groupId = element?.properties.groupId;
       if (groupId && !shiftKey) {
-        selectMany(getGroupMembers(groupId).map((el) => el.id));
+        selectMany(getGroupMembers(groupId).map(el => el.id));
         return;
       }
       if (shiftKey) toggleSelect(id);
@@ -1020,13 +1034,13 @@ function MapEditorInner({
 
   const handleDoubleClick = useCallback(
     (id: string) => {
-      const element = data.elements.find((el) => el.id === id);
+      const element = data.elements.find(el => el.id === id);
       const groupId = element?.properties.groupId;
       if (!groupId) return;
       // Enter the group if the clicked element is part of the currently selected group
       const allSelectedInGroup = [...selectedIds].every(
-        (sid) =>
-          data.elements.find((el) => el.id === sid)?.properties.groupId ===
+        sid =>
+          data.elements.find(el => el.id === sid)?.properties.groupId ===
           groupId,
       );
       if (allSelectedInGroup) {
@@ -1102,13 +1116,13 @@ function MapEditorInner({
       if (e.shiftKey) {
         // Ungroup: all selected elements must share the same groupId
         const ids = [...selectedIds];
-        const groupId = data.elements.find((el) => el.id === ids[0])?.properties
+        const groupId = data.elements.find(el => el.id === ids[0])?.properties
           .groupId;
         if (
           groupId &&
           ids.every(
-            (id) =>
-              data.elements.find((el) => el.id === id)?.properties.groupId ===
+            id =>
+              data.elements.find(el => el.id === id)?.properties.groupId ===
               groupId,
           )
         ) {
@@ -1120,8 +1134,7 @@ function MapEditorInner({
         if (
           selectedIds.size >= 2 &&
           [...selectedIds].every(
-            (id) =>
-              !data.elements.find((el) => el.id === id)?.properties.groupId,
+            id => !data.elements.find(el => el.id === id)?.properties.groupId,
           )
         ) {
           createGroup([...selectedIds]);
@@ -1137,7 +1150,7 @@ function MapEditorInner({
   const handleAutoMarkObstacles = useCallback(() => {
     const grid = data.walkableLayer;
     if (!grid) return;
-    const newCells = grid.cells.map((r) => [...r]);
+    const newCells = grid.cells.map(r => [...r]);
     for (const el of data.elements) {
       const geo = el.geometry;
       if (!("x" in geo && "y" in geo && "width" in geo && "height" in geo))
@@ -1201,14 +1214,9 @@ function MapEditorInner({
     (size: number) => {
       if (
         data.walkableLayer &&
-        data.walkableLayer.cells.some((r) => r.some((c) => c === 1))
+        data.walkableLayer.cells.some(r => r.some(c => c === 1))
       ) {
-        if (
-          !window.confirm(
-            t("editor.confirm.gridResolution"),
-          )
-        )
-          return;
+        if (!window.confirm(t("editor.confirm.gridResolution"))) return;
       }
       setWalkableGridResolution(size);
     },
@@ -1227,7 +1235,7 @@ function MapEditorInner({
   /** Returns the topmost solid, assignable element under canvas point (cx, cy). */
   const hitTestAssignable = useCallback(
     (cx: number, cy: number): FloorPlanElement | null => {
-      const candidates = data.elements.filter((el) => {
+      const candidates = data.elements.filter(el => {
         const s = el.geometry.shape;
         return (
           (s === "rect" ||
@@ -1240,7 +1248,7 @@ function MapEditorInner({
       return (
         [...candidates]
           .sort((a, b) => b.properties.zIndex - a.properties.zIndex)
-          .find((el) => {
+          .find(el => {
             const b = getElementBounds(el);
             return (
               cx >= b.left && cx <= b.right && cy >= b.top && cy <= b.bottom
@@ -1312,7 +1320,7 @@ function MapEditorInner({
       const displayProps: Partial<ElementProperties> = (() => {
         if (!group) return {};
         const found = group.records.find(
-          (r) => group.category.getRecordId(r.record) === ref.id,
+          r => group.category.getRecordId(r.record) === ref.id,
         );
         if (!found) return {};
         return {
@@ -1463,7 +1471,7 @@ function MapEditorInner({
       });
 
       addElements(newElements);
-      setSelectedIds(new Set(newElements.map((el) => el.id)));
+      setSelectedIds(new Set(newElements.map(el => el.id)));
     },
     [data, addElements, setSelectedIds],
   );
@@ -1488,7 +1496,9 @@ function MapEditorInner({
           ...(onSave
             ? [
                 {
-                  label: isSaving ? t("editor.menu.saving") : t("editor.menu.save"),
+                  label: isSaving
+                    ? t("editor.menu.saving")
+                    : t("editor.menu.save"),
                   shortcut: `${modKey}S`,
                   disabled: isSaving,
                   onClick: handleSave,
@@ -1499,12 +1509,16 @@ function MapEditorInner({
           {
             label: t("editor.menu.exportPng"),
             onClick: async () => {
-              const blob = await captureFloorPlanThumbnail(stageRef.current, data, {
-                maxEdge: Math.min(
-                  Math.max(data.dimensions.width, data.dimensions.height) * 2,
-                  EXPORT_MAX_EDGE,
-                ),
-              });
+              const blob = await captureFloorPlanThumbnail(
+                stageRef.current,
+                data,
+                {
+                  maxEdge: Math.min(
+                    Math.max(data.dimensions.width, data.dimensions.height) * 2,
+                    EXPORT_MAX_EDGE,
+                  ),
+                },
+              );
               if (!blob) return;
               const url = URL.createObjectURL(blob);
               const link = document.createElement("a");
@@ -1533,7 +1547,7 @@ function MapEditorInner({
               const input = document.createElement("input");
               input.type = "file";
               input.accept = ".json";
-              input.onchange = (e) => {
+              input.onchange = e => {
                 const file = (e.target as HTMLInputElement).files?.[0];
                 if (!file) return;
                 const reader = new FileReader();
@@ -1608,25 +1622,25 @@ function MapEditorInner({
         viewMenuItems={[
           {
             label: `${showRulers ? "✓ " : "   "}${t("editor.menu.showRulers")}`,
-            onClick: () => setShowRulers((s) => !s),
+            onClick: () => setShowRulers(s => !s),
           },
           {
             label: `${gridSettings.showGrid ? "✓ " : "   "}${t("editor.menu.showGrid")}`,
             onClick: () =>
-              setGridSettings((s) => ({ ...s, showGrid: !s.showGrid })),
+              setGridSettings(s => ({ ...s, showGrid: !s.showGrid })),
           },
           {
             label: `${gridSettings.snapToGrid ? "✓ " : "   "}${t("editor.menu.snapToGrid")}`,
             onClick: () =>
-              setGridSettings((s) => ({ ...s, snapToGrid: !s.snapToGrid })),
+              setGridSettings(s => ({ ...s, snapToGrid: !s.snapToGrid })),
           },
           {
             label: `${snapToObjects ? "✓ " : "   "}${t("editor.menu.snapToObjects")}`,
-            onClick: () => setSnapToObjects((s) => !s),
+            onClick: () => setSnapToObjects(s => !s),
           },
           {
             label: `${showTransformControls ? "✓ " : "   "}${t("editor.menu.showTransformControls")}`,
-            onClick: () => setShowTransformControls((s) => !s),
+            onClick: () => setShowTransformControls(s => !s),
           },
         ]}
         toolsMenuItems={[
@@ -1675,7 +1689,7 @@ function MapEditorInner({
           activeTool={activeTool}
           activeIconName={activeIconName}
           onToolChange={handleToolChange}
-          onIconSelect={(iconId) => setActiveIconName(iconId)}
+          onIconSelect={iconId => setActiveIconName(iconId)}
           isPathingMode={activeLayerId === "pathing"}
           isBackgroundLayer={activeLayerId === "background"}
           activePathingTool={activePathingTool}
@@ -1696,7 +1710,7 @@ function MapEditorInner({
           // Seatplanner places tables; the map product places booths (default).
           placementIcon={
             placementCategories.length > 0 &&
-            placementCategories.every((c) => c.elementType === "table") ? (
+            placementCategories.every(c => c.elementType === "table") ? (
               <MdOutlineTableBar size={16} />
             ) : undefined
           }
@@ -1947,13 +1961,13 @@ function MapEditorInner({
               onPreviewProperties={(id, updates) =>
                 previewProperties(id, updates)
               }
-              onBatchUpdateProperties={(updates) => {
+              onBatchUpdateProperties={updates => {
                 batchUpdateProperties(
-                  [...selectedIds].map((id) => ({ id, properties: updates })),
+                  [...selectedIds].map(id => ({ id, properties: updates })),
                 );
               }}
               onUpdateGeometry={updateElement}
-              onDelete={(id) => {
+              onDelete={id => {
                 if (isMultiSelect) {
                   deleteElements(selectedIds);
                 } else {
@@ -1961,8 +1975,9 @@ function MapEditorInner({
                 }
                 selectNone();
               }}
-              onBackgroundOpacityChange={(opacity) =>
-                data.background && setBackground({ ...data.background, opacity })
+              onBackgroundOpacityChange={opacity =>
+                data.background &&
+                setBackground({ ...data.background, opacity })
               }
               onRemoveBackground={handleRemoveBackground}
               onUploadBackground={() => {
@@ -2028,7 +2043,7 @@ function MapEditorInner({
       {showTypeDefaultsDialog && (
         <TypeDefaultsDialog
           typeStyles={data.typeStyles ?? {}}
-          typeKeys={placementCategories.map((c) => c.elementType)}
+          typeKeys={placementCategories.map(c => c.elementType)}
           onUpdateTypeStyles={updateTypeStyles}
           onClose={() => setShowTypeDefaultsDialog(false)}
         />
@@ -2051,7 +2066,7 @@ function MapEditorInner({
       {showLegendDialog && (
         <LegendDialog
           legend={data.legend}
-          onSave={(updated) => updateLegend(updated)}
+          onSave={updated => updateLegend(updated)}
           onClose={() => setShowLegendDialog(false)}
         />
       )}

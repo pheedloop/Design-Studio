@@ -14,7 +14,13 @@ export interface LayerDefinition {
 }
 
 export const DEFAULT_LAYERS: LayerDefinition[] = [
-  { id: "background", name: "Background", order: 0, visible: true, special: true },
+  {
+    id: "background",
+    name: "Background",
+    order: 0,
+    visible: true,
+    special: true,
+  },
   { id: "content", name: "Content", order: 1, visible: true, special: false },
   { id: "pathing", name: "Pathing", order: 2, visible: true, special: true },
   { id: "markup", name: "Markup", order: 3, visible: true, special: false },
@@ -200,10 +206,34 @@ export interface ElementTypeDefaults {
 export type TypeStyles = Record<string, ElementTypeDefaults>;
 
 export const DEFAULT_TYPE_STYLES: TypeStyles = {
-  booth:        { color: "#94a3b8", strokeColor: "#888888", strokeWidth: 1, defaultWidth: 120, defaultHeight: 80 },
-  session_area: { color: "#27AE60", strokeColor: "#888888", strokeWidth: 1, defaultWidth: 200, defaultHeight: 150 },
-  meeting_room: { color: "#7c3aed", strokeColor: "#888888", strokeWidth: 1, defaultWidth: 160, defaultHeight: 120 },
-  table:        { color: "#14b8a6", strokeColor: "#888888", strokeWidth: 1, defaultWidth: 90,  defaultHeight: 90 },
+  booth: {
+    color: "#94a3b8",
+    strokeColor: "#888888",
+    strokeWidth: 1,
+    defaultWidth: 120,
+    defaultHeight: 80,
+  },
+  session_area: {
+    color: "#27AE60",
+    strokeColor: "#888888",
+    strokeWidth: 1,
+    defaultWidth: 200,
+    defaultHeight: 150,
+  },
+  meeting_room: {
+    color: "#7c3aed",
+    strokeColor: "#888888",
+    strokeWidth: 1,
+    defaultWidth: 160,
+    defaultHeight: 120,
+  },
+  table: {
+    color: "#14b8a6",
+    strokeColor: "#888888",
+    strokeWidth: 1,
+    defaultWidth: 90,
+    defaultHeight: 90,
+  },
 };
 
 export type StateVisualTreatment =
@@ -223,13 +253,13 @@ export interface ViewerAppearance {
 export const DEFAULT_VIEWER_APPEARANCE: ViewerAppearance = {
   organizer: {
     available: { type: "hatch", pattern: "diagonal" },
-    reserved:  { type: "hatch", pattern: "cross" },
-    on_hold:   { type: "border", color: "#888888", style: "dashed", width: 2 },
-    sold:      { type: "none" },
+    reserved: { type: "hatch", pattern: "cross" },
+    on_hold: { type: "border", color: "#888888", style: "dashed", width: 2 },
+    sold: { type: "none" },
   },
   attendee: {
     available: { type: "none" },
-    occupied:  { type: "opacity", value: 0.35 },
+    occupied: { type: "opacity", value: 0.35 },
   },
 };
 

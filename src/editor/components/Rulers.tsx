@@ -76,8 +76,10 @@ function drawHorizontalRuler(
   const minorInterval = majorInterval / 5;
 
   // Visible range in real units
-  const startUnit = (0 - positionX) / scale / (calibrated ? dims.pixelsPerUnit : 1);
-  const endUnit = (cssWidth - positionX) / scale / (calibrated ? dims.pixelsPerUnit : 1);
+  const startUnit =
+    (0 - positionX) / scale / (calibrated ? dims.pixelsPerUnit : 1);
+  const endUnit =
+    (cssWidth - positionX) / scale / (calibrated ? dims.pixelsPerUnit : 1);
 
   // Draw minor ticks
   ctx.strokeStyle = TICK_COLOR;
@@ -154,8 +156,10 @@ function drawVerticalRuler(
   const majorInterval = niceInterval(roughInterval);
   const minorInterval = majorInterval / 5;
 
-  const startUnit = (0 - positionY) / scale / (calibrated ? dims.pixelsPerUnit : 1);
-  const endUnit = (cssHeight - positionY) / scale / (calibrated ? dims.pixelsPerUnit : 1);
+  const startUnit =
+    (0 - positionY) / scale / (calibrated ? dims.pixelsPerUnit : 1);
+  const endUnit =
+    (cssHeight - positionY) / scale / (calibrated ? dims.pixelsPerUnit : 1);
 
   // Minor ticks
   ctx.strokeStyle = TICK_COLOR;
@@ -216,7 +220,15 @@ export function Rulers({
     if (vRef.current) {
       drawVerticalRuler(vRef.current, scale, position.y, dimensions);
     }
-  }, [visible, scale, position.x, position.y, stageSize.width, stageSize.height, dimensions]);
+  }, [
+    visible,
+    scale,
+    position.x,
+    position.y,
+    stageSize.width,
+    stageSize.height,
+    dimensions,
+  ]);
 
   if (!visible) return null;
 

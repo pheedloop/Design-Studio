@@ -1,4 +1,10 @@
-import { useCallback, useLayoutEffect, useRef, useState, type ReactNode } from "react";
+import {
+  useCallback,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type ReactNode,
+} from "react";
 import type Konva from "konva";
 import { Stage, Layer, Rect } from "react-konva";
 import type { FloorPlanData } from "../../types";
@@ -102,11 +108,14 @@ function SeatPlanCanvasInner({
   );
 
   const sortedElements = [...data.elements].sort(
-    (a, b) => (a.properties.zIndex ?? 0) - (b.properties.zIndex ?? 0)
+    (a, b) => (a.properties.zIndex ?? 0) - (b.properties.zIndex ?? 0),
   );
 
   return (
-    <div ref={containerRef} className="relative flex-1 min-w-0 bg-gray-200 overflow-hidden">
+    <div
+      ref={containerRef}
+      className="relative flex-1 min-w-0 bg-gray-200 overflow-hidden"
+    >
       {/* Absolute so the Stage's own pixel size can't grow the box we measure. */}
       <Stage
         className="absolute inset-0"
@@ -132,19 +141,26 @@ function SeatPlanCanvasInner({
             stroke="#d1d5db"
             strokeWidth={1}
           />
-          {data.background?.kind === "image" && <BackgroundImage config={data.background} />}
-          {data.background?.kind === "dxf" && <DxfDrawing config={data.background} />}
+          {data.background?.kind === "image" && (
+            <BackgroundImage config={data.background} />
+          )}
+          {data.background?.kind === "dxf" && (
+            <DxfDrawing config={data.background} />
+          )}
         </Layer>
 
         <Layer>
-          {sortedElements.map((element) => {
+          {sortedElements.map(element => {
             const isTable = element.type === "table";
             const tableCode = element.properties.tableCode ?? null;
             const interactive = isTable && !!tableCode;
 
             const overrideColor =
-              interactive && getTableColor ? getTableColor(tableCode!) : undefined;
-            const isHighlighted = interactive && tableCode === highlightedTableCode;
+              interactive && getTableColor
+                ? getTableColor(tableCode!)
+                : undefined;
+            const isHighlighted =
+              interactive && tableCode === highlightedTableCode;
             const isDimmed = interactive && !!dimmedTableCodes?.has(tableCode!);
             const isHovered = interactive && tableCode === hoveredTableCode;
 
@@ -156,10 +172,16 @@ function SeatPlanCanvasInner({
                 isDimmed={isDimmed}
                 isHovered={!!isHovered && !isHighlighted}
                 overrideColor={overrideColor}
-                onMouseEnter={interactive ? () => setHoveredTableCode(tableCode) : undefined}
-                onMouseLeave={interactive ? () => setHoveredTableCode(null) : undefined}
+                onMouseEnter={
+                  interactive ? () => setHoveredTableCode(tableCode) : undefined
+                }
+                onMouseLeave={
+                  interactive ? () => setHoveredTableCode(null) : undefined
+                }
                 onClick={
-                  interactive && onTableClick ? () => onTableClick(tableCode!) : undefined
+                  interactive && onTableClick
+                    ? () => onTableClick(tableCode!)
+                    : undefined
                 }
               />
             );

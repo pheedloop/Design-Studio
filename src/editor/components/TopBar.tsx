@@ -44,36 +44,94 @@ export function TopBar({
         <PiMapTrifold size={20} />
       </div>
       <div className="relative">
-        <MenuButton open={fileOpen} onMouseDown={(e) => { e.stopPropagation(); closeAll(); setFileOpen((prev) => !prev); }}>
+        <MenuButton
+          open={fileOpen}
+          onMouseDown={e => {
+            e.stopPropagation();
+            closeAll();
+            setFileOpen(prev => !prev);
+          }}
+        >
           {t("editor.menu.file")}
         </MenuButton>
-        {fileOpen && <DropdownMenu items={fileMenuItems} onClose={() => setFileOpen(false)} />}
+        {fileOpen && (
+          <DropdownMenu
+            items={fileMenuItems}
+            onClose={() => setFileOpen(false)}
+          />
+        )}
       </div>
       <div className="relative">
-        <MenuButton open={editOpen} onMouseDown={(e) => { e.stopPropagation(); closeAll(); setEditOpen((prev) => !prev); }}>
+        <MenuButton
+          open={editOpen}
+          onMouseDown={e => {
+            e.stopPropagation();
+            closeAll();
+            setEditOpen(prev => !prev);
+          }}
+        >
           {t("editor.menu.edit")}
         </MenuButton>
-        {editOpen && <DropdownMenu items={editMenuItems} onClose={() => setEditOpen(false)} />}
+        {editOpen && (
+          <DropdownMenu
+            items={editMenuItems}
+            onClose={() => setEditOpen(false)}
+          />
+        )}
       </div>
       <div className="relative">
-        <MenuButton open={viewOpen} onMouseDown={(e) => { e.stopPropagation(); closeAll(); setViewOpen((prev) => !prev); }}>
+        <MenuButton
+          open={viewOpen}
+          onMouseDown={e => {
+            e.stopPropagation();
+            closeAll();
+            setViewOpen(prev => !prev);
+          }}
+        >
           {t("editor.menu.view")}
         </MenuButton>
-        {viewOpen && <DropdownMenu items={viewMenuItems} onClose={() => setViewOpen(false)} />}
+        {viewOpen && (
+          <DropdownMenu
+            items={viewMenuItems}
+            onClose={() => setViewOpen(false)}
+          />
+        )}
       </div>
       <div className="relative">
-        <MenuButton open={toolsOpen} onMouseDown={(e) => { e.stopPropagation(); closeAll(); setToolsOpen((prev) => !prev); }}>
+        <MenuButton
+          open={toolsOpen}
+          onMouseDown={e => {
+            e.stopPropagation();
+            closeAll();
+            setToolsOpen(prev => !prev);
+          }}
+        >
           {t("editor.menu.tools")}
         </MenuButton>
-        {toolsOpen && <DropdownMenu items={toolsMenuItems} onClose={() => setToolsOpen(false)} />}
+        {toolsOpen && (
+          <DropdownMenu
+            items={toolsMenuItems}
+            onClose={() => setToolsOpen(false)}
+          />
+        )}
       </div>
-      <MenuButton onClick={() => { closeAll(); onLegendClick?.(); }}>{t("common.legend")}</MenuButton>
+      <MenuButton
+        onClick={() => {
+          closeAll();
+          onLegendClick?.();
+        }}
+      >
+        {t("common.legend")}
+      </MenuButton>
       <div className="flex-1" />
       <MenuButton onClick={onHelpClick} title={t("editor.topBar.help")}>
         <PiQuestion size={16} />
       </MenuButton>
       {debug && (
-        <MenuButton onClick={onDebugClick} title={t("editor.topBar.debugTitle")}>
+        <MenuButton
+          onClick={onDebugClick}
+          title={t("editor.topBar.debugTitle")}
+        >
           <PiBug size={16} />
           <span className="text-[11px]">{t("editor.topBar.debug")}</span>
         </MenuButton>

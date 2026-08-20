@@ -6,7 +6,11 @@
 // Inner/back fields are authored UPRIGHT here; the fold flatten applies each
 // panel's offset + inversion on Save.
 
-import { BADGE_DOCUMENT_VERSION, type BadgeDocument, type BadgeField } from "./model";
+import {
+  BADGE_DOCUMENT_VERSION,
+  type BadgeDocument,
+  type BadgeField,
+} from "./model";
 import { createField } from "./factory";
 
 const PANEL_H = 5.5;
@@ -18,11 +22,51 @@ function mk(field: string, props: Partial<BadgeField>): BadgeField {
 
 function frontFields(): BadgeField[] {
   return [
-    mk("first_name", { top: 0.5806832869219374, left: 0.4375, width: 3.125, height: 0.375, fontSize: 30, numLines: 1, textAlign: "center" }),
-    mk("last_name", { top: 0.997349953588604, left: 0.4375, width: 3.125, height: 0.375, fontSize: 30, numLines: 1, textAlign: "center" }),
-    mk("organization", { top: 1.4660999535886041, left: 0.4375, width: 3.125, height: 0.3, fontSize: 24, numLines: 1, textAlign: "center" }),
-    mk("title", { top: 1.8306832869219374, left: 0.4375, width: 3.125, height: 0.25, fontSize: 20, numLines: 1, textAlign: "center" }),
-    mk("tags", { top: 2.1431832869219374, left: 0.4375, width: 3.125, height: 0.2, fontSize: 16, numLines: 1, textAlign: "center" }),
+    mk("first_name", {
+      top: 0.5806832869219374,
+      left: 0.4375,
+      width: 3.125,
+      height: 0.375,
+      fontSize: 30,
+      numLines: 1,
+      textAlign: "center",
+    }),
+    mk("last_name", {
+      top: 0.997349953588604,
+      left: 0.4375,
+      width: 3.125,
+      height: 0.375,
+      fontSize: 30,
+      numLines: 1,
+      textAlign: "center",
+    }),
+    mk("organization", {
+      top: 1.4660999535886041,
+      left: 0.4375,
+      width: 3.125,
+      height: 0.3,
+      fontSize: 24,
+      numLines: 1,
+      textAlign: "center",
+    }),
+    mk("title", {
+      top: 1.8306832869219374,
+      left: 0.4375,
+      width: 3.125,
+      height: 0.25,
+      fontSize: 20,
+      numLines: 1,
+      textAlign: "center",
+    }),
+    mk("tags", {
+      top: 2.1431832869219374,
+      left: 0.4375,
+      width: 3.125,
+      height: 0.2,
+      fontSize: 16,
+      numLines: 1,
+      textAlign: "center",
+    }),
     mk("qrCode", { top: 3.4145104604975915, left: 1.609375, scale: 1 }),
   ];
 }
@@ -31,16 +75,42 @@ function frontFields(): BadgeField[] {
 function innerFields(): BadgeField[] {
   const off = PANEL_H;
   return [
-    mk("table_number", { top: 6.136587866130225 - off, left: 0.6979166666666666, width: 2.6041666666666665, height: 0.25, fontSize: 24, numLines: 1, textAlign: "center" }),
-    mk("session_schedule", { top: 6.696068107981887 - off, left: 0.6979166666666655, width: 2.6041666666666674, height: 2.8544769879300276, fontSize: 20, numLines: 13, textAlign: "center" }),
-    mk("externalQRCodeUrl", { top: 9.752037425221967 - off, left: 1.609375, scale: 1 }),
+    mk("table_number", {
+      top: 6.136587866130225 - off,
+      left: 0.6979166666666666,
+      width: 2.6041666666666665,
+      height: 0.25,
+      fontSize: 24,
+      numLines: 1,
+      textAlign: "center",
+    }),
+    mk("session_schedule", {
+      top: 6.696068107981887 - off,
+      left: 0.6979166666666655,
+      width: 2.6041666666666674,
+      height: 2.8544769879300276,
+      fontSize: 20,
+      numLines: 13,
+      textAlign: "center",
+    }),
+    mk("externalQRCodeUrl", {
+      top: 9.752037425221967 - off,
+      left: 1.609375,
+      scale: 1,
+    }),
   ];
 }
 
 /** Back panel — a 5-row tickets block. Panel-local (exported − 11"). */
 function backFields(): BadgeField[] {
   return [
-    mk("tickets", { top: 11 - 2 * PANEL_H, left: 0, width: 3.9602689629864556, height: 5.523636908133685, numRows: 5 }),
+    mk("tickets", {
+      top: 11 - 2 * PANEL_H,
+      left: 0,
+      width: 3.9602689629864556,
+      height: 5.523636908133685,
+      numRows: 5,
+    }),
   ];
 }
 

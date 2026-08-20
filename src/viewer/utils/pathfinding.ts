@@ -11,13 +11,13 @@ const SQRT2 = Math.SQRT2;
 
 /** 8-directional neighbors: [dcol, drow, cost] */
 const DIRECTIONS: [number, number, number][] = [
-  [0, -1, 1],    // up
-  [1, 0, 1],     // right
-  [0, 1, 1],     // down
-  [-1, 0, 1],    // left
-  [1, -1, SQRT2],  // up-right
-  [1, 1, SQRT2],   // down-right
-  [-1, 1, SQRT2],  // down-left
+  [0, -1, 1], // up
+  [1, 0, 1], // right
+  [0, 1, 1], // down
+  [-1, 0, 1], // left
+  [1, -1, SQRT2], // up-right
+  [1, 1, SQRT2], // down-right
+  [-1, 1, SQRT2], // down-left
   [-1, -1, SQRT2], // up-left
 ];
 
@@ -49,7 +49,7 @@ function isWalkable(grid: WalkableGrid, col: number, row: number): boolean {
 export function findPath(
   grid: WalkableGrid,
   start: Cell,
-  end: Cell
+  end: Cell,
 ): Cell[] | null {
   if (!isWalkable(grid, start.col, start.row)) return null;
   if (!isWalkable(grid, end.col, end.row)) return null;
@@ -136,13 +136,11 @@ export function findPath(
  * Check if there is a clear walkable line-of-sight between two cells.
  * Uses Bresenham's line to check every cell along the line.
  */
-function hasLineOfSight(
-  grid: WalkableGrid,
-  a: Cell,
-  b: Cell
-): boolean {
-  let x0 = a.col, y0 = a.row;
-  const x1 = b.col, y1 = b.row;
+function hasLineOfSight(grid: WalkableGrid, a: Cell, b: Cell): boolean {
+  let x0 = a.col,
+    y0 = a.row;
+  const x1 = b.col,
+    y1 = b.row;
   const dx = Math.abs(x1 - x0);
   const dy = Math.abs(y1 - y0);
   const sx = x0 < x1 ? 1 : -1;
@@ -175,10 +173,10 @@ function hasLineOfSight(
  */
 export function smoothPath(
   grid: WalkableGrid,
-  path: Cell[]
+  path: Cell[],
 ): { x: number; y: number }[] {
   if (path.length <= 2) {
-    return path.map((c) => cellToCanvas(c, grid.cellSize));
+    return path.map(c => cellToCanvas(c, grid.cellSize));
   }
 
   const smoothed: Cell[] = [path[0]];
@@ -197,14 +195,11 @@ export function smoothPath(
     current = farthest;
   }
 
-  return smoothed.map((c) => cellToCanvas(c, grid.cellSize));
+  return smoothed.map(c => cellToCanvas(c, grid.cellSize));
 }
 
 /** Convert a grid cell to its canvas center point. */
-function cellToCanvas(
-  cell: Cell,
-  cellSize: number
-): { x: number; y: number } {
+function cellToCanvas(cell: Cell, cellSize: number): { x: number; y: number } {
   return {
     x: cell.col * cellSize + cellSize / 2,
     y: cell.row * cellSize + cellSize / 2,

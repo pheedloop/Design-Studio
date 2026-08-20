@@ -1,0 +1,10 @@
+dist
+node_modules
+coverage
+package-lock.json
+design-studio.local.tgz
+
+# Local-only, gitignored — never reaches CI, but `make format-check` would
+# otherwise fail on a working copy that has it.
+.claude
+.vscode

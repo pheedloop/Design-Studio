@@ -8,11 +8,24 @@ import { pseudoLocalize } from "./pseudo";
 
 export type DemoLocale = "en" | "pseudo" | "keys";
 
-export const DEMO_LOCALES: { id: DemoLocale; label: string; title: string }[] = [
-  { id: "en", label: "EN", title: "English — no translator passed (the built-in fallback)" },
-  { id: "pseudo", label: "Pseudo", title: "Accented + padded — finds hardcoded strings and clipping" },
-  { id: "keys", label: "Keys", title: "Renders each string's key — finds blanks and names strings" },
-];
+export const DEMO_LOCALES: { id: DemoLocale; label: string; title: string }[] =
+  [
+    {
+      id: "en",
+      label: "EN",
+      title: "English — no translator passed (the built-in fallback)",
+    },
+    {
+      id: "pseudo",
+      label: "Pseudo",
+      title: "Accented + padded — finds hardcoded strings and clipping",
+    },
+    {
+      id: "keys",
+      label: "Keys",
+      title: "Renders each string's key — finds blanks and names strings",
+    },
+  ];
 
 const STORAGE_KEY = "design-studio-demo:locale";
 
@@ -23,7 +36,10 @@ function readStored(): DemoLocale {
 
 /** Transform the template first, then substitute, or the vars render literally. */
 export function pseudoTranslate(key: string, vars?: Vars): string {
-  return interpolate(pseudoLocalize(resolveEnglishFrom(STRINGS, key, vars)), vars);
+  return interpolate(
+    pseudoLocalize(resolveEnglishFrom(STRINGS, key, vars)),
+    vars,
+  );
 }
 
 export function useDemoLocale() {
@@ -34,9 +50,12 @@ export function useDemoLocale() {
     localStorage.setItem(STORAGE_KEY, next);
   }, []);
 
-  const pseudo = useCallback<Translate>((key, vars) => pseudoTranslate(key, vars), []);
+  const pseudo = useCallback<Translate>(
+    (key, vars) => pseudoTranslate(key, vars),
+    [],
+  );
 
-  const keysTranslate = useCallback<Translate>((key) => `⟦${key}⟧`, []);
+  const keysTranslate = useCallback<Translate>(key => `⟦${key}⟧`, []);
 
   // undefined for "en" on purpose: exercises the no-translator path.
   const translate =

@@ -25,13 +25,13 @@ export async function captureFloorPlanThumbnail(
   const previous = { scale: stage.scaleX(), x: stage.x(), y: stage.y() };
   const chrome = stage
     .find(`.${CAPTURE_EXCLUDE_NAME}`)
-    .filter((node) => node.visible());
+    .filter(node => node.visible());
 
   let canvas: HTMLCanvasElement;
   try {
     stage.scale({ x: ratio, y: ratio });
     stage.position({ x: 0, y: 0 });
-    chrome.forEach((node) => node.visible(false));
+    chrome.forEach(node => node.visible(false));
 
     canvas = stage.toCanvas({
       x: 0,
@@ -43,10 +43,10 @@ export async function captureFloorPlanThumbnail(
   } catch {
     return null;
   } finally {
-    chrome.forEach((node) => node.visible(true));
+    chrome.forEach(node => node.visible(true));
     stage.scale({ x: previous.scale, y: previous.scale });
     stage.position({ x: previous.x, y: previous.y });
   }
 
-  return new Promise((resolve) => canvas.toBlob(resolve, "image/png"));
+  return new Promise(resolve => canvas.toBlob(resolve, "image/png"));
 }

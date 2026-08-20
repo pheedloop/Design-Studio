@@ -6,7 +6,7 @@ const DEFAULT_CELL_SIZE = 20;
 export function createWalkableGrid(
   canvasWidth: number,
   canvasHeight: number,
-  cellSize: number = DEFAULT_CELL_SIZE
+  cellSize: number = DEFAULT_CELL_SIZE,
 ): WalkableGrid {
   const cols = Math.ceil(canvasWidth / cellSize);
   const rows = Math.ceil(canvasHeight / cellSize);
@@ -18,7 +18,7 @@ export function createWalkableGrid(
 export function resizeWalkableGrid(
   grid: WalkableGrid,
   canvasWidth: number,
-  canvasHeight: number
+  canvasHeight: number,
 ): WalkableGrid {
   const newCols = Math.ceil(canvasWidth / grid.cellSize);
   const newRows = Math.ceil(canvasHeight / grid.cellSize);
@@ -27,8 +27,8 @@ export function resizeWalkableGrid(
 
   const cells = Array.from({ length: newRows }, (_, row) =>
     Array.from({ length: newCols }, (_, col) =>
-      row < grid.rows && col < grid.cols ? grid.cells[row][col] : 0
-    )
+      row < grid.rows && col < grid.cols ? grid.cells[row][col] : 0,
+    ),
   );
 
   return { ...grid, cols: newCols, rows: newRows, cells };
@@ -38,7 +38,7 @@ export function resizeWalkableGrid(
 export function canvasToCellCoord(
   x: number,
   y: number,
-  cellSize: number
+  cellSize: number,
 ): { col: number; row: number } {
   return {
     col: Math.floor(x / cellSize),
@@ -50,7 +50,7 @@ export function canvasToCellCoord(
 export function cellToCanvasCoord(
   col: number,
   row: number,
-  cellSize: number
+  cellSize: number,
 ): { x: number; y: number } {
   return {
     x: col * cellSize,
@@ -63,11 +63,13 @@ export function bresenhamLine(
   col0: number,
   row0: number,
   col1: number,
-  row1: number
+  row1: number,
 ): Array<{ col: number; row: number }> {
   const cells: Array<{ col: number; row: number }> = [];
-  let x0 = col0, y0 = row0;
-  const x1 = col1, y1 = row1;
+  let x0 = col0,
+    y0 = row0;
+  const x1 = col1,
+    y1 = row1;
   const dx = Math.abs(x1 - x0);
   const dy = Math.abs(y1 - y0);
   const sx = x0 < x1 ? 1 : -1;

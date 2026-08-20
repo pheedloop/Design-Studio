@@ -1,11 +1,19 @@
-import { useState, useEffect, useLayoutEffect, useRef, useCallback } from "react";
+import {
+  useState,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useCallback,
+} from "react";
 import type Konva from "konva";
 
 const MIN_SCALE = 0.1;
 const MAX_SCALE = 5;
 const ZOOM_STEP = 1.08;
 
-export function useCanvasControls(containerRef: React.RefObject<HTMLDivElement | null>) {
+export function useCanvasControls(
+  containerRef: React.RefObject<HTMLDivElement | null>,
+) {
   const stageRef = useRef<Konva.Stage>(null);
   const [scale, setScale] = useState(1);
   const [position, setPosition] = useState({ x: 0, y: 0 });
@@ -37,7 +45,7 @@ export function useCanvasControls(containerRef: React.RefObject<HTMLDivElement |
     const container = containerRef.current;
     if (!container) return;
 
-    const observer = new ResizeObserver((entries) => {
+    const observer = new ResizeObserver(entries => {
       const { width, height } = entries[0].contentRect;
       if (width > 0 && height > 0) {
         setStageSize({ width, height });
@@ -103,17 +111,14 @@ export function useCanvasControls(containerRef: React.RefObject<HTMLDivElement |
         y: pointer.y - mousePointTo.y * clamped,
       });
     },
-    [scale, position]
+    [scale, position],
   );
 
-  const handleDragEnd = useCallback(
-    (e: Konva.KonvaEventObject<DragEvent>) => {
-      if (e.target === stageRef.current) {
-        setPosition({ x: e.target.x(), y: e.target.y() });
-      }
-    },
-    []
-  );
+  const handleDragEnd = useCallback((e: Konva.KonvaEventObject<DragEvent>) => {
+    if (e.target === stageRef.current) {
+      setPosition({ x: e.target.x(), y: e.target.y() });
+    }
+  }, []);
 
   const handleTouchMove = useCallback(
     (e: Konva.KonvaEventObject<TouchEvent>) => {
@@ -163,11 +168,11 @@ export function useCanvasControls(containerRef: React.RefObject<HTMLDivElement |
   }, []);
 
   const zoomIn = useCallback(() => {
-    setScale((s) => Math.min(s * 1.2, MAX_SCALE));
+    setScale(s => Math.min(s * 1.2, MAX_SCALE));
   }, []);
 
   const zoomOut = useCallback(() => {
-    setScale((s) => Math.max(s / 1.2, MIN_SCALE));
+    setScale(s => Math.max(s / 1.2, MIN_SCALE));
   }, []);
 
   const zoomReset = useCallback(() => {

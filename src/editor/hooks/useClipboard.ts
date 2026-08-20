@@ -19,7 +19,7 @@ export function useClipboard() {
     pasteCount.current += 1;
     const offset = PASTE_OFFSET * pasteCount.current;
 
-    return buffer.map((el) => {
+    return buffer.map(el => {
       const newElement = structuredClone(el);
       newElement.id = uuidv4();
       // Pasted elements are independent — don't inherit group membership

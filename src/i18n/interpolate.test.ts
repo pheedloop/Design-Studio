@@ -15,7 +15,9 @@ describe("interpolate", () => {
   });
 
   it("tolerates whitespace inside the braces", () => {
-    expect(interpolate("Hello {{  name  }}", { name: "Ada" })).toBe("Hello Ada");
+    expect(interpolate("Hello {{  name  }}", { name: "Ada" })).toBe(
+      "Hello Ada",
+    );
   });
 
   it("coerces non-string values", () => {
@@ -24,7 +26,9 @@ describe("interpolate", () => {
 
   it("leaves an unsupplied placeholder visible rather than blank", () => {
     expect(interpolate("{{count}} seats", {})).toBe("{{count}} seats");
-    expect(interpolate("{{count}} seats", { other: 1 })).toBe("{{count}} seats");
+    expect(interpolate("{{count}} seats", { other: 1 })).toBe(
+      "{{count}} seats",
+    );
   });
 
   it("returns the template untouched when there are no vars", () => {
@@ -59,25 +63,25 @@ describe("resolveEnglishFrom", () => {
   });
 
   it("selects the singular at count 1", () => {
-    expect(resolveEnglishFrom(strings, "seatviewer.seatsFree", { count: 1 })).toBe(
-      "{{count}} seat free",
-    );
+    expect(
+      resolveEnglishFrom(strings, "seatviewer.seatsFree", { count: 1 }),
+    ).toBe("{{count}} seat free");
   });
 
   it("selects the plural at every other count, including 0 and 21", () => {
     // 0 and 21 are the counts other locales treat as singular; this function is
     // the displayed-English path, so it stays on English rules regardless.
     for (const count of [0, 7, 21]) {
-      expect(resolveEnglishFrom(strings, "seatviewer.seatsFree", { count })).toBe(
-        "{{count}} seats free",
-      );
+      expect(
+        resolveEnglishFrom(strings, "seatviewer.seatsFree", { count }),
+      ).toBe("{{count}} seats free");
     }
   });
 
   it("falls back to the unsuffixed entry when a key has no plural variants", () => {
-    expect(resolveEnglishFrom(strings, "viewer.legend.title", { count: 2 })).toBe(
-      "Legend",
-    );
+    expect(
+      resolveEnglishFrom(strings, "viewer.legend.title", { count: 2 }),
+    ).toBe("Legend");
   });
 
   it("returns the key itself for an unknown key, never an empty string", () => {

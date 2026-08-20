@@ -15,7 +15,7 @@ export function RouteOverlay({ path }: RouteOverlayProps) {
 
   const start = path[0];
   const end = path[path.length - 1];
-  const flatPoints = path.flatMap((p) => [p.x, p.y]);
+  const flatPoints = path.flatMap(p => [p.x, p.y]);
 
   return (
     <Layer listening={false}>

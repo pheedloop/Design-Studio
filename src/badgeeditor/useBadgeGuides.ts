@@ -54,7 +54,7 @@ export function useBadgeGuides(
 
   // Snap targets: every other field's bounds + the card itself.
   const targets = useMemo(() => {
-    const list = fields.map((f) => {
+    const list = fields.map(f => {
       const { w, h } = fieldSizePx(f);
       return { id: f.id, bounds: boundsFrom(f.left * PPI, f.top * PPI, w, h) };
     });
@@ -71,7 +71,7 @@ export function useBadgeGuides(
   const snap = useCallback(
     (id: string, left: number, top: number, w: number, h: number) => {
       const b = boundsFrom(left, top, w, h);
-      const others = targets.filter((t) => t.id !== id);
+      const others = targets.filter(t => t.id !== id);
       const guides: GuideLine[] = [];
 
       const dragX = [
@@ -99,7 +99,7 @@ export function useBadgeGuides(
             if (dx < bestDx) {
               bestDx = dx;
               snappedX = tx - dp.offset;
-              const filtered = guides.filter((g) => g.axis !== "x");
+              const filtered = guides.filter(g => g.axis !== "x");
               filtered.push({ axis: "x", position: tx });
               guides.length = 0;
               guides.push(...filtered);
@@ -112,7 +112,7 @@ export function useBadgeGuides(
             if (dy < bestDy) {
               bestDy = dy;
               snappedY = ty - dp.offset;
-              const filtered = guides.filter((g) => g.axis !== "y");
+              const filtered = guides.filter(g => g.axis !== "y");
               filtered.push({ axis: "y", position: ty });
               guides.length = 0;
               guides.push(...filtered);
@@ -123,13 +123,13 @@ export function useBadgeGuides(
 
       if (bestDx > SNAP_THRESHOLD) {
         snappedX = null;
-        const f = guides.filter((g) => g.axis !== "x");
+        const f = guides.filter(g => g.axis !== "x");
         guides.length = 0;
         guides.push(...f);
       }
       if (bestDy > SNAP_THRESHOLD) {
         snappedY = null;
-        const f = guides.filter((g) => g.axis !== "y");
+        const f = guides.filter(g => g.axis !== "y");
         guides.length = 0;
         guides.push(...f);
       }

@@ -75,7 +75,7 @@ function boothItemForSlug(
   boothSlug?: string,
 ): HoveredItem | null {
   if (!boothSlug) return null;
-  const el = elements.find((e) => e.properties.boothSlug === boothSlug);
+  const el = elements.find(e => e.properties.boothSlug === boothSlug);
   return el ? { type: "booth", elementId: el.id, boothSlug } : null;
 }
 
@@ -173,7 +173,7 @@ function MapViewerInner({
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
-    const observer = new ResizeObserver((entries) => {
+    const observer = new ResizeObserver(entries => {
       const width = entries[0].contentRect.width;
       setIsMobile(width < MOBILE_BREAKPOINT);
     });
@@ -182,7 +182,7 @@ function MapViewerInner({
   }, []);
 
   const occupiedBoothSlugs = useMemo(
-    () => new Set(exhibitors.map((ex) => ex.boothSlug)),
+    () => new Set(exhibitors.map(ex => ex.boothSlug)),
     [exhibitors],
   );
 
@@ -195,9 +195,7 @@ function MapViewerInner({
   }, [exhibitors]);
 
   const handleSidebarSelect = useCallback((item: HoveredItem) => {
-    setSelectedItem((prev) =>
-      prev?.elementId === item.elementId ? null : item,
-    );
+    setSelectedItem(prev => (prev?.elementId === item.elementId ? null : item));
     setPopover(null);
   }, []);
 
@@ -217,24 +215,24 @@ function MapViewerInner({
       }
       if (item.type !== "booth" && onLocationClick) {
         clearSelection();
-        const el = data.elements.find((e) => e.id === item.elementId);
+        const el = data.elements.find(e => e.id === item.elementId);
         onLocationClick({
           type: item.type,
           id:
             item.type === "session_area"
-              ? item.sessionId ?? null
-              : item.meetingRoomId ?? null,
+              ? (item.sessionId ?? null)
+              : (item.meetingRoomId ?? null),
           elementId: item.elementId,
           name: el?.properties.name || "",
         });
         return;
       }
-      setSelectedItem((prev) =>
+      setSelectedItem(prev =>
         prev?.elementId === item.elementId ? null : item,
       );
-      const el = data.elements.find((e) => e.id === item.elementId);
+      const el = data.elements.find(e => e.id === item.elementId);
       const name = el?.properties.name || "";
-      setPopover((prev) =>
+      setPopover(prev =>
         prev?.item.elementId === item.elementId
           ? null
           : { item, name, x: screenX, y: screenY },
@@ -324,7 +322,9 @@ function MapViewerInner({
               className="flex items-center gap-1.5 px-3 py-2 text-xs font-medium text-blue-600 hover:bg-blue-50 cursor-pointer transition-colors shrink-0 border-l border-gray-200"
             >
               <PiPath size={16} />
-              <span className="hidden sm:inline">{t("viewer.directions.title")}</span>
+              <span className="hidden sm:inline">
+                {t("viewer.directions.title")}
+              </span>
             </button>
           )}
         </div>
@@ -345,7 +345,7 @@ function MapViewerInner({
                 setHover(null);
                 return;
               }
-              const el = data.elements.find((e) => e.id === item.elementId);
+              const el = data.elements.find(e => e.id === item.elementId);
               setHover({ item, name: el?.properties.name || "", x, y });
             }}
           />

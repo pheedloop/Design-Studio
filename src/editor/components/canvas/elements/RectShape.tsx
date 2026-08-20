@@ -1,6 +1,10 @@
 import { Rect, Group } from "react-konva";
 import type { RectGeometry, ElementProperties } from "../../../../types";
-import { getLabelXY, getLabelFontStyle, getLabelRenderProps } from "./labelUtils";
+import {
+  getLabelXY,
+  getLabelFontStyle,
+  getLabelRenderProps,
+} from "./labelUtils";
 import { LabelWithBackground } from "./LabelWithBackground";
 
 interface RectShapeProps {
@@ -12,9 +16,21 @@ interface RectShapeProps {
   properties: ElementProperties;
 }
 
-export function RectShape({ geo, color, strokeColor, strokeWidth, label, properties }: RectShapeProps) {
+export function RectShape({
+  geo,
+  color,
+  strokeColor,
+  strokeWidth,
+  label,
+  properties,
+}: RectShapeProps) {
   const lp = getLabelRenderProps(properties);
-  const labelPos = getLabelXY(lp.labelPositionV, lp.labelPositionH, geo.width, geo.height);
+  const labelPos = getLabelXY(
+    lp.labelPositionV,
+    lp.labelPositionH,
+    geo.width,
+    geo.height,
+  );
   const fontStyle = getLabelFontStyle(lp.labelBold, lp.labelItalic);
 
   return (

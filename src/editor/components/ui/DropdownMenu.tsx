@@ -22,7 +22,14 @@ function isMenuDivider(entry: MenuEntry): entry is MenuDivider {
   return "type" in entry && entry.type === "divider";
 }
 
-function MenuItem({ label, shortcut, disabled, danger, premium, onClick }: MenuItemConfig) {
+function MenuItem({
+  label,
+  shortcut,
+  disabled,
+  danger,
+  premium,
+  onClick,
+}: MenuItemConfig) {
   const t = useT();
 
   return (
@@ -45,7 +52,9 @@ function MenuItem({ label, shortcut, disabled, danger, premium, onClick }: MenuI
         </span>
       ) : (
         shortcut && (
-          <span className={`ml-6 ${disabled ? "text-gray-300" : "text-gray-400"}`}>
+          <span
+            className={`ml-6 ${disabled ? "text-gray-300" : "text-gray-400"}`}
+          >
             {shortcut}
           </span>
         )
@@ -89,7 +98,7 @@ export function DropdownMenu({ items, onClose }: DropdownMenuProps) {
               onClose();
             }}
           />
-        )
+        ),
       )}
     </div>
   );

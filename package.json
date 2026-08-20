@@ -55,6 +55,8 @@
     "pack:local": "npm run build:lib && npm pack --pack-destination . && mv -f pheedloop-design-studio-*.tgz design-studio.local.tgz",
     "prepublishOnly": "npm run build:lib",
     "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "preview": "vite preview",
     "prepare": "husky",
     "test": "vitest run",
@@ -88,6 +90,7 @@
     "husky": "^9.1.7",
     "jsdom": "^30.0.1",
     "lint-staged": "^16.4.0",
+    "prettier": "^3.9.6",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "tailwindcss": "^4.2.2",
@@ -99,6 +102,7 @@
   },
   "lint-staged": {
     "*.{ts,tsx}": [
+      "./scripts/with-node.sh npx prettier --write",
       "bash -c 'tsc -b --noEmit'",
       "./scripts/with-node.sh npx eslint --max-warnings=0",
       "bash -c './scripts/with-node.sh npx vitest run'"

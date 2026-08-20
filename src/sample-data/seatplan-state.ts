@@ -16,7 +16,10 @@ const OCCUPANCY_CYCLE = [1.0, 0.6, 0.15, 0.9, 0.4, 0.05]; // fraction of seats f
 const UNRESTRICTED_TABLES = new Set(["SEATBL0007", "SEATBL0008", "SEATBL0009"]);
 
 export const seatPlanState: SeatTableState[] = seatPlanTables.map((t, i) => {
-  const occupancy = Math.min(Math.round(t.seatCount * OCCUPANCY_CYCLE[i % OCCUPANCY_CYCLE.length]), t.seatCount);
+  const occupancy = Math.min(
+    Math.round(t.seatCount * OCCUPANCY_CYCLE[i % OCCUPANCY_CYCLE.length]),
+    t.seatCount,
+  );
   const eligibleTicketCodes = UNRESTRICTED_TABLES.has(t.code)
     ? []
     : VIP_TABLES.has(t.code)

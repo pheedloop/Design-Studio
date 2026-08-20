@@ -8,7 +8,12 @@ interface PolygonShapeProps {
   strokeWidth: number;
 }
 
-export function PolygonShape({ geo, color, strokeColor, strokeWidth }: PolygonShapeProps) {
+export function PolygonShape({
+  geo,
+  color,
+  strokeColor,
+  strokeWidth,
+}: PolygonShapeProps) {
   return (
     <Line
       points={[...geo.points]}

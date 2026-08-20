@@ -16,11 +16,7 @@ import { DPI, type BadgeField, type BadgePage, type SlotType } from "./model";
 import { GridLayer } from "../editor/components/canvas/GridLayer";
 import { fieldDisplayText } from "./factory";
 import { fieldSizePx, useBadgeGuides } from "./useBadgeGuides";
-import {
-  fieldQrUrl,
-  fieldValueText,
-  type BadgeData,
-} from "./badgeData";
+import { fieldQrUrl, fieldValueText, type BadgeData } from "./badgeData";
 import qrCodeUrl from "./qr-code.png";
 
 // Shared image cache so per-field / per-ticket QR URLs load once. Undefined urls
@@ -36,7 +32,7 @@ function useImageLoader(
   urls: (string | undefined)[],
 ): (url?: string) => HTMLImageElement | null {
   const [, bump] = useState(0);
-  const key = urls.map((u) => u ?? "").join("|");
+  const key = urls.map(u => u ?? "").join("|");
   useEffect(() => {
     let alive = true;
     for (const u of urls) {
@@ -46,7 +42,7 @@ function useImageLoader(
         im.crossOrigin = "anonymous";
         im.onload = () => {
           imageCache.set(src, im);
-          if (alive) bump((x) => x + 1);
+          if (alive) bump(x => x + 1);
         };
         im.src = src;
       }
@@ -210,7 +206,7 @@ export function BadgeCanvas({
   const panelH = panelSize.height * PPI;
 
   const isQr =
-    page.fields.find((f) => f.id === singleSelectedId)?.kind === "qrCode";
+    page.fields.find(f => f.id === singleSelectedId)?.kind === "qrCode";
   const enabledAnchors = isQr
     ? ["top-left", "top-right", "bottom-left", "bottom-right"]
     : ["middle-left", "middle-right", "top-center", "bottom-center"];
@@ -286,7 +282,7 @@ export function BadgeCanvas({
     }
     if (marqueeOrigin.current && marquee) {
       const r = marquee;
-      const hit = page.fields.filter((f) => {
+      const hit = page.fields.filter(f => {
         const { w, h } = fieldSizePx(f);
         const fl = f.left * PPI;
         const ft = f.top * PPI;
@@ -295,7 +291,7 @@ export function BadgeCanvas({
       // Treat a click (no real drag) as "no marquee selection".
       if (r.w > 2 || r.h > 2)
         onMarqueeSelect(
-          hit.map((f) => f.id),
+          hit.map(f => f.id),
           e.evt.shiftKey,
         );
     }
@@ -321,7 +317,7 @@ export function BadgeCanvas({
 
   const handleFieldDragMove = (id: string, node: Konva.Node) => {
     if (dragStarts.current.size <= 1) {
-      const field = page.fields.find((f) => f.id === id);
+      const field = page.fields.find(f => f.id === id);
       if (!field) return;
       const { w, h } = fieldSizePx(field);
       // Grid snap first; alignment guides then refine when near other fields.
@@ -402,7 +398,7 @@ export function BadgeCanvas({
       onMouseDown={handleStageMouseDown}
       onMouseMove={handleStageMouseMove}
       onMouseUp={handleStageMouseUp}
-      onDragEnd={(e) => {
+      onDragEnd={e => {
         if (e.target === stageRef.current)
           onPositionChange(stageRef.current.position());
       }}
@@ -460,20 +456,20 @@ export function BadgeCanvas({
             });
           })()}
 
-        {page.fields.map((field) => (
+        {page.fields.map(field => (
           <FieldShape
             key={field.id}
             field={field}
             data={data}
             panMode={panMode}
-            registerRef={(node) => {
+            registerRef={node => {
               if (node) nodeRefs.current.set(field.id, node);
               else nodeRefs.current.delete(field.id);
             }}
-            onMouseDown={(additive) => onFieldMouseDown(field.id, additive)}
-            onChange={(patch) => onChangeField(field.id, patch)}
+            onMouseDown={additive => onFieldMouseDown(field.id, additive)}
+            onChange={patch => onChangeField(field.id, patch)}
             onDragStart={() => handleFieldDragStart(field.id)}
-            onDragMove={(node) => handleFieldDragMove(field.id, node)}
+            onDragMove={node => handleFieldDragMove(field.id, node)}
             onDragFinish={handleFieldDragEnd}
           />
         ))}
@@ -606,9 +602,9 @@ function FieldShape({
       draggable={!panMode}
       onMouseDown={handleMouseDown}
       onDragStart={onDragStart}
-      onDragMove={(e) => onDragMove(e.target)}
+      onDragMove={e => onDragMove(e.target)}
       onDragEnd={handleDragEnd}
-      onTransformEnd={(e) => {
+      onTransformEnd={e => {
         const node = e.target;
         if (isQrField) {
           const newSize = node.width() * node.scaleX();
@@ -638,7 +634,13 @@ function FieldShape({
  * interactive FieldShape and the read-only StaticField used in Full Preview.
  * Rendered at the group origin; includes the field-level 180° inversion.
  */
-function FieldBody({ field, data }: { field: BadgeField; data: BadgeData | null }) {
+function FieldBody({
+  field,
+  data,
+}: {
+  field: BadgeField;
+  data: BadgeData | null;
+}) {
   const isQrField = field.kind === "qrCode";
   const qrUrl = isQrField && data ? fieldQrUrl(field, data) : undefined;
   const getImg = useImageLoader(isQrField ? [qrUrl] : []);
@@ -676,11 +678,30 @@ function FieldBody({ field, data }: { field: BadgeField; data: BadgeData | null 
   return (
     <>
       {field.kind === "image" ? (
-        <Rect width={w} height={h} fill="#e2e8f0" stroke="#94a3b8" strokeWidth={1} />
+        <Rect
+          width={w}
+          height={h}
+          fill="#e2e8f0"
+          stroke="#94a3b8"
+          strokeWidth={1}
+        />
       ) : field.kind === "tickets" ? (
-        <Rect width={w} height={h} fill="transparent" stroke="#0f172a" strokeWidth={1} />
+        <Rect
+          width={w}
+          height={h}
+          fill="transparent"
+          stroke="#0f172a"
+          strokeWidth={1}
+        />
       ) : (
-        <Rect width={w} height={h} fill="transparent" stroke="#94a3b8" strokeWidth={1} dash={[4, 4]} />
+        <Rect
+          width={w}
+          height={h}
+          fill="transparent"
+          stroke="#94a3b8"
+          strokeWidth={1}
+          dash={[4, 4]}
+        />
       )}
       <Group
         x={inverted ? w : 0}
@@ -688,7 +709,13 @@ function FieldBody({ field, data }: { field: BadgeField; data: BadgeData | null 
         rotation={inverted ? 180 : 0}
         listening={false}
       >
-        <FieldContent field={field} w={w} h={h} fontSize={fontSize} data={data} />
+        <FieldContent
+          field={field}
+          w={w}
+          h={h}
+          fontSize={fontSize}
+          data={data}
+        />
       </Group>
     </>
   );
@@ -704,7 +731,13 @@ export function StaticField({
 }) {
   const { w, h } = fieldSizePx(field);
   return (
-    <Group x={field.left * PPI} y={field.top * PPI} width={w} height={h} listening={false}>
+    <Group
+      x={field.left * PPI}
+      y={field.top * PPI}
+      width={w}
+      height={h}
+      listening={false}
+    >
       <FieldBody field={field} data={data} />
     </Group>
   );
@@ -754,7 +787,7 @@ export function Slots({ slots, panelW }: { slots: SlotType; panelW: number }) {
   const startX = (panelW - total) / 2;
   return (
     <>
-      {[0, 1, 2].map((i) => (
+      {[0, 1, 2].map(i => (
         <Rect
           key={i}
           x={startX + i * (sw + gap)}
@@ -801,7 +834,12 @@ function FoldIndicators({
     const x2 = panelW + overhang;
     return (
       <Group key={key} listening={false}>
-        <Line points={[x1, y, x2, y]} stroke={color} strokeWidth={1} dash={dash} />
+        <Line
+          points={[x1, y, x2, y]}
+          stroke={color}
+          strokeWidth={1}
+          dash={dash}
+        />
         {[x1, x2].map((x, i) => (
           <Arrow
             key={i}
@@ -847,7 +885,7 @@ function FieldContent({
   // Ticket QR urls (real per-ticket, or stand-in placeholders) — one hook call.
   const ticketUrls = isTickets
     ? data
-      ? data.tickets.slice(0, rows).map((t) => t.qrUrl)
+      ? data.tickets.slice(0, rows).map(t => t.qrUrl)
       : Array.from({ length: rows }, () => undefined)
     : [];
   const getTicketImg = useImageLoader(ticketUrls);
@@ -924,7 +962,15 @@ function FieldContent({
     const lineH = lineFont * 1.45;
     if (data.sessions.length === 0) {
       return (
-        <Text text="(no sessions)" width={w} height={h} align="center" verticalAlign="middle" fontSize={lineFont} fill="#94a3b8" />
+        <Text
+          text="(no sessions)"
+          width={w}
+          height={h}
+          align="center"
+          verticalAlign="middle"
+          fontSize={lineFont}
+          fill="#94a3b8"
+        />
       );
     }
     return (

@@ -10,11 +10,11 @@ Design-Studio (`@pheedloop/design-studio`) is a Konva.js + React + TypeScript **
 
 Design-Studio ships three products, each with an authoring side and/or a display side:
 
-| Product | Authoring (editor) | Display (viewer) | Demo-app wrapper |
-|---|---|---|---|
-| Maps | `editor/` | `viewer/` | `map/` (`MapApp.tsx`) |
-| Seat plans | — | `seatviewer/` (shared: admin *and* attendee modes) | `seatplanner/` (`SeatplannerApp.tsx`) |
-| Badges | `badgeeditor/` (editor + preview together) | — | — |
+| Product    | Authoring (editor)                         | Display (viewer)                                   | Demo-app wrapper                      |
+| ---------- | ------------------------------------------ | -------------------------------------------------- | ------------------------------------- |
+| Maps       | `editor/`                                  | `viewer/`                                          | `map/` (`MapApp.tsx`)                 |
+| Seat plans | —                                          | `seatviewer/` (shared: admin _and_ attendee modes) | `seatplanner/` (`SeatplannerApp.tsx`) |
+| Badges     | `badgeeditor/` (editor + preview together) | —                                                  | —                                     |
 
 `src/App.tsx` + `src/routes/productRouter.ts` are the **demo app only** — they exist so this repo can run all three products standalone for local development and the GitHub Pages preview. They are not part of the published package.
 
@@ -22,7 +22,7 @@ Design-Studio ships three products, each with an authoring side and/or a display
 
 ### Konva / react-konva conventions
 
-- Describe the canvas declaratively — a component's JSX *is* the shape tree. Don't reach into `stage.find(...)` or mutate a Konva node imperatively from render code; that belongs in a dedicated hook (see `editor/hooks/`, `editor/tools/hooks/`) or a one-off utility like `editor/utils/captureThumbnail.ts`, not inline in a component body.
+- Describe the canvas declaratively — a component's JSX _is_ the shape tree. Don't reach into `stage.find(...)` or mutate a Konva node imperatively from render code; that belongs in a dedicated hook (see `editor/hooks/`, `editor/tools/hooks/`) or a one-off utility like `editor/utils/captureThumbnail.ts`, not inline in a component body.
 - One shape geometry = one component, in `editor/components/canvas/elements/` (`RectShape`, `EllipseShape`, `PolygonShape`, `ArcShape`, `ArrowShape`, `LineShape`, `BoothShape`, `TableShape`, `SessionAreaShape`, `MeetingRoomShape`, `TextShape`, `IconShape`). That folder is the source of truth for how each geometry type draws. Any other product that needs to draw the same geometry **reuses that component** — it does not reimplement the shape's drawing logic in a switch/case (see anti-pattern below).
 - Konva's own naming (`x`, `y`, `radiusX`, `fill`, ...) is allowed to leak into props for shape components — don't wrap it in a redundant abstraction just to avoid Konva-flavored prop names.
 
@@ -79,6 +79,7 @@ Tests sit flat beside their subject (`labels.ts` + `labels.test.ts`), so they ar
 ### One component per file (with one exception)
 
 A second component in a file is allowed only if **all** of these are true:
+
 - no own `Props` interface
 - no own hooks
 - no own state
@@ -100,6 +101,7 @@ If you're writing near-identical shape/handling logic for N variants that differ
 ### Imports
 
 **Only two import shapes are allowed:**
+
 - `./Sibling` — file lives in the same directory.
 - `@/...` — absolute import from `src/`.
 
@@ -119,7 +121,7 @@ A pre-commit hook (husky + lint-staged) runs `tsc -b --noEmit`, `eslint --max-wa
 
 - **Extract branchy label/state logic out of the component so it can be tested directly.** `seatviewer/labels.ts` exists precisely for this — `assignCta` has a dozen branches over mode, lock state, occupancy and eligibility, and testing it through a mounted Konva stage would be slow and brittle. A function taking `(input, t)` and returning `{ label, disabled, hint }` tests exhaustively in milliseconds. Do the same when you find comparable logic inline in a component.
 - **Render tests are for what only rendering can prove** — pluralization actually reaching the DOM, a provider override winning, an element appearing or not. `TableDetailPopover.test.tsx` is the model: render inside `I18nProvider`, assert on `screen.getByText`.
-- **Regressions against *released* behavior get a test with the old behavior named in a comment**, so nobody "simplifies" the fix away later. This does not apply to churn inside a single PR: by the time it merges there is no "used to", and a comment saying otherwise is archaeology a reader cannot verify. Write what the code guarantees and why that case is easy to get wrong — a test called "no longer does X" is a test with no meaning once X is gone.
+- **Regressions against _released_ behavior get a test with the old behavior named in a comment**, so nobody "simplifies" the fix away later. This does not apply to churn inside a single PR: by the time it merges there is no "used to", and a comment saying otherwise is archaeology a reader cannot verify. Write what the code guarantees and why that case is easy to get wrong — a test called "no longer does X" is a test with no meaning once X is gone.
 
 Konva components that need a real stage stay untested for now; there is no canvas harness in this repo. Don't build one for a single PR — extract the logic instead and test that.
 
@@ -129,12 +131,12 @@ Konva components that need a real stage stay untested for now; there is no canva
 
 Two kinds of text, two mechanisms. Getting the split right is the whole design:
 
-| | **UI chrome** — text this repo authors | **Content** — text the event author typed |
-|---|---|---|
-| Examples | "Assign", "No one seated yet", "Table locked" | booth names, legend labels, exhibitor names |
-| Mechanism | key → `t("seatviewer.assign.cta")` | `TranslateContent`: English string in, translation out |
-| Declared in | `src/i18n/strings.ts` | nowhere — unknown until runtime |
-| Host prop | `translate` | `translateContent` |
+|             | **UI chrome** — text this repo authors        | **Content** — text the event author typed              |
+| ----------- | --------------------------------------------- | ------------------------------------------------------ |
+| Examples    | "Assign", "No one seated yet", "Table locked" | booth names, legend labels, exhibitor names            |
+| Mechanism   | key → `t("seatviewer.assign.cta")`            | `TranslateContent`: English string in, translation out |
+| Declared in | `src/i18n/strings.ts`                         | nowhere — unknown until runtime                        |
+| Host prop   | `translate`                                   | `translateContent`                                     |
 
 This satisfies both consumers: ditto gets structured keys, Charmander keeps English-as-key for user-provided translations.
 
@@ -148,7 +150,7 @@ This satisfies both consumers: ditto gets structured keys, Charmander keeps Engl
 
 **Reaching `t`.** Inside a component, `const t = useT()` from the surface's own `i18n.ts` — it returns the host translator when a provider supplies one, the built-in English otherwise, so a component renders correctly with no provider at all. Each surface calls `createSurfaceI18n` once with only the namespaces it needs, and the returned `T` is **narrowed to that surface** — another surface's key is a compile error. That's deliberate; don't widen it to `AnyTranslate` to make an import work.
 
-**Module scope can't call a hook.** A module-level table of user-visible text stores *keys*, not English, and the render site translates: see `OCCUPANCY_LEGEND`'s `labelKey` and `SEAT_FLAG_LABEL_KEYS` in `seatviewer/logic.ts`. Typing these as `StringKey` means a typo fails the build.
+**Module scope can't call a hook.** A module-level table of user-visible text stores _keys_, not English, and the render site translates: see `OCCUPANCY_LEGEND`'s `labelKey` and `SEAT_FLAG_LABEL_KEYS` in `seatviewer/logic.ts`. Typing these as `StringKey` means a typo fails the build.
 
 **Pure functions take `t` as a parameter.** `assignCta(input, t)` and `occupantHeading(state, t)` in `seatviewer/labels.ts` — that keeps them testable without mounting anything, which is the same reason the Tests section wants them extracted.
 
@@ -230,9 +232,9 @@ Block real problems; comment on small ones; don't bikeshed. Every blocking comme
 
 These are real examples from this codebase. Don't repeat them.
 
-- **Inline sub-components with independent identity, in the same file as the component that mounts them.** `BadgeCanvas.tsx` (977 lines) defines `BadgeCanvas` plus six more components inline — `FieldShape`, `FieldBody`, `StaticField`, `Slots`, `FoldIndicators`, `FieldContent` — two of which (`StaticField`, `Slots`) are exported and imported by `BadgePreview.tsx`. That's not just size — it means a *second file* now depends on named exports out of what's supposed to be a canvas-orchestration component. `PlacementPanel.tsx` has the same shape: `PlacementPanel` plus `FilterBar`, `Section`, `PlacementRow`, `RecordRow` defined inline, plus a context. Each of these belongs in its own file.
+- **Inline sub-components with independent identity, in the same file as the component that mounts them.** `BadgeCanvas.tsx` (977 lines) defines `BadgeCanvas` plus six more components inline — `FieldShape`, `FieldBody`, `StaticField`, `Slots`, `FoldIndicators`, `FieldContent` — two of which (`StaticField`, `Slots`) are exported and imported by `BadgePreview.tsx`. That's not just size — it means a _second file_ now depends on named exports out of what's supposed to be a canvas-orchestration component. `PlacementPanel.tsx` has the same shape: `PlacementPanel` plus `FilterBar`, `Section`, `PlacementRow`, `RecordRow` defined inline, plus a context. Each of these belongs in its own file.
 - **Folder-of-one.** Four real instances: `src/utils/` (only `unitConversion.ts`), `src/components/` (only `ProductSwitcher.tsx`), `src/map/` (only `MapApp.tsx` — every other product folder has a real subtree, this one doesn't), and `src/editor/placement/` (only `types.ts`). Flatten these into their parent until real siblings justify the folder.
 - **Duplicate element-shape rendering.** `editor/components/canvas/elements/` has one component per geometry type (`RectShape`, `EllipseShape`, `ArcShape`, `PolygonShape`, `ArrowShape`, `LineShape`, ...). `viewer/components/ViewerElement.tsx` (319 lines) reimplements the same rect/ellipse/line/arrow/arc/polygon drawing inline, from scratch, via a big `switch` over raw `react-konva` primitives. Any future fix to how a shape draws now has to be made twice, and the two implementations can already disagree without anyone noticing.
 - **`../../` import chains.** Every one of these is a structural lie — either the file is in the wrong place, or the import shape is wrong. Use `@/` for anything off-directory. (Caveat: `@/` currently resolves in `vite.config.ts` but not `vitest.config.ts`, and no file in `src/` actually uses it — see the drift note under Tests before enforcing this on a test file.)
 - **Branchy label logic living inside a component.** The seat-plan assign CTA started as a ~35-line `useMemo` inside `SeatPlanViewer.tsx`, branching over mode, lock state, occupancy and eligibility, and returning `{ label, disabled, hint }`. Nothing about it needed React, but every branch was unreachable from a test without mounting a Konva stage — so none of them were tested. It now lives in `seatviewer/labels.ts` as `assignCta(input, t)` with a test per branch. When you catch yourself writing a `useMemo` that only maps state to strings, that's the same shape.
-- **Two eligibility rules drifting apart.** `isEligible` once answered a single yes/no, and the CTA re-derived the *reasons* inline with its own copy of the ticket-type and tag checks. The copies disagreed: one treated an empty `eligibleTicketCodes` allowlist as "nothing is allowed", the other as "everything is allowed". `seatEligibility` is now the one source for both the boolean and the reasons — `isEligible` is a thin wrapper over it. Don't re-derive a rule a shared helper already answers.
+- **Two eligibility rules drifting apart.** `isEligible` once answered a single yes/no, and the CTA re-derived the _reasons_ inline with its own copy of the ticket-type and tag checks. The copies disagreed: one treated an empty `eligibleTicketCodes` allowlist as "nothing is allowed", the other as "everything is allowed". `seatEligibility` is now the one source for both the boolean and the reasons — `isEligible` is a thin wrapper over it. Don't re-derive a rule a shared helper already answers.

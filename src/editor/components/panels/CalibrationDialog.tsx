@@ -14,7 +14,10 @@ interface CalibrationDialogProps {
 }
 
 /** Convert display-unit value to base Unit + distance for storage. */
-function toBaseUnit(distance: number, displayUnit: DisplayUnit): { distance: number; unit: Unit } {
+function toBaseUnit(
+  distance: number,
+  displayUnit: DisplayUnit,
+): { distance: number; unit: Unit } {
   if (displayUnit === "in") {
     return { distance: distance / 12, unit: "ft" };
   }
@@ -77,7 +80,7 @@ export function CalibrationDialog({
             <SectionLabel>{t("editor.field.distance")}</SectionLabel>
             <NumberInput
               value={distance}
-              onChange={(v) => setDistance(Math.max(0, v))}
+              onChange={v => setDistance(Math.max(0, v))}
               step={1}
             />
           </div>
@@ -85,7 +88,7 @@ export function CalibrationDialog({
             <SectionLabel>{t("editor.field.unit")}</SectionLabel>
             <Select
               value={displayUnit}
-              onChange={(e) => setDisplayUnit(e.target.value as DisplayUnit)}
+              onChange={e => setDisplayUnit(e.target.value as DisplayUnit)}
             >
               <option value="ft">{t("editor.unit.feet")}</option>
               <option value="in">{t("editor.unit.inches")}</option>

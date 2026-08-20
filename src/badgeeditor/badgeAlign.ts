@@ -42,42 +42,42 @@ const moveTo = (b: Box, left: number, top: number): FieldMove => ({
 
 export function alignLeft(fields: BadgeField[]): FieldMove[] {
   const boxes = fields.map(boxOf);
-  const target = Math.min(...boxes.map((b) => b.left));
-  return boxes.map((b) => moveTo(b, target, b.top));
+  const target = Math.min(...boxes.map(b => b.left));
+  return boxes.map(b => moveTo(b, target, b.top));
 }
 
 export function alignRight(fields: BadgeField[]): FieldMove[] {
   const boxes = fields.map(boxOf);
-  const target = Math.max(...boxes.map((b) => b.right));
-  return boxes.map((b) => moveTo(b, target - b.w, b.top));
+  const target = Math.max(...boxes.map(b => b.right));
+  return boxes.map(b => moveTo(b, target - b.w, b.top));
 }
 
 export function alignTop(fields: BadgeField[]): FieldMove[] {
   const boxes = fields.map(boxOf);
-  const target = Math.min(...boxes.map((b) => b.top));
-  return boxes.map((b) => moveTo(b, b.left, target));
+  const target = Math.min(...boxes.map(b => b.top));
+  return boxes.map(b => moveTo(b, b.left, target));
 }
 
 export function alignBottom(fields: BadgeField[]): FieldMove[] {
   const boxes = fields.map(boxOf);
-  const target = Math.max(...boxes.map((b) => b.bottom));
-  return boxes.map((b) => moveTo(b, b.left, target - b.h));
+  const target = Math.max(...boxes.map(b => b.bottom));
+  return boxes.map(b => moveTo(b, b.left, target - b.h));
 }
 
 export function alignCenterH(fields: BadgeField[]): FieldMove[] {
   const boxes = fields.map(boxOf);
-  const left = Math.min(...boxes.map((b) => b.left));
-  const right = Math.max(...boxes.map((b) => b.right));
+  const left = Math.min(...boxes.map(b => b.left));
+  const right = Math.max(...boxes.map(b => b.right));
   const center = (left + right) / 2;
-  return boxes.map((b) => moveTo(b, center - b.w / 2, b.top));
+  return boxes.map(b => moveTo(b, center - b.w / 2, b.top));
 }
 
 export function alignCenterV(fields: BadgeField[]): FieldMove[] {
   const boxes = fields.map(boxOf);
-  const top = Math.min(...boxes.map((b) => b.top));
-  const bottom = Math.max(...boxes.map((b) => b.bottom));
+  const top = Math.min(...boxes.map(b => b.top));
+  const bottom = Math.max(...boxes.map(b => b.bottom));
   const center = (top + bottom) / 2;
-  return boxes.map((b) => moveTo(b, b.left, center - b.h / 2));
+  return boxes.map(b => moveTo(b, b.left, center - b.h / 2));
 }
 
 export function distributeH(fields: BadgeField[]): FieldMove[] {

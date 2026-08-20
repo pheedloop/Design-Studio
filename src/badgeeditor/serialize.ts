@@ -23,7 +23,11 @@ import {
   type FoldType,
   type LegacyLayoutEntry,
 } from "./model";
-import { isLiteralTextField, isUserFieldEditable, kindForField } from "./fields";
+import {
+  isLiteralTextField,
+  isUserFieldEditable,
+  kindForField,
+} from "./fields";
 
 // ---------------------------------------------------------------------------
 // Field -> legacy entry

@@ -54,10 +54,14 @@ export function LayerPanel({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [open]);
 
-  const activeLayer = layers.find((l) => l.id === activeLayerId);
+  const activeLayer = layers.find(l => l.id === activeLayerId);
 
   return (
-    <div ref={panelRef} className="absolute right-2 z-[9001]" style={{ top: topOffset }}>
+    <div
+      ref={panelRef}
+      className="absolute right-2 z-[9001]"
+      style={{ top: topOffset }}
+    >
       <div className="flex items-center gap-1.5">
         {activeLayer && (
           <div className="flex items-center gap-1.5 px-2 py-1 bg-white border border-gray-200 rounded-lg shadow-md text-xs text-gray-600">
@@ -70,7 +74,7 @@ export function LayerPanel({
         )}
         <IconButton
           active={open}
-          onClick={() => setOpen((prev) => !prev)}
+          onClick={() => setOpen(prev => !prev)}
           className={`shadow-md border ${open ? "border-primary-600" : "border-gray-200 bg-white hover:bg-gray-50"}`}
           title={t("editor.field.layers")}
         >
@@ -80,10 +84,12 @@ export function LayerPanel({
 
       {open && (
         <div className="absolute top-full right-0 mt-1 bg-white border border-gray-200 rounded-md shadow-lg py-1 min-w-[180px]">
-          {layers.map((layer) => {
+          {layers.map(layer => {
             // Wayfinding gates the pathing layer: hide it entirely, or lock it.
-            const locked = layer.id === "pathing" && features.wayfinding === "locked";
-            if (layer.id === "pathing" && features.wayfinding === "hidden") return null;
+            const locked =
+              layer.id === "pathing" && features.wayfinding === "locked";
+            if (layer.id === "pathing" && features.wayfinding === "hidden")
+              return null;
 
             const isActive = layer.id === activeLayerId;
             return (
@@ -109,13 +115,21 @@ export function LayerPanel({
                 ) : (
                   <IconButton
                     size="sm"
-                    onClick={(e) => {
+                    onClick={e => {
                       e.stopPropagation();
                       onToggleVisibility(layer.id);
                     }}
-                    title={layer.visible ? t("editor.layer.hide") : t("editor.layer.show")}
+                    title={
+                      layer.visible
+                        ? t("editor.layer.hide")
+                        : t("editor.layer.show")
+                    }
                   >
-                    {layer.visible ? <PiEye size={14} /> : <PiEyeSlash size={14} />}
+                    {layer.visible ? (
+                      <PiEye size={14} />
+                    ) : (
+                      <PiEyeSlash size={14} />
+                    )}
                   </IconButton>
                 )}
               </div>

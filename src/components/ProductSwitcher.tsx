@@ -20,7 +20,7 @@ export function ProductSwitcher({
 }) {
   return (
     <>
-      {PRODUCTS.map((p) => (
+      {PRODUCTS.map(p => (
         <a
           key={p.id}
           href={productHref(p.id, mode)}

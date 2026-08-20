@@ -1,8 +1,8 @@
-import { defineConfig, type Plugin } from 'vite'
-import react from '@vitejs/plugin-react'
-import tailwindcss from '@tailwindcss/vite'
-import { copyFileSync } from 'node:fs'
-import { resolve } from 'node:path'
+import { defineConfig, type Plugin } from "vite";
+import react from "@vitejs/plugin-react";
+import tailwindcss from "@tailwindcss/vite";
+import { copyFileSync } from "node:fs";
+import { resolve } from "node:path";
 
 // GitHub Pages (and other static hosts) have no SPA fallback, so deep links like
 // /Design-Studio/seatplanner or /Design-Studio/badge 404 — there's no file there. The
@@ -11,24 +11,24 @@ import { resolve } from 'node:path'
 // path. Build-only so it never interferes with dev.
 function spa404Fallback(): Plugin {
   return {
-    name: 'spa-404-fallback',
-    apply: 'build',
+    name: "spa-404-fallback",
+    apply: "build",
     closeBundle() {
       try {
-        copyFileSync(resolve('dist/index.html'), resolve('dist/404.html'))
+        copyFileSync(resolve("dist/index.html"), resolve("dist/404.html"));
       } catch {
         // index.html may not exist for non-app builds — ignore.
       }
     },
-  }
+  };
 }
 
-const isGitHubActions = process.env.GITHUB_ACTIONS === 'true'
+const isGitHubActions = process.env.GITHUB_ACTIONS === "true";
 
 export default defineConfig({
-  base: isGitHubActions ? '/Design-Studio/' : '/',
+  base: isGitHubActions ? "/Design-Studio/" : "/",
   plugins: [react(), tailwindcss(), spa404Fallback()],
   resolve: {
-    alias: { '@': resolve('src') },
+    alias: { "@": resolve("src") },
   },
-})
+});

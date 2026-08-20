@@ -1,4 +1,9 @@
-import type { ToolDefinition, OptionsBarField, PropertiesPanelField, ContextMenuAction } from "./types";
+import type {
+  ToolDefinition,
+  OptionsBarField,
+  PropertiesPanelField,
+  ContextMenuAction,
+} from "./types";
 import { rectangleTool } from "./rectangle";
 import { ellipseTool } from "./ellipse";
 import { lineTool } from "./line";
@@ -45,7 +50,7 @@ const ELEMENT_TYPE_CONFIG_REGISTRY: ToolDefinition<any>[] = [
 // O(1) lookup by tool id
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const TOOL_MAP = new Map<string, ToolDefinition<any>>(
-  TOOL_REGISTRY.map((t) => [t.id, t])
+  TOOL_REGISTRY.map(t => [t.id, t]),
 );
 
 // ---------------------------------------------------------------------------
@@ -64,13 +69,17 @@ export interface ShapeUIConfig {
  */
 export function findToolForElement(
   geometryShape: string,
-  elementType?: string
+  elementType?: string,
 ): ToolDefinition | undefined {
   if (elementType) {
-    const byType = ELEMENT_TYPE_CONFIG_REGISTRY.find((t) => t.ownsElementType === elementType);
+    const byType = ELEMENT_TYPE_CONFIG_REGISTRY.find(
+      t => t.ownsElementType === elementType,
+    );
     if (byType) return byType;
   }
-  return ELEMENT_TYPE_CONFIG_REGISTRY.find((t) => t.ownsGeometry?.includes(geometryShape));
+  return ELEMENT_TYPE_CONFIG_REGISTRY.find(t =>
+    t.ownsGeometry?.includes(geometryShape),
+  );
 }
 
 /**
@@ -79,7 +88,7 @@ export function findToolForElement(
  */
 export function getToolUIConfig(
   geometryShape: string,
-  elementType?: string
+  elementType?: string,
 ): ShapeUIConfig {
   const tool = findToolForElement(geometryShape, elementType);
   if (tool) {

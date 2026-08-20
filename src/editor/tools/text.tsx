@@ -9,7 +9,7 @@ export const textTool: ToolDefinition<null> = {
   icon: <PiTextT size={20} />,
   cursor: "crosshair",
 
-  useInteraction: (ctx) =>
+  useInteraction: ctx =>
     useClickPlaceInteraction(ctx, (point, { defaults }) => ({
       type: "element",
       element: {
@@ -36,6 +36,16 @@ export const textTool: ToolDefinition<null> = {
 
   ownsElementType: "label",
   optionsBar: ["fill"],
-  propertiesPanel: ["text", "fontSize", "fontWeight", "fontStyle", "textDecoration", "textAlign", "width", "height", "rotation"],
+  propertiesPanel: [
+    "text",
+    "fontSize",
+    "fontWeight",
+    "fontStyle",
+    "textDecoration",
+    "textAlign",
+    "width",
+    "height",
+    "rotation",
+  ],
   contextMenu: ["delete"],
 };

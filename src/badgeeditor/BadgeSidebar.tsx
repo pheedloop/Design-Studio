@@ -38,7 +38,7 @@ export function BadgeSidebar({
   onNameChange,
   onAddField,
 }: BadgeSidebarProps) {
-  const fields = FIELD_DEFS.filter((d) => d.inPalette !== false);
+  const fields = FIELD_DEFS.filter(d => d.inPalette !== false);
 
   return (
     <div className="flex flex-col w-48 shrink-0 bg-white border-r border-gray-200 overflow-hidden">
@@ -47,7 +47,7 @@ export function BadgeSidebar({
         <div className="px-2 pb-1">
           <SectionLabel>Add Field</SectionLabel>
         </div>
-        {fields.map((d) => (
+        {fields.map(d => (
           <button
             key={d.field}
             type="button"
@@ -100,9 +100,9 @@ function SidebarHeader({
         <input
           ref={inputRef}
           value={draft}
-          onChange={(e) => setDraft(e.target.value)}
+          onChange={e => setDraft(e.target.value)}
           onBlur={commit}
-          onKeyDown={(e) => {
+          onKeyDown={e => {
             if (e.key === "Enter") commit();
             if (e.key === "Escape") {
               setDraft(name);

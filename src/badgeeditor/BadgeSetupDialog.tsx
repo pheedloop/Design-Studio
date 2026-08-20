@@ -99,7 +99,7 @@ export function BadgeSetupDialog({
 
   const changeFold = (f: FoldType) => {
     setLocalFold(f);
-    setPanels((prev) =>
+    setPanels(prev =>
       Array.from({ length: PAGE_COUNT[f] }, (_, i) =>
         i < prev.length
           ? prev[i]
@@ -113,7 +113,7 @@ export function BadgeSetupDialog({
   };
 
   const setPanel = (i: number, patch: Partial<PanelConfig>) =>
-    setPanels((prev) => prev.map((p, j) => (j === i ? { ...p, ...patch } : p)));
+    setPanels(prev => prev.map((p, j) => (j === i ? { ...p, ...patch } : p)));
 
   return (
     <Dialog
@@ -142,7 +142,7 @@ export function BadgeSetupDialog({
         <div className="flex flex-col gap-1.5">
           <SectionLabel>Fold</SectionLabel>
           <div className="flex gap-2">
-            {FOLD_OPTIONS.map((o) => (
+            {FOLD_OPTIONS.map(o => (
               <Button
                 key={o.value}
                 variant="outline"
@@ -163,7 +163,7 @@ export function BadgeSetupDialog({
         <div className="flex flex-col gap-1.5">
           <SectionLabel>Units</SectionLabel>
           <div className="flex gap-2">
-            {(["in", "cm"] as Unit[]).map((u) => (
+            {(["in", "cm"] as Unit[]).map(u => (
               <Button
                 key={u}
                 variant="outline"
@@ -199,7 +199,7 @@ export function BadgeSetupDialog({
         <div className="flex flex-col gap-1.5">
           <SectionLabel>Lanyard slots</SectionLabel>
           <div className="flex gap-2">
-            {SLOT_OPTIONS.map((o) => (
+            {SLOT_OPTIONS.map(o => (
               <Button
                 key={o.value}
                 variant="outline"
@@ -230,7 +230,7 @@ export function BadgeSetupDialog({
                     <input
                       type="checkbox"
                       checked={cfg.inverted}
-                      onChange={(e) =>
+                      onChange={e =>
                         setPanel(i, { inverted: e.target.checked })
                       }
                     />
@@ -240,7 +240,7 @@ export function BadgeSetupDialog({
                     <input
                       type="checkbox"
                       checked={cfg.tearaway}
-                      onChange={(e) =>
+                      onChange={e =>
                         setPanel(i, { tearaway: e.target.checked })
                       }
                     />
@@ -252,7 +252,7 @@ export function BadgeSetupDialog({
                       <div className="w-20">
                         <NumberInput
                           value={cfg.tearawayCount}
-                          onChange={(v) =>
+                          onChange={v =>
                             setPanel(i, { tearawayCount: Math.max(1, v) })
                           }
                         />
@@ -305,7 +305,7 @@ function DimField({
         step={unitStep[unit]}
         min={unitMin[unit]}
         value={text}
-        onChange={(e) => {
+        onChange={e => {
           setText(e.target.value);
           const n = Number(e.target.value);
           if (!Number.isNaN(n) && n > 0) onChange(fromUnit(n, unit));

@@ -38,27 +38,27 @@ export function usePlacementRecords(
   return useMemo(() => {
     const elements = data.elements;
 
-    return categories.map((category) => {
+    return categories.map(category => {
       // Ids currently referenced by any element via this category's link key.
       const placedIds = new Set(
         elements
-          .map((el) => el.properties[category.linkKey])
+          .map(el => el.properties[category.linkKey])
           .filter((v): v is NonNullable<typeof v> => Boolean(v))
-          .map((v) => String(v)),
+          .map(v => String(v)),
       );
 
-      const records: PlacedRecord[] = category.records.map((record) => ({
+      const records: PlacedRecord[] = category.records.map(record => ({
         record,
         isPlaced: placedIds.has(category.getRecordId(record)),
       }));
 
       const counts: RecordCounts = {
-        placed: records.filter((r) => r.isPlaced).length,
-        unplaced: records.filter((r) => !r.isPlaced).length,
+        placed: records.filter(r => r.isPlaced).length,
+        unplaced: records.filter(r => !r.isPlaced).length,
       };
 
       const knownIds = new Set(
-        category.records.map((r) => category.getRecordId(r)),
+        category.records.map(r => category.getRecordId(r)),
       );
 
       return { category, records, counts, knownIds };
