@@ -107,7 +107,7 @@ If you're writing near-identical shape/handling logic for N variants that differ
 
 **`../` is never acceptable.** If the importer and importee don't live in the same directory, use `@/`. This is mechanical and easy to enforce — search for `from "..` in any PR diff and reject every hit.
 
-This holds in test files too — `@/` resolves in `vitest.config.ts` exactly as it does in the two vite configs, so a test imports its subject as `./Subject` and everything else through `@/`.
+**Test files:** `@/` resolves in `vitest.config.ts` exactly as it does in the two vite configs, so the same two shapes apply — a test imports its subject as `./Subject`, and everything else through `@/`. Importing the subject relatively is deliberate rather than incidental: it acts as a co-location contract. If the subject is ever promoted to a shared location, that broken import is the immediate signal that the test must move with it — an `@/` path would keep resolving and quietly let the test drift away from the code it covers.
 
 ### Tests
 
@@ -125,7 +125,7 @@ A pre-commit hook (husky + lint-staged) runs `tsc -b --noEmit`, `eslint --max-wa
 
 Konva components that need a real stage stay untested for now; there is no canvas harness in this repo. Don't build one for a single PR — extract the logic instead and test that.
 
-Test files import their subject as `./Subject` and reach everything else through `@/`, same as production code — all three configs (`vite`, `vite.lib`, `vitest`) resolve the alias, so there is no test-runner exemption to remember.
+All three configs (`vite`, `vite.lib`, `vitest`) resolve `@/`, so there is no test-runner exemption to remember: a test imports its subject as `./Subject` — the co-location contract described under Imports — and everything else through `@/`.
 
 ### Strings / i18n
 
