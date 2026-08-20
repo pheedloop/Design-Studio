@@ -1,4 +1,4 @@
-import type { Exhibitor } from "../types";
+import type { Exhibitor } from "@/viewer/types";
 
 export function ExhibitorLogo({
   exhibitor,

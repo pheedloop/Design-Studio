@@ -1,4 +1,4 @@
-import type { MeetingRoom } from "../viewer/types";
+import type { MeetingRoom } from "@/viewer/types";
 
 /**
  * Sample MeetingRoom records.

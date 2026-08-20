@@ -17,9 +17,9 @@ import type {
   LineGeometry,
   ArcGeometry,
   PolygonGeometry,
-} from "../../types";
-import { getIconEntry } from "../../editor/utils/iconRegistry";
-import { iconToImage } from "../../editor/utils/iconToImage";
+} from "@/types";
+import { getIconEntry } from "@/editor/utils/iconRegistry";
+import { iconToImage } from "@/editor/utils/iconToImage";
 
 export function ViewerIcon({
   iconName,
@@ -224,7 +224,7 @@ export function ViewerElement({
       )}
       {geo.shape === "arrow" &&
         (() => {
-          const arrowGeo = geo as import("../../types").ArrowGeometry;
+          const arrowGeo = geo as import("@/types").ArrowGeometry;
           const pts = arrowGeo.points;
           const arrowHead = element.properties.arrowHead ?? {
             style: "triangle" as const,

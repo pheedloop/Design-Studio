@@ -1,6 +1,6 @@
 import { Rect } from "react-konva";
-import type { FloorPlanElement } from "../../../types";
-import { getElementBounds } from "../../utils/bounds";
+import type { FloorPlanElement } from "@/types";
+import { getElementBounds } from "@/editor/utils/bounds";
 
 interface MultiSelectBoundsProps {
   elements: FloorPlanElement[];

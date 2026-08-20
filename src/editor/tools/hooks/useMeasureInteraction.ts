@@ -1,8 +1,8 @@
 import { useState, useCallback, useRef } from "react";
 import type Konva from "konva";
-import type { Point } from "../../../types";
-import type { ToolContext, ToolInteraction } from "../types";
-import { getCanvasPoint, snapToAngle } from "../../utils/canvas";
+import type { Point } from "@/types";
+import type { ToolContext, ToolInteraction } from "@/editor/tools/types";
+import { getCanvasPoint, snapToAngle } from "@/editor/utils/canvas";
 
 export interface MeasureState {
   p1: Point | null;

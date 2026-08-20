@@ -1,5 +1,5 @@
 import { Line } from "react-konva";
-import type { LinePreviewState } from "../hooks/useLineInteraction";
+import type { LinePreviewState } from "@/editor/tools/hooks/useLineInteraction";
 
 const previewStyle = {
   stroke: "#475569",

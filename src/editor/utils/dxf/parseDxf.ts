@@ -13,7 +13,7 @@ import type {
   ISplineEntity,
   ITextEntity,
 } from "dxf-parser";
-import type { DxfPrimitive, Unit } from "../../../types";
+import type { DxfPrimitive, Unit } from "@/types";
 import { forEachPoint } from "./primitiveOps";
 
 /** Number of segments used to sample a full circle; arcs/ellipses use a

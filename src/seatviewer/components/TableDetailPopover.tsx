@@ -1,8 +1,8 @@
 import { PiX } from "react-icons/pi";
-import type { SeatOccupant, SeatTableState } from "../types";
-import { occupancyLevel, type OccupancyLevel } from "../logic";
-import { useT } from "../i18n";
-import { occupantHeading } from "../labels";
+import type { SeatOccupant, SeatTableState } from "@/seatviewer/types";
+import { occupancyLevel, type OccupancyLevel } from "@/seatviewer/logic";
+import { useT } from "@/seatviewer/i18n";
+import { occupantHeading } from "@/seatviewer/labels";
 
 interface TableDetailPopoverProps {
   table: SeatTableState;

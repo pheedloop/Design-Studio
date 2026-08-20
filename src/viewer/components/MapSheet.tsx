@@ -1,8 +1,8 @@
 import { useState, useMemo } from "react";
 import { PiCaretUp, PiCaretDown } from "react-icons/pi";
-import type { FloorPlanElement } from "../../types";
-import type { Exhibitor, HoveredItem } from "../types";
-import { useT } from "../i18n";
+import type { FloorPlanElement } from "@/types";
+import type { Exhibitor, HoveredItem } from "@/viewer/types";
+import { useT } from "@/viewer/i18n";
 
 interface MapSheetProps {
   elements: FloorPlanElement[];

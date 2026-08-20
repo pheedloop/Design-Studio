@@ -5,19 +5,26 @@ import {
   PiArrowsDownUp,
   PiFootprints,
 } from "react-icons/pi";
-import type { SearchResult } from "../hooks/useSearch";
-import type { DirectionsLocation, RouteStatus } from "../hooks/useDirections";
-import type { Dimensions } from "../../types";
+import type { SearchResult } from "@/viewer/hooks/useSearch";
+import type {
+  DirectionsLocation,
+  RouteStatus,
+} from "@/viewer/hooks/useDirections";
+import type { Dimensions } from "@/types";
 import {
   formatRouteDistance,
   pathDistance,
   pxToReal,
   estimateWalkingTime,
   formatWalkingTime,
-} from "../../utils/unitConversion";
-import { TYPE_BADGE, displayName, locationLabel } from "../utils/elementTypes";
-import { useLocale, useT } from "../i18n";
-import type { T } from "../i18n";
+} from "@/utils/unitConversion";
+import {
+  TYPE_BADGE,
+  displayName,
+  locationLabel,
+} from "@/viewer/utils/elementTypes";
+import { useLocale, useT } from "@/viewer/i18n";
+import type { T } from "@/viewer/i18n";
 
 interface DirectionsPanelProps {
   startLocation: DirectionsLocation | null;

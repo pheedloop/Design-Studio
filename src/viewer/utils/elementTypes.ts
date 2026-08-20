@@ -1,4 +1,4 @@
-import type { StringKey, T } from "../i18n";
+import type { StringKey, T } from "@/viewer/i18n";
 
 export type ViewerElementType = "booth" | "session_area" | "meeting_room";
 

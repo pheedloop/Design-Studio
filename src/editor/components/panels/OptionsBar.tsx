@@ -1,7 +1,7 @@
-import { Button, ColorSwatch, NumberInput } from "../ui";
+import { Button, ColorSwatch, NumberInput } from "@/editor/components/ui";
 import { AlignmentControls } from "./AlignmentControls";
-import type { OptionsBarField } from "../canvas/elements/types";
-import { useT } from "../../i18n";
+import type { OptionsBarField } from "@/editor/components/canvas/elements/types";
+import { useT } from "@/editor/i18n";
 
 export interface DrawingDefaults {
   fill: string;

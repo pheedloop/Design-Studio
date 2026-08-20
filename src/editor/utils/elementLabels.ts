@@ -1,5 +1,5 @@
-import type { ElementType, Geometry } from "../../types";
-import type { StringKey, T } from "../i18n";
+import type { ElementType, Geometry } from "@/types";
+import type { StringKey, T } from "@/editor/i18n";
 
 /** Type name shown in the properties header, for every element that isn't a shape. */
 const ELEMENT_TYPE_LABEL: Record<Exclude<ElementType, "shape">, StringKey> = {

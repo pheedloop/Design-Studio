@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
-import type { Background, Dimensions } from "../../types";
-import { parseDxf } from "../utils/dxf/parseDxf";
-import { bakeDrawing } from "../utils/dxf/bakeDrawing";
+import type { Background, Dimensions } from "@/types";
+import { parseDxf } from "@/editor/utils/dxf/parseDxf";
+import { bakeDrawing } from "@/editor/utils/dxf/bakeDrawing";
 
 interface UseDxfBackgroundHydrationArgs {
   background: Background | undefined;

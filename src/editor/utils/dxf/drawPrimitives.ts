@@ -1,4 +1,4 @@
-import type { DxfPrimitive } from "../../../types";
+import type { DxfPrimitive } from "@/types";
 
 /** Minimal 2D-context surface used by the renderer. Both a real
  *  CanvasRenderingContext2D (dialog preview) and Konva's sceneFunc context

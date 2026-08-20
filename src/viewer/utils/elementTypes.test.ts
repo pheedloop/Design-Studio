@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { createSurfaceI18n } from "../../i18n/context";
-import { COMMON, VIEWER } from "../../i18n/strings";
-import type { T } from "../i18n";
+import { createSurfaceI18n } from "@/i18n/context";
+import { COMMON, VIEWER } from "@/i18n/strings";
+import type { T } from "@/viewer/i18n";
 import {
   TYPE_BADGE,
   TYPE_NAME,

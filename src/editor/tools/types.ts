@@ -1,4 +1,4 @@
-import type { StringKey } from "../i18n";
+import type { StringKey } from "@/editor/i18n";
 import type Konva from "konva";
 import type {
   FloorPlanData,
@@ -6,13 +6,13 @@ import type {
   Geometry,
   Dimensions,
   Point,
-} from "../../types";
-import type { DrawingDefaults } from "../components/panels/OptionsBar";
+} from "@/types";
+import type { DrawingDefaults } from "@/editor/components/panels/OptionsBar";
 import type {
   OptionsBarField,
   PropertiesPanelField,
   ContextMenuAction,
-} from "../components/canvas/elements/types";
+} from "@/editor/components/canvas/elements/types";
 
 // Re-export so tool definitions can import everything from tools/types
 export type { OptionsBarField, PropertiesPanelField, ContextMenuAction };

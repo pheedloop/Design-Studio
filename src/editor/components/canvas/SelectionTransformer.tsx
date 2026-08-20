@@ -1,7 +1,7 @@
 import { useRef, useEffect, useCallback, useState } from "react";
 import { Transformer } from "react-konva";
 import type Konva from "konva";
-import type { FloorPlanElement } from "../../../types";
+import type { FloorPlanElement } from "@/types";
 
 interface SelectionTransformerProps {
   selectedIds: Set<string>;

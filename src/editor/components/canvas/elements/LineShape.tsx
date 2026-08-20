@@ -1,5 +1,5 @@
 import { Line } from "react-konva";
-import type { LineGeometry } from "../../../../types";
+import type { LineGeometry } from "@/types";
 
 interface LineShapeProps {
   geo: LineGeometry;

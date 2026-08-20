@@ -107,7 +107,7 @@ If you're writing near-identical shape/handling logic for N variants that differ
 
 **`../` is never acceptable.** If the importer and importee don't live in the same directory, use `@/`. This is mechanical and easy to enforce — search for `from "..` in any PR diff and reject every hit.
 
-**Exception — test files:** A test file that lives in a `tests/` subfolder next to the component it covers may import its subject with `../ComponentName`. This single-level relative import is intentional: it acts as a co-location contract. If the component is ever promoted to a shared location, the broken import is an immediate signal that the test file must move too. Use `@/` for everything else the test imports.
+**Test files:** `@/` resolves in `vitest.config.ts` exactly as it does in the two vite configs, so the same two shapes apply — a test imports its subject as `./Subject`, and everything else through `@/`. Importing the subject relatively is deliberate rather than incidental: it acts as a co-location contract. If the subject is ever promoted to a shared location, that broken import is the immediate signal that the test must move with it — an `@/` path would keep resolving and quietly let the test drift away from the code it covers.
 
 ### Tests
 
@@ -125,7 +125,7 @@ A pre-commit hook (husky + lint-staged) runs `tsc -b --noEmit`, `eslint --max-wa
 
 Konva components that need a real stage stay untested for now; there is no canvas harness in this repo. Don't build one for a single PR — extract the logic instead and test that.
 
-> **Known drift:** test files use `../` chains (`../i18n/context`) rather than the `@/` alias the Imports rule mandates, because `vitest.config.ts` has no `resolve.alias` — `@/` does not resolve under the test runner. In fact no file in `src/` uses `@/` today. Either add the alias to `vitest.config.ts` and migrate, or amend the Imports rule; until that's decided, don't fail a review over `../` in a test file.
+All three configs (`vite`, `vite.lib`, `vitest`) resolve `@/`, so there is no test-runner exemption to remember: a test imports its subject as `./Subject` — the co-location contract described under Imports — and everything else through `@/`.
 
 ### Strings / i18n
 
@@ -162,7 +162,7 @@ This satisfies both consumers: ditto gets structured keys, Charmander keeps Engl
 
 ### Skills required before opening a PR
 
-- No `console.log`, no commented-out code, no `TODO` without a Linear ticket reference.
+- No `console.log` (lint-enforced by `no-console`, which still allows `warn`/`error` for deliberate diagnostics on a failure path), no commented-out code, no `TODO` without a Linear ticket reference.
 - `npm run lint` clean.
 - `npm test` green, and `tsc -b --noEmit` clean. The pre-commit hook enforces both; don't `--no-verify` past it.
 - No user-visible string literal left in a component — every one goes through `t()`.
@@ -179,7 +179,7 @@ Reject (or block on fix) when you see any of the following. These map 1:1 to the
 
 - A new folder containing exactly one file, with no siblings in sight.
 - A new addition to top-level `src/components/` or `src/utils/` with only one caller in the PR.
-- **Any `from "../...` import in non-test code.** Same-directory `./` or absolute `@/` only. (Test files are exempt for now — see the drift note under Tests.)
+- **Any `from "../...` import.** Same-directory `./` or absolute `@/` only — production and test code alike. `src/` has zero `../` imports; the next one is a regression, not drift.
 - **Any file whose name doesn't match the PascalCase component it exports.**
 - Mixed sibling style within one feature: some helpers flat, some in a named subfolder.
 - A shape-drawing switch/case reimplementing a geometry that already has a dedicated component in `editor/components/canvas/elements/`.
@@ -235,6 +235,6 @@ These are real examples from this codebase. Don't repeat them.
 - **Inline sub-components with independent identity, in the same file as the component that mounts them.** `BadgeCanvas.tsx` (977 lines) defines `BadgeCanvas` plus six more components inline — `FieldShape`, `FieldBody`, `StaticField`, `Slots`, `FoldIndicators`, `FieldContent` — two of which (`StaticField`, `Slots`) are exported and imported by `BadgePreview.tsx`. That's not just size — it means a _second file_ now depends on named exports out of what's supposed to be a canvas-orchestration component. `PlacementPanel.tsx` has the same shape: `PlacementPanel` plus `FilterBar`, `Section`, `PlacementRow`, `RecordRow` defined inline, plus a context. Each of these belongs in its own file.
 - **Folder-of-one.** Four real instances: `src/utils/` (only `unitConversion.ts`), `src/components/` (only `ProductSwitcher.tsx`), `src/map/` (only `MapApp.tsx` — every other product folder has a real subtree, this one doesn't), and `src/editor/placement/` (only `types.ts`). Flatten these into their parent until real siblings justify the folder.
 - **Duplicate element-shape rendering.** `editor/components/canvas/elements/` has one component per geometry type (`RectShape`, `EllipseShape`, `ArcShape`, `PolygonShape`, `ArrowShape`, `LineShape`, ...). `viewer/components/ViewerElement.tsx` (319 lines) reimplements the same rect/ellipse/line/arrow/arc/polygon drawing inline, from scratch, via a big `switch` over raw `react-konva` primitives. Any future fix to how a shape draws now has to be made twice, and the two implementations can already disagree without anyone noticing.
-- **`../../` import chains.** Every one of these is a structural lie — either the file is in the wrong place, or the import shape is wrong. Use `@/` for anything off-directory. (Caveat: `@/` currently resolves in `vite.config.ts` but not `vitest.config.ts`, and no file in `src/` actually uses it — see the drift note under Tests before enforcing this on a test file.)
+- **`../../` import chains.** Every one of these is a structural lie — either the file is in the wrong place, or the import shape is wrong. Use `@/` for anything off-directory. All 415 of them were converted in one sweep (ENG-3569); the alias resolves in all three configs, so there is no longer an excuse for a new one.
 - **Branchy label logic living inside a component.** The seat-plan assign CTA started as a ~35-line `useMemo` inside `SeatPlanViewer.tsx`, branching over mode, lock state, occupancy and eligibility, and returning `{ label, disabled, hint }`. Nothing about it needed React, but every branch was unreachable from a test without mounting a Konva stage — so none of them were tested. It now lives in `seatviewer/labels.ts` as `assignCta(input, t)` with a test per branch. When you catch yourself writing a `useMemo` that only maps state to strings, that's the same shape.
 - **Two eligibility rules drifting apart.** `isEligible` once answered a single yes/no, and the CTA re-derived the _reasons_ inline with its own copy of the ticket-type and tag checks. The copies disagreed: one treated an empty `eligibleTicketCodes` allowlist as "nothing is allowed", the other as "everything is allowed". `seatEligibility` is now the one source for both the boolean and the reasons — `isEligible` is a thin wrapper over it. Don't re-derive a rule a shared helper already answers.

@@ -1,6 +1,6 @@
 import { useState, useCallback, useMemo } from "react";
-import type { FloorPlanElement } from "../../types";
-import { getElementBounds, type ElementBounds } from "../utils/bounds";
+import type { FloorPlanElement } from "@/types";
+import { getElementBounds, type ElementBounds } from "@/editor/utils/bounds";
 
 export interface GuideLine {
   axis: "x" | "y"; // x = vertical line, y = horizontal line

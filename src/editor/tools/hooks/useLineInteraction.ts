@@ -1,11 +1,15 @@
 import { useState, useRef, useCallback } from "react";
 import type Konva from "konva";
-import type { ToolContext, ToolInteraction, ToolResult } from "../types";
+import type {
+  ToolContext,
+  ToolInteraction,
+  ToolResult,
+} from "@/editor/tools/types";
 import {
   getCanvasPoint,
   isEmptySpaceClick,
   snapToAngle,
-} from "../../utils/canvas";
+} from "@/editor/utils/canvas";
 
 export interface LinePreviewState {
   x1: number;

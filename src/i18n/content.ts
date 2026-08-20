@@ -1,5 +1,5 @@
-import type { FloorPlanData } from "../types";
-import type { Exhibitor } from "../viewer/types";
+import type { FloorPlanData } from "@/types";
+import type { Exhibitor } from "@/viewer/types";
 
 /**
  * Translator for author-entered text, as opposed to `Translate`, which takes

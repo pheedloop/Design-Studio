@@ -1,5 +1,5 @@
 import { Text } from "react-konva";
-import { useT } from "../../../i18n";
+import { useT } from "@/editor/i18n";
 
 /** Corner marker on a shape with no record linked to it. */
 export function UnlinkedBadge() {

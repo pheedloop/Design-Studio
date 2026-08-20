@@ -1,15 +1,15 @@
 import { useCallback, useMemo, useState, useRef, useEffect } from "react";
 import { Stage, Layer, Group, Rect } from "react-konva";
 import type Konva from "konva";
-import type { FloorPlanData, LayerDefinition, LayerId } from "../../../types";
-import { ELEMENT_TYPE_TO_LAYER } from "../../../types";
+import type { FloorPlanData, LayerDefinition, LayerId } from "@/types";
+import { ELEMENT_TYPE_TO_LAYER } from "@/types";
 import type {
   ToolDefinition,
   ToolInteraction,
   ToolContext,
-} from "../../tools/types";
-import { findToolForElement } from "../../tools/registry";
-import { isEmptySpaceClick, getCanvasPoint } from "../../utils/canvas";
+} from "@/editor/tools/types";
+import { findToolForElement } from "@/editor/tools/registry";
+import { isEmptySpaceClick, getCanvasPoint } from "@/editor/utils/canvas";
 import { ElementShape } from "./ElementShape";
 import { SelectionTransformer } from "./SelectionTransformer";
 import { BackgroundImage } from "./BackgroundImage";
@@ -21,13 +21,13 @@ import { GroupTransformer } from "./GroupTransformer";
 import { GridLayer } from "./GridLayer";
 import { WalkableGridOverlay } from "./WalkableGridOverlay";
 import { CalibrationPreview } from "./CalibrationPreview";
-import type { CalibrationState } from "../../hooks/useCalibration";
+import type { CalibrationState } from "@/editor/hooks/useCalibration";
 import { CropOverlay } from "./CropOverlay";
-import type { CropRect } from "../../hooks/useCrop";
-import { useAlignmentGuides } from "../../hooks/useAlignmentGuides";
-import { getElementBounds, lineIntersectsRect } from "../../utils/bounds";
-import { CAPTURE_EXCLUDE_NAME } from "../../utils/captureThumbnail";
-import { PolygonVertexHandles } from "../../tools/handles/PolygonVertexHandles";
+import type { CropRect } from "@/editor/hooks/useCrop";
+import { useAlignmentGuides } from "@/editor/hooks/useAlignmentGuides";
+import { getElementBounds, lineIntersectsRect } from "@/editor/utils/bounds";
+import { CAPTURE_EXCLUDE_NAME } from "@/editor/utils/captureThumbnail";
+import { PolygonVertexHandles } from "@/editor/tools/handles/PolygonVertexHandles";
 
 // ---------------------------------------------------------------------------
 // ToolHost — mounts/unmounts with key={tool.id} to manage hook lifecycle
@@ -106,7 +106,7 @@ interface CanvasProps {
   ) => void;
   onGeometryUpdate: (
     id: string,
-    updates: Partial<import("../../../types").Geometry>,
+    updates: Partial<import("@/types").Geometry>,
   ) => void;
   onElementContextMenu: (id: string, screenX: number, screenY: number) => void;
   gridSettings: {
@@ -151,7 +151,7 @@ interface CanvasProps {
   onGroupTransformEnd?: (
     updates: Array<{
       id: string;
-      geometry: Partial<import("../../../types").Geometry>;
+      geometry: Partial<import("@/types").Geometry>;
     }>,
   ) => void;
 }

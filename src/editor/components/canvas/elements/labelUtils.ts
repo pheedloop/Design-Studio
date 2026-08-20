@@ -1,4 +1,4 @@
-import type { ElementProperties } from "../../../../types";
+import type { ElementProperties } from "@/types";
 
 type VPos = "top" | "middle" | "bottom";
 type HPos = "left" | "center" | "right";

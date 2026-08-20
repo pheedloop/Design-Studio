@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { Button, Dialog, TabBar } from "../ui";
-import type { FloorPlanData } from "../../../types";
+import { Button, Dialog, TabBar } from "@/editor/components/ui";
+import type { FloorPlanData } from "@/types";
 import { JsonDebugView } from "./JsonDebugView";
-import { useT } from "../../i18n";
+import { useT } from "@/editor/i18n";
 
 interface MapDebugDialogProps {
   data: FloorPlanData;

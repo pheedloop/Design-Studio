@@ -1,8 +1,11 @@
 import { useState, useMemo } from "react";
-import type { FloorPlanElement } from "../../types";
-import type { Exhibitor } from "../types";
-import { displayName, type ViewerElementType } from "../utils/elementTypes";
-import { useT } from "../i18n";
+import type { FloorPlanElement } from "@/types";
+import type { Exhibitor } from "@/viewer/types";
+import {
+  displayName,
+  type ViewerElementType,
+} from "@/viewer/utils/elementTypes";
+import { useT } from "@/viewer/i18n";
 
 export interface SearchResult {
   elementId: string; // element.id UUID — use as React key and for canvas highlight lookup

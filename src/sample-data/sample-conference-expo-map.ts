@@ -1,4 +1,4 @@
-import type { FloorPlanData } from "../types";
+import type { FloorPlanData } from "@/types";
 import rawData from "./Conference_Expo_2026.json";
 
 /**

@@ -1,5 +1,5 @@
 import { Text } from "react-konva";
-import type { RectGeometry } from "../../../../types";
+import type { RectGeometry } from "@/types";
 
 interface TextShapeProps {
   geo: RectGeometry;

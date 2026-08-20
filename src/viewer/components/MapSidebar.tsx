@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
-import type { FloorPlanElement } from "../../types";
-import { useT } from "../i18n";
-import type { Exhibitor, HoveredItem } from "../types";
+import type { FloorPlanElement } from "@/types";
+import { useT } from "@/viewer/i18n";
+import type { Exhibitor, HoveredItem } from "@/viewer/types";
 
 interface MapSidebarProps {
   elements: FloorPlanElement[];

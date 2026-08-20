@@ -7,12 +7,12 @@ import type {
   LayerId,
   Dimensions,
   ElementTypeDefaults,
-} from "../../../types";
-import { getToolUIConfig } from "../../tools/registry";
-import type { PropertiesPanelField } from "../canvas/elements/types";
-import { formatMeasurement, formatArea } from "../../../utils/unitConversion";
-import { elementTypeLabel } from "../../utils/elementLabels";
-import { useLocale, useT, type StringKey } from "../../i18n";
+} from "@/types";
+import { getToolUIConfig } from "@/editor/tools/registry";
+import type { PropertiesPanelField } from "@/editor/components/canvas/elements/types";
+import { formatMeasurement, formatArea } from "@/utils/unitConversion";
+import { elementTypeLabel } from "@/editor/utils/elementLabels";
+import { useLocale, useT, type StringKey } from "@/editor/i18n";
 import {
   Button,
   TabBar,
@@ -23,8 +23,8 @@ import {
   TextInput,
   TextArea,
   ColorSwatch,
-} from "../ui";
-import { JsonDebugView } from "../debug";
+} from "@/editor/components/ui";
+import { JsonDebugView } from "@/editor/components/debug";
 import { LabelSection } from "./LabelSection";
 
 const TEXT_ALIGN_LABEL: Record<"left" | "center" | "right", StringKey> = {

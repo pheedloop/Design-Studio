@@ -4,7 +4,7 @@ import {
   Dialog,
   NumberInput,
   SectionLabel,
-} from "../editor/components/ui";
+} from "@/editor/components/ui";
 import {
   fmtUnit,
   fromUnit,

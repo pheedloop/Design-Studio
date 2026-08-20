@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
-import { ProductSwitcher } from "../components/ProductSwitcher";
+import { ProductSwitcher } from "@/components/ProductSwitcher";
 import { SeatPlanEditor } from "./SeatPlanEditor";
 import { SeatPlanViewerDemo } from "./SeatPlanViewerDemo";
-import { LocaleSwitcher } from "../demo/LocaleSwitcher";
-import { useDemoLocale } from "../demo/useDemoLocale";
+import { LocaleSwitcher } from "@/demo/LocaleSwitcher";
+import { useDemoLocale } from "@/demo/useDemoLocale";
 
 type Mode = "editor" | "viewer";
 

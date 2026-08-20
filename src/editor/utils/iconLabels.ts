@@ -1,4 +1,4 @@
-import type { StringKey } from "../i18n";
+import type { StringKey } from "@/editor/i18n";
 import type { IconCategory } from "./iconRegistry";
 
 // Display text for the icon picker. Kept out of iconRegistry.ts because that

@@ -1,7 +1,7 @@
-import type { FloorPlanData } from "../types";
-import type { Tier, FeatureKey, FeatureOverride } from "../tiers";
+import type { FloorPlanData } from "@/types";
+import type { Tier, FeatureKey, FeatureOverride } from "@/tiers";
 import type { Translate } from "./i18n";
-import type { TranslateContent } from "../i18n/content";
+import type { TranslateContent } from "@/i18n/content";
 
 export type SeatPlanMode = "admin" | "attendee";
 

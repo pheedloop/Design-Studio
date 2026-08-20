@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import type { DxfPrimitive } from "../../../types";
+import type { DxfPrimitive } from "@/types";
 import { bakeDrawing } from "./bakeDrawing";
 
 /** A 10 × 5 drawing: wide enough that width and height fit at different

@@ -1,5 +1,5 @@
-import { OCCUPANCY_LEGEND } from "../logic";
-import { useT } from "../i18n";
+import { OCCUPANCY_LEGEND } from "@/seatviewer/logic";
+import { useT } from "@/seatviewer/i18n";
 
 /**
  * Key for the table occupancy colors, pinned to the bottom-right of the canvas.

@@ -1,7 +1,7 @@
 import { useEffect } from "react";
-import { usePopoverPosition } from "../hooks/usePopoverPosition";
-import { TYPE_NAME } from "../utils/elementTypes";
-import { useT } from "../i18n";
+import { usePopoverPosition } from "@/viewer/hooks/usePopoverPosition";
+import { TYPE_NAME } from "@/viewer/utils/elementTypes";
+import { useT } from "@/viewer/i18n";
 
 interface LocationPopoverProps {
   name: string;

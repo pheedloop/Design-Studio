@@ -1,6 +1,6 @@
 import type Konva from "konva";
 
-import type { FloorPlanData } from "../../types";
+import type { FloorPlanData } from "@/types";
 
 export const CAPTURE_EXCLUDE_NAME = "pl-capture-exclude";
 

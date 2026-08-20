@@ -1,9 +1,9 @@
 import { Circle, Group, Line, Rect, Text } from "react-konva";
-import type { CalibrationState } from "../../hooks/useCalibration";
-import type { ScaleCalibration, Unit } from "../../../types";
-import { useLocale, useT } from "../../i18n";
-import { formatNumber } from "../../../i18n/format";
-import { unitLabel } from "../../../utils/unitConversion";
+import type { CalibrationState } from "@/editor/hooks/useCalibration";
+import type { ScaleCalibration, Unit } from "@/types";
+import { useLocale, useT } from "@/editor/i18n";
+import { formatNumber } from "@/i18n/format";
+import { unitLabel } from "@/utils/unitConversion";
 
 interface CalibrationPreviewProps {
   calibrationState: CalibrationState;

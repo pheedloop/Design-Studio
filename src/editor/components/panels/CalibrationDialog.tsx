@@ -1,8 +1,14 @@
 import { useState } from "react";
-import { Button, Dialog, NumberInput, Select, SectionLabel } from "../ui";
-import type { Unit } from "../../../types";
-import { useLocale, useT } from "../../i18n";
-import { formatNumber } from "../../../i18n/format";
+import {
+  Button,
+  Dialog,
+  NumberInput,
+  Select,
+  SectionLabel,
+} from "@/editor/components/ui";
+import type { Unit } from "@/types";
+import { useLocale, useT } from "@/editor/i18n";
+import { formatNumber } from "@/i18n/format";
 
 type DisplayUnit = Unit | "in";
 

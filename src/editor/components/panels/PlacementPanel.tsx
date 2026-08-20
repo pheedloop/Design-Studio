@@ -11,10 +11,10 @@ import type {
   PlacementRecords,
   CategoryRecords,
   PlacedRecord,
-} from "../../hooks/usePlacementRecords";
-import type { PlacementCategory } from "../../placement/types";
-import { useT, type StringKey } from "../../i18n";
-import type { ElementType } from "../../../types";
+} from "@/editor/hooks/usePlacementRecords";
+import type { PlacementCategory } from "@/editor/placement/types";
+import { useT, type StringKey } from "@/editor/i18n";
+import type { ElementType } from "@/types";
 
 /** The ellipse option is offered as "Circle" — the placement grid only ever squares it. */
 const PLACEMENT_SHAPE_LABEL: Record<"rect" | "ellipse", StringKey> = {

@@ -1,5 +1,5 @@
 import { Rect, Group } from "react-konva";
-import type { RectGeometry, ElementProperties } from "../../../../types";
+import type { RectGeometry, ElementProperties } from "@/types";
 import {
   getLabelXY,
   getLabelFontStyle,

@@ -1,5 +1,5 @@
 import { Rect } from "react-konva";
-import type { DrawingRect } from "../hooks/useClickDragInteraction";
+import type { DrawingRect } from "@/editor/tools/hooks/useClickDragInteraction";
 
 const previewStyle = {
   fill: "#94a3b8",

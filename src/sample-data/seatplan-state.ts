@@ -1,5 +1,5 @@
 import { seatPlanTables } from "./seatplan-tables";
-import type { SeatTableState } from "../seatviewer/types";
+import type { SeatTableState } from "@/seatviewer/types";
 
 /**
  * Demo assignment/eligibility overlay for the sample banquet hall. In production

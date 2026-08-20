@@ -1,5 +1,5 @@
-import { IconButton } from "../ui";
-import { useT } from "../../i18n";
+import { IconButton } from "@/editor/components/ui";
+import { useT } from "@/editor/i18n";
 import {
   AlignLeftIcon,
   AlignCenterHIcon,

@@ -1,5 +1,5 @@
 import { useRef, useEffect } from "react";
-import type { Dimensions } from "../../types";
+import type { Dimensions } from "@/types";
 
 interface RulersProps {
   visible: boolean;

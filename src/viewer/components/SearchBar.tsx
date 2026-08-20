@@ -1,8 +1,8 @@
 import { useRef, useState } from "react";
 import { PiMagnifyingGlass, PiX } from "react-icons/pi";
-import type { SearchResult } from "../hooks/useSearch";
-import { TYPE_BADGE, displayName } from "../utils/elementTypes";
-import { useT } from "../i18n";
+import type { SearchResult } from "@/viewer/hooks/useSearch";
+import { TYPE_BADGE, displayName } from "@/viewer/utils/elementTypes";
+import { useT } from "@/viewer/i18n";
 
 interface SearchBarProps {
   query: string;

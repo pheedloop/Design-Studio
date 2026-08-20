@@ -6,8 +6,8 @@ import {
   SectionLabel,
   NumberInput,
   ColorSwatch,
-} from "../ui";
-import { useT } from "../../i18n";
+} from "@/editor/components/ui";
+import { useT } from "@/editor/i18n";
 
 export interface GridSettings {
   showGrid: boolean;

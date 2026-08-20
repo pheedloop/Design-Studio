@@ -1,6 +1,6 @@
 import { useEffect } from "react";
-import type { ActiveTool, PathingTool } from "../types";
-import { TOOL_REGISTRY } from "../tools/registry";
+import type { ActiveTool, PathingTool } from "@/editor/types";
+import { TOOL_REGISTRY } from "@/editor/tools/registry";
 
 // Build shortcut → tool id map from registry
 const toolShortcuts = new Map<string, string>();

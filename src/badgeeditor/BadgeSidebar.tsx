@@ -8,7 +8,7 @@ import {
   PiTagSimple,
   PiAddressBook,
 } from "react-icons/pi";
-import { SectionLabel } from "../editor/components/ui";
+import { SectionLabel } from "@/editor/components/ui";
 import { FIELD_DEFS, type FieldDef } from "./fields";
 
 function iconFor(def: FieldDef) {

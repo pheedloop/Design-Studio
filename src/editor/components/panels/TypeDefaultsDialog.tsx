@@ -1,7 +1,7 @@
-import type { TypeStyles, ElementTypeDefaults } from "../../../types";
-import { Dialog } from "../ui";
+import type { TypeStyles, ElementTypeDefaults } from "@/types";
+import { Dialog } from "@/editor/components/ui";
 import { TypeDefaultsPanel } from "./TypeDefaultsPanel";
-import { useT } from "../../i18n";
+import { useT } from "@/editor/i18n";
 
 interface TypeDefaultsDialogProps {
   typeStyles: TypeStyles;

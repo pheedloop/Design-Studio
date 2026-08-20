@@ -1,4 +1,4 @@
-import type { WalkableGrid } from "../../types";
+import type { WalkableGrid } from "@/types";
 
 const DEFAULT_CELL_SIZE = 20;
 

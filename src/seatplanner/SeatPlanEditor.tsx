@@ -1,10 +1,10 @@
 import { useMemo } from "react";
-import { MapEditor, definePlacementCategory } from "../editor";
-import { seatPlanMap } from "../sample-data/seatplan-map";
+import { MapEditor, definePlacementCategory } from "@/editor";
+import { seatPlanMap } from "@/sample-data/seatplan-map";
 import {
   seatPlanTables,
   type TableRecord,
-} from "../sample-data/seatplan-tables";
+} from "@/sample-data/seatplan-tables";
 
 /**
  * Seatplanner editor — the shared MapEditor configured for the seatplanner

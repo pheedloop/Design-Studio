@@ -1,4 +1,4 @@
-import type { DxfPrimitive } from "../../../types";
+import type { DxfPrimitive } from "@/types";
 
 export type FitMode = "fit" | "resize";
 

@@ -1,8 +1,14 @@
-import type { ElementProperties } from "../../../types";
-import { Button, SectionLabel, NumberInput, ColorSwatch, Slider } from "../ui";
+import type { ElementProperties } from "@/types";
+import {
+  Button,
+  SectionLabel,
+  NumberInput,
+  ColorSwatch,
+  Slider,
+} from "@/editor/components/ui";
 import { LabelPositionPicker } from "./LabelPositionPicker";
 import { PiEye, PiEyeSlash } from "react-icons/pi";
-import { useT } from "../../i18n";
+import { useT } from "@/editor/i18n";
 
 interface LabelSectionProps {
   properties: ElementProperties;

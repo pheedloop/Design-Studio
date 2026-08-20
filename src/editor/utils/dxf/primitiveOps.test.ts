@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import type { DxfPrimitive } from "../../../types";
+import type { DxfPrimitive } from "@/types";
 import { forEachPoint, primitiveBounds, mapPrimitive } from "./primitiveOps";
 
 const line = (points: number[]): DxfPrimitive => ({

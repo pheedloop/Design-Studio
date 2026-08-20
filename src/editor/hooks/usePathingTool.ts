@@ -1,9 +1,9 @@
 import { useRef, useCallback, useState } from "react";
 import type Konva from "konva";
-import type { WalkableGrid } from "../../types";
-import type { PathingTool } from "../types";
-import { canvasToCellCoord, bresenhamLine } from "../utils/walkableGrid";
-import { getCanvasPoint } from "../utils/canvas";
+import type { WalkableGrid } from "@/types";
+import type { PathingTool } from "@/editor/types";
+import { canvasToCellCoord, bresenhamLine } from "@/editor/utils/walkableGrid";
+import { getCanvasPoint } from "@/editor/utils/canvas";
 
 interface UsePathingToolOptions {
   stageRef: React.RefObject<Konva.Stage | null>;

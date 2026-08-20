@@ -82,16 +82,16 @@ import type {
   LayerId,
   LayerDefinition,
   Dimensions,
-} from "../types";
+} from "@/types";
 import type { PlacementCategory } from "./placement/types";
 import {
   DEFAULT_LAYERS,
   ELEMENT_TYPE_TO_LAYER,
   DEFAULT_TYPE_STYLES,
-} from "../types";
-import { resolveFeatures } from "../tiers";
-import type { Tier, FeatureKey, FeatureOverride } from "../tiers";
-import { I18nProvider } from "../i18n/I18nProvider";
+} from "@/types";
+import { resolveFeatures } from "@/tiers";
+import type { Tier, FeatureKey, FeatureOverride } from "@/tiers";
+import { I18nProvider } from "@/i18n/I18nProvider";
 import { useT } from "./i18n";
 import type { Translate } from "./i18n";
 
@@ -774,7 +774,7 @@ function MapEditorInner({
 
   // Generic geometry update handler (replaces per-shape callbacks for handles)
   const handleGeometryUpdate = useCallback(
-    (id: string, updates: Partial<import("../types").Geometry>) => {
+    (id: string, updates: Partial<import("@/types").Geometry>) => {
       updateElement(id, updates);
     },
     [updateElement],
@@ -1063,7 +1063,7 @@ function MapEditorInner({
     (
       updates: Array<{
         id: string;
-        geometry: Partial<import("../types").Geometry>;
+        geometry: Partial<import("@/types").Geometry>;
       }>,
     ) => {
       batchUpdateGeometry(updates);

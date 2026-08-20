@@ -1,7 +1,7 @@
-import type { Dimensions } from "../../types";
-import { unitLabel } from "../../utils/unitConversion";
-import { formatNumber } from "../../i18n/format";
-import { useLocale, useT } from "../i18n";
+import type { Dimensions } from "@/types";
+import { unitLabel } from "@/utils/unitConversion";
+import { formatNumber } from "@/i18n/format";
+import { useLocale, useT } from "@/viewer/i18n";
 
 interface ScaleBarProps {
   dimensions: Dimensions;

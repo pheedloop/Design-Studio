@@ -1,5 +1,5 @@
 import { Rect, Line, Ellipse, Circle, Text, Group } from "react-konva";
-import type { Geometry, ElementProperties } from "../../../../types";
+import type { Geometry, ElementProperties } from "@/types";
 import {
   getLabelXY,
   getLabelFontStyle,
@@ -7,7 +7,7 @@ import {
 } from "./labelUtils";
 import { LabelWithBackground } from "./LabelWithBackground";
 import { UnlinkedBadge } from "./UnlinkedBadge";
-import { getGeometryBounds } from "../../../utils/bounds";
+import { getGeometryBounds } from "@/editor/utils/bounds";
 
 interface SessionAreaShapeProps {
   geo: Geometry;

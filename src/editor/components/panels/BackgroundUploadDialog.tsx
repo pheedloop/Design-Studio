@@ -1,13 +1,13 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Button, Dialog } from "../ui";
-import type { Background, DxfPrimitive, Unit } from "../../../types";
-import { parseDxf, type ParsedDxf } from "../../utils/dxf/parseDxf";
-import { bakeDrawing, type FitMode } from "../../utils/dxf/bakeDrawing";
+import { Button, Dialog } from "@/editor/components/ui";
+import type { Background, DxfPrimitive, Unit } from "@/types";
+import { parseDxf, type ParsedDxf } from "@/editor/utils/dxf/parseDxf";
+import { bakeDrawing, type FitMode } from "@/editor/utils/dxf/bakeDrawing";
 import {
   drawPrimitives,
   type DrawContext,
-} from "../../utils/dxf/drawPrimitives";
-import { useT, type StringKey, type T } from "../../i18n";
+} from "@/editor/utils/dxf/drawPrimitives";
+import { useT, type StringKey, type T } from "@/editor/i18n";
 
 /** Serialized-size budget for the imported DXF primitives. pikachu caps the
  *  whole PATCH body (floor_plan_data) at 10 MB, so keep the payload well

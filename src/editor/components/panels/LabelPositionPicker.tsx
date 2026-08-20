@@ -1,5 +1,5 @@
-import { SectionLabel } from "../ui";
-import { useT } from "../../i18n";
+import { SectionLabel } from "@/editor/components/ui";
+import { useT } from "@/editor/i18n";
 
 type VPos = "top" | "middle" | "bottom";
 type HPos = "left" | "center" | "right";

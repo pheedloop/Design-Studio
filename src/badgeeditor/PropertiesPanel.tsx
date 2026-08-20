@@ -11,7 +11,7 @@ import {
   SectionLabel,
   FieldRow,
   TextInput,
-} from "../editor/components/ui";
+} from "@/editor/components/ui";
 import { inchToPx, type BadgeField, type TextAlign } from "./model";
 import { getFieldDef, isLiteralTextField, isUserFieldEditable } from "./fields";
 

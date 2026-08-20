@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
 import { elementTypeLabel } from "./elementLabels";
-import { createSurfaceI18n } from "../../i18n/context";
-import { COMMON, EDITOR } from "../../i18n/strings";
-import type { ElementType, Geometry } from "../../types";
-import type { T } from "../i18n";
+import { createSurfaceI18n } from "@/i18n/context";
+import { COMMON, EDITOR } from "@/i18n/strings";
+import type { ElementType, Geometry } from "@/types";
+import type { T } from "@/editor/i18n";
 
 const { defaultTranslate } = createSurfaceI18n({
   common: COMMON,

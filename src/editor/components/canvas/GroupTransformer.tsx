@@ -1,8 +1,8 @@
 import { useRef, useEffect, useCallback, useMemo } from "react";
 import { Rect, Transformer } from "react-konva";
 import type Konva from "konva";
-import type { FloorPlanElement, Geometry } from "../../../types";
-import { getElementBounds } from "../../utils/bounds";
+import type { FloorPlanElement, Geometry } from "@/types";
+import { getElementBounds } from "@/editor/utils/bounds";
 
 interface GroupTransformerProps {
   groupId: string;

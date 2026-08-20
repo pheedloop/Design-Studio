@@ -4,9 +4,9 @@ import {
   ICON_CATEGORIES,
   iconRegistry,
   type IconEntry,
-} from "../../utils/iconRegistry";
-import { ICON_CATEGORY_LABEL, ICON_LABEL } from "../../utils/iconLabels";
-import { useT } from "../../i18n";
+} from "@/editor/utils/iconRegistry";
+import { ICON_CATEGORY_LABEL, ICON_LABEL } from "@/editor/utils/iconLabels";
+import { useT } from "@/editor/i18n";
 
 interface IconPickerProps {
   selectedId: string | null;

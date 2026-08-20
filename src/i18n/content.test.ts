@@ -1,7 +1,7 @@
 import { act, renderHook } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-import type { FloorPlanData } from "../types";
-import { useSearch } from "../viewer/hooks/useSearch";
+import type { FloorPlanData } from "@/types";
+import { useSearch } from "@/viewer/hooks/useSearch";
 import { translateExhibitors, translateFloorPlan } from "./content";
 
 const FR: Record<string, string> = {

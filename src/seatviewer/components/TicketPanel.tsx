@@ -10,9 +10,13 @@ import type {
   SeatPlanMode,
   SeatTableState,
   SeatTicket,
-} from "../types";
-import { isEligible, seatEligibility, SEAT_FLAG_LABEL_KEYS } from "../logic";
-import { useT } from "../i18n";
+} from "@/seatviewer/types";
+import {
+  isEligible,
+  seatEligibility,
+  SEAT_FLAG_LABEL_KEYS,
+} from "@/seatviewer/logic";
+import { useT } from "@/seatviewer/i18n";
 
 interface TicketPanelProps {
   mode: SeatPlanMode;
