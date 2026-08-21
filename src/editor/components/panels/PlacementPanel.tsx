@@ -15,29 +15,17 @@ import type {
 import type { PlacementCategory } from "@/editor/placement/types";
 import { useT, type StringKey } from "@/editor/i18n";
 import type { ElementType } from "@/types";
+import {
+  PLACEMENT_DRAG_TYPE,
+  PLACEMENT_SHAPE_ELLIPSE_TYPE,
+  type PlacementRecordRef,
+} from "./placementDrag";
 
 /** The ellipse option is offered as "Circle" — the placement grid only ever squares it. */
 const PLACEMENT_SHAPE_LABEL: Record<"rect" | "ellipse", StringKey> = {
   ellipse: "editor.shape.circle",
   rect: "editor.shape.rect",
 };
-
-// ---------------------------------------------------------------------------
-// Data transfer constants
-// ---------------------------------------------------------------------------
-
-export const PLACEMENT_DRAG_TYPE = "application/x-placement-record";
-// Encoding shape in a MIME type allows reading it during dragover (types[] is readable
-// before drop, unlike actual data payload which browsers restrict for security).
-export const PLACEMENT_SHAPE_ELLIPSE_TYPE =
-  "application/x-placement-shape-ellipse";
-
-export interface PlacementRecordRef {
-  /** Element type to create/link for the dragged record. */
-  type: ElementType;
-  id: string;
-  defaultShape: "rect" | "ellipse";
-}
 
 export interface AutoArrangeRecord {
   recordId: string;
