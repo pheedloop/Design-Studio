@@ -1,12 +1,11 @@
 import { useCallback, useMemo, useState } from "react";
-import { DPI, type BadgeField } from "./model";
+import type { BadgeField } from "./model";
+import { PPI, QR_BASE_PX } from "./canvasMetrics";
 
 // Alignment guides + snapping for the badge canvas. Ported from the editor's
 // useAlignmentGuides, operating on field bounds in canvas pixels (PPI = DPI),
 // and additionally snapping to the card edges + center.
 
-const PPI = DPI;
-const QR_BASE_PX = 75;
 const SNAP_THRESHOLD = 5; // unscaled canvas px
 
 export interface GuideLine {
