@@ -9,6 +9,11 @@ import {
   type Unit,
 } from "./units";
 
+/**
+ * Fractional dimension input (NumberInput rounds to integers, so not usable
+ * here). The stored `value` is always inches; the field displays and accepts
+ * the current `unit` and converts back to inches on change.
+ */
 export function DimField({
   label,
   value,

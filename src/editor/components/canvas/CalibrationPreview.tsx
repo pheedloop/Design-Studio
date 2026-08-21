@@ -76,5 +76,3 @@ export function CalibrationPreview({
   // Only p1 placed, waiting for first move
   return <CalibrationPointMarker point={p1} inverseScale={inverseScale} />;
 }
-
-// --- Sub-components ---

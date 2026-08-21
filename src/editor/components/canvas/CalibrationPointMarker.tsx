@@ -1,6 +1,6 @@
 import { Circle } from "react-konva";
 
-export const POINT_RADIUS = 5;
+const POINT_RADIUS = 5;
 const POINT_COLOR = "#2563eb";
 
 export function CalibrationPointMarker({

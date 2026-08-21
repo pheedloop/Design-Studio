@@ -31,10 +31,6 @@ import { CAPTURE_EXCLUDE_NAME } from "@/editor/utils/captureThumbnail";
 import { PolygonVertexHandles } from "@/editor/tools/handles/PolygonVertexHandles";
 
 // ---------------------------------------------------------------------------
-// ToolHost — mounts/unmounts with key={tool.id} to manage hook lifecycle
-// ---------------------------------------------------------------------------
-
-// ---------------------------------------------------------------------------
 // Canvas
 // ---------------------------------------------------------------------------
 

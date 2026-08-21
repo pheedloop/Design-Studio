@@ -6,8 +6,6 @@ import {
   PiStorefront,
 } from "react-icons/pi";
 import { MapEditor, definePlacementCategory, type Tier } from "@/editor";
-// The merged translator, not either surface's: this shell drives both the editor
-// and the viewer, and each surface's own `Translate` covers only its own keys.
 import { LocaleSwitcher } from "@/demo/LocaleSwitcher";
 import { useDemoLocale } from "@/demo/useDemoLocale";
 import { ViewerRoute, type Viewport } from "./ViewerRoute";

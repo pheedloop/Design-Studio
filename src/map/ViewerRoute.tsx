@@ -1,5 +1,7 @@
 import { MapViewer } from "@/viewer";
 import type { Tier } from "@/editor";
+// The merged translator, not either surface's: this shell drives both the editor
+// and the viewer, and each surface's own `Translate` covers only its own keys.
 import type { Translate } from "@/i18n";
 import type { ViewerMode } from "@/viewer/types";
 import type { FloorPlanData } from "@/types";

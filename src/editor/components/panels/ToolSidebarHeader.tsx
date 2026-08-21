@@ -5,6 +5,9 @@ import type { FeatureMap } from "@/tiers";
 import { useT } from "@/editor/i18n";
 import { IconButton, TrophyIcon } from "@/editor/components/ui";
 
+/**
+ * Header row: map name (click to rename) + Design / Placement mode icon buttons.
+ */
 export function ToolSidebarHeader({
   mapName,
   onMapNameChange,

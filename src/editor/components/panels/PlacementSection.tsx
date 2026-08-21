@@ -4,7 +4,7 @@ import { useT } from "@/editor/i18n";
 import { SectionShapeContext } from "./sectionShapeContext";
 import { PlacementFilterBar, type StatusFilter } from "./PlacementFilterBar";
 
-export interface PlacementSectionProps {
+interface PlacementSectionProps {
   title: string;
   iconShape: "rect" | "oval";
   iconColor: string;
