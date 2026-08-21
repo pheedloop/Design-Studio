@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import { PiCaretDown, PiCaretUp, PiSparkle } from "react-icons/pi";
 import type {
   PlacementRecords,
@@ -7,14 +7,9 @@ import type {
 } from "@/editor/hooks/usePlacementRecords";
 import type { PlacementCategory } from "@/editor/placement/types";
 import { useT } from "@/editor/i18n";
-import type { ElementType } from "@/types";
-import {
-  PLACEMENT_DRAG_TYPE,
-  PLACEMENT_SHAPE_ELLIPSE_TYPE,
-  type PlacementRecordRef,
-} from "./placementDrag";
 import { SectionShapeContext } from "./sectionShapeContext";
 import { PlacementFilterBar, type StatusFilter } from "./PlacementFilterBar";
+import { PlacementRow } from "./PlacementRow";
 
 export interface AutoArrangeRecord {
   recordId: string;
@@ -148,54 +143,6 @@ function Section({
 // ---------------------------------------------------------------------------
 // Rows
 // ---------------------------------------------------------------------------
-
-function PlacementRow({
-  isPlaced,
-  recordType,
-  recordId,
-  children,
-}: {
-  isPlaced: boolean;
-  recordType: ElementType;
-  recordId: string;
-  children: React.ReactNode;
-}) {
-  const defaultShape = useContext(SectionShapeContext);
-
-  const handleDragStart = (e: React.DragEvent) => {
-    if (isPlaced) {
-      e.preventDefault();
-      return;
-    }
-    const ref: PlacementRecordRef = {
-      type: recordType,
-      id: recordId,
-      defaultShape,
-    };
-    e.dataTransfer.effectAllowed = "copy";
-    e.dataTransfer.setData(PLACEMENT_DRAG_TYPE, JSON.stringify(ref));
-    e.dataTransfer.setData("text/plain", JSON.stringify(ref));
-    // Encode shape as a MIME type so it can be read during dragover
-    if (defaultShape === "ellipse") {
-      e.dataTransfer.setData(PLACEMENT_SHAPE_ELLIPSE_TYPE, "1");
-    }
-  };
-
-  return (
-    <div
-      draggable={!isPlaced}
-      onDragStart={handleDragStart}
-      className={[
-        "flex items-center gap-3 px-3 py-2.5 border-b border-gray-50 text-sm transition-colors last:border-0",
-        isPlaced
-          ? "opacity-40 cursor-default"
-          : "cursor-grab hover:bg-gray-50 active:cursor-grabbing",
-      ].join(" ")}
-    >
-      {children}
-    </div>
-  );
-}
 
 function RecordRow({
   category,
