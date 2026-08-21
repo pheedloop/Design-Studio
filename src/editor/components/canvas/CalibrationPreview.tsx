@@ -1,9 +1,10 @@
-import { Circle, Group, Line, Rect, Text } from "react-konva";
+import { Group, Line, Rect, Text } from "react-konva";
 import type { CalibrationState } from "@/editor/hooks/useCalibration";
 import type { ScaleCalibration, Unit } from "@/types";
 import { useLocale, useT } from "@/editor/i18n";
 import { formatNumber } from "@/i18n/format";
 import { unitLabel } from "@/utils/unitConversion";
+import { CalibrationPointMarker } from "./CalibrationPointMarker";
 
 interface CalibrationPreviewProps {
   calibrationState: CalibrationState;
@@ -11,9 +12,6 @@ interface CalibrationPreviewProps {
   existingCalibration?: ScaleCalibration;
   scale: number;
 }
-
-const POINT_RADIUS = 5;
-const POINT_COLOR = "#2563eb";
 const LINE_COLOR = "#2563eb";
 const LINE_DASH = [6, 4];
 
@@ -78,33 +76,10 @@ export function CalibrationPreview({
   }
 
   // Only p1 placed, waiting for first move
-  return <PointMarker point={p1} inverseScale={inverseScale} />;
+  return <CalibrationPointMarker point={p1} inverseScale={inverseScale} />;
 }
 
 // --- Sub-components ---
-
-function PointMarker({
-  point,
-  inverseScale,
-  dimmed,
-}: {
-  point: { x: number; y: number };
-  inverseScale: number;
-  dimmed?: boolean;
-}) {
-  return (
-    <Circle
-      x={point.x}
-      y={point.y}
-      radius={POINT_RADIUS * inverseScale}
-      fill={POINT_COLOR}
-      opacity={dimmed ? 0.4 : 0.8}
-      stroke="#fff"
-      strokeWidth={1.5 * inverseScale}
-      listening={false}
-    />
-  );
-}
 
 function CalibrationLine({
   p1,
@@ -135,8 +110,16 @@ function CalibrationLine({
         opacity={opacity}
         listening={false}
       />
-      <PointMarker point={p1} inverseScale={inverseScale} dimmed={dimmed} />
-      <PointMarker point={p2} inverseScale={inverseScale} dimmed={dimmed} />
+      <CalibrationPointMarker
+        point={p1}
+        inverseScale={inverseScale}
+        dimmed={dimmed}
+      />
+      <CalibrationPointMarker
+        point={p2}
+        inverseScale={inverseScale}
+        dimmed={dimmed}
+      />
       {label && (
         <>
           <Rect
