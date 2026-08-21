@@ -585,28 +585,6 @@ function FieldShape({
   );
 }
 
-/** Read-only positioned field visual for the full-preview render. */
-export function StaticField({
-  field,
-  data,
-}: {
-  field: BadgeField;
-  data: BadgeData | null;
-}) {
-  const { w, h } = fieldSizePx(field);
-  return (
-    <Group
-      x={field.left * PPI}
-      y={field.top * PPI}
-      width={w}
-      height={h}
-      listening={false}
-    >
-      <FieldBody field={field} data={data} />
-    </Group>
-  );
-}
-
 /** Static lanyard hole-punch slots near the top of the front panel. */
 export function Slots({ slots, panelW }: { slots: SlotType; panelW: number }) {
   const fill = "#f1f5f9";
