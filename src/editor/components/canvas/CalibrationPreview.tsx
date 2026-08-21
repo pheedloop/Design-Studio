@@ -1,9 +1,10 @@
-import { Circle, Group, Line, Rect, Text } from "react-konva";
 import type { CalibrationState } from "@/editor/hooks/useCalibration";
 import type { ScaleCalibration, Unit } from "@/types";
 import { useLocale, useT } from "@/editor/i18n";
 import { formatNumber } from "@/i18n/format";
 import { unitLabel } from "@/utils/unitConversion";
+import { CalibrationPointMarker } from "./CalibrationPointMarker";
+import { CalibrationLine } from "./CalibrationLine";
 
 interface CalibrationPreviewProps {
   calibrationState: CalibrationState;
@@ -11,11 +12,6 @@ interface CalibrationPreviewProps {
   existingCalibration?: ScaleCalibration;
   scale: number;
 }
-
-const POINT_RADIUS = 5;
-const POINT_COLOR = "#2563eb";
-const LINE_COLOR = "#2563eb";
-const LINE_DASH = [6, 4];
 
 export function CalibrationPreview({
   calibrationState,
@@ -78,90 +74,5 @@ export function CalibrationPreview({
   }
 
   // Only p1 placed, waiting for first move
-  return <PointMarker point={p1} inverseScale={inverseScale} />;
-}
-
-// --- Sub-components ---
-
-function PointMarker({
-  point,
-  inverseScale,
-  dimmed,
-}: {
-  point: { x: number; y: number };
-  inverseScale: number;
-  dimmed?: boolean;
-}) {
-  return (
-    <Circle
-      x={point.x}
-      y={point.y}
-      radius={POINT_RADIUS * inverseScale}
-      fill={POINT_COLOR}
-      opacity={dimmed ? 0.4 : 0.8}
-      stroke="#fff"
-      strokeWidth={1.5 * inverseScale}
-      listening={false}
-    />
-  );
-}
-
-function CalibrationLine({
-  p1,
-  p2,
-  inverseScale,
-  label,
-  dashed,
-  dimmed,
-}: {
-  p1: { x: number; y: number };
-  p2: { x: number; y: number };
-  inverseScale: number;
-  label?: string;
-  dashed?: boolean;
-  dimmed?: boolean;
-}) {
-  const midX = (p1.x + p2.x) / 2;
-  const midY = (p1.y + p2.y) / 2;
-  const opacity = dimmed ? 0.4 : 0.9;
-
-  return (
-    <Group listening={false}>
-      <Line
-        points={[p1.x, p1.y, p2.x, p2.y]}
-        stroke={LINE_COLOR}
-        strokeWidth={2 * inverseScale}
-        dash={dashed ? LINE_DASH.map(d => d * inverseScale) : undefined}
-        opacity={opacity}
-        listening={false}
-      />
-      <PointMarker point={p1} inverseScale={inverseScale} dimmed={dimmed} />
-      <PointMarker point={p2} inverseScale={inverseScale} dimmed={dimmed} />
-      {label && (
-        <>
-          <Rect
-            x={midX - label.length * 4 * inverseScale}
-            y={midY - 10 * inverseScale}
-            width={label.length * 8 * inverseScale}
-            height={18 * inverseScale}
-            fill="#fff"
-            cornerRadius={3 * inverseScale}
-            opacity={0.9}
-            listening={false}
-          />
-          <Text
-            x={midX - label.length * 4 * inverseScale}
-            y={midY - 7 * inverseScale}
-            width={label.length * 8 * inverseScale}
-            text={label}
-            fontSize={11 * inverseScale}
-            fill="#1e40af"
-            fontFamily="system-ui, sans-serif"
-            align="center"
-            listening={false}
-          />
-        </>
-      )}
-    </Group>
-  );
+  return <CalibrationPointMarker point={p1} inverseScale={inverseScale} />;
 }

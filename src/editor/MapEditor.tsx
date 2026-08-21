@@ -12,11 +12,9 @@ import { usePlacementRecords } from "./hooks/usePlacementRecords";
 import {
   PLACEMENT_DRAG_TYPE,
   PLACEMENT_SHAPE_ELLIPSE_TYPE,
-} from "./components/panels/PlacementPanel";
-import type {
-  PlacementRecordRef,
-  AutoArrangeRecord,
-} from "./components/panels/PlacementPanel";
+} from "@/editor/components/panels/placementDrag";
+import type { PlacementRecordRef } from "@/editor/components/panels/placementDrag";
+import type { AutoArrangeRecord } from "./components/panels/PlacementPanel";
 import { getElementBounds } from "./utils/bounds";
 import {
   alignLeft,

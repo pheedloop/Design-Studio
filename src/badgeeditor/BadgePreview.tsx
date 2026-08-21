@@ -1,7 +1,9 @@
 import { useLayoutEffect, useRef } from "react";
 import { Stage, Layer, Rect, Group, Line } from "react-konva";
 import { useCanvasControls } from "@/editor/hooks/useCanvasControls";
-import { StaticField, Slots, PPI, PANEL_CORNER_IN } from "./BadgeCanvas";
+import { Slots } from "./Slots";
+import { StaticField } from "./StaticField";
+import { PANEL_CORNER_IN, PPI } from "./canvasMetrics";
 import { BadgeRulers } from "./BadgeRulers";
 import { foldInvertForPage } from "./serialize";
 import { DPI } from "./model";

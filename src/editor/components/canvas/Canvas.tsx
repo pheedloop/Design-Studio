@@ -9,6 +9,7 @@ import type {
   ToolContext,
 } from "@/editor/tools/types";
 import { findToolForElement } from "@/editor/tools/registry";
+import { ToolHost } from "./ToolHost";
 import { isEmptySpaceClick, getCanvasPoint } from "@/editor/utils/canvas";
 import { ElementShape } from "./ElementShape";
 import { SelectionTransformer } from "./SelectionTransformer";
@@ -28,44 +29,6 @@ import { useAlignmentGuides } from "@/editor/hooks/useAlignmentGuides";
 import { getElementBounds, lineIntersectsRect } from "@/editor/utils/bounds";
 import { CAPTURE_EXCLUDE_NAME } from "@/editor/utils/captureThumbnail";
 import { PolygonVertexHandles } from "@/editor/tools/handles/PolygonVertexHandles";
-
-// ---------------------------------------------------------------------------
-// ToolHost — mounts/unmounts with key={tool.id} to manage hook lifecycle
-// ---------------------------------------------------------------------------
-
-function ToolHost({
-  tool,
-  context,
-  onInteraction,
-}: {
-  tool: ToolDefinition;
-  context: ToolContext;
-  onInteraction: (interaction: ToolInteraction) => void;
-}) {
-  const interaction = tool.useInteraction(context);
-
-  useEffect(() => {
-    onInteraction(interaction);
-  });
-
-  // Key listener for tools that need it (e.g. arc Escape to cancel)
-  useEffect(() => {
-    if (!interaction.handleKeyDown) return;
-    const handler = interaction.handleKeyDown;
-    window.addEventListener("keydown", handler);
-    return () => window.removeEventListener("keydown", handler);
-  }, [interaction.handleKeyDown]);
-
-  // Render preview if the tool has one
-  const Preview = tool.PreviewComponent;
-  return Preview ? (
-    <Preview
-      state={interaction.state}
-      scale={context.scale}
-      dimensions={context.data.dimensions}
-    />
-  ) : null;
-}
 
 // ---------------------------------------------------------------------------
 // Canvas
