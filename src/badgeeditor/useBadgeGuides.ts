@@ -3,8 +3,8 @@ import type { BadgeField } from "./model";
 import { PPI, QR_BASE_PX } from "./canvasMetrics";
 
 // Alignment guides + snapping for the badge canvas. Ported from the editor's
-// useAlignmentGuides, operating on field bounds in canvas pixels (PPI = DPI),
-// and additionally snapping to the card edges + center.
+// useAlignmentGuides, operating on field bounds in canvas pixels, and
+// additionally snapping to the card edges + center.
 
 const SNAP_THRESHOLD = 5; // unscaled canvas px
 
