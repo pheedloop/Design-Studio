@@ -8,17 +8,14 @@ import {
 import { MapEditor, definePlacementCategory, type Tier } from "@/editor";
 // The merged translator, not either surface's: this shell drives both the editor
 // and the viewer, and each surface's own `Translate` covers only its own keys.
-import type { Translate } from "@/i18n";
 import { LocaleSwitcher } from "@/demo/LocaleSwitcher";
 import { useDemoLocale } from "@/demo/useDemoLocale";
-import { MapViewer } from "@/viewer";
+import { ViewerRoute, type Viewport } from "./ViewerRoute";
 import { ProductSwitcher } from "@/components/ProductSwitcher";
 import { exhibitionHallMap } from "@/sample-data/exhibition-hall-map";
-import { conferenceExpoExhibitors } from "@/sample-data/sample-exhibitors";
 import { conferenceExpoBooths } from "@/sample-data/sample-booths";
 import { sampleSessionLocations } from "@/sample-data/sample-session-locations";
 import { sampleMeetingRooms } from "@/sample-data/sample-meeting-rooms";
-import type { FloorPlanData } from "@/types";
 import type {
   ViewerMode,
   ExhibitorBooth,
@@ -27,60 +24,10 @@ import type {
 } from "@/viewer/types";
 
 type Mode = "editor" | "viewer";
-type Viewport = "desktop" | "mobile";
-
 function getMode(): Mode {
   const hash = window.location.hash.replace("#", "");
   if (hash === "viewer") return "viewer";
   return "editor";
-}
-
-function loadViewerData(): FloorPlanData | null {
-  try {
-    const raw = localStorage.getItem("map-editor:floorplan");
-    if (!raw) return null;
-    return JSON.parse(raw) as FloorPlanData;
-  } catch {
-    return null;
-  }
-}
-
-function ViewerRoute({
-  viewport,
-  mode,
-  tier,
-  translate,
-}: {
-  viewport: Viewport;
-  mode: ViewerMode;
-  tier: Tier;
-  translate?: Translate;
-}) {
-  const data = loadViewerData() ?? exhibitionHallMap;
-  const viewer = (
-    <MapViewer
-      data={data}
-      exhibitors={conferenceExpoExhibitors}
-      mode={mode}
-      tier={tier}
-      translate={translate}
-    />
-  );
-
-  if (viewport === "mobile") {
-    return (
-      <div className="h-full flex items-center justify-center bg-gray-800 overflow-hidden">
-        <div
-          className="bg-white rounded-xl shadow-2xl overflow-hidden border-4 border-gray-700"
-          style={{ width: 390, height: 844 }}
-        >
-          {viewer}
-        </div>
-      </div>
-    );
-  }
-
-  return viewer;
 }
 
 export function MapApp() {
