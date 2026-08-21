@@ -20,6 +20,7 @@ import {
   PLACEMENT_SHAPE_ELLIPSE_TYPE,
   type PlacementRecordRef,
 } from "./placementDrag";
+import { SectionShapeContext } from "./sectionShapeContext";
 
 /** The ellipse option is offered as "Circle" — the placement grid only ever squares it. */
 const PLACEMENT_SHAPE_LABEL: Record<"rect" | "ellipse", StringKey> = {
@@ -31,12 +32,6 @@ export interface AutoArrangeRecord {
   recordId: string;
   recordName: string;
 }
-
-// ---------------------------------------------------------------------------
-// Context — lets rows read the section's current defaultShape without prop drilling
-// ---------------------------------------------------------------------------
-
-const SectionShapeContext = React.createContext<"rect" | "ellipse">("rect");
 
 // ---------------------------------------------------------------------------
 // FilterBar — shape picker + search + status filter (per section)
