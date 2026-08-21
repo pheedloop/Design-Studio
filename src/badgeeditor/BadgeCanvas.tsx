@@ -18,43 +18,7 @@ import { PANEL_CORNER_IN, PPI, QR_BASE_PX } from "./canvasMetrics";
 import { fieldDisplayText } from "./factory";
 import { fieldSizePx, useBadgeGuides } from "./useBadgeGuides";
 import { fieldQrUrl, fieldValueText, type BadgeData } from "./badgeData";
-import qrCodeUrl from "./qr-code.png";
-
-// Shared image cache so per-field / per-ticket QR URLs load once. Undefined urls
-// fall back to the bundled stand-in QR.
-const STAND_IN_QR = qrCodeUrl;
-const imageCache = new Map<string, HTMLImageElement>();
-
-/**
- * Ensure the given image urls are loaded (undefined → stand-in) and return a
- * lookup. One hook call per component instance — pass an array, not per-row.
- */
-function useImageLoader(
-  urls: (string | undefined)[],
-): (url?: string) => HTMLImageElement | null {
-  const [, bump] = useState(0);
-  const key = urls.map(u => u ?? "").join("|");
-  useEffect(() => {
-    let alive = true;
-    for (const u of urls) {
-      const src = u || STAND_IN_QR;
-      if (!imageCache.has(src)) {
-        const im = new window.Image();
-        im.crossOrigin = "anonymous";
-        im.onload = () => {
-          imageCache.set(src, im);
-          if (alive) bump(x => x + 1);
-        };
-        im.src = src;
-      }
-    }
-    return () => {
-      alive = false;
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [key]);
-  return (u?: string) => imageCache.get(u || STAND_IN_QR) ?? null;
-}
+import { useImageLoader } from "./useImageLoader";
 
 // ---------------------------------------------------------------------------
 // Lanyard slot geometry — all values in INCHES. Tweak freely to match physical
