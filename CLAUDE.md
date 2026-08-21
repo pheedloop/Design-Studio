@@ -87,6 +87,8 @@ A second component in a file is allowed only if **all** of these are true:
 
 Anything else gets its own file. If the helper has state, hooks, or a typed props interface, it has independent identity — extract it. This applies just as much to Konva sub-shapes (a `<Group>` wrapper with its own layout logic) as to regular React components.
 
+**The one pair that stays together: an entry component and its `Inner`.** `MapEditor`/`MapEditorInner`, `BadgeEditor`, `MapViewer`, `SeatPlanViewer` and `SeatPlanCanvas` each pair a ~7-line `I18nProvider` wrapper with the component that does the work — and the `Inner` half has props, hooks and state, so by the letter of the rule above it should be extracted. Don't. The two halves are one unit: the wrapper exists only so the body can call `useT()` (see "Entry components own the provider" under Strings / i18n), and splitting them puts a file boundary through a single idea while moving no logic anywhere. Where an `Inner` is genuinely too big to read — `MapEditorInner` is ~1900 lines — the fix is to extract _features_ out of it, not to rename the file it lives in.
+
 ### Repetitive siblings → config-driven loop
 
 If you're writing near-identical shape/handling logic for N variants that differ only by data, that's one component (or one `switch`) plus a config/lookup keyed by the variant — not N copies. `BadgeCanvas.tsx`'s `SLOT_SPECS` map is a reasonable existing example of this pattern; follow its shape rather than writing out each slot layout by hand.
