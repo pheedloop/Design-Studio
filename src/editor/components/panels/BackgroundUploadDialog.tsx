@@ -7,7 +7,8 @@ import {
   drawPrimitives,
   type DrawContext,
 } from "@/editor/utils/dxf/drawPrimitives";
-import { useT, type StringKey, type T } from "@/editor/i18n";
+import { useT, type StringKey } from "@/editor/i18n";
+import { FitModeRadios } from "./FitModeRadios";
 
 /** Serialized-size budget for the imported DXF primitives. pikachu caps the
  *  whole PATCH body (floor_plan_data) at 10 MB, so keep the payload well
@@ -523,54 +524,5 @@ export function BackgroundUploadDialog({
         )}
       </div>
     </Dialog>
-  );
-}
-
-function FitModeRadios({
-  mode,
-  onChange,
-  t,
-}: {
-  mode: FitMode;
-  onChange: (mode: FitMode) => void;
-  t: T;
-}) {
-  return (
-    <div className="flex flex-col gap-2">
-      <label className="flex items-center gap-2 cursor-pointer">
-        <input
-          type="radio"
-          name="bgSizeMode"
-          checked={mode === "fit"}
-          onChange={() => onChange("fit")}
-          className="accent-primary-600"
-        />
-        <div>
-          <span className="text-xs font-medium text-gray-700">
-            {t("editor.background.fitToCanvas")}
-          </span>
-          <p className="text-[11px] text-gray-400">
-            {t("editor.background.fitToCanvasHint")}
-          </p>
-        </div>
-      </label>
-      <label className="flex items-center gap-2 cursor-pointer">
-        <input
-          type="radio"
-          name="bgSizeMode"
-          checked={mode === "resize"}
-          onChange={() => onChange("resize")}
-          className="accent-primary-600"
-        />
-        <div>
-          <span className="text-xs font-medium text-gray-700">
-            {t("editor.background.resizeToFile")}
-          </span>
-          <p className="text-[11px] text-gray-400">
-            {t("editor.background.resizeToFileHint")}
-          </p>
-        </div>
-      </label>
-    </div>
   );
 }
