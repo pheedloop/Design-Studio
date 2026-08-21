@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { PiMagnifyingGlass, PiX, PiCaretDown } from "react-icons/pi";
 import type { AttendeeOption, AttendeeProvider } from "./badgeData";
+import { useDismiss } from "@/hooks/useDismiss";
 
 interface AttendeePickerProps {
   provider: AttendeeProvider;
@@ -38,17 +39,7 @@ export function AttendeePicker({
     return () => clearTimeout(t);
   }, [query, open, provider]);
 
-  // Close on outside click.
-  useEffect(() => {
-    if (!open) return;
-    const onDown = (e: MouseEvent) => {
-      if (rootRef.current && !rootRef.current.contains(e.target as Node)) {
-        setOpen(false);
-      }
-    };
-    window.addEventListener("mousedown", onDown);
-    return () => window.removeEventListener("mousedown", onDown);
-  }, [open]);
+  useDismiss(rootRef, () => setOpen(false), open);
 
   return (
     <div ref={rootRef} className="relative">

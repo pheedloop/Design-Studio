@@ -7,6 +7,7 @@ import {
 } from "@/editor/utils/iconRegistry";
 import { ICON_CATEGORY_LABEL, ICON_LABEL } from "@/editor/utils/iconLabels";
 import { useT } from "@/editor/i18n";
+import { useDismiss } from "@/hooks/useDismiss";
 
 interface IconPickerProps {
   selectedId: string | null;
@@ -30,22 +31,7 @@ export function IconPicker({
     inputRef.current?.focus();
   }, []);
 
-  useEffect(() => {
-    const handleClick = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) {
-        onClose();
-      }
-    };
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-    };
-    window.addEventListener("mousedown", handleClick);
-    window.addEventListener("keydown", handleKeyDown);
-    return () => {
-      window.removeEventListener("mousedown", handleClick);
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [onClose]);
+  useDismiss(ref, onClose);
 
   // Matches the translated label so search works in the reading language, and the
   // English keywords, which stay untranslated as a synonym index.

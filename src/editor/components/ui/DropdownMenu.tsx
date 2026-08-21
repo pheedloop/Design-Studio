@@ -1,4 +1,5 @@
-import { useRef, useEffect } from "react";
+import { useRef } from "react";
+import { useDismiss } from "@/hooks/useDismiss";
 import { MenuItem } from "./MenuItem";
 
 export interface MenuItemConfig {
@@ -29,15 +30,7 @@ interface DropdownMenuProps {
 export function DropdownMenu({ items, onClose }: DropdownMenuProps) {
   const ref = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    const handleClick = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) {
-        onClose();
-      }
-    };
-    window.addEventListener("mousedown", handleClick);
-    return () => window.removeEventListener("mousedown", handleClick);
-  }, [onClose]);
+  useDismiss(ref, onClose);
 
   return (
     <div

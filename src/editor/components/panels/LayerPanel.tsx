@@ -1,10 +1,11 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import { PiStack, PiEye, PiEyeSlash } from "react-icons/pi";
 import type { LayerDefinition, LayerId } from "@/types";
 import type { FeatureMap } from "@/tiers";
 import { showTrophy } from "@/tiers";
 import { IconButton, TrophyIcon } from "@/editor/components/ui";
 import { useT } from "@/editor/i18n";
+import { useDismiss } from "@/hooks/useDismiss";
 
 interface LayerPanelProps {
   layers: LayerDefinition[];
@@ -35,24 +36,7 @@ export function LayerPanel({
   const [open, setOpen] = useState(false);
   const panelRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    if (!open) return;
-    const handleClick = (e: MouseEvent) => {
-      if (panelRef.current && !panelRef.current.contains(e.target as Node)) {
-        setOpen(false);
-      }
-    };
-    window.addEventListener("mousedown", handleClick);
-    return () => window.removeEventListener("mousedown", handleClick);
-  }, [open]);
-
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && open) setOpen(false);
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [open]);
+  useDismiss(panelRef, () => setOpen(false), open);
 
   const activeLayer = layers.find(l => l.id === activeLayerId);
 

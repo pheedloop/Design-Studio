@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useDismiss } from "@/hooks/useDismiss";
 import type { Exhibitor } from "@/viewer/types";
 import { usePopoverPosition } from "@/viewer/hooks/usePopoverPosition";
 import { ExhibitorLogo } from "./ExhibitorLogo";
@@ -28,29 +28,7 @@ export function BoothPopover({
   const t = useT();
   const { ref, pos } = usePopoverPosition(x, y);
 
-  useEffect(() => {
-    // Ignore the opening gesture's own trailing events (e.g. the ghost
-    // mousedown a browser fires ~300ms after a touch) so the popover doesn't
-    // close itself the instant it opens on mobile.
-    const openedAt = Date.now();
-    const handleClick = (e: MouseEvent | TouchEvent) => {
-      if (Date.now() - openedAt < 350) return;
-      if (ref.current && !ref.current.contains(e.target as Node)) {
-        onClose();
-      }
-    };
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-    };
-    window.addEventListener("mousedown", handleClick);
-    window.addEventListener("touchstart", handleClick);
-    window.addEventListener("keydown", handleEscape);
-    return () => {
-      window.removeEventListener("mousedown", handleClick);
-      window.removeEventListener("touchstart", handleClick);
-      window.removeEventListener("keydown", handleEscape);
-    };
-  }, [onClose, ref]);
+  useDismiss(ref, onClose);
 
   return (
     <div
