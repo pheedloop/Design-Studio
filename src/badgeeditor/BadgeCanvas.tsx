@@ -12,8 +12,9 @@ import {
   Transformer,
 } from "react-konva";
 import type Konva from "konva";
-import { DPI, type BadgeField, type BadgePage, type SlotType } from "./model";
+import type { BadgeField, BadgePage, SlotType } from "./model";
 import { GridLayer } from "@/editor/components/canvas/GridLayer";
+import { PANEL_CORNER_IN, PPI, QR_BASE_PX } from "./canvasMetrics";
 import { fieldDisplayText } from "./factory";
 import { fieldSizePx, useBadgeGuides } from "./useBadgeGuides";
 import { fieldQrUrl, fieldValueText, type BadgeData } from "./badgeData";
@@ -54,12 +55,6 @@ function useImageLoader(
   }, [key]);
   return (u?: string) => imageCache.get(u || STAND_IN_QR) ?? null;
 }
-
-// Canvas renders at 96px per inch (the legacy DPI); zoom is layered on top via
-// useCanvasControls' `scale`.
-export const PPI = DPI;
-const QR_BASE_PX = 75;
-export const PANEL_CORNER_IN = 0.25; // corner fillet
 
 // ---------------------------------------------------------------------------
 // Lanyard slot geometry — all values in INCHES. Tweak freely to match physical
