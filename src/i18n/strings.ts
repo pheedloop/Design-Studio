@@ -631,7 +631,9 @@ export const EDITOR = {
   "unit.meters": "Meters",
 } as const;
 
-export const BADGEEDITOR = {} as const;
+export const BADGEEDITOR = {
+  "sidebar.clickToRename": "Click to rename",
+} as const;
 
 export type Namespace =
   "common" | "viewer" | "seatviewer" | "editor" | "badgeeditor";
