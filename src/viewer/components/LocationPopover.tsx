@@ -1,5 +1,4 @@
-import { useDismiss } from "@/hooks/useDismiss";
-import { usePopoverPosition } from "@/viewer/hooks/usePopoverPosition";
+import { Popover } from "./Popover";
 import { TYPE_NAME } from "@/viewer/utils/elementTypes";
 import { useT } from "@/viewer/i18n";
 
@@ -21,16 +20,9 @@ export function LocationPopover({
   onGetDirections,
 }: LocationPopoverProps) {
   const t = useT();
-  const { ref, pos } = usePopoverPosition(x, y);
-
-  useDismiss(ref, onClose);
 
   return (
-    <div
-      ref={ref}
-      className="fixed bg-white border border-gray-200 rounded-lg shadow-lg p-3 z-[9999] min-w-[180px]"
-      style={{ left: pos.left, top: pos.top }}
-    >
+    <Popover x={x} y={y} onClose={onClose}>
       <div className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
         {t(TYPE_NAME[type])}
       </div>
@@ -43,6 +35,6 @@ export function LocationPopover({
           {t("viewer.getDirections")}
         </button>
       )}
-    </div>
+    </Popover>
   );
 }
