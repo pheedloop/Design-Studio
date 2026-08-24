@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import type { Legend, LegendEntry } from "@/types";
 import { Button } from "@/components/Button";
+import { Checkbox } from "@/components/Checkbox";
 import { IconButton } from "@/components/IconButton";
 import { Dialog, TextInput, ColorSwatch } from "@/editor/components/ui";
 import {
@@ -85,19 +86,11 @@ export function LegendDialog({ legend, onSave, onClose }: LegendDialogProps) {
     >
       <div className="flex flex-col gap-4 p-4 overflow-y-auto flex-1">
         {/* Global visibility toggle */}
-        <label className="flex items-center gap-2 cursor-pointer select-none">
-          <input
-            type="checkbox"
-            checked={local.visible}
-            onChange={e =>
-              setLocal(prev => ({ ...prev, visible: e.target.checked }))
-            }
-            className="cursor-pointer"
-          />
-          <span className="text-xs text-gray-700">
-            {t("editor.legend.showOnMap")}
-          </span>
-        </label>
+        <Checkbox
+          label={t("editor.legend.showOnMap")}
+          checked={local.visible}
+          onChange={v => setLocal(prev => ({ ...prev, visible: v }))}
+        />
 
         {/* Entry list */}
         {local.entries.length > 0 && (

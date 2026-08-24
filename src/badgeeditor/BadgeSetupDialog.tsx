@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Checkbox } from "@/components/Checkbox";
 import { Button } from "@/components/Button";
 import { Dialog, NumberInput, SectionLabel } from "@/editor/components/ui";
 import { fmtUnit, unitLabel, unitName, type Unit } from "./units";
@@ -215,26 +216,16 @@ export function BadgeSetupDialog({
                   <span className="text-xs font-medium text-gray-700">
                     {pageRoleLabel(pageRoleForIndex(count, i))}
                   </span>
-                  <label className="flex items-center gap-1.5 text-xs text-gray-500">
-                    <input
-                      type="checkbox"
-                      checked={cfg.inverted}
-                      onChange={e =>
-                        setPanel(i, { inverted: e.target.checked })
-                      }
-                    />
-                    Prints upside-down
-                  </label>
-                  <label className="flex items-center gap-1.5 text-xs text-gray-500">
-                    <input
-                      type="checkbox"
-                      checked={cfg.tearaway}
-                      onChange={e =>
-                        setPanel(i, { tearaway: e.target.checked })
-                      }
-                    />
-                    Tear-away (perforated stubs)
-                  </label>
+                  <Checkbox
+                    label="Prints upside-down"
+                    checked={cfg.inverted}
+                    onChange={v => setPanel(i, { inverted: v })}
+                  />
+                  <Checkbox
+                    label="Tear-away (perforated stubs)"
+                    checked={cfg.tearaway}
+                    onChange={v => setPanel(i, { tearaway: v })}
+                  />
                   {cfg.tearaway && (
                     <div className="flex items-center gap-2 text-xs text-gray-500 pl-5">
                       <span>Stubs</span>
