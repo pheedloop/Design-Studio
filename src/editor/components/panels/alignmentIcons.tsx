@@ -1,10 +1,8 @@
 // Alignment / distribution glyphs, shared by the map editor's OptionsBar and
 // the badge editor so both surfaces show the exact same tools.
 //
-// All eight are the same drawing: one or two rails showing the axis being
-// aligned to, plus two blocks standing in for the selected elements. Only the
-// coordinates differ — AlignLeft and AlignRight were three numbers apart — so
-// the geometry lives in a table and one component draws it.
+// Each is rails (the axis being aligned to) plus blocks (the elements); only the
+// coordinates differ, so they live in a table.
 
 /** [x1, y1, x2, y2] in the 14×14 viewBox. */
 type Rail = [number, number, number, number];

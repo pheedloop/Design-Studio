@@ -36,17 +36,13 @@ describe("AlignmentControls", () => {
   });
 
   it("renders no wrapper element around the row", () => {
-    // The cluster drops into the caller's `flex items-center gap-0.5` row, so
-    // any wrapper would take the buttons out of that flex context and collapse
-    // the gaps.
+    // A wrapper would pull the buttons out of the caller's flex row.
     const { container } = render(<AlignmentControls {...ALIGN_H} />);
     expect(container.firstElementChild?.tagName).toBe("BUTTON");
   });
 
   it("never leads with a divider", () => {
-    // Dividers separate groups, so one can only appear after something visible.
-    // Passing distribute handlers alone used to emit two dividers before the
-    // first button, and passing nothing at all emitted one on its own.
+    // Distribute-only used to emit two dividers before the first button.
     expect(counts(DISTRIBUTE)).toEqual({ buttons: 2, dividers: 0 });
     expect(counts(ALIGN_V)).toEqual({ buttons: 3, dividers: 0 });
     expect(counts({})).toEqual({ buttons: 0, dividers: 0 });

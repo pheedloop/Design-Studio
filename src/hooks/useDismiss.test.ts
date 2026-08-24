@@ -48,10 +48,8 @@ describe("useDismiss", () => {
   });
 
   it("listens for pointerdown, not mousedown", () => {
-    // A touch fires one pointerdown, then synthesizes a trailing mousedown
-    // ~300ms later. Listening for the latter is what made popovers close
-    // themselves the instant they opened on mobile, and the workaround for it
-    // was a 350ms grace window duplicated across two files.
+    // The trailing mousedown a touch synthesizes ~300ms later is what used to
+    // dismiss popovers the moment they opened on mobile.
     const { ref, outside } = mountTarget();
     const onDismiss = vi.fn();
     renderHook(() => useDismiss(ref, onDismiss));
@@ -83,9 +81,8 @@ describe("useDismiss", () => {
   });
 
   it("calls the newest callback without re-subscribing", () => {
-    // Call sites pass inline arrows like `() => setOpen(false)`, so the identity
-    // changes every render. The listener must not be torn down and re-attached
-    // each time, but it must still reach the current closure, not the first one.
+    // Inline arrows change identity every render: must not re-subscribe, must
+    // still reach the current closure.
     const { ref, outside } = mountTarget();
     const first = vi.fn();
     const second = vi.fn();

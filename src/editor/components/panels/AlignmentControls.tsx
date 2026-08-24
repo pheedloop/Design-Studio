@@ -14,9 +14,7 @@ export interface AlignmentControlsProps {
   onDistributeV?: () => void;
 }
 
-/** Buttons in render order, grouped: horizontal align | vertical align |
- *  distribute. A divider is drawn between adjacent groups that both have
- *  something to show. */
+/** Render order. A divider goes between adjacent groups that both have items. */
 const GROUPS: {
   prop: keyof AlignmentControlsProps;
   glyph: AlignmentGlyphName;

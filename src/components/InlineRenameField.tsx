@@ -4,19 +4,13 @@ interface InlineRenameFieldProps {
   value: string;
   /** Called with the trimmed value on Enter or blur. Never called empty. */
   onCommit: (next: string) => void;
-  /** Tooltip on the click-to-rename affordance. Translated by the caller: this
-   *  component is shared across surfaces, and each surface has its own narrowed
-   *  `t`, so it can't pick one. */
+  /** Translated by the caller — each surface has its own narrowed `t`. */
   title: string;
 }
 
 /**
- * A title that turns into a text input when clicked: Enter or blur commits,
- * Escape reverts, and an empty value is refused rather than saved.
- *
- * Shared by the map editor's tool sidebar and the badge editor's sidebar, which
- * had grown byte-identical copies of the state, the focus effect, the commit
- * rule and both class strings.
+ * A title that becomes a text input when clicked. Enter or blur commits, Escape
+ * reverts, and an empty value is refused rather than saved.
  */
 export function InlineRenameField({
   value,
@@ -34,10 +28,8 @@ export function InlineRenameField({
     }
   }, [editing]);
 
-  // No effect syncing `draft` from `value` while not editing: `draft` is only
-  // ever read while `editing` is true, and both places that flip it on
-  // (the rename button below, and Escape-to-cancel) already reinitialize
-  // `draft` from the current `value` at that exact moment.
+  // No sync effect needed: `draft` is only read while editing, and both entry
+  // points reinitialize it from `value` at that moment.
   const commit = () => {
     const trimmed = draft.trim();
     if (trimmed) onCommit(trimmed);
