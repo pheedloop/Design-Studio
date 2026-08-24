@@ -1,4 +1,5 @@
 import { PiX, PiArrowsDownUp, PiFootprints } from "react-icons/pi";
+import { IconButton } from "@/components/IconButton";
 import type { SearchResult } from "@/viewer/hooks/useSearch";
 import type {
   DirectionsLocation,
@@ -49,12 +50,9 @@ export function DirectionsPanel({
         <span className="text-xs font-semibold text-gray-700">
           {t("viewer.directions.title")}
         </span>
-        <button
-          onClick={onClose}
-          className="text-gray-400 hover:text-gray-600 cursor-pointer"
-        >
+        <IconButton variant="bare" size="sm" onClick={onClose}>
           <PiX size={16} />
-        </button>
+        </IconButton>
       </div>
 
       <div className="flex gap-2">
@@ -79,13 +77,14 @@ export function DirectionsPanel({
           />
         </div>
 
-        <button
+        <IconButton
+          size="sm"
           onClick={onSwap}
-          className="self-center p-1.5 rounded-md hover:bg-gray-100 text-gray-400 hover:text-gray-600 cursor-pointer shrink-0"
+          className="self-center shrink-0"
           title={t("viewer.directions.swap")}
         >
           <PiArrowsDownUp size={16} />
-        </button>
+        </IconButton>
       </div>
 
       {routeStatus === "no-route" && (
