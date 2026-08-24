@@ -13,8 +13,8 @@ import type { PropertiesPanelField } from "@/editor/components/canvas/elements/t
 import { formatMeasurement, formatArea } from "@/utils/unitConversion";
 import { elementTypeLabel } from "@/editor/utils/elementLabels";
 import { useLocale, useT, type StringKey } from "@/editor/i18n";
+import { Button } from "@/components/Button";
 import {
-  Button,
   TabBar,
   Slider,
   SectionLabel,

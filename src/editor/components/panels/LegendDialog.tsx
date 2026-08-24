@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import type { Legend, LegendEntry } from "@/types";
-import { Dialog, Button, TextInput, ColorSwatch } from "@/editor/components/ui";
+import { Button } from "@/components/Button";
+import { Dialog, TextInput, ColorSwatch } from "@/editor/components/ui";
 import {
   PiEye,
   PiEyeSlash,

@@ -1,10 +1,6 @@
 import { useState } from "react";
-import {
-  Button,
-  Dialog,
-  NumberInput,
-  SectionLabel,
-} from "@/editor/components/ui";
+import { Button } from "@/components/Button";
+import { Dialog, NumberInput, SectionLabel } from "@/editor/components/ui";
 import { fmtUnit, unitLabel, unitName, type Unit } from "./units";
 import {
   PAGE_COUNT,

@@ -1,5 +1,6 @@
 import { PiMagicWand, PiPath } from "react-icons/pi";
-import { Button, Select, Slider } from "@/editor/components/ui";
+import { Button } from "@/components/Button";
+import { Select, Slider } from "@/editor/components/ui";
 import { useT } from "@/editor/i18n";
 
 interface PathingOptionsBarProps {

@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Button, Dialog } from "@/editor/components/ui";
+import { Button } from "@/components/Button";
+import { Dialog } from "@/editor/components/ui";
 import type { Background, DxfPrimitive, Unit } from "@/types";
 import { parseDxf, type ParsedDxf } from "@/editor/utils/dxf/parseDxf";
 import { bakeDrawing, type FitMode } from "@/editor/utils/dxf/bakeDrawing";

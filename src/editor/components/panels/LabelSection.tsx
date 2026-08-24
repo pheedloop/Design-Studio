@@ -1,6 +1,6 @@
 import type { ElementProperties } from "@/types";
+import { Button } from "@/components/Button";
 import {
-  Button,
   SectionLabel,
   NumberInput,
   ColorSwatch,
