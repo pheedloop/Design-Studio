@@ -1,5 +1,6 @@
 import { useState, useRef } from "react";
 import { PiMagnifyingGlass, PiX } from "react-icons/pi";
+import { IconButton } from "@/components/IconButton";
 import type { SearchResult } from "@/viewer/hooks/useSearch";
 import type { DirectionsLocation } from "@/viewer/hooks/useDirections";
 import {
@@ -42,15 +43,17 @@ export function LocationField({
         <span className="flex-1 text-xs font-medium text-gray-800 truncate">
           {locationLabel(value, t)}
         </span>
-        <button
+        <IconButton
+          variant="bare"
+          size="sm"
           onClick={() => {
             onClear();
             setQuery("");
           }}
-          className="text-gray-400 hover:text-gray-600 cursor-pointer shrink-0"
+          className="shrink-0"
         >
           <PiX size={12} />
-        </button>
+        </IconButton>
       </div>
     );
   }
