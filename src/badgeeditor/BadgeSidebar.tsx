@@ -7,6 +7,7 @@ import {
   PiTagSimple,
   PiAddressBook,
 } from "react-icons/pi";
+import { SidebarRow } from "@/components/SidebarRow";
 import { SectionLabel } from "@/editor/components/ui";
 import { FIELD_DEFS, type FieldDef } from "./fields";
 import { BadgeSidebarHeader } from "./BadgeSidebarHeader";
@@ -48,17 +49,12 @@ export function BadgeSidebar({
           <SectionLabel>Add Field</SectionLabel>
         </div>
         {fields.map(d => (
-          <button
+          <SidebarRow
             key={d.field}
-            type="button"
+            label={d.label}
+            icon={<span className="text-gray-400">{iconFor(d)}</span>}
             onClick={() => onAddField(d.field)}
-            className="w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded-md text-sm text-gray-600 hover:bg-gray-100 hover:text-gray-800 transition-colors"
-          >
-            <span className="shrink-0 flex items-center w-4 text-gray-400">
-              {iconFor(d)}
-            </span>
-            <span className="flex-1 text-left">{d.label}</span>
-          </button>
+          />
         ))}
       </div>
     </div>
