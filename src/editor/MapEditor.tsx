@@ -13,6 +13,7 @@ import {
   PLACEMENT_DRAG_TYPE,
   PLACEMENT_SHAPE_ELLIPSE_TYPE,
 } from "@/editor/components/panels/placementDrag";
+import { Button } from "@/components/Button";
 import type { PlacementRecordRef } from "@/editor/components/panels/placementDrag";
 import type { AutoArrangeRecord } from "./components/panels/PlacementPanel";
 import { getElementBounds } from "./utils/bounds";
@@ -2012,18 +2013,12 @@ function MapEditorInner({
       {isCropping && (
         <div className="fixed top-4 left-1/2 -translate-x-1/2 z-[60] flex items-center gap-2 bg-white border border-gray-200 shadow-lg rounded-lg px-3 py-2">
           <span className="text-xs text-gray-600">{t("editor.crop.hint")}</span>
-          <button
-            onClick={crop.confirm}
-            className="text-xs font-medium text-white bg-primary-600 hover:bg-primary-700 rounded px-3 py-1.5 cursor-pointer transition-colors"
-          >
+          <Button variant="solid" color="primary" onClick={crop.confirm}>
             {t("editor.crop.apply")}
-          </button>
-          <button
-            onClick={handleCancelCrop}
-            className="text-xs text-gray-600 border border-gray-200 rounded px-3 py-1.5 hover:bg-gray-50 cursor-pointer transition-colors"
-          >
+          </Button>
+          <Button variant="outline" color="neutral" onClick={handleCancelCrop}>
             {t("editor.action.cancel")}
-          </button>
+          </Button>
         </div>
       )}
       {showResizeDialog && (
