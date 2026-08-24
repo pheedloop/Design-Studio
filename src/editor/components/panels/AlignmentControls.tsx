@@ -1,5 +1,5 @@
 import { Fragment } from "react";
-import { IconButton } from "@/editor/components/ui";
+import { IconButton } from "@/components/IconButton";
 import { useT, type StringKey } from "@/editor/i18n";
 import { AlignmentGlyph, type AlignmentGlyphName } from "./alignmentIcons";
 

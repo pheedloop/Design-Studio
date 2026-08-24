@@ -3,7 +3,8 @@ import { PiPencilSimple, PiStorefront } from "react-icons/pi";
 import type { EditorMode } from "@/editor/types";
 import type { FeatureMap } from "@/tiers";
 import { useT } from "@/editor/i18n";
-import { IconButton, TrophyIcon } from "@/editor/components/ui";
+import { IconButton } from "@/components/IconButton";
+import { TrophyIcon } from "@/editor/components/ui";
 
 /**
  * Header row: map name (click to rename) + Design / Placement mode icon buttons.

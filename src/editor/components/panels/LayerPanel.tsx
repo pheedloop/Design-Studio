@@ -3,7 +3,8 @@ import { PiStack, PiEye, PiEyeSlash } from "react-icons/pi";
 import type { LayerDefinition, LayerId } from "@/types";
 import type { FeatureMap } from "@/tiers";
 import { showTrophy } from "@/tiers";
-import { IconButton, TrophyIcon } from "@/editor/components/ui";
+import { IconButton } from "@/components/IconButton";
+import { TrophyIcon } from "@/editor/components/ui";
 import { useT } from "@/editor/i18n";
 import { useDismiss } from "@/hooks/useDismiss";
 

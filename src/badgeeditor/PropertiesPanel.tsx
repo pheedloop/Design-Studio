@@ -5,8 +5,8 @@ import {
   PiTextAlignJustify,
   PiTrash,
 } from "react-icons/pi";
+import { IconButton } from "@/components/IconButton";
 import {
-  IconButton,
   Select,
   SectionLabel,
   FieldRow,

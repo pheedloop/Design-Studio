@@ -1,5 +1,3 @@
-export { IconButton } from "./IconButton";
-export type { IconButtonProps } from "./IconButton";
 export { MenuButton } from "./MenuButton";
 export type { MenuButtonProps } from "./MenuButton";
 export { TabBar } from "./TabBar";
