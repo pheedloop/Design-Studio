@@ -12,15 +12,17 @@ import { SectionLabel } from "@/editor/components/ui";
 import { FIELD_DEFS, type FieldDef } from "./fields";
 import { BadgeSidebarHeader } from "./BadgeSidebarHeader";
 
+const iconProps = { size: 16, className: "text-gray-400" };
+
 function iconFor(def: FieldDef) {
-  if (def.kind === "qrCode") return <PiQrCode size={16} />;
-  if (def.kind === "tickets") return <PiTicket size={16} />;
-  if (def.kind === "image") return <PiImage size={16} />;
-  if (def.kind === "sessionSchedule") return <PiCalendarBlank size={16} />;
-  if (def.field === "tags") return <PiTagSimple size={16} />;
+  if (def.kind === "qrCode") return <PiQrCode {...iconProps} />;
+  if (def.kind === "tickets") return <PiTicket {...iconProps} />;
+  if (def.kind === "image") return <PiImage {...iconProps} />;
+  if (def.kind === "sessionSchedule") return <PiCalendarBlank {...iconProps} />;
+  if (def.field === "tags") return <PiTagSimple {...iconProps} />;
   if (def.field.startsWith("address_") || def.field === "city_state")
-    return <PiAddressBook size={16} />;
-  return <PiTextT size={16} />;
+    return <PiAddressBook {...iconProps} />;
+  return <PiTextT {...iconProps} />;
 }
 
 interface BadgeSidebarProps {
@@ -52,7 +54,7 @@ export function BadgeSidebar({
           <SidebarRow
             key={d.field}
             label={d.label}
-            icon={<span className="text-gray-400">{iconFor(d)}</span>}
+            icon={iconFor(d)}
             onClick={() => onAddField(d.field)}
           />
         ))}
