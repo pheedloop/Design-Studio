@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
 import { PiMagnifyingGlass, PiX } from "react-icons/pi";
+import { IconButton } from "@/components/IconButton";
 import type { SearchResult } from "@/viewer/hooks/useSearch";
 import { TYPE_BADGE, displayName } from "@/viewer/utils/elementTypes";
 import { useT } from "@/viewer/i18n";
@@ -42,15 +43,16 @@ export function SearchBar({
           className="flex-1 text-sm text-gray-800 placeholder:text-gray-400 outline-none bg-transparent"
         />
         {query && (
-          <button
+          <IconButton
+            variant="bare"
+            size="sm"
             onClick={() => {
               onQueryChange("");
               inputRef.current?.focus();
             }}
-            className="text-gray-400 hover:text-gray-600 cursor-pointer"
           >
             <PiX size={14} />
-          </button>
+          </IconButton>
         )}
       </div>
 
