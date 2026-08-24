@@ -1,4 +1,5 @@
 import { PiX } from "react-icons/pi";
+import { IconButton } from "@/components/IconButton";
 import type { SeatOccupant, SeatTableState } from "@/seatviewer/types";
 import { occupancyLevel, type OccupancyLevel } from "@/seatviewer/logic";
 import { useT } from "@/seatviewer/i18n";
@@ -80,14 +81,14 @@ export function TableDetailPopover({
         >
           {table.occupancy}/{table.seatCount}
         </span>
-        <button
-          type="button"
+        <IconButton
+          variant="bare"
+          size="sm"
           aria-label={t("seatviewer.table.close")}
           onClick={onClose}
-          className="text-gray-400 hover:text-gray-700 p-0.5 rounded cursor-pointer leading-none"
         >
           <PiX size={16} />
-        </button>
+        </IconButton>
       </div>
 
       {!hideAttendeeDetails && (
