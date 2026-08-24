@@ -1,4 +1,5 @@
 import { PiX } from "react-icons/pi";
+import { Button } from "@/components/Button";
 import { IconButton } from "@/components/IconButton";
 import type { SeatOccupant, SeatTableState } from "@/seatviewer/types";
 import { occupancyLevel, type OccupancyLevel } from "@/seatviewer/logic";
@@ -131,14 +132,16 @@ export function TableDetailPopover({
       )}
 
       <div className="p-3 border-t border-gray-200 bg-gray-100">
-        <button
-          type="button"
+        <Button
+          variant="solid"
+          color="primary"
+          size="lg"
+          className="w-full"
           disabled={assignDisabled || assigning}
           onClick={onAssign}
-          className="w-full text-sm font-medium py-2.5 rounded-lg cursor-pointer disabled:cursor-not-allowed bg-primary-600 text-white hover:bg-primary-700 disabled:bg-gray-200 disabled:text-gray-400"
         >
           {assigning ? t("seatviewer.table.assigning") : assignLabel}
-        </button>
+        </Button>
         {assignHint && (
           <p className="text-xs text-gray-500 text-center mt-2 m-0">
             {assignHint}
