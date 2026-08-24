@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { InlineRenameField } from "@/components/InlineRenameField";
 import { PiPencilSimple, PiStorefront } from "react-icons/pi";
 import type { EditorMode } from "@/editor/types";
 import type { FeatureMap } from "@/tiers";
@@ -31,23 +31,6 @@ export function ToolSidebarHeader({
   placementIcon?: React.ReactNode;
 }) {
   const t = useT();
-  const [editing, setEditing] = useState(false);
-  const [draft, setDraft] = useState(mapName);
-  const inputRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    if (editing && inputRef.current) {
-      inputRef.current.focus();
-      inputRef.current.select();
-    }
-  }, [editing]);
-
-  const commit = () => {
-    const trimmed = draft.trim();
-    if (trimmed) onMapNameChange(trimmed);
-    else setDraft(mapName);
-    setEditing(false);
-  };
 
   return (
     <div className="px-3 py-3 border-b border-gray-100 flex items-center gap-2 min-w-0">
@@ -63,33 +46,12 @@ export function ToolSidebarHeader({
         <span className="flex-1 text-base font-semibold text-gray-800 truncate">
           {mapName}
         </span>
-      ) : editing ? (
-        <input
-          ref={inputRef}
-          value={draft}
-          onChange={e => setDraft(e.target.value)}
-          onBlur={commit}
-          onKeyDown={e => {
-            if (e.key === "Enter") commit();
-            if (e.key === "Escape") {
-              setDraft(mapName);
-              setEditing(false);
-            }
-          }}
-          className="flex-1 text-base font-semibold text-gray-800 bg-white border border-primary-400 rounded px-1.5 py-0.5 outline-none focus:ring-1 focus:ring-primary-400"
-        />
       ) : (
-        <button
-          type="button"
-          onClick={() => {
-            setDraft(mapName);
-            setEditing(true);
-          }}
-          className="flex-1 text-left text-base font-semibold text-gray-800 truncate hover:text-primary-600 transition-colors"
+        <InlineRenameField
+          value={mapName}
+          onCommit={onMapNameChange}
           title={t("editor.toolbar.clickToRename")}
-        >
-          {mapName}
-        </button>
+        />
       )}
       {/* Design mode is the default state, so its button sits on the left. */}
       <IconButton

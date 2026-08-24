@@ -1,6 +1,5 @@
-import { useEffect } from "react";
 import type { Exhibitor } from "@/viewer/types";
-import { usePopoverPosition } from "@/viewer/hooks/usePopoverPosition";
+import { Popover } from "./Popover";
 import { ExhibitorLogo } from "./ExhibitorLogo";
 import { useT } from "@/viewer/i18n";
 
@@ -26,38 +25,9 @@ export function BoothPopover({
   onExhibitorClick,
 }: BoothPopoverProps) {
   const t = useT();
-  const { ref, pos } = usePopoverPosition(x, y);
-
-  useEffect(() => {
-    // Ignore the opening gesture's own trailing events (e.g. the ghost
-    // mousedown a browser fires ~300ms after a touch) so the popover doesn't
-    // close itself the instant it opens on mobile.
-    const openedAt = Date.now();
-    const handleClick = (e: MouseEvent | TouchEvent) => {
-      if (Date.now() - openedAt < 350) return;
-      if (ref.current && !ref.current.contains(e.target as Node)) {
-        onClose();
-      }
-    };
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-    };
-    window.addEventListener("mousedown", handleClick);
-    window.addEventListener("touchstart", handleClick);
-    window.addEventListener("keydown", handleEscape);
-    return () => {
-      window.removeEventListener("mousedown", handleClick);
-      window.removeEventListener("touchstart", handleClick);
-      window.removeEventListener("keydown", handleEscape);
-    };
-  }, [onClose, ref]);
 
   return (
-    <div
-      ref={ref}
-      className="fixed bg-white border border-gray-200 rounded-lg shadow-lg p-3 z-[9999] min-w-[180px]"
-      style={{ left: pos.left, top: pos.top }}
-    >
+    <Popover x={x} y={y} onClose={onClose}>
       <div className="text-center text-[11px] font-medium text-gray-400">
         {boothCode}
       </div>
@@ -94,6 +64,6 @@ export function BoothPopover({
           {t("viewer.getDirections")}
         </button>
       )}
-    </div>
+    </Popover>
   );
 }

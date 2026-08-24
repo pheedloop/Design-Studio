@@ -6,10 +6,8 @@ import type {
 } from "@/editor/tools/types";
 
 /**
- * Bridges a tool into the canvas: calls the tool's own `useInteraction` hook and
- * renders its preview. Mounted with `key={tool.id}` by Canvas, so switching tool
- * unmounts this and remounts it — which is what gives each tool's hooks a clean
- * lifecycle instead of carrying the previous tool's state over.
+ * Runs a tool's `useInteraction` hook and renders its preview. Canvas mounts it
+ * with `key={tool.id}`, so switching tool remounts and resets the tool's hooks.
  */
 export function ToolHost({
   tool,

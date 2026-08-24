@@ -1,7 +1,91 @@
 // Alignment / distribution glyphs, shared by the map editor's OptionsBar and
 // the badge editor so both surfaces show the exact same tools.
+//
+// Each is rails (the axis being aligned to) plus blocks (the elements); only the
+// coordinates differ, so they live in a table.
 
-export function AlignLeftIcon() {
+/** [x1, y1, x2, y2] in the 14×14 viewBox. */
+type Rail = [number, number, number, number];
+/** [x, y, width, height] in the 14×14 viewBox. */
+type Block = [number, number, number, number];
+
+export type AlignmentGlyphName =
+  | "alignLeft"
+  | "alignCenterH"
+  | "alignRight"
+  | "alignTop"
+  | "alignCenterV"
+  | "alignBottom"
+  | "distributeH"
+  | "distributeV";
+
+const GLYPHS: Record<AlignmentGlyphName, { rails: Rail[]; blocks: Block[] }> = {
+  alignLeft: {
+    rails: [[2, 1.5, 2, 12.5]],
+    blocks: [
+      [3.5, 2.5, 7, 3.5],
+      [3.5, 8, 4.5, 3.5],
+    ],
+  },
+  alignCenterH: {
+    rails: [[7, 1.5, 7, 12.5]],
+    blocks: [
+      [3.5, 2.5, 7, 3.5],
+      [4.75, 8, 4.5, 3.5],
+    ],
+  },
+  alignRight: {
+    rails: [[12, 1.5, 12, 12.5]],
+    blocks: [
+      [3.5, 2.5, 7, 3.5],
+      [6, 8, 4.5, 3.5],
+    ],
+  },
+  alignTop: {
+    rails: [[1.5, 2, 12.5, 2]],
+    blocks: [
+      [2.5, 3.5, 3.5, 7],
+      [8, 3.5, 3.5, 4.5],
+    ],
+  },
+  alignCenterV: {
+    rails: [[1.5, 7, 12.5, 7]],
+    blocks: [
+      [2.5, 3.5, 3.5, 7],
+      [8, 4.75, 3.5, 4.5],
+    ],
+  },
+  alignBottom: {
+    rails: [[1.5, 12, 12.5, 12]],
+    blocks: [
+      [2.5, 3.5, 3.5, 7],
+      [8, 6, 3.5, 4.5],
+    ],
+  },
+  distributeH: {
+    rails: [
+      [1.5, 1.5, 1.5, 12.5],
+      [12.5, 1.5, 12.5, 12.5],
+    ],
+    blocks: [
+      [3.5, 4, 2.5, 6],
+      [8, 4, 2.5, 6],
+    ],
+  },
+  distributeV: {
+    rails: [
+      [1.5, 1.5, 12.5, 1.5],
+      [1.5, 12.5, 12.5, 12.5],
+    ],
+    blocks: [
+      [4, 3.5, 6, 2.5],
+      [4, 8, 6, 2.5],
+    ],
+  },
+};
+
+export function AlignmentGlyph({ name }: { name: AlignmentGlyphName }) {
+  const { rails, blocks } = GLYPHS[name];
   return (
     <svg
       viewBox="0 0 14 14"
@@ -10,363 +94,32 @@ export function AlignLeftIcon() {
       height="14"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <line
-        x1="2"
-        y1="1.5"
-        x2="2"
-        y2="12.5"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-      />
-      <rect
-        x="3.5"
-        y="2.5"
-        width="7"
-        height="3.5"
-        rx="0.5"
-        fill="currentColor"
-        fillOpacity="0.25"
-        stroke="currentColor"
-        strokeWidth="1"
-      />
-      <rect
-        x="3.5"
-        y="8"
-        width="4.5"
-        height="3.5"
-        rx="0.5"
-        fill="currentColor"
-        fillOpacity="0.25"
-        stroke="currentColor"
-        strokeWidth="1"
-      />
-    </svg>
-  );
-}
-
-export function AlignCenterHIcon() {
-  return (
-    <svg
-      viewBox="0 0 14 14"
-      fill="none"
-      width="14"
-      height="14"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <line
-        x1="7"
-        y1="1.5"
-        x2="7"
-        y2="12.5"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-      />
-      <rect
-        x="3.5"
-        y="2.5"
-        width="7"
-        height="3.5"
-        rx="0.5"
-        fill="currentColor"
-        fillOpacity="0.25"
-        stroke="currentColor"
-        strokeWidth="1"
-      />
-      <rect
-        x="4.75"
-        y="8"
-        width="4.5"
-        height="3.5"
-        rx="0.5"
-        fill="currentColor"
-        fillOpacity="0.25"
-        stroke="currentColor"
-        strokeWidth="1"
-      />
-    </svg>
-  );
-}
-
-export function AlignRightIcon() {
-  return (
-    <svg
-      viewBox="0 0 14 14"
-      fill="none"
-      width="14"
-      height="14"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <line
-        x1="12"
-        y1="1.5"
-        x2="12"
-        y2="12.5"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-      />
-      <rect
-        x="3.5"
-        y="2.5"
-        width="7"
-        height="3.5"
-        rx="0.5"
-        fill="currentColor"
-        fillOpacity="0.25"
-        stroke="currentColor"
-        strokeWidth="1"
-      />
-      <rect
-        x="6"
-        y="8"
-        width="4.5"
-        height="3.5"
-        rx="0.5"
-        fill="currentColor"
-        fillOpacity="0.25"
-        stroke="currentColor"
-        strokeWidth="1"
-      />
-    </svg>
-  );
-}
-
-export function AlignTopIcon() {
-  return (
-    <svg
-      viewBox="0 0 14 14"
-      fill="none"
-      width="14"
-      height="14"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <line
-        x1="1.5"
-        y1="2"
-        x2="12.5"
-        y2="2"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-      />
-      <rect
-        x="2.5"
-        y="3.5"
-        width="3.5"
-        height="7"
-        rx="0.5"
-        fill="currentColor"
-        fillOpacity="0.25"
-        stroke="currentColor"
-        strokeWidth="1"
-      />
-      <rect
-        x="8"
-        y="3.5"
-        width="3.5"
-        height="4.5"
-        rx="0.5"
-        fill="currentColor"
-        fillOpacity="0.25"
-        stroke="currentColor"
-        strokeWidth="1"
-      />
-    </svg>
-  );
-}
-
-export function AlignCenterVIcon() {
-  return (
-    <svg
-      viewBox="0 0 14 14"
-      fill="none"
-      width="14"
-      height="14"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <line
-        x1="1.5"
-        y1="7"
-        x2="12.5"
-        y2="7"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-      />
-      <rect
-        x="2.5"
-        y="3.5"
-        width="3.5"
-        height="7"
-        rx="0.5"
-        fill="currentColor"
-        fillOpacity="0.25"
-        stroke="currentColor"
-        strokeWidth="1"
-      />
-      <rect
-        x="8"
-        y="4.75"
-        width="3.5"
-        height="4.5"
-        rx="0.5"
-        fill="currentColor"
-        fillOpacity="0.25"
-        stroke="currentColor"
-        strokeWidth="1"
-      />
-    </svg>
-  );
-}
-
-export function AlignBottomIcon() {
-  return (
-    <svg
-      viewBox="0 0 14 14"
-      fill="none"
-      width="14"
-      height="14"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <line
-        x1="1.5"
-        y1="12"
-        x2="12.5"
-        y2="12"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-      />
-      <rect
-        x="2.5"
-        y="3.5"
-        width="3.5"
-        height="7"
-        rx="0.5"
-        fill="currentColor"
-        fillOpacity="0.25"
-        stroke="currentColor"
-        strokeWidth="1"
-      />
-      <rect
-        x="8"
-        y="6"
-        width="3.5"
-        height="4.5"
-        rx="0.5"
-        fill="currentColor"
-        fillOpacity="0.25"
-        stroke="currentColor"
-        strokeWidth="1"
-      />
-    </svg>
-  );
-}
-
-export function DistributeHIcon() {
-  return (
-    <svg
-      viewBox="0 0 14 14"
-      fill="none"
-      width="14"
-      height="14"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <line
-        x1="1.5"
-        y1="1.5"
-        x2="1.5"
-        y2="12.5"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-      />
-      <line
-        x1="12.5"
-        y1="1.5"
-        x2="12.5"
-        y2="12.5"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-      />
-      <rect
-        x="3.5"
-        y="4"
-        width="2.5"
-        height="6"
-        rx="0.5"
-        fill="currentColor"
-        fillOpacity="0.25"
-        stroke="currentColor"
-        strokeWidth="1"
-      />
-      <rect
-        x="8"
-        y="4"
-        width="2.5"
-        height="6"
-        rx="0.5"
-        fill="currentColor"
-        fillOpacity="0.25"
-        stroke="currentColor"
-        strokeWidth="1"
-      />
-    </svg>
-  );
-}
-
-export function DistributeVIcon() {
-  return (
-    <svg
-      viewBox="0 0 14 14"
-      fill="none"
-      width="14"
-      height="14"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <line
-        x1="1.5"
-        y1="1.5"
-        x2="12.5"
-        y2="1.5"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-      />
-      <line
-        x1="1.5"
-        y1="12.5"
-        x2="12.5"
-        y2="12.5"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-      />
-      <rect
-        x="4"
-        y="3.5"
-        width="6"
-        height="2.5"
-        rx="0.5"
-        fill="currentColor"
-        fillOpacity="0.25"
-        stroke="currentColor"
-        strokeWidth="1"
-      />
-      <rect
-        x="4"
-        y="8"
-        width="6"
-        height="2.5"
-        rx="0.5"
-        fill="currentColor"
-        fillOpacity="0.25"
-        stroke="currentColor"
-        strokeWidth="1"
-      />
+      {rails.map(([x1, y1, x2, y2], i) => (
+        <line
+          key={`rail-${i}`}
+          x1={x1}
+          y1={y1}
+          x2={x2}
+          y2={y2}
+          stroke="currentColor"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+        />
+      ))}
+      {blocks.map(([x, y, width, height], i) => (
+        <rect
+          key={`block-${i}`}
+          x={x}
+          y={y}
+          width={width}
+          height={height}
+          rx="0.5"
+          fill="currentColor"
+          fillOpacity="0.25"
+          stroke="currentColor"
+          strokeWidth="1"
+        />
+      ))}
     </svg>
   );
 }
