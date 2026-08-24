@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { PiCaretDown, PiMagnifyingGlass, PiFunnel, PiX } from "react-icons/pi";
+import { IconButton } from "@/components/IconButton";
 import { useT, type StringKey } from "@/editor/i18n";
 
 /** The ellipse option is offered as "Circle" — the placement grid only ever squares it. */
@@ -97,40 +98,30 @@ export function PlacementFilterBar({
         <div className="flex-1" />
 
         {/* Search toggle */}
-        <button
-          type="button"
+        <IconButton
+          variant="bare"
+          size="sm"
+          active={searchOpen}
           onClick={toggleSearch}
-          className={[
-            "p-0.5 transition-colors rounded",
-            searchOpen
-              ? "text-primary-600 bg-primary-50"
-              : "text-gray-400 hover:text-gray-600",
-          ].join(" ")}
           title={t("editor.placement.search")}
         >
           <PiMagnifyingGlass size={13} />
-        </button>
+        </IconButton>
 
         {/* Filter toggle + popover */}
         <div className="relative">
-          <button
-            type="button"
+          <IconButton
+            variant="bare"
+            size="sm"
+            active={statusFilter !== "all" || filterOpen}
             onClick={() => {
               setFilterOpen(v => !v);
               setShapeOpen(false);
             }}
-            className={[
-              "p-0.5 transition-colors rounded",
-              statusFilter !== "all"
-                ? "text-primary-600 bg-primary-50"
-                : filterOpen
-                  ? "text-primary-600 bg-primary-50"
-                  : "text-gray-400 hover:text-gray-600",
-            ].join(" ")}
             title={t("editor.placement.filterByStatus")}
           >
             <PiFunnel size={13} />
-          </button>
+          </IconButton>
           {filterOpen && (
             <div className="absolute right-0 top-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-20 py-1.5 w-36">
               <div className="px-2.5 pb-1 text-[10px] uppercase tracking-wider text-gray-400 font-medium">
@@ -178,13 +169,14 @@ export function PlacementFilterBar({
               className="w-full pl-2.5 pr-6 py-1 text-xs border border-gray-200 rounded bg-gray-50 focus:bg-white focus:outline-none focus:ring-1 focus:ring-primary-400 transition"
             />
             {query && (
-              <button
-                type="button"
+              <IconButton
+                variant="bare"
+                size="sm"
                 onClick={() => onQueryChange("")}
-                className="absolute right-1.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                className="absolute right-1.5 top-1/2 -translate-y-1/2"
               >
                 <PiX size={11} />
-              </button>
+              </IconButton>
             )}
           </div>
         </div>
