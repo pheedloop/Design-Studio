@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import type { Legend, LegendEntry } from "@/types";
 import { Button } from "@/components/Button";
+import { IconButton } from "@/components/IconButton";
 import { Dialog, TextInput, ColorSwatch } from "@/editor/components/ui";
 import {
   PiEye,
@@ -117,8 +118,8 @@ export function LegendDialog({ legend, onSave, onClose }: LegendDialogProps) {
                     placeholder={t("editor.legend.labelPlaceholder")}
                   />
                 </div>
-                <button
-                  className="p-1 rounded text-gray-400 hover:text-gray-600 transition-colors cursor-pointer"
+                <IconButton
+                  variant="bare"
                   onClick={() =>
                     updateEntry(entry.id, { visible: !entry.visible })
                   }
@@ -133,23 +134,25 @@ export function LegendDialog({ legend, onSave, onClose }: LegendDialogProps) {
                   ) : (
                     <PiEyeSlash size={15} className="text-red-400" />
                   )}
-                </button>
-                <button
-                  className="p-1 rounded text-gray-400 hover:text-gray-600 transition-colors cursor-pointer disabled:opacity-30 disabled:cursor-default"
+                </IconButton>
+                <IconButton
+                  variant="bare"
                   onClick={() => moveEntry(entry.id, "up")}
                   disabled={idx === 0}
                   title={t("editor.action.moveUp")}
                 >
                   <PiArrowUp size={13} />
-                </button>
-                <button
-                  className="p-1 rounded text-gray-400 hover:text-gray-600 transition-colors cursor-pointer disabled:opacity-30 disabled:cursor-default"
+                </IconButton>
+                <IconButton
+                  variant="bare"
                   onClick={() => moveEntry(entry.id, "down")}
                   disabled={idx === local.entries.length - 1}
                   title={t("editor.action.moveDown")}
                 >
                   <PiArrowDown size={13} />
-                </button>
+                </IconButton>
+                {/* Raw: the red hover marks the destructive action, and a tone
+                    prop for one site fails the ≥2-consumer bar. */}
                 <button
                   className="p-1 rounded text-gray-400 hover:text-red-500 transition-colors cursor-pointer"
                   onClick={() => removeEntry(entry.id)}
