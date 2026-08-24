@@ -13,10 +13,8 @@ export function SidebarRow({
   label: string;
   icon: ReactNode;
   shortcut?: string;
-  /** Takes the shortcut's place when present — e.g. a tier trophy. */
   badge?: ReactNode;
   isActive?: boolean;
-  /** Greys the row out and ignores clicks. */
   disabled?: boolean;
   title?: string;
   onClick: () => void;

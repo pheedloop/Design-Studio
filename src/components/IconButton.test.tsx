@@ -53,8 +53,6 @@ describe("IconButton bare variant", () => {
       </IconButton>,
     );
     expect(cls()).toContain(pad);
-    // The whole point of the variant: it hugs the icon, so callers can drop it
-    // into a dense row or an input without the row growing to fit a box.
     expect(cls()).not.toMatch(/\bw-\d/);
     expect(cls()).not.toMatch(/\bh-\d/);
   });

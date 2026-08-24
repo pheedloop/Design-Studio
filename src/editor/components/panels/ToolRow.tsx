@@ -11,7 +11,6 @@ export interface ToolDef<T extends string> {
   icon: React.ReactNode;
 }
 
-/** Resolves a tool's string key and tier state onto the shared row. */
 export function ToolRow<T extends string>({
   tool,
   isActive,
@@ -22,9 +21,7 @@ export function ToolRow<T extends string>({
   tool: ToolDef<T>;
   isActive: boolean;
   onClick: () => void;
-  /** When true, the tool is greyed out and clicks are ignored. */
   disabled?: boolean;
-  /** When true, show the premium trophy badge (implies disabled styling). */
   locked?: boolean;
 }) {
   const t = useT();

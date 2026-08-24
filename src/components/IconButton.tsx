@@ -2,11 +2,6 @@ import type { ButtonHTMLAttributes, ReactNode } from "react";
 
 export interface IconButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   active?: boolean;
-  /**
-   * `filled` is a fixed-size box that takes a background on hover. `bare` hugs
-   * the icon with padding and only shifts colour, so it sits inside dense rows
-   * and input fields without pushing them open.
-   */
   variant?: "filled" | "bare";
   size?: "sm" | "md" | "lg";
   children: ReactNode;

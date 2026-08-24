@@ -3,7 +3,6 @@
 
 import type { ReactNode } from "react";
 
-/** A segment in the demo nav bar, styled for its dark background. */
 export function ChromeToggle({
   active,
   title,
