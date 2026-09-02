@@ -61,7 +61,7 @@ export function ArrangeGridDialog({
           </div>
           <div className="flex flex-col gap-1.5 flex-1">
             <SectionLabel>{t("editor.field.rowsComputed")}</SectionLabel>
-            <div className="flex items-center h-[30px] px-2 text-xs text-gray-400 bg-gray-50 border border-gray-200 rounded">
+            <div className="flex items-center h-[30px] px-2 text-xs text-gray-400 bg-surface-neutral border border-gray-200 rounded">
               {rows}
             </div>
           </div>

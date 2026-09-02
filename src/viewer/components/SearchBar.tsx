@@ -73,7 +73,7 @@ export function SearchBar({
                     onQueryChange("");
                     inputRef.current?.blur();
                   }}
-                  className="w-full text-left px-3 py-2 hover:bg-gray-50 cursor-pointer transition-colors"
+                  className="w-full text-left px-3 py-2 hover:bg-surface-neutral cursor-pointer transition-colors"
                 >
                   <div className="flex items-center justify-between gap-2">
                     <span className="text-xs font-medium text-gray-800 truncate">

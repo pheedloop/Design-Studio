@@ -203,7 +203,7 @@ export function CanvasResizeDialog({
                     className={`flex h-8 w-8 items-center justify-center rounded border transition-colors ${
                       selected
                         ? "border-blue-500 bg-blue-50"
-                        : "border-gray-200 bg-gray-50 hover:border-gray-300 hover:bg-gray-100"
+                        : "border-gray-200 bg-surface-neutral hover:border-gray-300 hover:bg-gray-100"
                     }`}
                   >
                     <span

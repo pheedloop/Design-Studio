@@ -161,7 +161,7 @@ export function MapSheet({
                     });
                   }}
                   className={`w-full text-left px-4 py-2.5 border-t border-gray-100 cursor-pointer transition-colors ${
-                    isSelected ? "bg-primary-100" : "hover:bg-gray-50"
+                    isSelected ? "bg-primary-100" : "hover:bg-surface-neutral"
                   }`}
                 >
                   <div className="flex items-center gap-2">
@@ -203,7 +203,7 @@ export function MapSheet({
                     })
                   }
                   className={`w-full text-left px-4 py-2.5 border-t border-gray-100 cursor-pointer transition-colors ${
-                    isSelected ? "bg-primary-100" : "hover:bg-gray-50"
+                    isSelected ? "bg-primary-100" : "hover:bg-surface-neutral"
                   }`}
                 >
                   <div className="text-xs font-medium text-gray-800">
@@ -227,7 +227,7 @@ export function MapSheet({
                     })
                   }
                   className={`w-full text-left px-4 py-2.5 border-t border-gray-100 cursor-pointer transition-colors ${
-                    isSelected ? "bg-primary-100" : "hover:bg-gray-50"
+                    isSelected ? "bg-primary-100" : "hover:bg-surface-neutral"
                   }`}
                 >
                   <div className="text-xs font-medium text-gray-800">

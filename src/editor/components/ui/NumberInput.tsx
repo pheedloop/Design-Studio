@@ -53,7 +53,7 @@ export function NumberInput({
           }
         }}
         disabled={disabled}
-        className="w-full px-2 py-1 text-xs border border-gray-200 rounded-l bg-white disabled:bg-gray-50 disabled:text-gray-400 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+        className="w-full px-2 py-1 text-xs border border-gray-200 rounded-l bg-white disabled:bg-surface-neutral disabled:text-gray-400 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
       />
       {!disabled && (
         <div className="flex flex-col border border-l-0 border-gray-200 rounded-r overflow-hidden">

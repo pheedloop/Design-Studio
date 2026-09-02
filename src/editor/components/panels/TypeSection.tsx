@@ -54,7 +54,7 @@ export function TypeSection({ typeKey, defaults, onChange }: TypeSectionProps) {
   return (
     <div className="border border-gray-200 rounded">
       <button
-        className="w-full flex items-center justify-between px-3 py-2 text-left hover:bg-gray-50 transition-colors cursor-pointer"
+        className="w-full flex items-center justify-between px-3 py-2 text-left hover:bg-surface-neutral transition-colors cursor-pointer"
         onClick={() => setOpen(o => !o)}
       >
         <div className="flex items-center gap-2">

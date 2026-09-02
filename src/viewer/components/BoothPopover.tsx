@@ -36,7 +36,7 @@ export function BoothPopover({
           <button
             type="button"
             onClick={() => onExhibitorClick(exhibitor)}
-            className="mt-1 flex w-full flex-col items-center gap-2 rounded-md px-2 py-2 text-center hover:bg-gray-50 cursor-pointer transition-colors"
+            className="mt-1 flex w-full flex-col items-center gap-2 rounded-md px-2 py-2 text-center hover:bg-surface-neutral cursor-pointer transition-colors"
           >
             <ExhibitorLogo exhibitor={exhibitor} />
             <div className="text-sm font-medium text-gray-900 line-clamp-2">

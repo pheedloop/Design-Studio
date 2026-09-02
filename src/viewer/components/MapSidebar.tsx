@@ -134,7 +134,7 @@ export function MapSidebar({
                   });
                 }}
                 className={`w-full text-left px-3 py-2 border-b border-gray-100 cursor-pointer transition-colors ${
-                  isSelected ? "bg-primary-100" : "hover:bg-gray-50"
+                  isSelected ? "bg-primary-100" : "hover:bg-surface-neutral"
                 }`}
               >
                 <div className="flex items-center gap-2">
@@ -176,7 +176,7 @@ export function MapSidebar({
                   })
                 }
                 className={`w-full text-left px-3 py-2 border-b border-gray-100 cursor-pointer transition-colors ${
-                  isSelected ? "bg-primary-100" : "hover:bg-gray-50"
+                  isSelected ? "bg-primary-100" : "hover:bg-surface-neutral"
                 }`}
               >
                 <div className="text-xs font-medium text-gray-800">
@@ -200,7 +200,7 @@ export function MapSidebar({
                   })
                 }
                 className={`w-full text-left px-3 py-2 border-b border-gray-100 cursor-pointer transition-colors ${
-                  isSelected ? "bg-primary-100" : "hover:bg-gray-50"
+                  isSelected ? "bg-primary-100" : "hover:bg-surface-neutral"
                 }`}
               >
                 <div className="text-xs font-medium text-gray-800">

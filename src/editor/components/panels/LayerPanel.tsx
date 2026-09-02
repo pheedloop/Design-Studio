@@ -60,7 +60,7 @@ export function LayerPanel({
         <IconButton
           active={open}
           onClick={() => setOpen(prev => !prev)}
-          className={`shadow-md border ${open ? "border-primary-600" : "border-gray-200 bg-white hover:bg-gray-50"}`}
+          className={`shadow-md border ${open ? "border-primary-600" : "border-gray-200 bg-white hover:bg-surface-neutral"}`}
           title={t("editor.field.layers")}
         >
           <PiStack size={18} />
@@ -86,7 +86,7 @@ export function LayerPanel({
                     ? "text-gray-300 cursor-not-allowed"
                     : isActive
                       ? "bg-gray-100 font-semibold text-gray-800 cursor-pointer"
-                      : "text-gray-600 hover:bg-gray-50 cursor-pointer"
+                      : "text-gray-600 hover:bg-surface-neutral cursor-pointer"
                 }`}
                 onClick={locked ? undefined : () => onSetActiveLayer(layer.id)}
               >

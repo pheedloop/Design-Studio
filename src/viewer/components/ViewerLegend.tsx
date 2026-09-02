@@ -36,7 +36,7 @@ export function ViewerLegend({ legend }: ViewerLegendProps) {
           </div>
         )}
         <button
-          className="flex items-center justify-between gap-4 px-3 py-1.5 w-full cursor-pointer hover:bg-gray-50 transition-colors"
+          className="flex items-center justify-between gap-4 px-3 py-1.5 w-full cursor-pointer hover:bg-surface-neutral transition-colors"
           onClick={() => setCollapsed(c => !c)}
         >
           <span className="text-xs font-medium text-gray-600">

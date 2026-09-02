@@ -58,7 +58,7 @@ export function PlacementFilterBar({
               setShapeOpen(v => !v);
               setFilterOpen(false);
             }}
-            className="flex items-center gap-1 text-xs text-gray-600 border border-gray-200 rounded px-1.5 py-0.5 hover:bg-gray-50 transition-colors"
+            className="flex items-center gap-1 text-xs text-gray-600 border border-gray-200 rounded px-1.5 py-0.5 hover:bg-surface-neutral transition-colors"
           >
             <span
               className="inline-block w-2.5 h-2.5 bg-gray-300 shrink-0"
@@ -78,7 +78,7 @@ export function PlacementFilterBar({
                     setShapeOpen(false);
                   }}
                   className={[
-                    "w-full text-left flex items-center gap-1.5 px-2 py-1.5 text-xs hover:bg-gray-50 transition-colors",
+                    "w-full text-left flex items-center gap-1.5 px-2 py-1.5 text-xs hover:bg-surface-neutral transition-colors",
                     shape === s
                       ? "text-primary-600 font-medium"
                       : "text-gray-700",
@@ -130,7 +130,7 @@ export function PlacementFilterBar({
               {(["all", "unplaced", "placed"] as const).map(f => (
                 <label
                   key={f}
-                  className="flex items-center gap-2 px-2.5 py-1.5 text-xs cursor-pointer hover:bg-gray-50 transition-colors"
+                  className="flex items-center gap-2 px-2.5 py-1.5 text-xs cursor-pointer hover:bg-surface-neutral transition-colors"
                 >
                   <input
                     type="radio"
@@ -166,7 +166,7 @@ export function PlacementFilterBar({
               value={query}
               onChange={e => onQueryChange(e.target.value)}
               placeholder={t("editor.placement.searchPlaceholder")}
-              className="w-full pl-2.5 pr-6 py-1 text-xs border border-gray-200 rounded bg-gray-50 focus:bg-white focus:outline-none focus:ring-1 focus:ring-primary-400 transition"
+              className="w-full pl-2.5 pr-6 py-1 text-xs border border-gray-200 rounded bg-surface-neutral focus:bg-white focus:outline-none focus:ring-1 focus:ring-primary-400 transition"
             />
             {query && (
               <IconButton

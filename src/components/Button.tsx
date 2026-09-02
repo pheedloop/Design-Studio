@@ -32,7 +32,7 @@ const styles = {
     primary:
       "border border-primary-200 text-primary-600 hover:bg-primary-50 disabled:border-gray-200 disabled:text-gray-400 disabled:hover:bg-transparent",
     neutral:
-      "border border-gray-200 text-gray-600 hover:bg-gray-50 disabled:border-gray-200 disabled:text-gray-400 disabled:hover:bg-transparent",
+      "border border-gray-200 text-gray-600 hover:bg-surface-neutral disabled:border-gray-200 disabled:text-gray-400 disabled:hover:bg-transparent",
     negative:
       "border border-red-200 text-red-600 hover:bg-red-50 disabled:border-gray-200 disabled:text-gray-400 disabled:hover:bg-transparent",
     positive:

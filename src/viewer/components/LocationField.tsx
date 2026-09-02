@@ -36,7 +36,7 @@ export function LocationField({
 
   if (value) {
     return (
-      <div className="flex items-center gap-2 px-3 py-2 bg-gray-50 rounded-lg border border-gray-200">
+      <div className="flex items-center gap-2 px-3 py-2 bg-surface-neutral rounded-lg border border-gray-200">
         <span className="text-[10px] font-semibold text-gray-400 uppercase w-8 shrink-0">
           {label}
         </span>
@@ -94,7 +94,7 @@ export function LocationField({
                     setQuery("");
                     inputRef.current?.blur();
                   }}
-                  className="w-full text-left px-3 py-1.5 hover:bg-gray-50 cursor-pointer transition-colors"
+                  className="w-full text-left px-3 py-1.5 hover:bg-surface-neutral cursor-pointer transition-colors"
                 >
                   <div className="flex items-center justify-between gap-2">
                     <span className="text-xs font-medium text-gray-800 truncate">
