@@ -106,6 +106,19 @@
   --link-text-color: var(--primary-600);
   --primary-text-color: var(--primary-600);
   --card-background-color: var(--white);
+
+  --border-neutral: var(--gray-300);
+  --border-neutral-light: var(--gray-200);
+  --border-neutral-faint: var(--gray-100);
+  --border-primary: var(--primary-600);
+  --border-primary-accent: var(--primary-100);
+
+  --surface-neutral: var(--gray-100);
+  --surface-muted: var(--gray-200);
+  --surface-muted-hover: var(--gray-300);
+  --surface-contrast: var(--white);
+  --surface-primary: var(--primary-600);
+  --surface-primary-accent: var(--primary-100);
   --border-radius-small: var(--rounded);
   --border-radius: var(--rounded-lg);
 
@@ -134,6 +147,19 @@
   --color-text-primary: rgb(var(--primary-text-color));
 
   --color-card: rgb(var(--card-background-color));
+
+  --color-border-neutral: rgb(var(--border-neutral));
+  --color-border-neutral-light: rgb(var(--border-neutral-light));
+  --color-border-neutral-faint: rgb(var(--border-neutral-faint));
+  --color-border-primary: rgb(var(--border-primary));
+  --color-border-primary-accent: rgb(var(--border-primary-accent));
+
+  --color-surface-neutral: rgb(var(--surface-neutral));
+  --color-surface-muted: rgb(var(--surface-muted));
+  --color-surface-muted-hover: rgb(var(--surface-muted-hover));
+  --color-surface-contrast: rgb(var(--surface-contrast));
+  --color-surface-primary: rgb(var(--surface-primary));
+  --color-surface-primary-accent: rgb(var(--surface-primary-accent));
 
   --color-primary-100: rgb(229 242 255);
   --color-primary-200: rgb(204 229 255);
