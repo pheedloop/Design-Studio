@@ -86,7 +86,12 @@
 
   --heading-text-color: var(--gray-800);
   --body-text-color: var(--gray-700);
+  --caption-text-color: var(--gray-500);
+  --subtle-text-color: var(--gray-400);
+  --disabled-text-color: var(--gray-300);
   --contrast-text-color: var(--white);
+  --link-text-color: var(--primary-600);
+  --primary-text-color: var(--primary-600);
   --card-background-color: var(--white);
   --border-radius-small: var(--rounded);
   --border-radius: var(--rounded-lg);
@@ -106,9 +111,15 @@
   --color-pheedloop-blue-800: rgb(0 74 153);
   --color-pheedloop-blue-900: rgb(0 49 102);
 
-  --color-heading: rgb(var(--heading-text-color));
-  --color-body: rgb(var(--body-text-color));
-  --color-contrast: rgb(var(--contrast-text-color));
+  --color-text-heading: rgb(var(--heading-text-color));
+  --color-text-body: rgb(var(--body-text-color));
+  --color-text-caption: rgb(var(--caption-text-color));
+  --color-text-subtle: rgb(var(--subtle-text-color));
+  --color-text-disabled: rgb(var(--disabled-text-color));
+  --color-text-invert: rgb(var(--contrast-text-color));
+  --color-text-link: rgb(var(--link-text-color));
+  --color-text-primary: rgb(var(--primary-text-color));
+
   --color-card: rgb(var(--card-background-color));
 
   --color-primary-100: rgb(229 242 255);
