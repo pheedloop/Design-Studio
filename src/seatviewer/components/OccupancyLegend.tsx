@@ -9,7 +9,7 @@ export function OccupancyLegend() {
   const t = useT();
 
   return (
-    <div className="absolute right-3 bottom-3 z-10 flex flex-col gap-1.5 bg-surface-contrast/95 border border-gray-200 rounded-lg px-3 py-2.5 shadow-[0_4px_16px_rgba(38,59,90,0.1)] backdrop-blur-sm">
+    <div className="absolute right-3 bottom-3 z-10 flex flex-col gap-1.5 bg-surface-contrast/95 border border-border-neutral-light rounded-lg px-3 py-2.5 shadow-[0_4px_16px_rgba(38,59,90,0.1)] backdrop-blur-sm">
       <span className="text-[10px] tracking-wider uppercase text-text-subtle font-semibold">
         {t("seatviewer.legend.title")}
       </span>

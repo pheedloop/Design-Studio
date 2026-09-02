@@ -26,7 +26,7 @@ export function PathingOptionsBar({
 }: PathingOptionsBarProps) {
   const t = useT();
   return (
-    <div className="flex items-center gap-4 px-3 py-2 bg-white border-b border-gray-200">
+    <div className="flex items-center gap-4 px-3 py-2 bg-white border-b border-border-neutral-light">
       <div className="flex items-center gap-1.5">
         <span className="text-[11px] text-text-caption">
           {t("editor.field.cellSize")}
@@ -60,7 +60,7 @@ export function PathingOptionsBar({
         </span>
       </div>
 
-      <div className="h-4 w-px bg-gray-200" />
+      <div className="h-4 w-px bg-surface-muted" />
 
       <Button
         variant="ghost"
@@ -82,7 +82,7 @@ export function PathingOptionsBar({
         {t("editor.pathing.autoObstacles")}
       </button>
 
-      <div className="h-4 w-px bg-gray-200" />
+      <div className="h-4 w-px bg-surface-muted" />
 
       <Button
         variant="ghost"

@@ -23,13 +23,13 @@ export function StatusBar({
   const t = useT();
 
   return (
-    <div className="relative z-20 flex items-center justify-between px-3 py-1.5 bg-white border-t border-gray-200 text-xs text-text-caption">
+    <div className="relative z-20 flex items-center justify-between px-3 py-1.5 bg-white border-t border-border-neutral-light text-xs text-text-caption">
       <div className="flex items-center gap-2">
         {isCalibrated && showUnit && (
           <select
             value={unit}
             onChange={e => onUnitChange(e.target.value as Unit)}
-            className="px-1.5 py-0.5 text-xs border border-gray-200 rounded bg-white cursor-pointer hover:border-gray-300"
+            className="px-1.5 py-0.5 text-xs border border-border-neutral-light rounded bg-white cursor-pointer hover:border-border-neutral"
             title={t("editor.statusBar.displayUnit")}
           >
             <option value="ft">{t("editor.unit.feet")}</option>

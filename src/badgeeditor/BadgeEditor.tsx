@@ -537,7 +537,7 @@ function BadgeEditorInner({
             if (!previewMode && doc.pages.length <= 1 && !showAlign)
               return null;
             return (
-              <div className="relative z-20 flex items-center gap-3 px-3 h-[43px] bg-white border-b border-gray-200 shrink-0">
+              <div className="relative z-20 flex items-center gap-3 px-3 h-[43px] bg-white border-b border-border-neutral-light shrink-0">
                 {!previewMode && doc.pages.length > 1 && (
                   <TabBar
                     tabs={pageTabs}
@@ -600,7 +600,7 @@ function BadgeEditorInner({
               ) : (
                 <div
                   ref={containerRef}
-                  className="relative flex-1 min-h-0 overflow-hidden bg-gray-100"
+                  className="relative flex-1 min-h-0 overflow-hidden bg-surface-neutral"
                 >
                   <BadgeCanvas
                     page={activePage}
@@ -637,7 +637,7 @@ function BadgeEditorInner({
                 </div>
               )}
               {/* Footer — page + overall badge size, and zoom (mirrors StatusBar) */}
-              <div className="relative z-20 flex items-center justify-between px-3 py-1.5 bg-white border-t border-gray-200 text-xs text-text-caption">
+              <div className="relative z-20 flex items-center justify-between px-3 py-1.5 bg-white border-t border-border-neutral-light text-xs text-text-caption">
                 <div className="flex items-center gap-2">
                   <span>
                     Page {fmtUnit(doc.panelSize.width, unit)} ×{" "}
@@ -662,8 +662,8 @@ function BadgeEditorInner({
             </div>
 
             {showLayout ? (
-              <aside className="w-72 shrink-0 border-l border-gray-200 bg-white flex flex-col">
-                <div className="px-3 py-2 border-b border-gray-200 text-xs font-medium text-text-body">
+              <aside className="w-72 shrink-0 border-l border-border-neutral-light bg-white flex flex-col">
+                <div className="px-3 py-2 border-b border-border-neutral-light text-xs font-medium text-text-body">
                   badge_layout · {flattened.width}" × {flattened.height}"
                 </div>
                 <pre className="flex-1 overflow-auto text-[11px] leading-tight p-3 text-text-body">
@@ -671,8 +671,8 @@ function BadgeEditorInner({
                 </pre>
               </aside>
             ) : previewMode ? null : selectedIds.size > 1 ? (
-              <aside className="w-52 shrink-0 border-l border-gray-200 bg-white flex flex-col">
-                <div className="px-3 py-2 border-b border-gray-200 flex items-center justify-between">
+              <aside className="w-52 shrink-0 border-l border-border-neutral-light bg-white flex flex-col">
+                <div className="px-3 py-2 border-b border-border-neutral-light flex items-center justify-between">
                   <span className="text-xs font-medium text-text-body">
                     {selectedIds.size} fields selected
                   </span>

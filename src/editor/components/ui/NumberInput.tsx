@@ -53,14 +53,14 @@ export function NumberInput({
           }
         }}
         disabled={disabled}
-        className="w-full px-2 py-1 text-xs border border-gray-200 rounded-l bg-white disabled:bg-surface-neutral disabled:text-text-subtle [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+        className="w-full px-2 py-1 text-xs border border-border-neutral-light rounded-l bg-white disabled:bg-surface-neutral disabled:text-text-subtle [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
       />
       {!disabled && (
-        <div className="flex flex-col border border-l-0 border-gray-200 rounded-r overflow-hidden">
+        <div className="flex flex-col border border-l-0 border-border-neutral-light rounded-r overflow-hidden">
           <button
             type="button"
             onClick={increment}
-            className="flex items-center justify-center px-1 h-1/2 hover:bg-gray-100 cursor-pointer text-text-subtle hover:text-text-body transition-colors"
+            className="flex items-center justify-center px-1 h-1/2 hover:bg-surface-neutral cursor-pointer text-text-subtle hover:text-text-body transition-colors"
             tabIndex={-1}
           >
             <PiCaretUp size={10} />
@@ -68,7 +68,7 @@ export function NumberInput({
           <button
             type="button"
             onClick={decrement}
-            className="flex items-center justify-center px-1 h-1/2 border-t border-gray-200 hover:bg-gray-100 cursor-pointer text-text-subtle hover:text-text-body transition-colors"
+            className="flex items-center justify-center px-1 h-1/2 border-t border-border-neutral-light hover:bg-surface-neutral cursor-pointer text-text-subtle hover:text-text-body transition-colors"
             tabIndex={-1}
           >
             <PiCaretDown size={10} />

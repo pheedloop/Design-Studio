@@ -17,13 +17,13 @@ export function ViewerLegend({ legend }: ViewerLegendProps) {
 
   return (
     <div className="absolute bottom-4 right-4 z-20 select-none">
-      <div className="bg-white border border-gray-200 rounded shadow-sm overflow-hidden min-w-[120px]">
+      <div className="bg-white border border-border-neutral-light rounded shadow-sm overflow-hidden min-w-[120px]">
         {!collapsed && (
-          <div className="px-3 py-2 border-b border-gray-100 flex flex-col gap-1.5">
+          <div className="px-3 py-2 border-b border-border-neutral-faint flex flex-col gap-1.5">
             {visibleEntries.map(entry => (
               <div key={entry.id} className="flex items-center gap-2">
                 <span
-                  className="shrink-0 rounded-sm border border-gray-300"
+                  className="shrink-0 rounded-sm border border-border-neutral"
                   style={{ width: 12, height: 12, background: entry.color }}
                 />
                 <span className="text-xs text-text-body leading-none whitespace-nowrap">

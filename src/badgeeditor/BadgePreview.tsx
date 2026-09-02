@@ -63,7 +63,7 @@ export function BadgePreview({
   return (
     <div
       ref={containerRef}
-      className="relative w-full h-full overflow-hidden bg-gray-100"
+      className="relative w-full h-full overflow-hidden bg-surface-neutral"
     >
       <Stage
         ref={stageRef}

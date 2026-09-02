@@ -44,7 +44,7 @@ export function BadgeSidebar({
   const fields = FIELD_DEFS.filter(d => d.inPalette !== false);
 
   return (
-    <div className="flex flex-col w-48 shrink-0 bg-white border-r border-gray-200 overflow-hidden">
+    <div className="flex flex-col w-48 shrink-0 bg-white border-r border-border-neutral-light overflow-hidden">
       <BadgeSidebarHeader name={name} onNameChange={onNameChange} />
       <div className="flex-1 overflow-y-auto py-2 px-1">
         <div className="px-2 pb-1">

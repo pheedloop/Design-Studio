@@ -27,7 +27,7 @@ export function SearchBar({
 
   return (
     <div className="relative">
-      <div className="flex items-center gap-2 px-3 py-2 bg-white border-b border-gray-200">
+      <div className="flex items-center gap-2 px-3 py-2 bg-white border-b border-border-neutral-light">
         <PiMagnifyingGlass size={16} className="text-text-subtle shrink-0" />
         <input
           ref={inputRef}
@@ -57,7 +57,7 @@ export function SearchBar({
       </div>
 
       {showDropdown && (
-        <div className="absolute top-full left-0 right-0 bg-white border border-gray-200 border-t-0 rounded-b-lg shadow-lg z-50 max-h-60 overflow-y-auto">
+        <div className="absolute top-full left-0 right-0 bg-white border border-border-neutral-light border-t-0 rounded-b-lg shadow-lg z-50 max-h-60 overflow-y-auto">
           {results.length === 0 ? (
             <div className="px-3 py-3 text-xs text-text-subtle">
               {t("viewer.search.noResults")}

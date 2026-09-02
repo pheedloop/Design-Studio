@@ -35,11 +35,14 @@ export function DropdownMenu({ items, onClose }: DropdownMenuProps) {
   return (
     <div
       ref={ref}
-      className="absolute top-full left-0 mt-0 bg-white border border-gray-200 rounded-md shadow-lg py-1 min-w-[200px] z-[9999]"
+      className="absolute top-full left-0 mt-0 bg-white border border-border-neutral-light rounded-md shadow-lg py-1 min-w-[200px] z-[9999]"
     >
       {items.map((entry, i) =>
         isMenuDivider(entry) ? (
-          <div key={`divider-${i}`} className="my-1 border-t border-gray-100" />
+          <div
+            key={`divider-${i}`}
+            className="my-1 border-t border-border-neutral-faint"
+          />
         ) : (
           <MenuItem
             key={entry.label}

@@ -65,7 +65,7 @@ export function OptionsBar({
   ].filter(Boolean);
 
   return (
-    <div className="flex items-center gap-4 px-3 py-2 bg-white border-b border-gray-200 h-[43px]">
+    <div className="flex items-center gap-4 px-3 py-2 bg-white border-b border-border-neutral-light h-[43px]">
       {fields.has("fill") && (
         <ColorSwatch
           label={t("editor.field.fill")}
@@ -97,7 +97,7 @@ export function OptionsBar({
       )}
       {groupActions.length > 0 && (
         <>
-          <div className="w-px h-4 bg-gray-200 shrink-0" />
+          <div className="w-px h-4 bg-surface-muted shrink-0" />
           <div className="flex items-center gap-1">
             {onExitGroup && (
               <Button
@@ -144,7 +144,7 @@ export function OptionsBar({
       )}
       {alignActions.length > 0 && (
         <>
-          <div className="w-px h-4 bg-gray-200 shrink-0" />
+          <div className="w-px h-4 bg-surface-muted shrink-0" />
           <div className="flex items-center gap-0.5">
             <AlignmentControls
               onAlignLeft={onAlignLeft}
@@ -158,7 +158,7 @@ export function OptionsBar({
             />
             {onArrangeAsGrid && (
               <>
-                <div className="w-px h-3.5 bg-gray-200 shrink-0 mx-0.5" />
+                <div className="w-px h-3.5 bg-surface-muted shrink-0 mx-0.5" />
                 <Button
                   variant="outline"
                   color="neutral"

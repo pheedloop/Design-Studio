@@ -33,12 +33,15 @@ export function ContextMenu({ x, y, items, onClose }: ContextMenuProps) {
   return (
     <div
       ref={ref}
-      className="fixed bg-white border border-gray-200 rounded-md shadow-lg py-1 z-[9999]"
+      className="fixed bg-white border border-border-neutral-light rounded-md shadow-lg py-1 z-[9999]"
       style={{ left: x, top: y }}
     >
       {items.map((item, i) =>
         isDivider(item) ? (
-          <div key={`divider-${i}`} className="my-1 border-t border-gray-100" />
+          <div
+            key={`divider-${i}`}
+            className="my-1 border-t border-border-neutral-faint"
+          />
         ) : (
           <Button
             key={item.label}

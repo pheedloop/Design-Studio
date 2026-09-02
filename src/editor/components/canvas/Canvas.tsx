@@ -758,7 +758,7 @@ export function Canvas({
   return (
     <div
       ref={containerRef}
-      className="flex-1 min-w-0 bg-gray-200 overflow-hidden"
+      className="flex-1 min-w-0 bg-surface-muted overflow-hidden"
       style={{ cursor }}
     >
       <Stage

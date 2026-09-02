@@ -236,8 +236,8 @@ export function PropertiesPanel({
     );
 
     return (
-      <div className="w-60 shrink-0 border-l border-gray-200 bg-white flex flex-col">
-        <div className="px-3 py-2 border-b border-gray-200">
+      <div className="w-60 shrink-0 border-l border-border-neutral-light bg-white flex flex-col">
+        <div className="px-3 py-2 border-b border-border-neutral-light">
           <span className="text-xs font-medium text-text-body">
             {t("editor.selection.count", { count: selectedCount })}
           </span>
@@ -300,7 +300,7 @@ export function PropertiesPanel({
             </>
           )}
         </div>
-        <div className="p-3 border-t border-gray-200">
+        <div className="p-3 border-t border-border-neutral-light">
           <Button
             variant="outline"
             color="negative"
@@ -317,8 +317,8 @@ export function PropertiesPanel({
   if (!element) {
     if (activeLayerId === "background") {
       return (
-        <div className="w-60 shrink-0 border-l border-gray-200 bg-white flex flex-col">
-          <div className="px-3 py-2 border-b border-gray-200">
+        <div className="w-60 shrink-0 border-l border-border-neutral-light bg-white flex flex-col">
+          <div className="px-3 py-2 border-b border-border-neutral-light">
             <span className="text-xs font-medium text-text-body">
               {t("editor.field.background")}
             </span>
@@ -339,7 +339,7 @@ export function PropertiesPanel({
                 <div className="flex flex-col gap-2">
                   {background.kind === "image" ? (
                     <div
-                      className="w-full h-20 rounded border border-gray-200 bg-surface-neutral"
+                      className="w-full h-20 rounded border border-border-neutral-light bg-surface-neutral"
                       style={{
                         backgroundImage: `url(${background.url})`,
                         backgroundSize: "contain",
@@ -379,7 +379,7 @@ export function PropertiesPanel({
                       <span className="text-[11px] text-text-caption">
                         {t("editor.field.layers")}
                       </span>
-                      <div className="max-h-32 overflow-y-auto flex flex-col gap-1 border border-gray-200 rounded-md p-2">
+                      <div className="max-h-32 overflow-y-auto flex flex-col gap-1 border border-border-neutral-light rounded-md p-2">
                         {background.layers.map(layer => (
                           <label
                             key={layer}
@@ -424,7 +424,7 @@ export function PropertiesPanel({
               ) : (
                 <button
                   onClick={onUploadBackground}
-                  className="w-full text-xs text-text-body border border-gray-200 border-dashed rounded px-2 py-3 hover:bg-surface-neutral cursor-pointer transition-colors"
+                  className="w-full text-xs text-text-body border border-border-neutral-light border-dashed rounded px-2 py-3 hover:bg-surface-neutral cursor-pointer transition-colors"
                 >
                   {t("editor.background.uploadCta")}
                 </button>
@@ -436,7 +436,7 @@ export function PropertiesPanel({
     }
 
     return (
-      <div className="w-60 shrink-0 border-l border-gray-200 bg-white p-4">
+      <div className="w-60 shrink-0 border-l border-border-neutral-light bg-white p-4">
         <p className="text-xs text-text-subtle">
           {t("editor.properties.noSelection")}
         </p>
@@ -468,8 +468,8 @@ export function PropertiesPanel({
   };
 
   return (
-    <div className="w-60 shrink-0 border-l border-gray-200 bg-white flex flex-col">
-      <div className="flex items-center justify-between px-3 py-2 border-b border-gray-200">
+    <div className="w-60 shrink-0 border-l border-border-neutral-light bg-white flex flex-col">
+      <div className="flex items-center justify-between px-3 py-2 border-b border-border-neutral-light">
         {debug && (
           <TabBar
             tabs={[
@@ -482,7 +482,7 @@ export function PropertiesPanel({
           />
         )}
       </div>
-      <div className="flex items-center justify-between px-3 py-2 border-b border-gray-200">
+      <div className="flex items-center justify-between px-3 py-2 border-b border-border-neutral-light">
         <span className="text-xs font-medium text-text-body">
           {elementTypeLabel(element, t)}
         </span>
@@ -713,7 +713,7 @@ export function PropertiesPanel({
           {fields.has("area") && (
             <div className="flex flex-col gap-1.5">
               <SectionLabel>{t("editor.field.area")}</SectionLabel>
-              <div className="px-2 py-1 text-xs text-text-body bg-surface-neutral rounded border border-gray-200">
+              <div className="px-2 py-1 text-xs text-text-body bg-surface-neutral rounded border border-border-neutral-light">
                 {formatArea(dims.width, dims.height, dimensions, t, locale)}
               </div>
             </div>
@@ -722,7 +722,7 @@ export function PropertiesPanel({
           {fields.has("length") && (
             <div className="flex flex-col gap-1.5">
               <SectionLabel>{t("editor.field.length")}</SectionLabel>
-              <div className="px-2 py-1 text-xs text-text-body bg-surface-neutral rounded border border-gray-200">
+              <div className="px-2 py-1 text-xs text-text-body bg-surface-neutral rounded border border-border-neutral-light">
                 {formatMeasurement(dims.length, dimensions, t, locale)}
               </div>
             </div>
@@ -775,7 +775,7 @@ export function PropertiesPanel({
         </div>
       )}
 
-      <div className="flex flex-col gap-2 p-3 border-t border-gray-200">
+      <div className="flex flex-col gap-2 p-3 border-t border-border-neutral-light">
         {(element.type === "booth" ||
           element.type === "session_area" ||
           element.type === "meeting_room") && (

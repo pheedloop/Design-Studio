@@ -143,8 +143,8 @@ export function SeatPlanViewerDemo({ translate }: { translate?: Translate }) {
 
   return (
     <div className="flex flex-col h-full">
-      <div className="flex items-center gap-3 px-3 py-1.5 bg-gray-100 border-b border-gray-200 text-xs shrink-0">
-        <div className="flex items-center gap-1 bg-gray-200 rounded p-0.5">
+      <div className="flex items-center gap-3 px-3 py-1.5 bg-surface-neutral border-b border-border-neutral-light text-xs shrink-0">
+        <div className="flex items-center gap-1 bg-surface-muted rounded p-0.5">
           {tab("admin", "Admin")}
           {tab("attendee", "Attendee")}
         </div>

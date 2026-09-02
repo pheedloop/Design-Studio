@@ -105,17 +105,17 @@ export function TicketPanel({
         aria-pressed={isSel}
         disabled={disabled}
         onClick={() => onToggle(ticket.code)}
-        className={`w-full text-left flex items-start gap-2.5 p-3 border-b border-gray-200 transition-colors ${
+        className={`w-full text-left flex items-start gap-2.5 p-3 border-b border-border-neutral-light transition-colors ${
           isSel
             ? "bg-primary-100 shadow-[inset_2px_0_0_var(--color-primary-600)]"
-            : "hover:bg-gray-100"
+            : "hover:bg-surface-neutral"
         } ${disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
       >
         <span
           className={`size-[18px] mt-0.5 shrink-0 grid place-items-center border rounded ${
             isSel
               ? "bg-primary-600 border-primary-600 text-white"
-              : "bg-white border-gray-300"
+              : "bg-white border-border-neutral"
           }`}
         >
           {isSel && <PiCheck size={12} strokeWidth={2} />}
@@ -172,7 +172,7 @@ export function TicketPanel({
       return (
         <div
           key={ticket.code}
-          className="w-full flex items-center gap-3 px-4 py-2.5 border-b border-gray-200"
+          className="w-full flex items-center gap-3 px-4 py-2.5 border-b border-border-neutral-light"
         >
           <span className="size-[18px] shrink-0 grid place-items-center rounded-full bg-[#00a863] text-white">
             <PiCheck size={11} strokeWidth={3} />
@@ -205,23 +205,23 @@ export function TicketPanel({
         aria-checked={isSel}
         disabled={disabled}
         onClick={() => onToggle(ticket.code)}
-        className={`w-full text-left flex items-center gap-3 px-4 py-2.5 border-b border-gray-200 transition-colors ${
+        className={`w-full text-left flex items-center gap-3 px-4 py-2.5 border-b border-border-neutral-light transition-colors ${
           isSel
             ? "bg-primary-100 shadow-[inset_2px_0_0_var(--color-primary-600)]"
-            : "hover:bg-gray-100"
+            : "hover:bg-surface-neutral"
         } ${disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
       >
         <span
           className={`size-[18px] shrink-0 grid place-items-center border rounded-full ${
             isSel
               ? "bg-primary-600 border-primary-600 text-white"
-              : "bg-white border-gray-300"
+              : "bg-white border-border-neutral"
           }`}
         >
           {isSel && <span className="size-2 rounded-full bg-white" />}
         </span>
         {label}
-        <span className="shrink-0 inline-flex items-center gap-1.5 text-xs font-medium px-2 py-0.5 rounded-full text-text-caption bg-gray-200 whitespace-nowrap">
+        <span className="shrink-0 inline-flex items-center gap-1.5 text-xs font-medium px-2 py-0.5 rounded-full text-text-caption bg-surface-muted whitespace-nowrap">
           <span className="size-1.5 rounded-full bg-gray-400" />
           {t("seatviewer.tickets.noTable")}
         </span>
@@ -236,12 +236,12 @@ export function TicketPanel({
       : t("seatviewer.tickets.pickPrompt");
 
     return (
-      <aside className="shrink-0 bg-surface-contrast border-b border-gray-200">
+      <aside className="shrink-0 bg-surface-contrast border-b border-border-neutral-light">
         <button
           type="button"
           aria-expanded={expanded}
           onClick={() => setExpanded(prev => !prev)}
-          className="w-full flex items-center gap-2 px-4 py-3 text-left cursor-pointer hover:bg-gray-100"
+          className="w-full flex items-center gap-2 px-4 py-3 text-left cursor-pointer hover:bg-surface-neutral"
         >
           <h2 className="text-base font-medium text-text-body m-0">
             {t("seatviewer.tickets.yours")}
@@ -260,7 +260,7 @@ export function TicketPanel({
 
         {expanded && (
           <div
-            className="max-h-56 overflow-y-auto scrollbar border-t border-gray-200"
+            className="max-h-56 overflow-y-auto scrollbar border-t border-border-neutral-light"
             role="radiogroup"
           >
             {tickets.map(renderAttendeeRow)}
@@ -281,8 +281,8 @@ export function TicketPanel({
   }
 
   return (
-    <aside className="w-80 shrink-0 bg-surface-contrast border-r border-gray-200 flex flex-col min-h-0">
-      <div className="p-4 border-b border-gray-200 flex flex-col gap-3">
+    <aside className="w-80 shrink-0 bg-surface-contrast border-r border-border-neutral-light flex flex-col min-h-0">
+      <div className="p-4 border-b border-border-neutral-light flex flex-col gap-3">
         <div className="flex items-baseline gap-2">
           <h2 className="text-base font-medium text-text-body m-0">
             {t("seatviewer.tickets.holders")}
@@ -305,7 +305,7 @@ export function TicketPanel({
             onChange={e => onSearchChange(e.target.value)}
             placeholder={t("seatviewer.tickets.searchPlaceholder")}
             aria-label={t("seatviewer.tickets.searchLabel")}
-            className="w-full text-sm text-text-body pl-8 pr-2.5 py-2 border border-gray-200 rounded-lg bg-gray-100 focus:outline-2 focus:outline-primary-600 focus:bg-white"
+            className="w-full text-sm text-text-body pl-8 pr-2.5 py-2 border border-border-neutral-light rounded-lg bg-surface-neutral focus:outline-2 focus:outline-primary-600 focus:bg-white"
           />
         </div>
         {filterOptions && filterOptions.length > 0 && (
@@ -325,7 +325,7 @@ export function TicketPanel({
                   className={`text-xs font-medium px-2.5 py-1 rounded-full cursor-pointer transition-colors ${
                     active
                       ? "bg-primary-600 text-white"
-                      : "bg-gray-200 text-text-body hover:bg-gray-300"
+                      : "bg-surface-muted text-text-body hover:bg-surface-muted-hover"
                   }`}
                 >
                   {opt.label}

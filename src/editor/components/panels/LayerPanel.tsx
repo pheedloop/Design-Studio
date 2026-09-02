@@ -49,7 +49,7 @@ export function LayerPanel({
     >
       <div className="flex items-center gap-1.5">
         {activeLayer && (
-          <div className="flex items-center gap-1.5 px-2 py-1 bg-white border border-gray-200 rounded-lg shadow-md text-xs text-text-body">
+          <div className="flex items-center gap-1.5 px-2 py-1 bg-white border border-border-neutral-light rounded-lg shadow-md text-xs text-text-body">
             <span
               className="w-2 h-2 rounded-full"
               style={{ backgroundColor: LAYER_COLORS[activeLayer.id] }}
@@ -60,7 +60,7 @@ export function LayerPanel({
         <IconButton
           active={open}
           onClick={() => setOpen(prev => !prev)}
-          className={`shadow-md border ${open ? "border-primary-600" : "border-gray-200 bg-white hover:bg-surface-neutral"}`}
+          className={`shadow-md border ${open ? "border-primary-600" : "border-border-neutral-light bg-white hover:bg-surface-neutral"}`}
           title={t("editor.field.layers")}
         >
           <PiStack size={18} />
@@ -68,7 +68,7 @@ export function LayerPanel({
       </div>
 
       {open && (
-        <div className="absolute top-full right-0 mt-1 bg-white border border-gray-200 rounded-md shadow-lg py-1 min-w-[180px]">
+        <div className="absolute top-full right-0 mt-1 bg-white border border-border-neutral-light rounded-md shadow-lg py-1 min-w-[180px]">
           {layers.map(layer => {
             // Wayfinding gates the pathing layer: hide it entirely, or lock it.
             const locked =
@@ -85,7 +85,7 @@ export function LayerPanel({
                   locked
                     ? "text-text-disabled cursor-not-allowed"
                     : isActive
-                      ? "bg-gray-100 font-semibold text-text-heading cursor-pointer"
+                      ? "bg-surface-neutral font-semibold text-text-heading cursor-pointer"
                       : "text-text-body hover:bg-surface-neutral cursor-pointer"
                 }`}
                 onClick={locked ? undefined : () => onSetActiveLayer(layer.id)}

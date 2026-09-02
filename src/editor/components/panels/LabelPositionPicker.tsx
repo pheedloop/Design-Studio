@@ -22,7 +22,7 @@ export function LabelPositionPicker({
   return (
     <div className="flex flex-col gap-1.5">
       <SectionLabel>{t("editor.field.labelPosition")}</SectionLabel>
-      <div className="inline-grid grid-cols-3 gap-1 p-1.5 bg-surface-neutral rounded border border-gray-200 w-fit">
+      <div className="inline-grid grid-cols-3 gap-1 p-1.5 bg-surface-neutral rounded border border-border-neutral-light w-fit">
         {vValues.map(vv =>
           hValues.map(hh => {
             const active = vv === v && hh === h;
@@ -30,7 +30,9 @@ export function LabelPositionPicker({
               <button
                 key={`${vv}-${hh}`}
                 className={`w-5 h-5 rounded-sm flex items-center justify-center cursor-pointer transition-colors ${
-                  active ? "bg-blue-500" : "bg-gray-200 hover:bg-gray-300"
+                  active
+                    ? "bg-blue-500"
+                    : "bg-surface-muted hover:bg-surface-muted-hover"
                 }`}
                 onClick={() => onChange(vv, hh)}
                 title={`${vv}-${hh}`}

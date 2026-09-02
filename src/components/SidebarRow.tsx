@@ -31,7 +31,7 @@ export function SidebarRow({
           ? "text-text-disabled cursor-not-allowed"
           : isActive
             ? "bg-primary-600 text-white"
-            : "text-text-body hover:bg-gray-100 hover:text-text-heading",
+            : "text-text-body hover:bg-surface-neutral hover:text-text-heading",
       ].join(" ")}
     >
       <span className="shrink-0 flex items-center w-4">{icon}</span>

@@ -326,7 +326,7 @@ export function BackgroundUploadDialog({
         {!file ? (
           <div
             onClick={() => fileRef.current?.click()}
-            className="flex flex-col items-center justify-center h-40 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-primary-400 hover:bg-surface-neutral transition-colors"
+            className="flex flex-col items-center justify-center h-40 border-2 border-dashed border-border-neutral rounded-lg cursor-pointer hover:border-primary-400 hover:bg-surface-neutral transition-colors"
           >
             <span className="text-sm text-text-caption">
               {t("editor.background.chooseFile")}
@@ -346,7 +346,7 @@ export function BackgroundUploadDialog({
         ) : kind === "dxf" ? (
           !parsed ? (
             <>
-              <div className="flex items-center justify-center h-40 bg-gray-100 rounded-lg">
+              <div className="flex items-center justify-center h-40 bg-surface-neutral rounded-lg">
                 <span className="text-xs text-text-caption px-4 text-center truncate">
                   {file.name}
                 </span>
@@ -367,14 +367,14 @@ export function BackgroundUploadDialog({
                 ref={previewRef}
                 width={PREVIEW_W}
                 height={PREVIEW_H}
-                className="w-full bg-gray-100 rounded-lg border border-gray-200"
+                className="w-full bg-surface-neutral rounded-lg border border-border-neutral-light"
               />
 
               <div className="flex flex-col gap-1">
                 <span className="text-xs font-medium text-text-body">
                   {t("editor.background.layersToImport")}
                 </span>
-                <div className="max-h-40 overflow-y-auto flex flex-col gap-1 border border-gray-200 rounded-md p-2">
+                <div className="max-h-40 overflow-y-auto flex flex-col gap-1 border border-border-neutral-light rounded-md p-2">
                   {parsed.layers.map(layer => (
                     <label
                       key={layer}
@@ -462,7 +462,7 @@ export function BackgroundUploadDialog({
           )
         ) : (
           <>
-            <div className="flex items-center justify-center h-40 bg-gray-100 rounded-lg overflow-hidden">
+            <div className="flex items-center justify-center h-40 bg-surface-neutral rounded-lg overflow-hidden">
               {imagePreview ? (
                 <img
                   src={imagePreview}

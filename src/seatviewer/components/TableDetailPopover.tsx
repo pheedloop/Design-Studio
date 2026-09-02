@@ -28,7 +28,7 @@ const OCC_BADGE: Record<OccupancyLevel, string> = {
   available: "text-[#14653a] bg-[rgba(0,168,99,0.12)]",
   half: "text-[#8a5a00] bg-[rgba(255,168,0,0.16)]",
   low: "text-[#b42318] bg-[rgba(235,87,87,0.16)]",
-  full: "text-text-body bg-gray-200",
+  full: "text-text-body bg-surface-muted",
 };
 
 function initials(o: SeatOccupant): string {
@@ -63,9 +63,9 @@ export function TableDetailPopover({
       role="dialog"
       aria-modal="false"
       aria-label={t("seatviewer.table.details", { name: tableName })}
-      className="absolute z-[9999] w-72 max-w-[calc(100%-24px)] left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-surface-contrast border border-gray-300 rounded-xl shadow-[0_16px_48px_rgba(38,59,90,0.28)] overflow-hidden"
+      className="absolute z-[9999] w-72 max-w-[calc(100%-24px)] left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-surface-contrast border border-border-neutral rounded-xl shadow-[0_16px_48px_rgba(38,59,90,0.28)] overflow-hidden"
     >
-      <div className="flex items-start gap-2 p-3 border-b border-gray-200">
+      <div className="flex items-start gap-2 p-3 border-b border-border-neutral-light">
         <div className="flex-1 min-w-0">
           <h3 className="m-0 text-base font-medium text-text-body">
             {tableName}
@@ -131,7 +131,7 @@ export function TableDetailPopover({
         </div>
       )}
 
-      <div className="p-3 border-t border-gray-200 bg-gray-100">
+      <div className="p-3 border-t border-border-neutral-light bg-surface-neutral">
         <Button
           variant="solid"
           color="primary"

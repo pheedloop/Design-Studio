@@ -56,7 +56,7 @@ export function IconPicker({
         className={`flex items-center justify-center w-9 h-9 rounded cursor-pointer transition-colors ${
           isSelected
             ? "bg-primary-600 text-white"
-            : "hover:bg-gray-100 text-text-body"
+            : "hover:bg-surface-neutral text-text-body"
         }`}
       >
         <Icon size={20} />
@@ -69,10 +69,10 @@ export function IconPicker({
   return (
     <div
       ref={ref}
-      className="bg-white border border-gray-200 rounded-lg shadow-lg z-[9999] w-[280px] max-h-[400px] flex flex-col"
+      className="bg-white border border-border-neutral-light rounded-lg shadow-lg z-[9999] w-[280px] max-h-[400px] flex flex-col"
       style={{ position: "fixed", left: anchorRect.right + 8, top }}
     >
-      <div className="flex items-center gap-2 px-3 py-2 border-b border-gray-200">
+      <div className="flex items-center gap-2 px-3 py-2 border-b border-border-neutral-light">
         <PiMagnifyingGlass size={14} className="text-text-subtle shrink-0" />
         <input
           ref={inputRef}

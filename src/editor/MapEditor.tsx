@@ -2011,7 +2011,7 @@ function MapEditorInner({
         />
       )}
       {isCropping && (
-        <div className="fixed top-4 left-1/2 -translate-x-1/2 z-[60] flex items-center gap-2 bg-white border border-gray-200 shadow-lg rounded-lg px-3 py-2">
+        <div className="fixed top-4 left-1/2 -translate-x-1/2 z-[60] flex items-center gap-2 bg-white border border-border-neutral-light shadow-lg rounded-lg px-3 py-2">
           <span className="text-xs text-text-body">
             {t("editor.crop.hint")}
           </span>

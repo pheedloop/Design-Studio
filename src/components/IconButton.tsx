@@ -26,7 +26,7 @@ const states = {
   filled: {
     active: "bg-primary-600 text-white hover:bg-primary-700",
     inactive:
-      "text-text-caption hover:bg-gray-100 hover:text-text-body disabled:text-text-disabled disabled:hover:bg-transparent",
+      "text-text-caption hover:bg-surface-neutral hover:text-text-body disabled:text-text-disabled disabled:hover:bg-transparent",
   },
   bare: {
     active: "text-primary-600 bg-primary-50",

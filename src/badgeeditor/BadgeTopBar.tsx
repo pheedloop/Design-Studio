@@ -47,8 +47,8 @@ export function BadgeTopBar({
     ) : null;
 
   return (
-    <div className="flex items-center bg-white border-b border-gray-200">
-      <div className="flex items-center justify-center w-12 shrink-0 h-10 border-r border-gray-200 text-text-subtle">
+    <div className="flex items-center bg-white border-b border-border-neutral-light">
+      <div className="flex items-center justify-center w-12 shrink-0 h-10 border-r border-border-neutral-light text-text-subtle">
         <PiIdentificationBadge size={20} />
       </div>
       {menu("file", "File", fileMenuItems)}

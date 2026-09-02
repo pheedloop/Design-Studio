@@ -47,7 +47,7 @@ export function PlacementFilterBar({
   };
 
   return (
-    <div className="border-b border-gray-100 bg-white">
+    <div className="border-b border-border-neutral-faint bg-white">
       {/* Toolbar row */}
       <div className="flex items-center gap-1.5 px-3 py-1.5">
         {/* Shape picker */}
@@ -58,17 +58,17 @@ export function PlacementFilterBar({
               setShapeOpen(v => !v);
               setFilterOpen(false);
             }}
-            className="flex items-center gap-1 text-xs text-text-body border border-gray-200 rounded px-1.5 py-0.5 hover:bg-surface-neutral transition-colors"
+            className="flex items-center gap-1 text-xs text-text-body border border-border-neutral-light rounded px-1.5 py-0.5 hover:bg-surface-neutral transition-colors"
           >
             <span
-              className="inline-block w-2.5 h-2.5 bg-gray-300 shrink-0"
+              className="inline-block w-2.5 h-2.5 bg-surface-muted-hover shrink-0"
               style={{ borderRadius: shape === "ellipse" ? "9999px" : "0px" }}
             />
             {t(PLACEMENT_SHAPE_LABEL[shape])}
             <PiCaretDown size={10} className="text-text-subtle" />
           </button>
           {shapeOpen && (
-            <div className="absolute top-full left-0 mt-0.5 bg-white border border-gray-200 rounded shadow-md z-20 py-0.5 w-28">
+            <div className="absolute top-full left-0 mt-0.5 bg-white border border-border-neutral-light rounded shadow-md z-20 py-0.5 w-28">
               {(["rect", "ellipse"] as const).map(s => (
                 <button
                   key={s}
@@ -85,7 +85,7 @@ export function PlacementFilterBar({
                   ].join(" ")}
                 >
                   <span
-                    className="inline-block w-2.5 h-2.5 bg-gray-300 shrink-0"
+                    className="inline-block w-2.5 h-2.5 bg-surface-muted-hover shrink-0"
                     style={{ borderRadius: s === "ellipse" ? "9999px" : "0px" }}
                   />
                   {t(PLACEMENT_SHAPE_LABEL[s])}
@@ -123,7 +123,7 @@ export function PlacementFilterBar({
             <PiFunnel size={13} />
           </IconButton>
           {filterOpen && (
-            <div className="absolute right-0 top-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-20 py-1.5 w-36">
+            <div className="absolute right-0 top-full mt-1 bg-white border border-border-neutral-light rounded-lg shadow-lg z-20 py-1.5 w-36">
               <div className="px-2.5 pb-1 text-[10px] uppercase tracking-wider text-text-subtle font-medium">
                 {t("editor.placement.status")}
               </div>
@@ -166,7 +166,7 @@ export function PlacementFilterBar({
               value={query}
               onChange={e => onQueryChange(e.target.value)}
               placeholder={t("editor.placement.searchPlaceholder")}
-              className="w-full pl-2.5 pr-6 py-1 text-xs border border-gray-200 rounded bg-surface-neutral focus:bg-white focus:outline-none focus:ring-1 focus:ring-primary-400 transition"
+              className="w-full pl-2.5 pr-6 py-1 text-xs border border-border-neutral-light rounded bg-surface-neutral focus:bg-white focus:outline-none focus:ring-1 focus:ring-primary-400 transition"
             />
             {query && (
               <IconButton

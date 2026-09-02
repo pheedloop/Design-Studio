@@ -211,7 +211,7 @@ export function BadgeSetupDialog({
               {panels.map((cfg, i) => (
                 <div
                   key={i}
-                  className="flex flex-col gap-1.5 px-2.5 py-2 rounded border border-gray-200"
+                  className="flex flex-col gap-1.5 px-2.5 py-2 rounded border border-border-neutral-light"
                 >
                   <span className="text-xs font-medium text-text-body">
                     {pageRoleLabel(pageRoleForIndex(count, i))}

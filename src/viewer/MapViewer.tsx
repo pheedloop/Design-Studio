@@ -319,7 +319,7 @@ function MapViewerInner({
           {showDirectionsButton && (
             <button
               onClick={directions.open}
-              className="flex items-center gap-1.5 px-3 py-2 text-xs font-medium text-blue-600 hover:bg-blue-50 cursor-pointer transition-colors shrink-0 border-l border-gray-200"
+              className="flex items-center gap-1.5 px-3 py-2 text-xs font-medium text-blue-600 hover:bg-blue-50 cursor-pointer transition-colors shrink-0 border-l border-border-neutral-light"
             >
               <PiPath size={16} />
               <span className="hidden sm:inline">
@@ -350,7 +350,7 @@ function MapViewerInner({
             }}
           />
           {!isMobile && directions.active && (
-            <div className="w-64 shrink-0 bg-white border-l border-gray-200 flex flex-col">
+            <div className="w-64 shrink-0 bg-white border-l border-border-neutral-light flex flex-col">
               <DirectionsPanel
                 startLocation={directions.startLocation}
                 endLocation={directions.endLocation}

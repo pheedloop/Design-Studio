@@ -46,7 +46,7 @@ export function PlacementSection({
   const total = placed + unplaced;
 
   return (
-    <div className="border-b border-gray-100 last:border-0">
+    <div className="border-b border-border-neutral-faint last:border-0">
       {/* Header */}
       <button
         type="button"
@@ -55,7 +55,7 @@ export function PlacementSection({
           "w-full flex items-center gap-2.5 py-2.5 text-left transition-colors border-l-2",
           isOpen
             ? "bg-primary-100 border-primary-500 px-[10px]"
-            : "border-transparent px-3 hover:bg-gray-100",
+            : "border-transparent px-3 hover:bg-surface-neutral",
         ].join(" ")}
       >
         <span

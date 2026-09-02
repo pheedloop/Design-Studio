@@ -262,7 +262,7 @@ export function HelpDialog({ onClose }: HelpDialogProps) {
       width="520px"
       maxHeight="80vh"
     >
-      <div className="px-4 pt-3 border-b border-gray-200">
+      <div className="px-4 pt-3 border-b border-border-neutral-light">
         <TabBar
           tabs={[
             { id: "start", label: t("editor.help.tab.gettingStarted") },
@@ -307,7 +307,7 @@ export function HelpDialog({ onClose }: HelpDialogProps) {
                     <span className="text-xs text-text-body">
                       {t(item.descriptionKey)}
                     </span>
-                    <kbd className="text-[10px] font-mono text-text-caption bg-gray-100 border border-gray-200 rounded px-1.5 py-0.5">
+                    <kbd className="text-[10px] font-mono text-text-caption bg-surface-neutral border border-border-neutral-light rounded px-1.5 py-0.5">
                       {item.keysKey ? t(item.keysKey) : item.keys}
                     </kbd>
                   </div>

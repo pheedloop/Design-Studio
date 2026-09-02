@@ -80,7 +80,7 @@ export function AlignmentControls(props: AlignmentControlsProps) {
         return (
           <Fragment key={i}>
             {precededByContent && (
-              <div className="w-px h-3.5 bg-gray-200 shrink-0 mx-0.5" />
+              <div className="w-px h-3.5 bg-surface-muted shrink-0 mx-0.5" />
             )}
             {group.map(({ prop, glyph, labelKey }) => (
               <IconButton

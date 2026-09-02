@@ -51,7 +51,7 @@ export function PropertiesPanel({
 }: PropertiesPanelProps) {
   if (!field) {
     return (
-      <div className="w-48 shrink-0 border-l border-gray-200 bg-white flex flex-col">
+      <div className="w-48 shrink-0 border-l border-border-neutral-light bg-white flex flex-col">
         <div className="flex-1 flex items-center justify-center p-6 text-center">
           <span className="text-xs text-text-subtle">
             Select a field to edit its properties.
@@ -73,8 +73,8 @@ export function PropertiesPanel({
   };
 
   return (
-    <div className="w-52 shrink-0 border-l border-gray-200 bg-white flex flex-col">
-      <div className="px-3 py-2 border-b border-gray-200 flex items-center justify-between">
+    <div className="w-52 shrink-0 border-l border-border-neutral-light bg-white flex flex-col">
+      <div className="px-3 py-2 border-b border-border-neutral-light flex items-center justify-between">
         <span className="text-xs font-medium text-text-body truncate">
           {label}
         </span>
@@ -171,7 +171,7 @@ export function PropertiesPanel({
                   onClick={() =>
                     onChange({ text: field.text ? `${field.text} ${t}` : t })
                   }
-                  className="text-[11px] px-1.5 py-0.5 rounded bg-gray-100 hover:bg-gray-200 text-text-body font-mono"
+                  className="text-[11px] px-1.5 py-0.5 rounded bg-surface-neutral hover:bg-surface-muted text-text-body font-mono"
                 >
                   {t.replace(/[{}]/g, "").trim()}
                 </button>

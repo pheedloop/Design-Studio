@@ -83,10 +83,10 @@ export function MapSidebar({
     : (visibleTabs[0]?.id ?? "exhibitors");
 
   return (
-    <div className="w-64 shrink-0 bg-white border-l border-gray-200 flex flex-col">
+    <div className="w-64 shrink-0 bg-white border-l border-border-neutral-light flex flex-col">
       {/* Tab bar — only shown when there are multiple tabs */}
       {visibleTabs.length > 1 && (
-        <div className="flex border-b border-gray-200">
+        <div className="flex border-b border-border-neutral-light">
           {visibleTabs.map(tab => (
             <button
               key={tab.id}
@@ -105,7 +105,7 @@ export function MapSidebar({
 
       {/* Single tab header — mirrors original ExhibitorList when no tabs needed */}
       {visibleTabs.length === 1 && (
-        <div className="px-3 py-2 border-b border-gray-200">
+        <div className="px-3 py-2 border-b border-border-neutral-light">
           <span className="text-xs font-medium text-text-body">
             {t("viewer.labelWithCount", {
               label: visibleTabs[0].label,
@@ -133,7 +133,7 @@ export function MapSidebar({
                     boothSlug: exhibitor.boothSlug,
                   });
                 }}
-                className={`w-full text-left px-3 py-2 border-b border-gray-100 cursor-pointer transition-colors ${
+                className={`w-full text-left px-3 py-2 border-b border-border-neutral-faint cursor-pointer transition-colors ${
                   isSelected ? "bg-primary-100" : "hover:bg-surface-neutral"
                 }`}
               >
@@ -142,7 +142,7 @@ export function MapSidebar({
                     <img
                       src={exhibitor.logo}
                       alt=""
-                      className="w-7 h-7 shrink-0 rounded-md border border-gray-200 bg-white object-contain p-0.5"
+                      className="w-7 h-7 shrink-0 rounded-md border border-border-neutral-light bg-white object-contain p-0.5"
                     />
                   )}
                   <div>
@@ -175,7 +175,7 @@ export function MapSidebar({
                     sessionId: el.properties.sessionId ?? null,
                   })
                 }
-                className={`w-full text-left px-3 py-2 border-b border-gray-100 cursor-pointer transition-colors ${
+                className={`w-full text-left px-3 py-2 border-b border-border-neutral-faint cursor-pointer transition-colors ${
                   isSelected ? "bg-primary-100" : "hover:bg-surface-neutral"
                 }`}
               >
@@ -199,7 +199,7 @@ export function MapSidebar({
                     meetingRoomId: el.properties.meetingRoomId ?? null,
                   })
                 }
-                className={`w-full text-left px-3 py-2 border-b border-gray-100 cursor-pointer transition-colors ${
+                className={`w-full text-left px-3 py-2 border-b border-border-neutral-faint cursor-pointer transition-colors ${
                   isSelected ? "bg-primary-100" : "hover:bg-surface-neutral"
                 }`}
               >

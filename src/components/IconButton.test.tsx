@@ -9,7 +9,7 @@ const cls = () => screen.getByRole("button").className;
 const FILLED_SHAPE =
   "flex items-center justify-center rounded-lg cursor-pointer transition-colors disabled:cursor-not-allowed";
 const FILLED_IDLE =
-  "text-text-caption hover:bg-gray-100 hover:text-text-body disabled:text-text-disabled disabled:hover:bg-transparent";
+  "text-text-caption hover:bg-surface-neutral hover:text-text-body disabled:text-text-disabled disabled:hover:bg-transparent";
 const FILLED_ACTIVE = "bg-primary-600 text-white hover:bg-primary-700";
 
 describe("IconButton filled variant", () => {

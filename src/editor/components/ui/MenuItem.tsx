@@ -22,7 +22,7 @@ export function MenuItem({
           ? "text-text-disabled cursor-default"
           : danger
             ? "text-red-600 hover:bg-red-50 cursor-pointer"
-            : "text-text-body hover:bg-gray-100 cursor-pointer"
+            : "text-text-body hover:bg-surface-neutral cursor-pointer"
       }`}
     >
       <span>{label}</span>

@@ -160,7 +160,7 @@ export function MapSheet({
                       boothSlug: exhibitor.boothSlug,
                     });
                   }}
-                  className={`w-full text-left px-4 py-2.5 border-t border-gray-100 cursor-pointer transition-colors ${
+                  className={`w-full text-left px-4 py-2.5 border-t border-border-neutral-faint cursor-pointer transition-colors ${
                     isSelected ? "bg-primary-100" : "hover:bg-surface-neutral"
                   }`}
                 >
@@ -169,7 +169,7 @@ export function MapSheet({
                       <img
                         src={exhibitor.logo}
                         alt=""
-                        className="w-7 h-7 shrink-0 rounded-md border border-gray-200 bg-white object-contain p-0.5"
+                        className="w-7 h-7 shrink-0 rounded-md border border-border-neutral-light bg-white object-contain p-0.5"
                       />
                     )}
                     <div>
@@ -202,7 +202,7 @@ export function MapSheet({
                       sessionId: el.properties.sessionId ?? null,
                     })
                   }
-                  className={`w-full text-left px-4 py-2.5 border-t border-gray-100 cursor-pointer transition-colors ${
+                  className={`w-full text-left px-4 py-2.5 border-t border-border-neutral-faint cursor-pointer transition-colors ${
                     isSelected ? "bg-primary-100" : "hover:bg-surface-neutral"
                   }`}
                 >
@@ -226,7 +226,7 @@ export function MapSheet({
                       meetingRoomId: el.properties.meetingRoomId ?? null,
                     })
                   }
-                  className={`w-full text-left px-4 py-2.5 border-t border-gray-100 cursor-pointer transition-colors ${
+                  className={`w-full text-left px-4 py-2.5 border-t border-border-neutral-faint cursor-pointer transition-colors ${
                     isSelected ? "bg-primary-100" : "hover:bg-surface-neutral"
                   }`}
                 >

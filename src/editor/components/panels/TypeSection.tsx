@@ -52,14 +52,14 @@ export function TypeSection({ typeKey, defaults, onChange }: TypeSectionProps) {
   const opacity = defaults.opacity ?? 1;
 
   return (
-    <div className="border border-gray-200 rounded">
+    <div className="border border-border-neutral-light rounded">
       <button
         className="w-full flex items-center justify-between px-3 py-2 text-left hover:bg-surface-neutral transition-colors cursor-pointer"
         onClick={() => setOpen(o => !o)}
       >
         <div className="flex items-center gap-2">
           <span
-            className="w-3 h-3 rounded-sm shrink-0 border border-gray-300"
+            className="w-3 h-3 rounded-sm shrink-0 border border-border-neutral"
             style={{ background: defaults.color ?? "#94a3b8" }}
           />
           <span className="text-xs font-medium text-text-body">
@@ -74,7 +74,7 @@ export function TypeSection({ typeKey, defaults, onChange }: TypeSectionProps) {
       </button>
 
       {open && (
-        <div className="flex flex-col gap-3 px-3 pb-3 border-t border-gray-100 pt-3">
+        <div className="flex flex-col gap-3 px-3 pb-3 border-t border-border-neutral-faint pt-3">
           <ColorSwatch
             label={t("editor.field.fill")}
             value={defaults.color ?? "#94a3b8"}
@@ -127,7 +127,7 @@ export function TypeSection({ typeKey, defaults, onChange }: TypeSectionProps) {
               className="w-full"
             />
           </div>
-          <div className="border-t border-gray-100 pt-3">
+          <div className="border-t border-border-neutral-faint pt-3">
             <LabelSection
               properties={toElementProperties(defaults)}
               onChange={updates =>

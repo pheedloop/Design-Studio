@@ -11,7 +11,7 @@ export function BadgeSidebarHeader({
   const t = useT();
 
   return (
-    <div className="px-3 h-[43px] shrink-0 border-b border-gray-200 flex items-center gap-2 min-w-0">
+    <div className="px-3 h-[43px] shrink-0 border-b border-border-neutral-light flex items-center gap-2 min-w-0">
       <InlineRenameField
         value={name}
         onCommit={onNameChange}

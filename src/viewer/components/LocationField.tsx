@@ -36,7 +36,7 @@ export function LocationField({
 
   if (value) {
     return (
-      <div className="flex items-center gap-2 px-3 py-2 bg-surface-neutral rounded-lg border border-gray-200">
+      <div className="flex items-center gap-2 px-3 py-2 bg-surface-neutral rounded-lg border border-border-neutral-light">
         <span className="text-[10px] font-semibold text-text-subtle uppercase w-8 shrink-0">
           {label}
         </span>
@@ -60,7 +60,7 @@ export function LocationField({
 
   return (
     <div className="relative">
-      <div className="flex items-center gap-2 px-3 py-2 bg-white rounded-lg border border-gray-200 focus-within:border-blue-400">
+      <div className="flex items-center gap-2 px-3 py-2 bg-white rounded-lg border border-border-neutral-light focus-within:border-blue-400">
         <span className="text-[10px] font-semibold text-text-subtle uppercase w-8 shrink-0">
           {label}
         </span>
@@ -78,7 +78,7 @@ export function LocationField({
       </div>
 
       {showDropdown && (
-        <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-44 overflow-y-auto">
+        <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-border-neutral-light rounded-lg shadow-lg z-50 max-h-44 overflow-y-auto">
           {results.length === 0 ? (
             <div className="px-3 py-2 text-xs text-text-subtle">
               {t("viewer.search.noResults")}

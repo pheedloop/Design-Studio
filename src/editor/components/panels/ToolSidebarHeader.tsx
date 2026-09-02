@@ -34,7 +34,7 @@ export function ToolSidebarHeader({
   const t = useT();
 
   return (
-    <div className="px-3 py-3 border-b border-gray-100 flex items-center gap-2 min-w-0">
+    <div className="px-3 py-3 border-b border-border-neutral-faint flex items-center gap-2 min-w-0">
       {isDirty && (
         <span
           className="shrink-0 text-red-500 font-bold text-sm leading-none"

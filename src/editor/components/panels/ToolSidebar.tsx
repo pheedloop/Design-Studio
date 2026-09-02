@@ -147,8 +147,8 @@ export function ToolSidebar({
   // Pathing mode overrides the normal sidebar
   if (isPathingMode && onPathingToolChange && activePathingTool) {
     return (
-      <div className="flex flex-col w-64 shrink-0 bg-white border-r border-gray-200 overflow-hidden">
-        <div className="px-3 py-3 border-b border-gray-100">
+      <div className="flex flex-col w-64 shrink-0 bg-white border-r border-border-neutral-light overflow-hidden">
+        <div className="px-3 py-3 border-b border-border-neutral-faint">
           <div className="text-[10px] uppercase tracking-wider text-text-subtle leading-none mb-1">
             {t("editor.pathing.layerTitle")}
           </div>
@@ -174,8 +174,8 @@ export function ToolSidebar({
   // properties panel), so the drawing tools don't apply here.
   if (isBackgroundLayer) {
     return (
-      <div className="flex flex-col w-64 shrink-0 bg-white border-r border-gray-200 overflow-hidden">
-        <div className="px-3 py-3 border-b border-gray-100">
+      <div className="flex flex-col w-64 shrink-0 bg-white border-r border-border-neutral-light overflow-hidden">
+        <div className="px-3 py-3 border-b border-border-neutral-faint">
           <div className="text-[10px] uppercase tracking-wider text-text-subtle leading-none mb-1">
             {t("editor.background.layerTitle")}
           </div>
@@ -204,7 +204,7 @@ export function ToolSidebar({
 
   return (
     <>
-      <div className="flex flex-col w-64 shrink-0 bg-white border-r border-gray-200 overflow-hidden">
+      <div className="flex flex-col w-64 shrink-0 bg-white border-r border-border-neutral-light overflow-hidden">
         {/* Map name + mode switcher */}
         <ToolSidebarHeader
           mapName={mapName}

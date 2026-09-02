@@ -203,11 +203,11 @@ export function CanvasResizeDialog({
                     className={`flex h-8 w-8 items-center justify-center rounded border transition-colors ${
                       selected
                         ? "border-blue-500 bg-blue-50"
-                        : "border-gray-200 bg-surface-neutral hover:border-gray-300 hover:bg-gray-100"
+                        : "border-border-neutral-light bg-surface-neutral hover:border-border-neutral hover:bg-surface-neutral"
                     }`}
                   >
                     <span
-                      className={`h-2 w-2 rounded-full ${selected ? "bg-blue-500" : "bg-gray-300"}`}
+                      className={`h-2 w-2 rounded-full ${selected ? "bg-blue-500" : "bg-surface-muted-hover"}`}
                     />
                   </button>
                 );
@@ -220,7 +220,7 @@ export function CanvasResizeDialog({
         )}
 
         {onStartCrop && (
-          <div className="flex flex-col gap-1.5 border-t border-gray-100 pt-4">
+          <div className="flex flex-col gap-1.5 border-t border-border-neutral-faint pt-4">
             <SectionLabel>{t("editor.resize.cropSection")}</SectionLabel>
             <Button
               variant="outline"

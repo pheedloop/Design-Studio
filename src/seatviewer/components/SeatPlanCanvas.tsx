@@ -114,7 +114,7 @@ function SeatPlanCanvasInner({
   return (
     <div
       ref={containerRef}
-      className="relative flex-1 min-w-0 bg-gray-200 overflow-hidden"
+      className="relative flex-1 min-w-0 bg-surface-muted overflow-hidden"
     >
       {/* Absolute so the Stage's own pixel size can't grow the box we measure. */}
       <Stage

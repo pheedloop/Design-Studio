@@ -107,7 +107,7 @@ export function ViewerCanvas({
   return (
     <div
       ref={containerRef}
-      className="relative flex-1 min-w-0 bg-gray-200 overflow-hidden"
+      className="relative flex-1 min-w-0 bg-surface-muted overflow-hidden"
       style={{ touchAction: "none" }}
     >
       {isFitted && (
