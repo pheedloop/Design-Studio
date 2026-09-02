@@ -43,7 +43,7 @@ export function LocationField({
         align="center"
         className="px-xs py-xxs bg-surface-neutral rounded-lg border border-border-neutral-light"
       >
-        <span className="text-[10px] font-semibold text-text-subtle uppercase w-8 shrink-0">
+        <span className="text-xs font-semibold text-text-subtle uppercase w-8 shrink-0">
           {label}
         </span>
         <span className="flex-1 text-xs font-medium text-text-heading truncate">
@@ -71,7 +71,7 @@ export function LocationField({
         align="center"
         className="px-xs py-xxs bg-white rounded-lg border border-border-neutral-light focus-within:border-blue-400"
       >
-        <span className="text-[10px] font-semibold text-text-subtle uppercase w-8 shrink-0">
+        <span className="text-xs font-semibold text-text-subtle uppercase w-8 shrink-0">
           {label}
         </span>
         <PiMagnifyingGlass size={12} className="text-text-disabled shrink-0" />
@@ -117,7 +117,7 @@ export function LocationField({
                       {result.exhibitorName || displayName(result, t)}
                     </Text>
                     <span
-                      className={`text-[10px] font-medium px-tight py-hair rounded shrink-0 ${badge.className}`}
+                      className={`text-xs font-medium px-tight py-hair rounded shrink-0 ${badge.className}`}
                     >
                       {t(badge.labelKey)}
                     </span>

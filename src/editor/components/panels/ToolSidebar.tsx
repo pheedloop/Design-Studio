@@ -149,7 +149,7 @@ export function ToolSidebar({
     return (
       <div className="flex flex-col w-64 shrink-0 bg-white border-r border-border-neutral-light overflow-hidden">
         <div className="px-xs py-xs border-b border-border-neutral-faint">
-          <div className="text-[10px] uppercase tracking-wider text-text-subtle leading-none mb-xxxs">
+          <div className="text-xs uppercase tracking-wider text-text-subtle leading-none mb-xxxs">
             {t("editor.pathing.layerTitle")}
           </div>
           <div className="text-base font-semibold text-text-heading truncate">
@@ -176,7 +176,7 @@ export function ToolSidebar({
     return (
       <div className="flex flex-col w-64 shrink-0 bg-white border-r border-border-neutral-light overflow-hidden">
         <div className="px-xs py-xs border-b border-border-neutral-faint">
-          <div className="text-[10px] uppercase tracking-wider text-text-subtle leading-none mb-xxxs">
+          <div className="text-xs uppercase tracking-wider text-text-subtle leading-none mb-xxxs">
             {t("editor.background.layerTitle")}
           </div>
           <div className="text-base font-semibold text-text-heading truncate">

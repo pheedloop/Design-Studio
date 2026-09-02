@@ -119,7 +119,7 @@ export function TypeSection({ typeKey, defaults, onChange }: TypeSectionProps) {
           <Stack gap="tight">
             <div className="flex items-center justify-between">
               <SectionLabel>{t("editor.field.opacity")}</SectionLabel>
-              <span className="text-[11px] text-text-subtle">
+              <span className="text-xs text-text-subtle">
                 {Math.round(opacity * 100)}%
               </span>
             </div>

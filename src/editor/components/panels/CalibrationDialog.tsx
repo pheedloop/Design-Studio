@@ -106,7 +106,7 @@ export function CalibrationDialog({
         </Row>
 
         {displayUnit === "in" && distance > 0 && (
-          <p className="text-[11px] text-text-subtle">
+          <p className="text-xs text-text-subtle">
             {t("editor.calibration.equals", {
               measurement: t("common.measurement", {
                 value: formatNumber(distance / 12, locale, 2),

@@ -249,7 +249,7 @@ export function PropertiesPanel({
           <Stack gap="tight">
             <div className="flex items-center justify-between">
               <SectionLabel>{t("editor.field.opacity")}</SectionLabel>
-              <span className="text-[11px] text-text-subtle">
+              <span className="text-xs text-text-subtle">
                 {commonOpacity !== undefined
                   ? `${Math.round(commonOpacity * 100)}%`
                   : t("editor.field.mixed")}
@@ -351,16 +351,16 @@ export function PropertiesPanel({
                       }}
                     />
                   ) : (
-                    <div className="text-[11px] text-text-caption truncate">
+                    <div className="text-xs text-text-caption truncate">
                       {background.sourceFileName}
                     </div>
                   )}
                   <Stack gap="tight">
                     <div className="flex items-center justify-between">
-                      <span className="text-[11px] text-text-caption">
+                      <span className="text-xs text-text-caption">
                         {t("editor.field.opacity")}
                       </span>
-                      <span className="text-[11px] text-text-subtle">
+                      <span className="text-xs text-text-subtle">
                         {Math.round(background.opacity * 100)}%
                       </span>
                     </div>
@@ -379,7 +379,7 @@ export function PropertiesPanel({
 
                   {background.kind === "dxf" && (
                     <Stack gap="xxxs">
-                      <span className="text-[11px] text-text-caption">
+                      <span className="text-xs text-text-caption">
                         {t("editor.field.layers")}
                       </span>
                       <Stack
@@ -389,7 +389,7 @@ export function PropertiesPanel({
                         {background.layers.map(layer => (
                           <label
                             key={layer}
-                            className="flex items-center gap-xxs cursor-pointer text-[11px]"
+                            className="flex items-center gap-xxs cursor-pointer text-xs"
                           >
                             <input
                               type="checkbox"
@@ -484,7 +484,7 @@ export function PropertiesPanel({
             ]}
             value={tab}
             onChange={id => setTab(id as typeof tab)}
-            itemClassName="px-tight py-hair text-[10px]"
+            itemClassName="px-tight py-hair text-xs"
           />
         )}
       </div>
@@ -506,10 +506,10 @@ export function PropertiesPanel({
               align="start"
               className="px-xxs py-tight rounded bg-red-50 border border-red-200"
             >
-              <span className="text-red-500 text-[10px] font-medium leading-4">
+              <span className="text-red-500 text-xs font-medium leading-4">
                 {t("editor.properties.unlinked")}
               </span>
-              <span className="text-red-400 text-[10px] leading-4">
+              <span className="text-red-400 text-xs leading-4">
                 {t("editor.properties.unlinkedHint")}
               </span>
             </Row>
@@ -528,7 +528,7 @@ export function PropertiesPanel({
           <Stack gap="tight">
             <div className="flex items-center justify-between">
               <SectionLabel>{t("editor.field.opacity")}</SectionLabel>
-              <span className="text-[11px] text-text-subtle">
+              <span className="text-xs text-text-subtle">
                 {Math.round((element.properties.opacity ?? 1) * 100)}%
               </span>
             </div>

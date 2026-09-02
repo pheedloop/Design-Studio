@@ -297,7 +297,7 @@ export function HelpDialog({ onClose }: HelpDialogProps) {
         {tab === "shortcuts" &&
           shortcuts.map(section => (
             <div key={section.categoryKey} className="mb-s">
-              <div className="text-[10px] font-medium text-text-subtle uppercase tracking-wide mb-tight">
+              <div className="text-xs font-medium text-text-subtle uppercase tracking-wide mb-tight">
                 {t(section.categoryKey)}
               </div>
               <div className="space-y-1">
@@ -309,7 +309,7 @@ export function HelpDialog({ onClose }: HelpDialogProps) {
                     <span className="text-xs text-text-body">
                       {t(item.descriptionKey)}
                     </span>
-                    <kbd className="text-[10px] font-mono text-text-caption bg-surface-neutral border border-border-neutral-light rounded px-tight py-hair">
+                    <kbd className="text-xs font-mono text-text-caption bg-surface-neutral border border-border-neutral-light rounded px-tight py-hair">
                       {item.keysKey ? t(item.keysKey) : item.keys}
                     </kbd>
                   </div>
@@ -325,7 +325,7 @@ export function HelpDialog({ onClose }: HelpDialogProps) {
             </p>
             {menus.map(menu => (
               <div key={menu.nameKey} className="mb-s">
-                <div className="text-[10px] font-medium text-text-subtle uppercase tracking-wide mb-tight">
+                <div className="text-xs font-medium text-text-subtle uppercase tracking-wide mb-tight">
                   {t(menu.nameKey)}
                 </div>
                 <div className="space-y-1">

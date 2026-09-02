@@ -133,7 +133,7 @@ export function TopBar({
           title={t("editor.topBar.debugTitle")}
         >
           <PiBug size={16} />
-          <span className="text-[11px]">{t("editor.topBar.debug")}</span>
+          <span className="text-xs">{t("editor.topBar.debug")}</span>
         </MenuButton>
       )}
     </div>

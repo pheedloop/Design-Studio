@@ -178,7 +178,7 @@ export function MapSheet({
                       <div className="text-xs font-medium text-text-heading">
                         {exhibitor.name}
                       </div>
-                      <div className="text-[11px] text-text-subtle">
+                      <div className="text-xs text-text-subtle">
                         {boothEl?.properties.name
                           ? t("viewer.boothLabel", {
                               code: boothEl.properties.name,

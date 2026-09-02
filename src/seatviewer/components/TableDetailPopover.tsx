@@ -100,7 +100,7 @@ export function TableDetailPopover({
 
       {!hideAttendeeDetails && (
         <div className="max-h-44 overflow-y-auto scrollbar">
-          <div className="px-xs pt-snug pb-xxxs text-[10px] tracking-wider uppercase text-text-subtle font-semibold">
+          <div className="px-xs pt-snug pb-xxxs text-xs tracking-wider uppercase text-text-subtle font-semibold">
             {occupantHeading(
               {
                 loading: !!occupantsLoading,
@@ -117,7 +117,7 @@ export function TableDetailPopover({
               align="center"
               className="px-xs py-tight"
             >
-              <span className="size-6 shrink-0 grid place-items-center rounded-full text-[10px] font-semibold bg-primary-100 text-primary-600">
+              <span className="size-6 shrink-0 grid place-items-center rounded-full text-xs font-semibold bg-primary-100 text-primary-600">
                 {initials(o)}
               </span>
               <span className="flex-1 min-w-0">

@@ -672,7 +672,7 @@ function BadgeEditorInner({
                 <div className="px-xs py-xxs border-b border-border-neutral-light text-xs font-medium text-text-body">
                   badge_layout · {flattened.width}" × {flattened.height}"
                 </div>
-                <pre className="flex-1 overflow-auto text-[11px] leading-tight p-xs text-text-body">
+                <pre className="flex-1 overflow-auto text-xs leading-tight p-xs text-text-body">
                   {JSON.stringify(flattened.layout, null, 2)}
                 </pre>
               </aside>

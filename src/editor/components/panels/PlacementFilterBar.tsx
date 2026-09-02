@@ -125,7 +125,7 @@ export function PlacementFilterBar({
           </IconButton>
           {filterOpen && (
             <div className="absolute right-0 top-full mt-xxxs bg-white border border-border-neutral-light rounded-lg shadow-lg z-20 py-tight w-36">
-              <div className="px-snug pb-xxxs text-[10px] uppercase tracking-wider text-text-subtle font-medium">
+              <div className="px-snug pb-xxxs text-xs uppercase tracking-wider text-text-subtle font-medium">
                 {t("editor.placement.status")}
               </div>
               {(["all", "unplaced", "placed"] as const).map(f => (

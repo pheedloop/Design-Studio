@@ -103,7 +103,7 @@ export function IconPicker({
         ) : (
           ICON_CATEGORIES.map(category => (
             <div key={category} className="mb-xs">
-              <div className="text-[10px] font-medium text-text-subtle uppercase tracking-wide px-xxxs mb-xxxs">
+              <div className="text-xs font-medium text-text-subtle uppercase tracking-wide px-xxxs mb-xxxs">
                 {t(ICON_CATEGORY_LABEL[category])}
               </div>
               <Row gap="hair" className="flex-wrap">

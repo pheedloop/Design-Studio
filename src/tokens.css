@@ -29,8 +29,6 @@
   /* Type scale aligned to the Ditto dashboard (globals.css --font-size-*), so a
      given text-* utility is the same size in the editor, the host and the
      standalone dev app. */
-  --text-xxs: 10px;
-  --line-height-xxs: 12px;
   --text-xs: 10px;
   --line-height-xs: 12px;
   --text-sm: 12px;
@@ -144,9 +142,6 @@
 
   --font-family-sans: "Poppins", sans-serif;
   --font-family-poppins: "Poppins", sans-serif;
-
-  --text-xxs: 10px;
-  --text-xxs--line-height: 12px;
 
   --radius-none: 0px;
   --radius-sm: 2px;

@@ -67,7 +67,7 @@ export function BadgeTopBar({
           title="Debug: View badge_layout JSON"
         >
           <PiBug size={16} />
-          <span className="text-[11px]">Debug</span>
+          <span className="text-xs">Debug</span>
         </MenuButton>
       )}
     </div>

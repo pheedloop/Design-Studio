@@ -93,7 +93,7 @@ export function MapSidebar({
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`flex-1 px-xxs py-xxs text-[11px] font-medium transition-colors cursor-pointer ${
+              className={`flex-1 px-xxs py-xxs text-xs font-medium transition-colors cursor-pointer ${
                 currentTab === tab.id
                   ? "text-primary-600 border-b-2 border-primary-500"
                   : "text-text-caption hover:text-text-body"
@@ -151,7 +151,7 @@ export function MapSidebar({
                     <div className="text-xs font-medium text-text-heading">
                       {exhibitor.name}
                     </div>
-                    <div className="text-[11px] text-text-subtle">
+                    <div className="text-xs text-text-subtle">
                       {boothEl?.properties.name
                         ? t("viewer.boothLabel", {
                             code: boothEl.properties.name,

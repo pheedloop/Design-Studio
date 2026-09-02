@@ -92,13 +92,13 @@ export function SearchBar({
                       {result.exhibitorName || displayName(result, t)}
                     </Text>
                     <span
-                      className={`text-[10px] font-medium px-tight py-hair rounded shrink-0 ${badge.className}`}
+                      className={`text-xs font-medium px-tight py-hair rounded shrink-0 ${badge.className}`}
                     >
                       {t(badge.labelKey)}
                     </span>
                   </Row>
                   {result.exhibitorName && (
-                    <div className="text-[11px] text-text-subtle">
+                    <div className="text-xs text-text-subtle">
                       {displayName(result, t)}
                     </div>
                   )}

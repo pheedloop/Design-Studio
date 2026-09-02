@@ -87,7 +87,7 @@ export function OptionsBar({
       )}
       {fields.has("strokeWidth") && (
         <Row gap="tight" align="center">
-          <span className="text-[11px] text-text-caption">
+          <span className="text-xs text-text-caption">
             {t("editor.field.stroke")}
           </span>
           <div className="w-14">

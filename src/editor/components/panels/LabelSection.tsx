@@ -126,7 +126,7 @@ export function LabelSection({ properties, onChange }: LabelSectionProps) {
               }
             />
             <Row gap="tight" align="center">
-              <span className="text-[11px] text-text-caption">
+              <span className="text-xs text-text-caption">
                 {t("editor.field.opacity")}
               </span>
               <Slider
@@ -143,7 +143,7 @@ export function LabelSection({ properties, onChange }: LabelSectionProps) {
                 }
                 className="flex-1"
               />
-              <span className="text-[10px] text-text-subtle w-7 text-right">
+              <span className="text-xs text-text-subtle w-7 text-right">
                 {Math.round(properties.labelBackground.opacity * 100)}%
               </span>
             </Row>

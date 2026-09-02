@@ -148,7 +148,7 @@ export function BadgeSetupDialog({
               </Button>
             ))}
           </Row>
-          <span className="text-[11px] text-text-subtle">
+          <span className="text-xs text-text-subtle">
             {count} panel{count > 1 ? "s" : ""}, stacked top-to-bottom
           </span>
         </Stack>
@@ -198,7 +198,7 @@ export function BadgeSetupDialog({
                 variant="outline"
                 color={localSlots === o.value ? "primary" : "neutral"}
                 active={localSlots === o.value}
-                className="flex-1 text-[11px]"
+                className="flex-1 text-xs"
                 onClick={() => setLocalSlots(o.value)}
               >
                 {o.label}

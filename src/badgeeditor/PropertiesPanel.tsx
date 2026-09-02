@@ -174,7 +174,7 @@ export function PropertiesPanel({
                   onClick={() =>
                     onChange({ text: field.text ? `${field.text} ${t}` : t })
                   }
-                  className="text-[11px] px-tight py-hair rounded bg-surface-neutral hover:bg-surface-muted text-text-body font-mono"
+                  className="text-xs px-tight py-hair rounded bg-surface-neutral hover:bg-surface-muted text-text-body font-mono"
                 >
                   {t.replace(/[{}]/g, "").trim()}
                 </button>

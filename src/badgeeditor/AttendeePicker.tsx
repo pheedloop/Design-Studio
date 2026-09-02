@@ -120,7 +120,7 @@ export function AttendeePicker({
                     {o.name}
                   </div>
                   {o.subtitle && (
-                    <div className="text-[11px] text-text-subtle truncate">
+                    <div className="text-xs text-text-subtle truncate">
                       {o.subtitle}
                     </div>
                   )}
