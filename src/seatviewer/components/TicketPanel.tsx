@@ -236,7 +236,7 @@ export function TicketPanel({
       : t("seatviewer.tickets.pickPrompt");
 
     return (
-      <aside className="shrink-0 bg-card border-b border-gray-200">
+      <aside className="shrink-0 bg-surface-contrast border-b border-gray-200">
         <button
           type="button"
           aria-expanded={expanded}
@@ -281,7 +281,7 @@ export function TicketPanel({
   }
 
   return (
-    <aside className="w-80 shrink-0 bg-card border-r border-gray-200 flex flex-col min-h-0">
+    <aside className="w-80 shrink-0 bg-surface-contrast border-r border-gray-200 flex flex-col min-h-0">
       <div className="p-4 border-b border-gray-200 flex flex-col gap-3">
         <div className="flex items-baseline gap-2">
           <h2 className="text-base font-medium text-gray-700 m-0">

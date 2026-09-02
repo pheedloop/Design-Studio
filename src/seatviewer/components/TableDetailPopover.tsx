@@ -63,7 +63,7 @@ export function TableDetailPopover({
       role="dialog"
       aria-modal="false"
       aria-label={t("seatviewer.table.details", { name: tableName })}
-      className="absolute z-[9999] w-72 max-w-[calc(100%-24px)] left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-card border border-gray-300 rounded-xl shadow-[0_16px_48px_rgba(38,59,90,0.28)] overflow-hidden"
+      className="absolute z-[9999] w-72 max-w-[calc(100%-24px)] left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-surface-contrast border border-gray-300 rounded-xl shadow-[0_16px_48px_rgba(38,59,90,0.28)] overflow-hidden"
     >
       <div className="flex items-start gap-2 p-3 border-b border-gray-200">
         <div className="flex-1 min-w-0">
