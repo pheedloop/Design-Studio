@@ -45,7 +45,7 @@ export function LayerPanel({
   return (
     <div
       ref={panelRef}
-      className="absolute right-2 z-[9001]"
+      className="absolute right-2 z-dropdown"
       style={{ top: topOffset }}
     >
       <Row gap="tight" align="center">

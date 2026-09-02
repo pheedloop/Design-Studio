@@ -65,7 +65,7 @@ export function TableDetailPopover({
       role="dialog"
       aria-modal="false"
       aria-label={t("seatviewer.table.details", { name: tableName })}
-      className="absolute z-[9999] w-72 max-w-[calc(100%-24px)] left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-surface-contrast border border-border-neutral rounded-xl shadow-[0_16px_48px_rgba(38,59,90,0.28)] overflow-hidden"
+      className="absolute z-dialog w-72 max-w-[calc(100%-24px)] left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-surface-contrast border border-border-neutral rounded-xl shadow-[0_16px_48px_rgba(38,59,90,0.28)] overflow-hidden"
     >
       <Row
         gap="xxs"

@@ -38,7 +38,7 @@ export function HoverTooltip({
   return (
     <div
       ref={ref}
-      className="fixed pointer-events-none bg-white border border-border-neutral-light rounded-lg shadow-lg px-3 py-2 z-[9998] min-w-[140px] max-w-[240px]"
+      className="fixed pointer-events-none bg-white border border-border-neutral-light rounded-lg shadow-lg px-3 py-2 z-[calc(var(--z-dialog)-1)] min-w-[140px] max-w-[240px]"
       style={{ left: pos.left, top: pos.top }}
     >
       {item.type === "booth" && exhibitor ? (

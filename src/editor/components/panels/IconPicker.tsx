@@ -70,7 +70,7 @@ export function IconPicker({
   return (
     <div
       ref={ref}
-      className="bg-white border border-border-neutral-light rounded-lg shadow-lg z-[9999] w-[280px] max-h-[400px] flex flex-col"
+      className="bg-white border border-border-neutral-light rounded-lg shadow-lg z-dialog w-[280px] max-h-[400px] flex flex-col"
       style={{ position: "fixed", left: anchorRect.right + 8, top }}
     >
       <Row

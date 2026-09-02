@@ -83,7 +83,7 @@ export function AttendeePicker({
       </div>
 
       {open && (
-        <div className="absolute right-0 top-full mt-1 w-72 bg-white border border-border-neutral-light rounded-md shadow-lg z-[9999] overflow-hidden">
+        <div className="absolute right-0 top-full mt-1 w-72 bg-white border border-border-neutral-light rounded-md shadow-lg z-dialog overflow-hidden">
           <div className="p-2 border-b border-border-neutral-faint">
             <input
               autoFocus

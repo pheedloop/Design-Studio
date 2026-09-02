@@ -35,7 +35,7 @@ export function DropdownMenu({ items, onClose }: DropdownMenuProps) {
   return (
     <div
       ref={ref}
-      className="absolute top-full left-0 mt-0 bg-white border border-border-neutral-light rounded-md shadow-lg py-1 min-w-[200px] z-[9999]"
+      className="absolute top-full left-0 mt-0 bg-white border border-border-neutral-light rounded-md shadow-lg py-1 min-w-[200px] z-dialog"
     >
       {items.map((entry, i) =>
         isMenuDivider(entry) ? (
