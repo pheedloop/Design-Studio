@@ -80,7 +80,7 @@ export function TicketPanel({
   };
 
   const seatPill = (tableCode: string) => (
-    <span className="inline-flex items-center gap-xxxs.5 text-xs font-medium px-2 py-0.5 rounded-full text-[#14653a] bg-[rgba(0,168,99,0.12)] whitespace-nowrap">
+    <span className="inline-flex items-center gap-tight text-xs font-medium px-2 py-0.5 rounded-full text-[#14653a] bg-[rgba(0,168,99,0.12)] whitespace-nowrap">
       <span className="size-1.5 rounded-full bg-[#00a863]" />
       {tableLabel?.(tableCode) ?? tableCode}
     </span>
@@ -105,7 +105,7 @@ export function TicketPanel({
         aria-pressed={isSel}
         disabled={disabled}
         onClick={() => onToggle(ticket.code)}
-        className={`w-full text-left flex items-start gap-xxs.5 p-3 border-b border-border-neutral-light transition-colors ${
+        className={`w-full text-left flex items-start gap-snug p-3 border-b border-border-neutral-light transition-colors ${
           isSel
             ? "bg-primary-100 shadow-[inset_2px_0_0_var(--color-primary-600)]"
             : "hover:bg-surface-neutral"
@@ -137,11 +137,11 @@ export function TicketPanel({
             {ticket.attendee.email ? ` · ${ticket.attendee.email}` : ""}
           </span>
           {flags.length > 0 && (
-            <span className="mt-0.5 flex flex-wrap gap-xxxs.5">
+            <span className="mt-0.5 flex flex-wrap gap-tight">
               {flags.map(f => (
                 <span
                   key={f}
-                  className="inline-flex items-center gap-xxxs.5 text-xs font-medium px-2 py-0.5 rounded-full text-[#8a5300] bg-[rgba(240,169,46,0.16)]"
+                  className="inline-flex items-center gap-tight text-xs font-medium px-2 py-0.5 rounded-full text-[#8a5300] bg-[rgba(240,169,46,0.16)]"
                 >
                   <PiWarningCircle size={12} />
                   {t(SEAT_FLAG_LABEL_KEYS[f])}
@@ -178,7 +178,7 @@ export function TicketPanel({
             <PiCheck size={11} strokeWidth={3} />
           </span>
           {label}
-          <span className="shrink-0 flex items-center gap-xxs.5">
+          <span className="shrink-0 flex items-center gap-snug">
             {seatPill(ticket.tableCode)}
             {!lockSeatSelectionPage && onClearTicket && (
               <button
@@ -221,7 +221,7 @@ export function TicketPanel({
           {isSel && <span className="size-2 rounded-full bg-white" />}
         </span>
         {label}
-        <span className="shrink-0 inline-flex items-center gap-xxxs.5 text-xs font-medium px-2 py-0.5 rounded-full text-text-caption bg-surface-muted whitespace-nowrap">
+        <span className="shrink-0 inline-flex items-center gap-tight text-xs font-medium px-2 py-0.5 rounded-full text-text-caption bg-surface-muted whitespace-nowrap">
           <span className="size-1.5 rounded-full bg-gray-400" />
           {t("seatviewer.tickets.noTable")}
         </span>
@@ -310,7 +310,7 @@ export function TicketPanel({
         </div>
         {filterOptions && filterOptions.length > 0 && (
           <div
-            className="flex flex-wrap gap-xxxs.5"
+            className="flex flex-wrap gap-tight"
             role="group"
             aria-label={t("seatviewer.tickets.filterLabel")}
           >

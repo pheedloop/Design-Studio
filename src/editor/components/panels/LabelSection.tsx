@@ -49,7 +49,7 @@ export function LabelSection({ properties, onChange }: LabelSectionProps) {
         onChange={c => onChange({ labelColor: c })}
       />
 
-      <div className="flex flex-col gap-xxxs.5">
+      <div className="flex flex-col gap-tight">
         <SectionLabel>{t("editor.field.fontSize")}</SectionLabel>
         <div className="w-20">
           <NumberInput
@@ -59,7 +59,7 @@ export function LabelSection({ properties, onChange }: LabelSectionProps) {
         </div>
       </div>
 
-      <div className="flex flex-col gap-xxxs.5">
+      <div className="flex flex-col gap-tight">
         <SectionLabel>{t("editor.field.style")}</SectionLabel>
         <div className="flex gap-xxxs">
           <Button
@@ -94,7 +94,7 @@ export function LabelSection({ properties, onChange }: LabelSectionProps) {
         </div>
       </div>
 
-      <div className="flex flex-col gap-xxxs.5">
+      <div className="flex flex-col gap-tight">
         <div className="flex items-center gap-xxs">
           <SectionLabel>{t("editor.field.background")}</SectionLabel>
           <input
@@ -123,7 +123,7 @@ export function LabelSection({ properties, onChange }: LabelSectionProps) {
                 })
               }
             />
-            <div className="flex items-center gap-xxxs.5">
+            <div className="flex items-center gap-tight">
               <span className="text-[11px] text-text-caption">
                 {t("editor.field.opacity")}
               </span>

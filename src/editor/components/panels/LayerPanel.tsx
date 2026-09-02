@@ -47,9 +47,9 @@ export function LayerPanel({
       className="absolute right-2 z-[9001]"
       style={{ top: topOffset }}
     >
-      <div className="flex items-center gap-xxxs.5">
+      <div className="flex items-center gap-tight">
         {activeLayer && (
-          <div className="flex items-center gap-xxxs.5 px-2 py-1 bg-white border border-border-neutral-light rounded-lg shadow-md text-xs text-text-body">
+          <div className="flex items-center gap-tight px-2 py-1 bg-white border border-border-neutral-light rounded-lg shadow-md text-xs text-text-body">
             <span
               className="w-2 h-2 rounded-full"
               style={{ backgroundColor: LAYER_COLORS[activeLayer.id] }}

@@ -49,7 +49,7 @@ export function PlacementFilterBar({
   return (
     <div className="border-b border-border-neutral-faint bg-white">
       {/* Toolbar row */}
-      <div className="flex items-center gap-xxxs.5 px-3 py-1.5">
+      <div className="flex items-center gap-tight px-3 py-1.5">
         {/* Shape picker */}
         <div className="relative">
           <button
@@ -78,7 +78,7 @@ export function PlacementFilterBar({
                     setShapeOpen(false);
                   }}
                   className={[
-                    "w-full text-left flex items-center gap-xxxs.5 px-2 py-1.5 text-xs hover:bg-surface-neutral transition-colors",
+                    "w-full text-left flex items-center gap-tight px-2 py-1.5 text-xs hover:bg-surface-neutral transition-colors",
                     shape === s
                       ? "text-primary-600 font-medium"
                       : "text-text-body",

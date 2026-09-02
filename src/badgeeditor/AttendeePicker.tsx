@@ -45,7 +45,7 @@ export function AttendeePicker({
   return (
     <div ref={rootRef} className="relative">
       <div
-        className={`flex items-center gap-xxxs.5 h-7 pl-2 pr-1 rounded border text-xs ${
+        className={`flex items-center gap-tight h-7 pl-2 pr-1 rounded border text-xs ${
           open ? "border-primary-400" : "border-border-neutral-light"
         } bg-white`}
       >

@@ -20,7 +20,7 @@ export function LabelPositionPicker({
 }: LabelPositionPickerProps) {
   const t = useT();
   return (
-    <div className="flex flex-col gap-xxxs.5">
+    <div className="flex flex-col gap-tight">
       <SectionLabel>{t("editor.field.labelPosition")}</SectionLabel>
       <div className="inline-grid grid-cols-3 gap-xxxs p-1.5 bg-surface-neutral rounded border border-border-neutral-light w-fit">
         {vValues.map(vv =>

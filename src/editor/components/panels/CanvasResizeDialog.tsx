@@ -134,7 +134,7 @@ export function CanvasResizeDialog({
       }
     >
       <div className="flex flex-col gap-s p-4">
-        <div className="flex flex-col gap-xxxs.5">
+        <div className="flex flex-col gap-tight">
           <SectionLabel>{t("editor.field.widthPx")}</SectionLabel>
           <NumberInput value={newWidth} onChange={setW} />
           {dimensions.unit !== "px" && (
@@ -144,7 +144,7 @@ export function CanvasResizeDialog({
           )}
         </div>
 
-        <div className="flex flex-col gap-xxxs.5">
+        <div className="flex flex-col gap-tight">
           <SectionLabel>{t("editor.field.heightPx")}</SectionLabel>
           <NumberInput
             value={newHeight}
@@ -158,7 +158,7 @@ export function CanvasResizeDialog({
           )}
         </div>
 
-        <div className="flex flex-col gap-xxxs.5">
+        <div className="flex flex-col gap-tight">
           <SectionLabel>{t("editor.field.content")}</SectionLabel>
           <div className="flex gap-xxs">
             <Button
@@ -220,7 +220,7 @@ export function CanvasResizeDialog({
         )}
 
         {onStartCrop && (
-          <div className="flex flex-col gap-xxxs.5 border-t border-border-neutral-faint pt-4">
+          <div className="flex flex-col gap-tight border-t border-border-neutral-faint pt-4">
             <SectionLabel>{t("editor.resize.cropSection")}</SectionLabel>
             <Button
               variant="outline"

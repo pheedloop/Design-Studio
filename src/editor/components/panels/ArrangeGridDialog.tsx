@@ -50,7 +50,7 @@ export function ArrangeGridDialog({
         </p>
 
         <div className="flex gap-s">
-          <div className="flex flex-col gap-xxxs.5 flex-1">
+          <div className="flex flex-col gap-tight flex-1">
             <SectionLabel>{t("editor.field.columns")}</SectionLabel>
             <NumberInput
               value={cols}
@@ -59,7 +59,7 @@ export function ArrangeGridDialog({
               }
             />
           </div>
-          <div className="flex flex-col gap-xxxs.5 flex-1">
+          <div className="flex flex-col gap-tight flex-1">
             <SectionLabel>{t("editor.field.rowsComputed")}</SectionLabel>
             <div className="flex items-center h-[30px] px-2 text-xs text-text-subtle bg-surface-neutral border border-border-neutral-light rounded">
               {rows}
@@ -68,11 +68,11 @@ export function ArrangeGridDialog({
         </div>
 
         <div className="flex gap-s">
-          <div className="flex flex-col gap-xxxs.5 flex-1">
+          <div className="flex flex-col gap-tight flex-1">
             <SectionLabel>{t("editor.field.horizontalGapPx")}</SectionLabel>
             <NumberInput value={gapX} onChange={v => setGapX(Math.max(0, v))} />
           </div>
-          <div className="flex flex-col gap-xxxs.5 flex-1">
+          <div className="flex flex-col gap-tight flex-1">
             <SectionLabel>{t("editor.field.verticalGapPx")}</SectionLabel>
             <NumberInput value={gapY} onChange={v => setGapY(Math.max(0, v))} />
           </div>

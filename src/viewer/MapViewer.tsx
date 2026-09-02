@@ -319,7 +319,7 @@ function MapViewerInner({
           {showDirectionsButton && (
             <button
               onClick={directions.open}
-              className="flex items-center gap-xxxs.5 px-3 py-2 text-xs font-medium text-blue-600 hover:bg-blue-50 cursor-pointer transition-colors shrink-0 border-l border-border-neutral-light"
+              className="flex items-center gap-tight px-3 py-2 text-xs font-medium text-blue-600 hover:bg-blue-50 cursor-pointer transition-colors shrink-0 border-l border-border-neutral-light"
             >
               <PiPath size={16} />
               <span className="hidden sm:inline">

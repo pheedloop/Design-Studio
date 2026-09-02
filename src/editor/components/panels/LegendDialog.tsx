@@ -166,7 +166,7 @@ export function LegendDialog({ legend, onSave, onClose }: LegendDialogProps) {
 
         {/* Add entry */}
         <button
-          className="flex items-center gap-xxxs.5 text-xs text-blue-600 hover:text-blue-700 transition-colors cursor-pointer self-start"
+          className="flex items-center gap-tight text-xs text-blue-600 hover:text-blue-700 transition-colors cursor-pointer self-start"
           onClick={addEntry}
         >
           <PiPlus size={13} />

@@ -107,7 +107,7 @@ export function TableDetailPopover({
           {occupants.map(o => (
             <div
               key={o.code}
-              className="flex items-center gap-xxs.5 px-3 py-1.5"
+              className="flex items-center gap-snug px-3 py-1.5"
             >
               <span className="size-6 shrink-0 grid place-items-center rounded-full text-[10px] font-semibold bg-primary-100 text-primary-600">
                 {initials(o)}

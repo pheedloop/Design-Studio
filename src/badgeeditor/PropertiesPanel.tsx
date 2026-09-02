@@ -85,7 +85,7 @@ export function PropertiesPanel({
 
       <div className="flex flex-col gap-s p-3 overflow-y-auto flex-1">
         {isLiteralTextField(field.field) && (
-          <div className="flex flex-col gap-xxxs.5">
+          <div className="flex flex-col gap-tight">
             <SectionLabel>Text</SectionLabel>
             <TextInput
               value={field.text ?? ""}
@@ -161,7 +161,7 @@ export function PropertiesPanel({
         )}
 
         {isLiteralTextField(field.field) && (
-          <div className="flex flex-col gap-xxxs.5">
+          <div className="flex flex-col gap-tight">
             <SectionLabel>Insert token</SectionLabel>
             <div className="flex flex-wrap gap-xxxs">
               {TOKENS.map(t => (

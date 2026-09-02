@@ -129,7 +129,7 @@ export function BadgeSetupDialog({
       }
     >
       <div className="flex flex-col gap-s p-4">
-        <div className="flex flex-col gap-xxxs.5">
+        <div className="flex flex-col gap-tight">
           <SectionLabel>Fold</SectionLabel>
           <div className="flex gap-xxs">
             {FOLD_OPTIONS.map(o => (
@@ -150,7 +150,7 @@ export function BadgeSetupDialog({
           </span>
         </div>
 
-        <div className="flex flex-col gap-xxxs.5">
+        <div className="flex flex-col gap-tight">
           <SectionLabel>Units</SectionLabel>
           <div className="flex gap-xxs">
             {(["in", "cm"] as Unit[]).map(u => (
@@ -186,7 +186,7 @@ export function BadgeSetupDialog({
           {count > 1 && " (unfolded)"}
         </div>
 
-        <div className="flex flex-col gap-xxxs.5">
+        <div className="flex flex-col gap-tight">
           <SectionLabel>Lanyard slots</SectionLabel>
           <div className="flex gap-xxs">
             {SLOT_OPTIONS.map(o => (
@@ -205,13 +205,13 @@ export function BadgeSetupDialog({
         </div>
 
         {count > 1 && (
-          <div className="flex flex-col gap-xxxs.5">
+          <div className="flex flex-col gap-tight">
             <SectionLabel>Panels</SectionLabel>
-            <div className="flex flex-col gap-xxxs.5">
+            <div className="flex flex-col gap-tight">
               {panels.map((cfg, i) => (
                 <div
                   key={i}
-                  className="flex flex-col gap-xxxs.5 px-2.5 py-2 rounded border border-border-neutral-light"
+                  className="flex flex-col gap-tight px-2.5 py-2 rounded border border-border-neutral-light"
                 >
                   <span className="text-xs font-medium text-text-body">
                     {pageRoleLabel(pageRoleForIndex(count, i))}

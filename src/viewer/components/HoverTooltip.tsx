@@ -41,7 +41,7 @@ export function HoverTooltip({
       style={{ left: pos.left, top: pos.top }}
     >
       {item.type === "booth" && exhibitor ? (
-        <div className="flex flex-col items-center gap-xxxs.5 text-center">
+        <div className="flex flex-col items-center gap-tight text-center">
           <ExhibitorLogo exhibitor={exhibitor} size="sm" />
           <span className="text-sm font-medium text-text-heading line-clamp-2">
             {exhibitor.name}

@@ -243,7 +243,7 @@ export function PropertiesPanel({
           </span>
         </div>
         <div className="flex flex-col gap-s p-3 overflow-y-auto flex-1">
-          <div className="flex flex-col gap-xxxs.5">
+          <div className="flex flex-col gap-tight">
             <div className="flex items-center justify-between">
               <SectionLabel>{t("editor.field.opacity")}</SectionLabel>
               <span className="text-[11px] text-text-subtle">
@@ -324,7 +324,7 @@ export function PropertiesPanel({
             </span>
           </div>
           <div className="flex flex-col gap-s p-3 overflow-y-auto flex-1">
-            <div className="flex flex-col gap-xxxs.5">
+            <div className="flex flex-col gap-tight">
               <SectionLabel>{t("editor.field.backgroundColor")}</SectionLabel>
               <ColorSwatch
                 label=""
@@ -333,7 +333,7 @@ export function PropertiesPanel({
               />
             </div>
 
-            <div className="flex flex-col gap-xxxs.5">
+            <div className="flex flex-col gap-tight">
               <SectionLabel>{t("editor.field.backgroundFile")}</SectionLabel>
               {background ? (
                 <div className="flex flex-col gap-xxs">
@@ -352,7 +352,7 @@ export function PropertiesPanel({
                       {background.sourceFileName}
                     </div>
                   )}
-                  <div className="flex flex-col gap-xxxs.5">
+                  <div className="flex flex-col gap-tight">
                     <div className="flex items-center justify-between">
                       <span className="text-[11px] text-text-caption">
                         {t("editor.field.opacity")}
@@ -495,7 +495,7 @@ export function PropertiesPanel({
       ) : (
         <div className="flex flex-col gap-s p-3 overflow-y-auto flex-1">
           {isSelectedUnlinked && (
-            <div className="flex items-start gap-xxxs.5 px-2 py-1.5 rounded bg-red-50 border border-red-200">
+            <div className="flex items-start gap-tight px-2 py-1.5 rounded bg-red-50 border border-red-200">
               <span className="text-red-500 text-[10px] font-medium leading-4">
                 {t("editor.properties.unlinked")}
               </span>
@@ -505,7 +505,7 @@ export function PropertiesPanel({
             </div>
           )}
           {fields.has("name") && (
-            <div className="flex flex-col gap-xxxs.5">
+            <div className="flex flex-col gap-tight">
               <SectionLabel>{t("editor.field.name")}</SectionLabel>
               <TextInput
                 value={element.properties.name || ""}
@@ -515,7 +515,7 @@ export function PropertiesPanel({
               />
             </div>
           )}
-          <div className="flex flex-col gap-xxxs.5">
+          <div className="flex flex-col gap-tight">
             <div className="flex items-center justify-between">
               <SectionLabel>{t("editor.field.opacity")}</SectionLabel>
               <span className="text-[11px] text-text-subtle">
@@ -559,7 +559,7 @@ export function PropertiesPanel({
             )}
 
           {fields.has("text") && (
-            <div className="flex flex-col gap-xxxs.5">
+            <div className="flex flex-col gap-tight">
               <SectionLabel>{t("editor.field.text")}</SectionLabel>
               <TextArea
                 value={element.properties.text || ""}
@@ -572,7 +572,7 @@ export function PropertiesPanel({
           )}
 
           {fields.has("fontSize") && (
-            <div className="flex flex-col gap-xxxs.5">
+            <div className="flex flex-col gap-tight">
               <SectionLabel>{t("editor.field.fontSize")}</SectionLabel>
               <NumberInput
                 value={element.properties.fontSize ?? 16}
@@ -586,7 +586,7 @@ export function PropertiesPanel({
           {(fields.has("fontWeight") ||
             fields.has("fontStyle") ||
             fields.has("textDecoration")) && (
-            <div className="flex flex-col gap-xxxs.5">
+            <div className="flex flex-col gap-tight">
               <SectionLabel>{t("editor.field.style")}</SectionLabel>
               <div className="flex gap-xxxs">
                 {fields.has("fontWeight") && (
@@ -648,7 +648,7 @@ export function PropertiesPanel({
           )}
 
           {fields.has("textAlign") && (
-            <div className="flex flex-col gap-xxxs.5">
+            <div className="flex flex-col gap-tight">
               <SectionLabel>{t("editor.field.alignment")}</SectionLabel>
               <div className="flex">
                 {(["left", "center", "right"] as const).map(align => (
@@ -677,7 +677,7 @@ export function PropertiesPanel({
 
           {(fields.has("width") || fields.has("height")) &&
             (geo.shape === "rect" || geo.shape === "ellipse") && (
-              <div className="flex flex-col gap-xxxs.5">
+              <div className="flex flex-col gap-tight">
                 <SectionLabel>{t("editor.field.size")}</SectionLabel>
                 {fields.has("width") && (
                   <FieldRow label={t("editor.field.widthShort")}>
@@ -699,7 +699,7 @@ export function PropertiesPanel({
             )}
 
           {fields.has("rotation") && (
-            <div className="flex flex-col gap-xxxs.5">
+            <div className="flex flex-col gap-tight">
               <SectionLabel>{t("editor.field.rotation")}</SectionLabel>
               <FieldRow label="°">
                 <NumberInput
@@ -711,7 +711,7 @@ export function PropertiesPanel({
           )}
 
           {fields.has("area") && (
-            <div className="flex flex-col gap-xxxs.5">
+            <div className="flex flex-col gap-tight">
               <SectionLabel>{t("editor.field.area")}</SectionLabel>
               <div className="px-2 py-1 text-xs text-text-body bg-surface-neutral rounded border border-border-neutral-light">
                 {formatArea(dims.width, dims.height, dimensions, t, locale)}
@@ -720,7 +720,7 @@ export function PropertiesPanel({
           )}
 
           {fields.has("length") && (
-            <div className="flex flex-col gap-xxxs.5">
+            <div className="flex flex-col gap-tight">
               <SectionLabel>{t("editor.field.length")}</SectionLabel>
               <div className="px-2 py-1 text-xs text-text-body bg-surface-neutral rounded border border-border-neutral-light">
                 {formatMeasurement(dims.length, dimensions, t, locale)}
@@ -729,7 +729,7 @@ export function PropertiesPanel({
           )}
 
           {fields.has("arrowHeadStyle") && element.properties.arrowHead && (
-            <div className="flex flex-col gap-xxxs.5">
+            <div className="flex flex-col gap-tight">
               <SectionLabel>{t("editor.field.arrowStyle")}</SectionLabel>
               <div className="flex">
                 {(["triangle", "chevron"] as const).map(style => (
@@ -755,7 +755,7 @@ export function PropertiesPanel({
           )}
 
           {fields.has("arrowHeadSize") && element.properties.arrowHead && (
-            <div className="flex flex-col gap-xxxs.5">
+            <div className="flex flex-col gap-tight">
               <SectionLabel>{t("editor.field.arrowSize")}</SectionLabel>
               <FieldRow label={t("common.unit.px")}>
                 <NumberInput

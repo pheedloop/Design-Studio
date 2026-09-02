@@ -27,7 +27,7 @@ export function PathingOptionsBar({
   const t = useT();
   return (
     <div className="flex items-center gap-s px-3 py-2 bg-white border-b border-border-neutral-light">
-      <div className="flex items-center gap-xxxs.5">
+      <div className="flex items-center gap-tight">
         <span className="text-[11px] text-text-caption">
           {t("editor.field.cellSize")}
         </span>
@@ -43,7 +43,7 @@ export function PathingOptionsBar({
         </Select>
       </div>
 
-      <div className="flex items-center gap-xxxs.5">
+      <div className="flex items-center gap-tight">
         <span className="text-[11px] text-text-caption">
           {t("editor.field.opacity")}
         </span>

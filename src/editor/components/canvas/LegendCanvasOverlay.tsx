@@ -13,7 +13,7 @@ export function LegendCanvasOverlay({ legend }: LegendCanvasOverlayProps) {
 
   return (
     <div className="absolute bottom-4 right-4 z-10 pointer-events-none select-none">
-      <div className="bg-white border border-border-neutral-light rounded shadow-sm px-3 py-2 flex flex-col gap-xxxs.5">
+      <div className="bg-white border border-border-neutral-light rounded shadow-sm px-3 py-2 flex flex-col gap-tight">
         {visibleEntries.map(entry => (
           <div key={entry.id} className="flex items-center gap-xxs">
             <span
