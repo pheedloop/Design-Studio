@@ -8,6 +8,7 @@ import {
 import { MapEditor, definePlacementCategory, type Tier } from "@/editor";
 import { LocaleSwitcher } from "@/demo/LocaleSwitcher";
 import { useDemoLocale } from "@/demo/useDemoLocale";
+import { ChromeDivider } from "@/demo/ChromeDivider";
 import { ViewerRoute, type Viewport } from "./ViewerRoute";
 import { ChromeToggle } from "@/demo/ChromeToggle";
 import { ProductSwitcher } from "@/components/ProductSwitcher";
@@ -107,11 +108,11 @@ export function MapApp() {
     <div className="h-screen flex flex-col">
       <nav className="flex items-center gap-xxxs px-xs py-tight bg-gray-900 text-xs shrink-0">
         <ProductSwitcher current="maps" mode={mode} />
-        <div className="w-px h-4 bg-gray-700 mx-xxxs" />
+        <ChromeDivider />
         {modeTab("editor", "Editor")}
         {modeTab("viewer", "Viewer")}
 
-        <div className="w-px h-4 bg-gray-700 mx-xxxs" />
+        <ChromeDivider />
         <span className="text-gray-500 mr-hair">Tier:</span>
         {(["basic", "advanced", "premium"] as Tier[]).map(t => (
           <ChromeToggle
@@ -129,7 +130,7 @@ export function MapApp() {
 
         {mode === "viewer" && (
           <>
-            <div className="w-px h-4 bg-gray-700 mx-xxxs" />
+            <ChromeDivider />
             <button
               onClick={() => setViewport("desktop")}
               className={`p-xxxs rounded cursor-pointer transition-colors ${
@@ -152,7 +153,7 @@ export function MapApp() {
             >
               <PiDeviceMobile size={16} />
             </button>
-            <div className="w-px h-4 bg-gray-700 mx-xxxs" />
+            <ChromeDivider />
             <ChromeToggle
               active={viewerMode === "attendee"}
               onClick={() => setViewerMode("attendee")}

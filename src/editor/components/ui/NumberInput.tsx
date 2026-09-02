@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { PiCaretUp, PiCaretDown } from "react-icons/pi";
+import { Row } from "@/components/Row";
 
 interface NumberInputProps {
   value: number;
@@ -40,7 +41,7 @@ export function NumberInput({
   };
 
   return (
-    <div className="flex items-stretch">
+    <Row align="stretch">
       <input
         type="number"
         value={display}
@@ -75,6 +76,6 @@ export function NumberInput({
           </button>
         </div>
       )}
-    </div>
+    </Row>
   );
 }

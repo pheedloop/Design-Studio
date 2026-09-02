@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { PiMapTrifold, PiBug, PiQuestion } from "react-icons/pi";
+import { Row } from "@/components/Row";
 import { DropdownMenu, MenuButton } from "./ui";
 import type { MenuEntry } from "./ui";
 import { useT } from "@/editor/i18n";
@@ -39,10 +40,17 @@ export function TopBar({
   };
 
   return (
-    <div className="flex items-center bg-white border-b border-border-neutral-light">
-      <div className="flex items-center justify-center w-12 shrink-0 h-10 border-r border-border-neutral-light text-text-subtle">
+    <Row
+      align="center"
+      className="bg-white border-b border-border-neutral-light"
+    >
+      <Row
+        align="center"
+        justify="center"
+        className="w-12 shrink-0 h-10 border-r border-border-neutral-light text-text-subtle"
+      >
         <PiMapTrifold size={20} />
-      </div>
+      </Row>
       <div className="relative">
         <MenuButton
           open={fileOpen}
@@ -136,6 +144,6 @@ export function TopBar({
           <span className="text-xs">{t("editor.topBar.debug")}</span>
         </MenuButton>
       )}
-    </div>
+    </Row>
   );
 }

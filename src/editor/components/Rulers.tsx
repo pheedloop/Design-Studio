@@ -1,6 +1,7 @@
 import { useRef, useEffect } from "react";
 import type { Dimensions } from "@/types";
 import { GRAY_100, GRAY_200, GRAY_400, GRAY_500 } from "@/canvasColors";
+import { Row } from "@/components/Row";
 
 interface RulersProps {
   visible: boolean;
@@ -236,8 +237,7 @@ export function Rulers({
   return (
     <>
       {/* Corner square — unit label */}
-      <div
-        className="absolute z-10 flex items-center justify-center select-none"
+      <Row
         style={{
           top: 0,
           left: 0,
@@ -250,9 +250,12 @@ export function Rulers({
           color: TEXT_COLOR,
           fontFamily: "system-ui, sans-serif",
         }}
+        align="center"
+        justify="center"
+        className="absolute z-10 select-none"
       >
         {dimensions.unit}
-      </div>
+      </Row>
 
       {/* Horizontal ruler */}
       <canvas

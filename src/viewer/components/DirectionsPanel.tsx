@@ -49,14 +49,14 @@ export function DirectionsPanel({
 
   return (
     <Stack gap="xxs" className="p-xs">
-      <div className="flex items-center justify-between">
+      <Row align="center" justify="between">
         <Text size="xs" weight="semibold" color="body" as="span">
           {t("viewer.directions.title")}
         </Text>
         <IconButton variant="bare" size="sm" onClick={onClose}>
           <PiX size={16} />
         </IconButton>
-      </div>
+      </Row>
 
       <Row gap="xxs">
         <Stack gap="xxs" className="flex-1 min-w-0">

@@ -3,6 +3,7 @@ import { unitLabel } from "@/utils/unitConversion";
 import { formatNumber } from "@/i18n/format";
 import { useLocale, useT } from "@/viewer/i18n";
 import { Stack } from "@/components/Stack";
+import { Row } from "@/components/Row";
 
 interface ScaleBarProps {
   dimensions: Dimensions;
@@ -52,10 +53,10 @@ export function ScaleBar({ dimensions, scale }: ScaleBarProps) {
         style={{ width: barWidthPx }}
       >
         {/* End caps */}
-        <div className="flex justify-between h-full">
+        <Row justify="between" className="h-full">
           <div className="w-px h-full bg-gray-700/70" />
           <div className="w-px h-full bg-gray-700/70" />
-        </div>
+        </Row>
       </div>
     </Stack>
   );

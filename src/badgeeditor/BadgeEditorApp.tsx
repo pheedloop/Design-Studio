@@ -1,4 +1,5 @@
 import { ProductSwitcher } from "@/components/ProductSwitcher";
+import { ChromeDivider } from "@/demo/ChromeDivider";
 import { BadgeEditor } from "./BadgeEditor";
 import { sampleAttendeeProvider } from "./sample-attendees";
 import { LocaleSwitcher } from "@/demo/LocaleSwitcher";
@@ -15,7 +16,7 @@ export function BadgeEditorApp() {
     <div className="h-screen flex flex-col">
       <nav className="flex items-center gap-xxxs px-xs py-tight bg-gray-900 text-xs shrink-0">
         <ProductSwitcher current="badges" mode="editor" />
-        <div className="w-px h-4 bg-gray-700 mx-xxxs" />
+        <ChromeDivider />
         <span className="px-xs py-xxxs rounded bg-white/15 text-white">
           Editor
         </span>

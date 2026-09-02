@@ -103,7 +103,13 @@ export function MapSheet({
           }
           className="absolute inset-0 w-full cursor-pointer"
         />
-        <div className="relative flex items-center justify-between w-full px-s py-xs pointer-events-none">
+        <Row
+          align="center"
+          justify="between"
+          px="s"
+          py="xs"
+          className="relative w-full pointer-events-none"
+        >
           {hasTabs ? (
             <Row gap="xs" className="pointer-events-auto">
               {visibleTabs.map(tab => (
@@ -137,7 +143,7 @@ export function MapSheet({
           ) : (
             <PiCaretUp size={14} className="text-text-subtle" />
           )}
-        </div>
+        </Row>
       </div>
 
       {expanded && (

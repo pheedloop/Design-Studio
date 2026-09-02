@@ -643,7 +643,13 @@ function BadgeEditorInner({
                 </div>
               )}
               {/* Footer — page + overall badge size, and zoom (mirrors StatusBar) */}
-              <div className="relative z-20 flex items-center justify-between px-xs py-tight bg-white border-t border-border-neutral-light text-xs text-text-caption">
+              <Row
+                align="center"
+                justify="between"
+                px="xs"
+                py="tight"
+                className="relative z-20 bg-white border-t border-border-neutral-light text-xs text-text-caption"
+              >
                 <Row gap="xxs" align="center">
                   <span>
                     Page {fmtUnit(doc.panelSize.width, unit)} ×{" "}
@@ -664,7 +670,7 @@ function BadgeEditorInner({
                 >
                   {Math.round(controls.scale * 100)}%
                 </IconButton>
-              </div>
+              </Row>
             </div>
 
             {showLayout ? (
@@ -678,7 +684,13 @@ function BadgeEditorInner({
               </aside>
             ) : previewMode ? null : selectedIds.size > 1 ? (
               <aside className="w-52 shrink-0 border-l border-border-neutral-light bg-white flex flex-col">
-                <div className="px-xs py-xxs border-b border-border-neutral-light flex items-center justify-between">
+                <Row
+                  px="xs"
+                  py="xxs"
+                  align="center"
+                  justify="between"
+                  className="border-b border-border-neutral-light"
+                >
                   <Text size="xs" weight="medium" color="body" as="span">
                     {selectedIds.size} fields selected
                   </Text>
@@ -690,7 +702,7 @@ function BadgeEditorInner({
                   >
                     Delete
                   </Button>
-                </div>
+                </Row>
                 <p className="p-xs text-xs text-text-subtle">
                   Drag to move them together, or select a single field to edit
                   its properties.

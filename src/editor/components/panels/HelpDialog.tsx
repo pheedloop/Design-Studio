@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Dialog, TabBar } from "@/editor/components/ui";
 import { useT, type StringKey, type T } from "@/editor/i18n";
 import { Heading } from "@/components/Heading";
+import { Row } from "@/components/Row";
 
 const isMac = navigator.platform.toUpperCase().includes("MAC");
 const mod = isMac ? "⌘" : "Ctrl";
@@ -302,9 +303,11 @@ export function HelpDialog({ onClose }: HelpDialogProps) {
               </div>
               <div className="space-y-1">
                 {section.items.map(item => (
-                  <div
+                  <Row
                     key={item.descriptionKey}
-                    className="flex items-center justify-between py-hair"
+                    align="center"
+                    justify="between"
+                    py="hair"
                   >
                     <span className="text-xs text-text-body">
                       {t(item.descriptionKey)}
@@ -312,7 +315,7 @@ export function HelpDialog({ onClose }: HelpDialogProps) {
                     <kbd className="text-xs font-mono text-text-caption bg-surface-neutral border border-border-neutral-light rounded px-tight py-hair">
                       {item.keysKey ? t(item.keysKey) : item.keys}
                     </kbd>
-                  </div>
+                  </Row>
                 ))}
               </div>
             </div>

@@ -25,7 +25,7 @@ export function LabelSection({ properties, onChange }: LabelSectionProps) {
 
   return (
     <Stack gap="xs">
-      <div className="flex items-center justify-between">
+      <Row align="center" justify="between">
         <SectionLabel>{t("editor.field.label")}</SectionLabel>
         <button
           className={`p-xxxs rounded transition-colors cursor-pointer ${
@@ -38,7 +38,7 @@ export function LabelSection({ properties, onChange }: LabelSectionProps) {
         >
           {visible ? <PiEye size={16} /> : <PiEyeSlash size={16} />}
         </button>
-      </div>
+      </Row>
 
       <LabelPositionPicker
         v={properties.labelPositionV}

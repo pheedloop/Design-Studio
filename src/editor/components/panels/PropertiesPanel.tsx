@@ -248,14 +248,14 @@ export function PropertiesPanel({
         </div>
         <Stack gap="s" className="p-xs overflow-y-auto flex-1">
           <Stack gap="tight">
-            <div className="flex items-center justify-between">
+            <Row align="center" justify="between">
               <SectionLabel>{t("editor.field.opacity")}</SectionLabel>
               <span className="text-xs text-text-subtle">
                 {commonOpacity !== undefined
                   ? `${Math.round(commonOpacity * 100)}%`
                   : t("editor.field.mixed")}
               </span>
-            </div>
+            </Row>
             <Slider
               min={0}
               max={100}
@@ -357,14 +357,14 @@ export function PropertiesPanel({
                     </div>
                   )}
                   <Stack gap="tight">
-                    <div className="flex items-center justify-between">
+                    <Row align="center" justify="between">
                       <span className="text-xs text-text-caption">
                         {t("editor.field.opacity")}
                       </span>
                       <span className="text-xs text-text-subtle">
                         {Math.round(background.opacity * 100)}%
                       </span>
-                    </div>
+                    </Row>
                     <Slider
                       min={0}
                       max={100}
@@ -476,7 +476,13 @@ export function PropertiesPanel({
 
   return (
     <div className="w-60 shrink-0 border-l border-border-neutral-light bg-white flex flex-col">
-      <div className="flex items-center justify-between px-xs py-xxs border-b border-border-neutral-light">
+      <Row
+        align="center"
+        justify="between"
+        px="xs"
+        py="xxs"
+        className="border-b border-border-neutral-light"
+      >
         {debug && (
           <TabBar
             tabs={[
@@ -488,12 +494,18 @@ export function PropertiesPanel({
             itemClassName="px-tight py-hair text-xs"
           />
         )}
-      </div>
-      <div className="flex items-center justify-between px-xs py-xxs border-b border-border-neutral-light">
+      </Row>
+      <Row
+        align="center"
+        justify="between"
+        px="xs"
+        py="xxs"
+        className="border-b border-border-neutral-light"
+      >
         <Text size="xs" weight="medium" color="body" as="span">
           {elementTypeLabel(element, t)}
         </Text>
-      </div>
+      </Row>
 
       {tab === "debug" && debug ? (
         <div className="flex-1 overflow-auto p-xxs">
@@ -527,12 +539,12 @@ export function PropertiesPanel({
             </Stack>
           )}
           <Stack gap="tight">
-            <div className="flex items-center justify-between">
+            <Row align="center" justify="between">
               <SectionLabel>{t("editor.field.opacity")}</SectionLabel>
               <span className="text-xs text-text-subtle">
                 {Math.round((element.properties.opacity ?? 1) * 100)}%
               </span>
-            </div>
+            </Row>
             <Slider
               min={0}
               max={100}

@@ -1,5 +1,6 @@
 import { useRef, useEffect } from "react";
 import { GRAY_100, GRAY_200, GRAY_400, GRAY_500 } from "@/canvasColors";
+import { Row } from "@/components/Row";
 import { toUnit, type Unit } from "./units";
 
 // Rulers for the badge canvas. The badge coordinate system is 1 inch = `ppi`
@@ -235,8 +236,7 @@ export function BadgeRulers({
         style={{ top: 0, left: 0, bottom: 0, width: RULER_SIZE }}
       />
       {/* Corner square — unit label */}
-      <div
-        className="absolute z-10 flex items-center justify-center select-none"
+      <Row
         style={{
           top: 0,
           left: 0,
@@ -249,9 +249,12 @@ export function BadgeRulers({
           color: TEXT_COLOR,
           fontFamily: "system-ui, sans-serif",
         }}
+        align="center"
+        justify="center"
+        className="absolute z-10 select-none"
       >
         {unit}
-      </div>
+      </Row>
     </>
   );
 }

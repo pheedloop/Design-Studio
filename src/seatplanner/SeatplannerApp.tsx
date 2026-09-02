@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { ProductSwitcher } from "@/components/ProductSwitcher";
+import { ChromeDivider } from "@/demo/ChromeDivider";
 import { SeatPlanEditor } from "./SeatPlanEditor";
 import { SeatPlanViewerDemo } from "./SeatPlanViewerDemo";
 import { LocaleSwitcher } from "@/demo/LocaleSwitcher";
@@ -38,7 +39,7 @@ export function SeatplannerApp() {
     <div className="h-screen flex flex-col">
       <nav className="flex items-center gap-xxxs px-xs py-tight bg-gray-900 text-xs shrink-0">
         <ProductSwitcher current="seatplans" mode={mode} />
-        <div className="w-px h-4 bg-gray-700 mx-xxxs" />
+        <ChromeDivider />
         {modeTab("editor", "Editor")}
         {modeTab("viewer", "Viewer")}
         <LocaleSwitcher locale={locale} setLocale={setLocale} />

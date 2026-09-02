@@ -26,13 +26,19 @@ export function Dialog({
 }: DialogProps) {
   const t = useT();
   return (
-    <div className="fixed inset-0 z-dialog flex items-center justify-center p-s">
+    <Row align="center" justify="center" className="fixed inset-0 z-dialog p-s">
       <div className="absolute inset-0 bg-black/50" onClick={onClose} />
       <div
         className="relative bg-white rounded-lg shadow-xl flex flex-col max-w-full"
         style={{ width, maxHeight }}
       >
-        <div className="flex items-center justify-between px-s py-xs border-b border-border-neutral-light shrink-0">
+        <Row
+          align="center"
+          justify="between"
+          px="s"
+          py="xs"
+          className="border-b border-border-neutral-light shrink-0"
+        >
           <Heading level={2}>{title}</Heading>
           <Row gap="xxs" align="center">
             {headerActions}
@@ -44,7 +50,7 @@ export function Dialog({
               &times;
             </button>
           </Row>
-        </div>
+        </Row>
         <div className="flex-1 min-h-0 overflow-y-auto">{children}</div>
         {footer && (
           <Row
@@ -57,6 +63,6 @@ export function Dialog({
           </Row>
         )}
       </div>
-    </div>
+    </Row>
   );
 }

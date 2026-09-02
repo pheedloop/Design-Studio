@@ -118,12 +118,12 @@ export function TypeSection({ typeKey, defaults, onChange }: TypeSectionProps) {
             </Stack>
           </Row>
           <Stack gap="tight">
-            <div className="flex items-center justify-between">
+            <Row align="center" justify="between">
               <SectionLabel>{t("editor.field.opacity")}</SectionLabel>
               <span className="text-xs text-text-subtle">
                 {Math.round(opacity * 100)}%
               </span>
-            </div>
+            </Row>
             <Slider
               min={0}
               max={100}

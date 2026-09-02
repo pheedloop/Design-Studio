@@ -24,7 +24,13 @@ export function StatusBar({
   const t = useT();
 
   return (
-    <div className="relative z-20 flex items-center justify-between px-xs py-tight bg-white border-t border-border-neutral-light text-xs text-text-caption">
+    <Row
+      align="center"
+      justify="between"
+      px="xs"
+      py="tight"
+      className="relative z-20 bg-white border-t border-border-neutral-light text-xs text-text-caption"
+    >
       <Row gap="xxs" align="center">
         {isCalibrated && showUnit && (
           <select
@@ -46,6 +52,6 @@ export function StatusBar({
       >
         {Math.round(scale * 100)}%
       </IconButton>
-    </div>
+    </Row>
   );
 }
