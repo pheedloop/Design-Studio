@@ -238,7 +238,7 @@ export function PropertiesPanel({
     return (
       <div className="w-60 shrink-0 border-l border-gray-200 bg-white flex flex-col">
         <div className="px-3 py-2 border-b border-gray-200">
-          <span className="text-xs font-medium text-gray-600">
+          <span className="text-xs font-medium text-text-body">
             {t("editor.selection.count", { count: selectedCount })}
           </span>
         </div>
@@ -319,7 +319,7 @@ export function PropertiesPanel({
       return (
         <div className="w-60 shrink-0 border-l border-gray-200 bg-white flex flex-col">
           <div className="px-3 py-2 border-b border-gray-200">
-            <span className="text-xs font-medium text-gray-600">
+            <span className="text-xs font-medium text-text-body">
               {t("editor.field.background")}
             </span>
           </div>
@@ -424,7 +424,7 @@ export function PropertiesPanel({
               ) : (
                 <button
                   onClick={onUploadBackground}
-                  className="w-full text-xs text-gray-600 border border-gray-200 border-dashed rounded px-2 py-3 hover:bg-surface-neutral cursor-pointer transition-colors"
+                  className="w-full text-xs text-text-body border border-gray-200 border-dashed rounded px-2 py-3 hover:bg-surface-neutral cursor-pointer transition-colors"
                 >
                   {t("editor.background.uploadCta")}
                 </button>
@@ -483,7 +483,7 @@ export function PropertiesPanel({
         )}
       </div>
       <div className="flex items-center justify-between px-3 py-2 border-b border-gray-200">
-        <span className="text-xs font-medium text-gray-600">
+        <span className="text-xs font-medium text-text-body">
           {elementTypeLabel(element, t)}
         </span>
       </div>
@@ -713,7 +713,7 @@ export function PropertiesPanel({
           {fields.has("area") && (
             <div className="flex flex-col gap-1.5">
               <SectionLabel>{t("editor.field.area")}</SectionLabel>
-              <div className="px-2 py-1 text-xs text-gray-600 bg-surface-neutral rounded border border-gray-200">
+              <div className="px-2 py-1 text-xs text-text-body bg-surface-neutral rounded border border-gray-200">
                 {formatArea(dims.width, dims.height, dimensions, t, locale)}
               </div>
             </div>
@@ -722,7 +722,7 @@ export function PropertiesPanel({
           {fields.has("length") && (
             <div className="flex flex-col gap-1.5">
               <SectionLabel>{t("editor.field.length")}</SectionLabel>
-              <div className="px-2 py-1 text-xs text-gray-600 bg-surface-neutral rounded border border-gray-200">
+              <div className="px-2 py-1 text-xs text-text-body bg-surface-neutral rounded border border-gray-200">
                 {formatMeasurement(dims.length, dimensions, t, locale)}
               </div>
             </div>

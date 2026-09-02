@@ -30,7 +30,7 @@ const states = {
   },
   bare: {
     active: "text-primary-600 bg-primary-50",
-    inactive: "text-gray-400 hover:text-gray-600",
+    inactive: "text-gray-400 hover:text-text-body",
   },
 };
 

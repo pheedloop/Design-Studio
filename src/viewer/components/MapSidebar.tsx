@@ -106,7 +106,7 @@ export function MapSidebar({
       {/* Single tab header — mirrors original ExhibitorList when no tabs needed */}
       {visibleTabs.length === 1 && (
         <div className="px-3 py-2 border-b border-gray-200">
-          <span className="text-xs font-medium text-gray-600">
+          <span className="text-xs font-medium text-text-body">
             {t("viewer.labelWithCount", {
               label: visibleTabs[0].label,
               count: visibleTabs[0].count,

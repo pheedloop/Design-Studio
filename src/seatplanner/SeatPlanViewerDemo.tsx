@@ -133,7 +133,7 @@ export function SeatPlanViewerDemo({ translate }: { translate?: Translate }) {
       onClick={() => setViewerMode(m)}
       className={`px-3 py-1 rounded text-xs font-medium transition-colors ${
         viewerMode === m
-          ? "bg-white text-gray-900 shadow-sm"
+          ? "bg-white text-text-heading shadow-sm"
           : "text-gray-500 hover:text-gray-800"
       }`}
     >
@@ -149,7 +149,7 @@ export function SeatPlanViewerDemo({ translate }: { translate?: Translate }) {
           {tab("attendee", "Attendee")}
         </div>
         {viewerMode === "attendee" && (
-          <div className="flex items-center gap-4 text-gray-600">
+          <div className="flex items-center gap-4 text-text-body">
             <Checkbox
               label="Lock selection"
               checked={lockSelection}

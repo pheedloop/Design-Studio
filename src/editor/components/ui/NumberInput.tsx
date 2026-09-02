@@ -60,7 +60,7 @@ export function NumberInput({
           <button
             type="button"
             onClick={increment}
-            className="flex items-center justify-center px-1 h-1/2 hover:bg-gray-100 cursor-pointer text-gray-400 hover:text-gray-600 transition-colors"
+            className="flex items-center justify-center px-1 h-1/2 hover:bg-gray-100 cursor-pointer text-gray-400 hover:text-text-body transition-colors"
             tabIndex={-1}
           >
             <PiCaretUp size={10} />
@@ -68,7 +68,7 @@ export function NumberInput({
           <button
             type="button"
             onClick={decrement}
-            className="flex items-center justify-center px-1 h-1/2 border-t border-gray-200 hover:bg-gray-100 cursor-pointer text-gray-400 hover:text-gray-600 transition-colors"
+            className="flex items-center justify-center px-1 h-1/2 border-t border-gray-200 hover:bg-gray-100 cursor-pointer text-gray-400 hover:text-text-body transition-colors"
             tabIndex={-1}
           >
             <PiCaretDown size={10} />

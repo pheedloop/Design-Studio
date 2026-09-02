@@ -75,7 +75,7 @@ export function PathingOptionsBar({
 
       <button
         onClick={onAutoMarkObstacles}
-        className="flex items-center gap-1 px-2 py-1 text-xs text-gray-600 hover:bg-amber-50 hover:text-amber-700 rounded transition-colors cursor-pointer"
+        className="flex items-center gap-1 px-2 py-1 text-xs text-text-body hover:bg-amber-50 hover:text-amber-700 rounded transition-colors cursor-pointer"
         title={t("editor.pathing.autoObstaclesHint")}
       >
         <PiMagicWand size={14} />

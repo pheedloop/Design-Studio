@@ -26,7 +26,7 @@ export function LocationPopover({
       <div className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
         {t(TYPE_NAME[type])}
       </div>
-      <div className="mt-1 text-sm font-medium text-gray-900">{name}</div>
+      <div className="mt-1 text-sm font-medium text-text-heading">{name}</div>
       {onGetDirections && (
         <button
           onClick={onGetDirections}

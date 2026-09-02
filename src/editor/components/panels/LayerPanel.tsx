@@ -49,7 +49,7 @@ export function LayerPanel({
     >
       <div className="flex items-center gap-1.5">
         {activeLayer && (
-          <div className="flex items-center gap-1.5 px-2 py-1 bg-white border border-gray-200 rounded-lg shadow-md text-xs text-gray-600">
+          <div className="flex items-center gap-1.5 px-2 py-1 bg-white border border-gray-200 rounded-lg shadow-md text-xs text-text-body">
             <span
               className="w-2 h-2 rounded-full"
               style={{ backgroundColor: LAYER_COLORS[activeLayer.id] }}
@@ -86,7 +86,7 @@ export function LayerPanel({
                     ? "text-gray-300 cursor-not-allowed"
                     : isActive
                       ? "bg-gray-100 font-semibold text-gray-800 cursor-pointer"
-                      : "text-gray-600 hover:bg-surface-neutral cursor-pointer"
+                      : "text-text-body hover:bg-surface-neutral cursor-pointer"
                 }`}
                 onClick={locked ? undefined : () => onSetActiveLayer(layer.id)}
               >

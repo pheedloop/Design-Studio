@@ -56,7 +56,7 @@ export function IconPicker({
         className={`flex items-center justify-center w-9 h-9 rounded cursor-pointer transition-colors ${
           isSelected
             ? "bg-primary-600 text-white"
-            : "hover:bg-gray-100 text-gray-600"
+            : "hover:bg-gray-100 text-text-body"
         }`}
       >
         <Icon size={20} />

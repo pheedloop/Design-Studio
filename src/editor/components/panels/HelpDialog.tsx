@@ -284,7 +284,7 @@ export function HelpDialog({ onClose }: HelpDialogProps) {
               >
                 {t(section.headingKey)}
               </h3>
-              <ul className="text-xs text-gray-600 space-y-1.5">
+              <ul className="text-xs text-text-body space-y-1.5">
                 {section.bulletKeys.map(bulletKey => (
                   <li key={bulletKey}>{t(bulletKey, { mod })}</li>
                 ))}
@@ -304,7 +304,7 @@ export function HelpDialog({ onClose }: HelpDialogProps) {
                     key={item.descriptionKey}
                     className="flex items-center justify-between py-0.5"
                   >
-                    <span className="text-xs text-gray-600">
+                    <span className="text-xs text-text-body">
                       {t(item.descriptionKey)}
                     </span>
                     <kbd className="text-[10px] font-mono text-gray-500 bg-gray-100 border border-gray-200 rounded px-1.5 py-0.5">
@@ -330,7 +330,7 @@ export function HelpDialog({ onClose }: HelpDialogProps) {
                   {menu.itemKeys.map(itemKey => (
                     <div
                       key={itemKey}
-                      className="text-xs text-gray-600 py-0.5 pl-2"
+                      className="text-xs text-text-body py-0.5 pl-2"
                     >
                       {t(itemKey)}
                     </div>

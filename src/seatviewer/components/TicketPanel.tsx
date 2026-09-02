@@ -130,7 +130,7 @@ export function TicketPanel({
             )}
           </span>
           <span className="text-sm text-gray-500 leading-snug break-words">
-            <span className="text-gray-600 font-medium">
+            <span className="text-text-body font-medium">
               {ticket.ticketName}
             </span>
             {/* Guest tickets carry no email — don't leave the separator dangling. */}
@@ -325,7 +325,7 @@ export function TicketPanel({
                   className={`text-xs font-medium px-2.5 py-1 rounded-full cursor-pointer transition-colors ${
                     active
                       ? "bg-primary-600 text-white"
-                      : "bg-gray-200 text-gray-600 hover:bg-gray-300"
+                      : "bg-gray-200 text-text-body hover:bg-gray-300"
                   }`}
                 >
                   {opt.label}

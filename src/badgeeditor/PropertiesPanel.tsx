@@ -75,7 +75,7 @@ export function PropertiesPanel({
   return (
     <div className="w-52 shrink-0 border-l border-gray-200 bg-white flex flex-col">
       <div className="px-3 py-2 border-b border-gray-200 flex items-center justify-between">
-        <span className="text-xs font-medium text-gray-600 truncate">
+        <span className="text-xs font-medium text-text-body truncate">
           {label}
         </span>
         <IconButton size="sm" onClick={onDelete} title="Delete field">
@@ -171,7 +171,7 @@ export function PropertiesPanel({
                   onClick={() =>
                     onChange({ text: field.text ? `${field.text} ${t}` : t })
                   }
-                  className="text-[11px] px-1.5 py-0.5 rounded bg-gray-100 hover:bg-gray-200 text-gray-600 font-mono"
+                  className="text-[11px] px-1.5 py-0.5 rounded bg-gray-100 hover:bg-gray-200 text-text-body font-mono"
                 >
                   {t.replace(/[{}]/g, "").trim()}
                 </button>

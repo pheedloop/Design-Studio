@@ -37,7 +37,7 @@ export function Dialog({
             <button
               onClick={onClose}
               aria-label={t("editor.action.close")}
-              className="text-gray-400 hover:text-gray-600 text-lg leading-none cursor-pointer"
+              className="text-gray-400 hover:text-text-body text-lg leading-none cursor-pointer"
             >
               &times;
             </button>

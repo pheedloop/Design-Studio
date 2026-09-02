@@ -28,7 +28,7 @@ const OCC_BADGE: Record<OccupancyLevel, string> = {
   available: "text-[#14653a] bg-[rgba(0,168,99,0.12)]",
   half: "text-[#8a5a00] bg-[rgba(255,168,0,0.16)]",
   low: "text-[#b42318] bg-[rgba(235,87,87,0.16)]",
-  full: "text-gray-600 bg-gray-200",
+  full: "text-text-body bg-gray-200",
 };
 
 function initials(o: SeatOccupant): string {

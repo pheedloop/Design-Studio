@@ -39,14 +39,14 @@ export function BoothPopover({
             className="mt-1 flex w-full flex-col items-center gap-2 rounded-md px-2 py-2 text-center hover:bg-surface-neutral cursor-pointer transition-colors"
           >
             <ExhibitorLogo exhibitor={exhibitor} />
-            <div className="text-sm font-medium text-gray-900 line-clamp-2">
+            <div className="text-sm font-medium text-text-heading line-clamp-2">
               {exhibitor.name}
             </div>
           </button>
         ) : (
           <div className="mt-1 flex flex-col items-center gap-2 text-center">
             <ExhibitorLogo exhibitor={exhibitor} />
-            <div className="text-sm font-medium text-gray-900 line-clamp-2">
+            <div className="text-sm font-medium text-text-heading line-clamp-2">
               {exhibitor.name}
             </div>
           </div>

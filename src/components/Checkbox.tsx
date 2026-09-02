@@ -14,7 +14,7 @@ export function Checkbox({
         checked={checked}
         onChange={e => onChange(e.target.checked)}
       />
-      <span className="text-xs text-gray-600">{label}</span>
+      <span className="text-xs text-text-body">{label}</span>
     </label>
   );
 }

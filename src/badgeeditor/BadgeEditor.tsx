@@ -663,17 +663,17 @@ function BadgeEditorInner({
 
             {showLayout ? (
               <aside className="w-72 shrink-0 border-l border-gray-200 bg-white flex flex-col">
-                <div className="px-3 py-2 border-b border-gray-200 text-xs font-medium text-gray-600">
+                <div className="px-3 py-2 border-b border-gray-200 text-xs font-medium text-text-body">
                   badge_layout · {flattened.width}" × {flattened.height}"
                 </div>
-                <pre className="flex-1 overflow-auto text-[11px] leading-tight p-3 text-gray-600">
+                <pre className="flex-1 overflow-auto text-[11px] leading-tight p-3 text-text-body">
                   {JSON.stringify(flattened.layout, null, 2)}
                 </pre>
               </aside>
             ) : previewMode ? null : selectedIds.size > 1 ? (
               <aside className="w-52 shrink-0 border-l border-gray-200 bg-white flex flex-col">
                 <div className="px-3 py-2 border-b border-gray-200 flex items-center justify-between">
-                  <span className="text-xs font-medium text-gray-600">
+                  <span className="text-xs font-medium text-text-body">
                     {selectedIds.size} fields selected
                   </span>
                   <Button

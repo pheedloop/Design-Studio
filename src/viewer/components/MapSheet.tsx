@@ -115,7 +115,7 @@ export function MapSheet({
                   className={`text-xs font-medium pb-0.5 cursor-pointer transition-colors ${
                     currentTab === tab.id
                       ? "text-primary-600 border-b-2 border-primary-500"
-                      : "text-gray-400 hover:text-gray-600"
+                      : "text-gray-400 hover:text-text-body"
                   }`}
                 >
                   {tab.label}
@@ -123,7 +123,7 @@ export function MapSheet({
               ))}
             </div>
           ) : (
-            <span className="text-xs font-medium text-gray-600">
+            <span className="text-xs font-medium text-text-body">
               {t("viewer.labelWithCount", {
                 label: visibleTabs[0]?.label ?? "",
                 count: visibleTabs[0]?.count ?? 0,

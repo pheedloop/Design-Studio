@@ -79,7 +79,7 @@ export function PlacementSection({
             "shrink-0 transition-colors",
             totalUnplaced > 0 && onAutoArrange
               ? "text-amber-400 hover:text-amber-500 cursor-pointer"
-              : "text-gray-200 cursor-default",
+              : "text-text-disabled cursor-default",
           ].join(" ")}
           title={
             totalUnplaced > 0

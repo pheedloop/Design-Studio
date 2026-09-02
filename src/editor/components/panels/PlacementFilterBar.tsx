@@ -58,7 +58,7 @@ export function PlacementFilterBar({
               setShapeOpen(v => !v);
               setFilterOpen(false);
             }}
-            className="flex items-center gap-1 text-xs text-gray-600 border border-gray-200 rounded px-1.5 py-0.5 hover:bg-surface-neutral transition-colors"
+            className="flex items-center gap-1 text-xs text-text-body border border-gray-200 rounded px-1.5 py-0.5 hover:bg-surface-neutral transition-colors"
           >
             <span
               className="inline-block w-2.5 h-2.5 bg-gray-300 shrink-0"
