@@ -8,7 +8,7 @@ export function Checkbox({
   onChange: (v: boolean) => void;
 }) {
   return (
-    <label className="flex items-center gap-2 cursor-pointer">
+    <label className="flex items-center gap-2 cursor-pointer select-none">
       <input
         type="checkbox"
         checked={checked}

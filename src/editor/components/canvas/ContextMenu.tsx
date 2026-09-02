@@ -1,6 +1,6 @@
 import { useRef } from "react";
 import { useDismiss } from "@/hooks/useDismiss";
-import { Button } from "@/editor/components/ui";
+import { Button } from "@/components/Button";
 
 export interface ContextMenuAction {
   label: string;

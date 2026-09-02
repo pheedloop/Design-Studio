@@ -1,6 +1,9 @@
 import { useRef, useState } from "react";
 import type { Legend, LegendEntry } from "@/types";
-import { Dialog, Button, TextInput, ColorSwatch } from "@/editor/components/ui";
+import { Button } from "@/components/Button";
+import { Checkbox } from "@/components/Checkbox";
+import { IconButton } from "@/components/IconButton";
+import { Dialog, TextInput, ColorSwatch } from "@/editor/components/ui";
 import {
   PiEye,
   PiEyeSlash,
@@ -83,19 +86,11 @@ export function LegendDialog({ legend, onSave, onClose }: LegendDialogProps) {
     >
       <div className="flex flex-col gap-4 p-4 overflow-y-auto flex-1">
         {/* Global visibility toggle */}
-        <label className="flex items-center gap-2 cursor-pointer select-none">
-          <input
-            type="checkbox"
-            checked={local.visible}
-            onChange={e =>
-              setLocal(prev => ({ ...prev, visible: e.target.checked }))
-            }
-            className="cursor-pointer"
-          />
-          <span className="text-xs text-gray-700">
-            {t("editor.legend.showOnMap")}
-          </span>
-        </label>
+        <Checkbox
+          label={t("editor.legend.showOnMap")}
+          checked={local.visible}
+          onChange={v => setLocal(prev => ({ ...prev, visible: v }))}
+        />
 
         {/* Entry list */}
         {local.entries.length > 0 && (
@@ -116,8 +111,8 @@ export function LegendDialog({ legend, onSave, onClose }: LegendDialogProps) {
                     placeholder={t("editor.legend.labelPlaceholder")}
                   />
                 </div>
-                <button
-                  className="p-1 rounded text-gray-400 hover:text-gray-600 transition-colors cursor-pointer"
+                <IconButton
+                  variant="bare"
                   onClick={() =>
                     updateEntry(entry.id, { visible: !entry.visible })
                   }
@@ -132,23 +127,25 @@ export function LegendDialog({ legend, onSave, onClose }: LegendDialogProps) {
                   ) : (
                     <PiEyeSlash size={15} className="text-red-400" />
                   )}
-                </button>
-                <button
-                  className="p-1 rounded text-gray-400 hover:text-gray-600 transition-colors cursor-pointer disabled:opacity-30 disabled:cursor-default"
+                </IconButton>
+                <IconButton
+                  variant="bare"
                   onClick={() => moveEntry(entry.id, "up")}
                   disabled={idx === 0}
                   title={t("editor.action.moveUp")}
                 >
                   <PiArrowUp size={13} />
-                </button>
-                <button
-                  className="p-1 rounded text-gray-400 hover:text-gray-600 transition-colors cursor-pointer disabled:opacity-30 disabled:cursor-default"
+                </IconButton>
+                <IconButton
+                  variant="bare"
                   onClick={() => moveEntry(entry.id, "down")}
                   disabled={idx === local.entries.length - 1}
                   title={t("editor.action.moveDown")}
                 >
                   <PiArrowDown size={13} />
-                </button>
+                </IconButton>
+                {/* Raw: the red hover marks the destructive action, and a tone
+                    prop for one site fails the ≥2-consumer bar. */}
                 <button
                   className="p-1 rounded text-gray-400 hover:text-red-500 transition-colors cursor-pointer"
                   onClick={() => removeEntry(entry.id)}

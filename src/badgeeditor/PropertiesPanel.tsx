@@ -5,8 +5,8 @@ import {
   PiTextAlignJustify,
   PiTrash,
 } from "react-icons/pi";
+import { IconButton } from "@/components/IconButton";
 import {
-  IconButton,
   Select,
   SectionLabel,
   FieldRow,
@@ -14,7 +14,7 @@ import {
 } from "@/editor/components/ui";
 import { inchToPx, type BadgeField, type TextAlign } from "./model";
 import { getFieldDef, isLiteralTextField, isUserFieldEditable } from "./fields";
-import { Checkbox } from "./Checkbox";
+import { Checkbox } from "@/components/Checkbox";
 
 const FONT_SIZES = [10, 12, 16, 18, 20, 24, 30, 36, 42];
 const ROW_COUNTS = [1, 2, 3, 4, 5, 6];

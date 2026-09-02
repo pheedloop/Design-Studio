@@ -1,10 +1,6 @@
 import { useState, useMemo } from "react";
-import {
-  Button,
-  Dialog,
-  SectionLabel,
-  NumberInput,
-} from "@/editor/components/ui";
+import { Button } from "@/components/Button";
+import { Dialog, SectionLabel, NumberInput } from "@/editor/components/ui";
 import type { FloorPlanElement, Dimensions } from "@/types";
 import { formatMeasurement } from "@/utils/unitConversion";
 import { useLocale, useT, type StringKey } from "@/editor/i18n";

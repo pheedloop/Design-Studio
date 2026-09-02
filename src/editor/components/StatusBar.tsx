@@ -1,4 +1,4 @@
-import { IconButton } from "./ui";
+import { IconButton } from "@/components/IconButton";
 import { useT } from "@/editor/i18n";
 import type { Unit } from "@/types";
 

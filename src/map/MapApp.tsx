@@ -9,6 +9,7 @@ import { MapEditor, definePlacementCategory, type Tier } from "@/editor";
 import { LocaleSwitcher } from "@/demo/LocaleSwitcher";
 import { useDemoLocale } from "@/demo/useDemoLocale";
 import { ViewerRoute, type Viewport } from "./ViewerRoute";
+import { ChromeToggle } from "@/demo/ChromeToggle";
 import { ProductSwitcher } from "@/components/ProductSwitcher";
 import { exhibitionHallMap } from "@/sample-data/exhibition-hall-map";
 import { conferenceExpoBooths } from "@/sample-data/sample-booths";
@@ -113,18 +114,15 @@ export function MapApp() {
         <div className="w-px h-4 bg-gray-700 mx-1" />
         <span className="text-gray-500 mr-0.5">Tier:</span>
         {(["basic", "advanced", "premium"] as Tier[]).map(t => (
-          <button
+          <ChromeToggle
             key={t}
+            active={tier === t}
             onClick={() => setTier(t)}
-            className={`px-2 py-0.5 rounded capitalize cursor-pointer transition-colors ${
-              tier === t
-                ? "bg-white/15 text-white"
-                : "text-gray-500 hover:text-gray-300"
-            }`}
+            className="capitalize"
             title={`Set ${t} tier`}
           >
             {t}
-          </button>
+          </ChromeToggle>
         ))}
 
         <LocaleSwitcher locale={locale} setLocale={setLocale} />
@@ -155,30 +153,24 @@ export function MapApp() {
               <PiDeviceMobile size={16} />
             </button>
             <div className="w-px h-4 bg-gray-700 mx-1" />
-            <button
+            <ChromeToggle
+              active={viewerMode === "attendee"}
               onClick={() => setViewerMode("attendee")}
-              className={`flex items-center gap-1 px-2 py-0.5 rounded cursor-pointer transition-colors ${
-                viewerMode === "attendee"
-                  ? "bg-white/15 text-white"
-                  : "text-gray-500 hover:text-gray-300"
-              }`}
+              className="flex items-center gap-1"
               title="Attendee view"
             >
               <PiUser size={14} />
               <span>Attendee</span>
-            </button>
-            <button
+            </ChromeToggle>
+            <ChromeToggle
+              active={viewerMode === "exhibitor"}
               onClick={() => setViewerMode("exhibitor")}
-              className={`flex items-center gap-1 px-2 py-0.5 rounded cursor-pointer transition-colors ${
-                viewerMode === "exhibitor"
-                  ? "bg-white/15 text-white"
-                  : "text-gray-500 hover:text-gray-300"
-              }`}
+              className="flex items-center gap-1"
               title="Exhibitor view"
             >
               <PiStorefront size={14} />
               <span>Exhibitor</span>
-            </button>
+            </ChromeToggle>
           </>
         )}
       </nav>

@@ -1,4 +1,5 @@
 import { useMemo, useRef, useState, useCallback } from "react";
+import { Checkbox } from "@/components/Checkbox";
 import { SeatPlanViewer } from "@/seatviewer";
 import type {
   SeatOccupant,
@@ -149,22 +150,16 @@ export function SeatPlanViewerDemo({ translate }: { translate?: Translate }) {
         </div>
         {viewerMode === "attendee" && (
           <div className="flex items-center gap-4 text-gray-600">
-            <label className="flex items-center gap-1.5 cursor-pointer">
-              <input
-                type="checkbox"
-                checked={lockSelection}
-                onChange={e => setLockSelection(e.target.checked)}
-              />
-              Lock selection
-            </label>
-            <label className="flex items-center gap-1.5 cursor-pointer">
-              <input
-                type="checkbox"
-                checked={hideDetails}
-                onChange={e => setHideDetails(e.target.checked)}
-              />
-              Hide attendee details
-            </label>
+            <Checkbox
+              label="Lock selection"
+              checked={lockSelection}
+              onChange={setLockSelection}
+            />
+            <Checkbox
+              label="Hide attendee details"
+              checked={hideDetails}
+              onChange={setHideDetails}
+            />
           </div>
         )}
       </div>

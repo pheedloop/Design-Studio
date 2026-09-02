@@ -9,12 +9,9 @@ import {
 import { v4 as uuid } from "uuid";
 import { useCanvasControls } from "@/editor/hooks/useCanvasControls";
 import { useHistory } from "@/editor/hooks/useHistory";
-import {
-  Button,
-  IconButton,
-  TabBar,
-  type MenuEntry,
-} from "@/editor/components/ui";
+import { Button } from "@/components/Button";
+import { IconButton } from "@/components/IconButton";
+import { TabBar, type MenuEntry } from "@/editor/components/ui";
 import { BadgeTopBar } from "./BadgeTopBar";
 import { modKey } from "@/editor/utils/platform";
 import { I18nProvider } from "@/i18n/I18nProvider";

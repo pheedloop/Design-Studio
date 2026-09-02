@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Button, Dialog, TabBar } from "@/editor/components/ui";
+import { Button } from "@/components/Button";
+import { Dialog, TabBar } from "@/editor/components/ui";
 import type { FloorPlanData } from "@/types";
 import { JsonDebugView } from "./JsonDebugView";
 import { useT } from "@/editor/i18n";

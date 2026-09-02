@@ -1,4 +1,5 @@
-import { Button, ColorSwatch, NumberInput } from "@/editor/components/ui";
+import { Button } from "@/components/Button";
+import { ColorSwatch, NumberInput } from "@/editor/components/ui";
 import { AlignmentControls } from "./AlignmentControls";
 import type { OptionsBarField } from "@/editor/components/canvas/elements/types";
 import { useT } from "@/editor/i18n";

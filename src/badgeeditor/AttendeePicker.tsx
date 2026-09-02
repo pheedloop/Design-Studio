@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { PiMagnifyingGlass, PiX, PiCaretDown } from "react-icons/pi";
+import { IconButton } from "@/components/IconButton";
 import type { AttendeeOption, AttendeeProvider } from "./badgeData";
 import { useDismiss } from "@/hooks/useDismiss";
 
@@ -67,14 +68,15 @@ export function AttendeePicker({
           )}
         </button>
         {value ? (
-          <button
-            type="button"
+          <IconButton
+            variant="bare"
+            size="sm"
             title="Clear"
             onClick={() => onChange(null)}
-            className="shrink-0 text-gray-400 hover:text-gray-600 p-0.5"
+            className="shrink-0"
           >
             <PiX size={13} />
-          </button>
+          </IconButton>
         ) : (
           <PiCaretDown size={12} className="text-gray-400 shrink-0" />
         )}

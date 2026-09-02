@@ -106,6 +106,8 @@ export default defineConfig({
         "src/editor",
         "src/viewer",
         "src/seatviewer",
+        "src/components",
+        "src/hooks",
         "src/types",
         "src/i18n",
         "src/utils",
