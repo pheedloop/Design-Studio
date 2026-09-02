@@ -1,8 +1,9 @@
 import { Line } from "react-konva";
 import type { LinePreviewState } from "@/editor/tools/hooks/useLineInteraction";
+import { GRAY_600 } from "@/canvasColors";
 
 const previewStyle = {
-  stroke: "#475569",
+  stroke: GRAY_600,
   strokeWidth: 2,
   dash: [4, 4] as number[],
   listening: false,

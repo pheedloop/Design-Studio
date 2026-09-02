@@ -1,5 +1,6 @@
 import { useRef, useEffect } from "react";
 import type { Dimensions } from "@/types";
+import { GRAY_100, GRAY_200, GRAY_400, GRAY_500 } from "@/canvasColors";
 
 interface RulersProps {
   visible: boolean;
@@ -11,10 +12,10 @@ interface RulersProps {
 
 const RULER_SIZE = 22;
 const FONT = "10px system-ui, sans-serif";
-const BG_COLOR = "#f9fafb";
-const TICK_COLOR = "#9ca3af";
-const TEXT_COLOR = "#6b7280";
-const BORDER_COLOR = "#e5e7eb";
+const BG_COLOR = GRAY_100;
+const TICK_COLOR = GRAY_400;
+const TEXT_COLOR = GRAY_500;
+const BORDER_COLOR = GRAY_200;
 const MAJOR_TICK_MIN_PX = 80;
 
 function isCalibrated(dims: Dimensions): boolean {

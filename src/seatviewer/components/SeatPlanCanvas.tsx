@@ -14,6 +14,7 @@ import { DxfDrawing } from "@/editor/components/canvas/DxfDrawing";
 import { ViewerElement } from "@/viewer/components/ViewerElement";
 import { I18nProvider } from "@/i18n/I18nProvider";
 import type { Translate } from "@/seatviewer/i18n";
+import { GRAY_300, WHITE } from "@/canvasColors";
 
 export interface SeatPlanCanvasProps {
   data: FloorPlanData;
@@ -137,8 +138,8 @@ function SeatPlanCanvasInner({
             y={0}
             width={data.dimensions.width}
             height={data.dimensions.height}
-            fill="#ffffff"
-            stroke="#d1d5db"
+            fill={WHITE}
+            stroke={GRAY_300}
             strokeWidth={1}
           />
           {data.background?.kind === "image" && (

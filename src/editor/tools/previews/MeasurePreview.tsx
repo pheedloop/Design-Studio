@@ -3,6 +3,7 @@ import type { MeasureState } from "@/editor/tools/hooks/useMeasureInteraction";
 import type { Dimensions } from "@/types";
 import { formatMeasurement } from "@/utils/unitConversion";
 import { useLocale, useT } from "@/editor/i18n";
+import { WHITE } from "@/canvasColors";
 
 interface MeasurePreviewProps {
   state: MeasureState;
@@ -51,7 +52,7 @@ export function MeasurePreview({
         y={p1.y}
         radius={POINT_RADIUS * inverseScale}
         fill={COLOR}
-        stroke="#fff"
+        stroke={WHITE}
         strokeWidth={1 * inverseScale}
         listening={false}
       />
@@ -60,7 +61,7 @@ export function MeasurePreview({
         y={p2.y}
         radius={POINT_RADIUS * inverseScale}
         fill={COLOR}
-        stroke="#fff"
+        stroke={WHITE}
         strokeWidth={1 * inverseScale}
         listening={false}
       />
@@ -69,7 +70,7 @@ export function MeasurePreview({
         y={midY - 10 * inverseScale}
         width={label.length * 7 * inverseScale}
         height={18 * inverseScale}
-        fill="#fff"
+        fill={WHITE}
         cornerRadius={3 * inverseScale}
         opacity={0.9}
         listening={false}

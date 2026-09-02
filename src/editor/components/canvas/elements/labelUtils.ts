@@ -1,4 +1,5 @@
 import type { ElementProperties } from "@/types";
+import { WHITE } from "@/canvasColors";
 
 type VPos = "top" | "middle" | "bottom";
 type HPos = "left" | "center" | "right";
@@ -54,7 +55,7 @@ export function getLabelRenderProps(
   return {
     labelPositionV: props.labelPositionV ?? "middle",
     labelPositionH: props.labelPositionH ?? "center",
-    labelColor: props.labelColor ?? "#ffffff",
+    labelColor: props.labelColor ?? WHITE,
     labelFontSize: props.labelFontSize ?? 12,
     labelBold: props.labelBold ?? true,
     labelItalic: props.labelItalic ?? false,

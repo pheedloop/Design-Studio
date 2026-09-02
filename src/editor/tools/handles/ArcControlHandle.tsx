@@ -1,6 +1,7 @@
 import { Circle } from "react-konva";
 import type Konva from "konva";
 import type { FloorPlanElement, Geometry, ArcGeometry } from "@/types";
+import { BRAND, WHITE } from "@/canvasColors";
 
 interface ArcControlHandleProps {
   element: FloorPlanElement;
@@ -55,8 +56,8 @@ export function ArcControlHandle({
         x={absStart.x}
         y={absStart.y}
         radius={HANDLE_RADIUS}
-        fill="#fff"
-        stroke="#007bff"
+        fill={WHITE}
+        stroke={BRAND}
         strokeWidth={1.5}
         draggable
         onDragMove={e => handleDrag(0, e)}
@@ -65,8 +66,8 @@ export function ArcControlHandle({
         x={absEnd.x}
         y={absEnd.y}
         radius={HANDLE_RADIUS}
-        fill="#fff"
-        stroke="#007bff"
+        fill={WHITE}
+        stroke={BRAND}
         strokeWidth={1.5}
         draggable
         onDragMove={e => handleDrag(1, e)}
@@ -75,8 +76,8 @@ export function ArcControlHandle({
         x={absControl.x}
         y={absControl.y}
         radius={CONTROL_HANDLE_RADIUS}
-        fill="#007bff"
-        stroke="#fff"
+        fill={BRAND}
+        stroke={WHITE}
         strokeWidth={1.5}
         draggable
         onDragMove={e => handleDrag(2, e)}

@@ -8,6 +8,7 @@ import {
 } from "@/editor/components/ui";
 import { Row } from "@/components/Row";
 import { Stack } from "@/components/Stack";
+import { BLACK, WHITE } from "@/canvasColors";
 import { LabelPositionPicker } from "./LabelPositionPicker";
 import { PiEye, PiEyeSlash } from "react-icons/pi";
 import { useT } from "@/editor/i18n";
@@ -47,7 +48,7 @@ export function LabelSection({ properties, onChange }: LabelSectionProps) {
 
       <ColorSwatch
         label={t("editor.field.color")}
-        value={properties.labelColor ?? "#ffffff"}
+        value={properties.labelColor ?? WHITE}
         onChange={c => onChange({ labelColor: c })}
       />
 
@@ -105,7 +106,7 @@ export function LabelSection({ properties, onChange }: LabelSectionProps) {
             onChange={e => {
               if (e.target.checked) {
                 onChange({
-                  labelBackground: { color: "#000000", opacity: 0.5 },
+                  labelBackground: { color: BLACK, opacity: 0.5 },
                 });
               } else {
                 onChange({ labelBackground: undefined });

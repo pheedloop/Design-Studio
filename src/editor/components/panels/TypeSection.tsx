@@ -11,6 +11,7 @@ import {
 import { Row } from "@/components/Row";
 import { Stack } from "@/components/Stack";
 import { Text } from "@/components/Text";
+import { GRAY_400 } from "@/canvasColors";
 import { LabelSection } from "./LabelSection";
 
 const TYPE_DISPLAY_NAMES: Record<string, string> = {
@@ -29,7 +30,7 @@ function formatTypeDisplayName(key: string): string {
 
 function toElementProperties(defaults: ElementTypeDefaults): ElementProperties {
   return {
-    color: defaults.color ?? "#94a3b8",
+    color: defaults.color ?? GRAY_400,
     zIndex: 1,
     labelColor: defaults.labelColor,
     labelFontSize: defaults.labelFontSize,
@@ -63,7 +64,7 @@ export function TypeSection({ typeKey, defaults, onChange }: TypeSectionProps) {
         <Row gap="xxs" align="center">
           <span
             className="w-3 h-3 rounded-sm shrink-0 border border-border-neutral"
-            style={{ background: defaults.color ?? "#94a3b8" }}
+            style={{ background: defaults.color ?? GRAY_400 }}
           />
           <Text size="xs" weight="medium" color="body" as="span">
             {formatTypeDisplayName(typeKey)}
@@ -83,12 +84,12 @@ export function TypeSection({ typeKey, defaults, onChange }: TypeSectionProps) {
         >
           <ColorSwatch
             label={t("editor.field.fill")}
-            value={defaults.color ?? "#94a3b8"}
+            value={defaults.color ?? GRAY_400}
             onChange={c => onChange({ color: c })}
           />
           <ColorSwatch
             label={t("editor.field.stroke")}
-            value={defaults.strokeColor ?? "#888888"}
+            value={defaults.strokeColor ?? GRAY_400}
             onChange={c => onChange({ strokeColor: c })}
           />
           <Stack gap="tight">

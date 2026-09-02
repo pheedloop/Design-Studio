@@ -8,6 +8,7 @@ import {
 } from "react";
 import { MdOutlineTableBar } from "react-icons/md";
 import { Row } from "@/components/Row";
+import { GRAY_300, GRAY_400 } from "@/canvasColors";
 import type { ActiveTool, EditorMode, PathingTool } from "./types";
 import { usePlacementRecords } from "./hooks/usePlacementRecords";
 import {
@@ -100,8 +101,8 @@ import type { Translate } from "./i18n";
 const EXPORT_MAX_EDGE = 4096;
 
 const INITIAL_DEFAULTS: DrawingDefaults = {
-  fill: "#94a3b8",
-  stroke: "#888888",
+  fill: GRAY_400,
+  stroke: GRAY_400,
   strokeWidth: 1,
 };
 
@@ -306,7 +307,7 @@ function MapEditorInner({
     showGrid: true,
     gridSpacing: 20,
     snapToGrid: true,
-    gridColor: "#d1d5db",
+    gridColor: GRAY_300,
     gridOpacity: 0.5,
   });
   const [snapToObjects, setSnapToObjects] = useState(true);
@@ -655,7 +656,7 @@ function MapEditorInner({
         stroke:
           selectedElement.geometry.shape === "line"
             ? selectedElement.properties.color
-            : selectedElement.properties.strokeColor || "#888888",
+            : selectedElement.properties.strokeColor || GRAY_400,
         strokeWidth:
           selectedElement.properties.strokeWidth ??
           (selectedElement.geometry.shape === "line" ? 2 : 1),
@@ -666,7 +667,7 @@ function MapEditorInner({
           stroke:
             selectedElements[0].geometry.shape === "line"
               ? selectedElements[0].properties.color
-              : selectedElements[0].properties.strokeColor || "#888888",
+              : selectedElements[0].properties.strokeColor || GRAY_400,
           strokeWidth: selectedElements[0].properties.strokeWidth ?? 1,
         }
       : defaults;
@@ -1373,8 +1374,8 @@ function MapEditorInner({
           layer: activeLayerId,
           geometry,
           properties: {
-            color: typeStyle.color ?? "#94a3b8",
-            strokeColor: typeStyle.strokeColor ?? "#888888",
+            color: typeStyle.color ?? GRAY_400,
+            strokeColor: typeStyle.strokeColor ?? GRAY_400,
             strokeWidth: typeStyle.strokeWidth ?? 1,
             zIndex: maxZ + 1,
             ...linkedProps,
@@ -1461,8 +1462,8 @@ function MapEditorInner({
           geometry,
           properties: {
             name: rec.recordName,
-            color: typeStyle.color ?? "#94a3b8",
-            strokeColor: typeStyle.strokeColor ?? "#888888",
+            color: typeStyle.color ?? GRAY_400,
+            strokeColor: typeStyle.strokeColor ?? GRAY_400,
             strokeWidth: typeStyle.strokeWidth ?? 1,
             zIndex: maxZ + 1 + i,
             ...linkingProps,

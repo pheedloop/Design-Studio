@@ -28,6 +28,7 @@ import { JsonDebugView } from "@/editor/components/debug";
 import { Row } from "@/components/Row";
 import { Stack } from "@/components/Stack";
 import { Text } from "@/components/Text";
+import { WHITE } from "@/canvasColors";
 import { LabelSection } from "./LabelSection";
 
 const TEXT_ALIGN_LABEL: Record<"left" | "center" | "right", StringKey> = {
@@ -205,7 +206,7 @@ export function PropertiesPanel({
           ) as ElementProperties["labelPositionH"],
           labelColor: getCommonValue(
             labelableElements,
-            el => el.properties.labelColor ?? "#ffffff",
+            el => el.properties.labelColor ?? WHITE,
           ),
           labelFontSize: getCommonValue(
             labelableElements,
@@ -331,7 +332,7 @@ export function PropertiesPanel({
               <SectionLabel>{t("editor.field.backgroundColor")}</SectionLabel>
               <ColorSwatch
                 label=""
-                value={backgroundColor ?? "#ffffff"}
+                value={backgroundColor ?? WHITE}
                 onChange={c => onBackgroundColorChange?.(c)}
               />
             </Stack>

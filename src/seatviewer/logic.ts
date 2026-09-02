@@ -1,3 +1,4 @@
+import { GRAY_400 } from "@/canvasColors";
 import type { StringKey } from "./i18n";
 import type { SeatTableState, SeatTicket, SeatPlanMode } from "./types";
 
@@ -33,7 +34,7 @@ const OCCUPANCY_FILL: Record<OccupancyLevel, string> = {
   available: "#34b87a",
   half: "#f0a92e",
   low: "#e25c5c",
-  full: "#9aa6b8",
+  full: GRAY_400,
 };
 
 export function occupancyColor(table: OccupancyInput): string {

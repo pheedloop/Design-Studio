@@ -1,3 +1,4 @@
+import { GRAY_400 } from "@/canvasColors";
 export type Unit = "ft" | "m" | "px";
 
 // --- Layer system ---
@@ -205,29 +206,29 @@ export type TypeStyles = Record<string, ElementTypeDefaults>;
 
 export const DEFAULT_TYPE_STYLES: TypeStyles = {
   booth: {
-    color: "#94a3b8",
-    strokeColor: "#888888",
+    color: GRAY_400,
+    strokeColor: GRAY_400,
     strokeWidth: 1,
     defaultWidth: 120,
     defaultHeight: 80,
   },
   session_area: {
     color: "#27AE60",
-    strokeColor: "#888888",
+    strokeColor: GRAY_400,
     strokeWidth: 1,
     defaultWidth: 200,
     defaultHeight: 150,
   },
   meeting_room: {
     color: "#7c3aed",
-    strokeColor: "#888888",
+    strokeColor: GRAY_400,
     strokeWidth: 1,
     defaultWidth: 160,
     defaultHeight: 120,
   },
   table: {
     color: "#14b8a6",
-    strokeColor: "#888888",
+    strokeColor: GRAY_400,
     strokeWidth: 1,
     defaultWidth: 90,
     defaultHeight: 90,
@@ -252,7 +253,7 @@ export const DEFAULT_VIEWER_APPEARANCE: ViewerAppearance = {
   organizer: {
     available: { type: "hatch", pattern: "diagonal" },
     reserved: { type: "hatch", pattern: "cross" },
-    on_hold: { type: "border", color: "#888888", style: "dashed", width: 2 },
+    on_hold: { type: "border", color: GRAY_400, style: "dashed", width: 2 },
     sold: { type: "none" },
   },
   attendee: {

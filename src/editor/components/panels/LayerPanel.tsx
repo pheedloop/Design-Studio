@@ -8,6 +8,7 @@ import { TrophyIcon } from "@/editor/components/ui";
 import { useT } from "@/editor/i18n";
 import { useDismiss } from "@/hooks/useDismiss";
 import { Row } from "@/components/Row";
+import { BRAND, GRAY_400 } from "@/canvasColors";
 
 interface LayerPanelProps {
   layers: LayerDefinition[];
@@ -20,8 +21,8 @@ interface LayerPanelProps {
 }
 
 const LAYER_COLORS: Record<LayerId, string> = {
-  background: "#9ca3af",
-  content: "#007bff",
+  background: GRAY_400,
+  content: BRAND,
   pathing: "#f59e0b",
   markup: "#10b981",
 };

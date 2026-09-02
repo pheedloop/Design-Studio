@@ -3,6 +3,7 @@ import { Rect, Transformer } from "react-konva";
 import type Konva from "konva";
 import type { FloorPlanElement, Geometry } from "@/types";
 import { getElementBounds } from "@/editor/utils/bounds";
+import { BRAND, WHITE } from "@/canvasColors";
 
 interface GroupTransformerProps {
   groupId: string;
@@ -112,10 +113,10 @@ export function GroupTransformer({
       <Transformer
         ref={trRef}
         rotateEnabled={false}
-        borderStroke="#007bff"
+        borderStroke={BRAND}
         borderStrokeWidth={1.5}
-        anchorFill="#fff"
-        anchorStroke="#007bff"
+        anchorFill={WHITE}
+        anchorStroke={BRAND}
         anchorSize={8}
         anchorCornerRadius={2}
         boundBoxFunc={(_oldBox, newBox) => {
