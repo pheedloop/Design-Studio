@@ -26,23 +26,6 @@ export function getLabelXY(
   };
 }
 
-/**
- * Get x/y position for a Konva Label (point-positioned, used with Tag background).
- */
-export function getLabelTagPosition(
-  v: VPos,
-  h: HPos,
-  elWidth: number,
-  elHeight: number,
-  padding: number = 4,
-) {
-  const x =
-    h === "left" ? padding : h === "right" ? elWidth - padding : elWidth / 2;
-  const y =
-    v === "top" ? padding : v === "bottom" ? elHeight - padding : elHeight / 2;
-  return { x, y };
-}
-
 /** Build Konva fontStyle string from bold + italic flags. */
 export function getLabelFontStyle(bold?: boolean, italic?: boolean): string {
   if (bold && italic) return "bold italic";

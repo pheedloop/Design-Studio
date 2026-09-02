@@ -54,8 +54,6 @@ export const ELEMENT_TYPE_TO_LAYER: Record<ElementType, LayerId> = {
   shape: "markup",
 };
 
-export type ShapeType = "rect" | "polygon" | "circle" | "ellipse";
-
 export interface Point {
   x: number;
   y: number;
