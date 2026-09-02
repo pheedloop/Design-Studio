@@ -50,7 +50,7 @@ export function InlineRenameField({
           setEditing(false);
         }
       }}
-      className="flex-1 text-base font-semibold text-text-heading bg-white border border-primary-400 rounded px-1.5 py-0.5 outline-none focus:ring-1 focus:ring-primary-400"
+      className="flex-1 text-base font-semibold text-text-heading bg-white border border-primary-400 rounded px-tight py-hair outline-none focus:ring-1 focus:ring-primary-400"
     />
   ) : (
     <button

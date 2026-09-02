@@ -1,6 +1,7 @@
 import { Circle } from "react-konva";
 import type Konva from "konva";
 import type { FloorPlanElement, Geometry, PolygonGeometry } from "@/types";
+import { BRAND, WHITE } from "@/canvasColors";
 
 interface PolygonVertexHandlesProps {
   element: FloorPlanElement;
@@ -43,8 +44,8 @@ export function PolygonVertexHandles({
           x={v.x}
           y={v.y}
           radius={HANDLE_RADIUS}
-          fill="#fff"
-          stroke="#007bff"
+          fill={WHITE}
+          stroke={BRAND}
           strokeWidth={1.5}
           draggable
           onDragMove={e => handleDrag(v.index, e)}

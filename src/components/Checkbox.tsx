@@ -11,6 +11,7 @@ export function Checkbox({
     <label className="flex items-center gap-xxs cursor-pointer select-none">
       <input
         type="checkbox"
+        className="accent-primary-600"
         checked={checked}
         onChange={e => onChange(e.target.checked)}
       />

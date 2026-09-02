@@ -93,7 +93,7 @@ export function MapSidebar({
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`flex-1 px-2 py-2 text-[11px] font-medium transition-colors cursor-pointer ${
+              className={`flex-1 px-xxs py-xxs text-xs font-medium transition-colors cursor-pointer ${
                 currentTab === tab.id
                   ? "text-primary-600 border-b-2 border-primary-500"
                   : "text-text-caption hover:text-text-body"
@@ -107,7 +107,7 @@ export function MapSidebar({
 
       {/* Single tab header — mirrors original ExhibitorList when no tabs needed */}
       {visibleTabs.length === 1 && (
-        <div className="px-3 py-2 border-b border-border-neutral-light">
+        <div className="px-xs py-xxs border-b border-border-neutral-light">
           <Text size="xs" weight="medium" color="body" as="span">
             {t("viewer.labelWithCount", {
               label: visibleTabs[0].label,
@@ -135,7 +135,7 @@ export function MapSidebar({
                     boothSlug: exhibitor.boothSlug,
                   });
                 }}
-                className={`w-full text-left px-3 py-2 border-b border-border-neutral-faint cursor-pointer transition-colors ${
+                className={`w-full text-left px-xs py-xxs border-b border-border-neutral-faint cursor-pointer transition-colors ${
                   isSelected ? "bg-primary-100" : "hover:bg-surface-neutral"
                 }`}
               >
@@ -144,14 +144,14 @@ export function MapSidebar({
                     <img
                       src={exhibitor.logo}
                       alt=""
-                      className="w-7 h-7 shrink-0 rounded-md border border-border-neutral-light bg-white object-contain p-0.5"
+                      className="w-7 h-7 shrink-0 rounded-md border border-border-neutral-light bg-white object-contain p-hair"
                     />
                   )}
                   <div>
                     <div className="text-xs font-medium text-text-heading">
                       {exhibitor.name}
                     </div>
-                    <div className="text-[11px] text-text-subtle">
+                    <div className="text-xs text-text-subtle">
                       {boothEl?.properties.name
                         ? t("viewer.boothLabel", {
                             code: boothEl.properties.name,
@@ -177,7 +177,7 @@ export function MapSidebar({
                     sessionId: el.properties.sessionId ?? null,
                   })
                 }
-                className={`w-full text-left px-3 py-2 border-b border-border-neutral-faint cursor-pointer transition-colors ${
+                className={`w-full text-left px-xs py-xxs border-b border-border-neutral-faint cursor-pointer transition-colors ${
                   isSelected ? "bg-primary-100" : "hover:bg-surface-neutral"
                 }`}
               >
@@ -201,7 +201,7 @@ export function MapSidebar({
                     meetingRoomId: el.properties.meetingRoomId ?? null,
                   })
                 }
-                className={`w-full text-left px-3 py-2 border-b border-border-neutral-faint cursor-pointer transition-colors ${
+                className={`w-full text-left px-xs py-xxs border-b border-border-neutral-faint cursor-pointer transition-colors ${
                   isSelected ? "bg-primary-100" : "hover:bg-surface-neutral"
                 }`}
               >

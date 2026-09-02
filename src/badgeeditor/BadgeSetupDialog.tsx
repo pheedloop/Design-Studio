@@ -131,7 +131,7 @@ export function BadgeSetupDialog({
         </>
       }
     >
-      <Stack gap="s" className="p-4">
+      <Stack gap="s" className="p-s">
         <Stack gap="tight">
           <SectionLabel>Fold</SectionLabel>
           <Row gap="xxs">
@@ -148,7 +148,7 @@ export function BadgeSetupDialog({
               </Button>
             ))}
           </Row>
-          <span className="text-[11px] text-text-subtle">
+          <span className="text-xs text-text-subtle">
             {count} panel{count > 1 ? "s" : ""}, stacked top-to-bottom
           </span>
         </Stack>
@@ -198,7 +198,7 @@ export function BadgeSetupDialog({
                 variant="outline"
                 color={localSlots === o.value ? "primary" : "neutral"}
                 active={localSlots === o.value}
-                className="flex-1 text-[11px]"
+                className="flex-1 text-xs"
                 onClick={() => setLocalSlots(o.value)}
               >
                 {o.label}
@@ -215,7 +215,7 @@ export function BadgeSetupDialog({
                 <Stack
                   key={i}
                   gap="tight"
-                  className="px-2.5 py-2 rounded border border-border-neutral-light"
+                  className="px-snug py-xxs rounded border border-border-neutral-light"
                 >
                   <Text size="xs" weight="medium" color="body" as="span">
                     {pageRoleLabel(pageRoleForIndex(count, i))}

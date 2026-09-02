@@ -38,7 +38,7 @@ export function ToolSidebarHeader({
     <Row
       gap="xxs"
       align="center"
-      className="px-3 py-3 border-b border-border-neutral-faint min-w-0"
+      className="px-xs py-xs border-b border-border-neutral-faint min-w-0"
     >
       {isDirty && (
         <span

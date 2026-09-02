@@ -28,6 +28,7 @@ import { JsonDebugView } from "@/editor/components/debug";
 import { Row } from "@/components/Row";
 import { Stack } from "@/components/Stack";
 import { Text } from "@/components/Text";
+import { WHITE } from "@/canvasColors";
 import { LabelSection } from "./LabelSection";
 
 const TEXT_ALIGN_LABEL: Record<"left" | "center" | "right", StringKey> = {
@@ -205,7 +206,7 @@ export function PropertiesPanel({
           ) as ElementProperties["labelPositionH"],
           labelColor: getCommonValue(
             labelableElements,
-            el => el.properties.labelColor ?? "#ffffff",
+            el => el.properties.labelColor ?? WHITE,
           ),
           labelFontSize: getCommonValue(
             labelableElements,
@@ -240,21 +241,21 @@ export function PropertiesPanel({
 
     return (
       <div className="w-60 shrink-0 border-l border-border-neutral-light bg-white flex flex-col">
-        <div className="px-3 py-2 border-b border-border-neutral-light">
+        <div className="px-xs py-xxs border-b border-border-neutral-light">
           <Text size="xs" weight="medium" color="body" as="span">
             {t("editor.selection.count", { count: selectedCount })}
           </Text>
         </div>
-        <Stack gap="s" className="p-3 overflow-y-auto flex-1">
+        <Stack gap="s" className="p-xs overflow-y-auto flex-1">
           <Stack gap="tight">
-            <div className="flex items-center justify-between">
+            <Row align="center" justify="between">
               <SectionLabel>{t("editor.field.opacity")}</SectionLabel>
-              <span className="text-[11px] text-text-subtle">
+              <span className="text-xs text-text-subtle">
                 {commonOpacity !== undefined
                   ? `${Math.round(commonOpacity * 100)}%`
                   : t("editor.field.mixed")}
               </span>
-            </div>
+            </Row>
             <Slider
               min={0}
               max={100}
@@ -303,7 +304,7 @@ export function PropertiesPanel({
             </>
           )}
         </Stack>
-        <div className="p-3 border-t border-border-neutral-light">
+        <div className="p-xs border-t border-border-neutral-light">
           <Button
             variant="outline"
             color="negative"
@@ -321,17 +322,17 @@ export function PropertiesPanel({
     if (activeLayerId === "background") {
       return (
         <div className="w-60 shrink-0 border-l border-border-neutral-light bg-white flex flex-col">
-          <div className="px-3 py-2 border-b border-border-neutral-light">
+          <div className="px-xs py-xxs border-b border-border-neutral-light">
             <Text size="xs" weight="medium" color="body" as="span">
               {t("editor.field.background")}
             </Text>
           </div>
-          <Stack gap="s" className="p-3 overflow-y-auto flex-1">
+          <Stack gap="s" className="p-xs overflow-y-auto flex-1">
             <Stack gap="tight">
               <SectionLabel>{t("editor.field.backgroundColor")}</SectionLabel>
               <ColorSwatch
                 label=""
-                value={backgroundColor ?? "#ffffff"}
+                value={backgroundColor ?? WHITE}
                 onChange={c => onBackgroundColorChange?.(c)}
               />
             </Stack>
@@ -351,19 +352,19 @@ export function PropertiesPanel({
                       }}
                     />
                   ) : (
-                    <div className="text-[11px] text-text-caption truncate">
+                    <div className="text-xs text-text-caption truncate">
                       {background.sourceFileName}
                     </div>
                   )}
                   <Stack gap="tight">
-                    <div className="flex items-center justify-between">
-                      <span className="text-[11px] text-text-caption">
+                    <Row align="center" justify="between">
+                      <span className="text-xs text-text-caption">
                         {t("editor.field.opacity")}
                       </span>
-                      <span className="text-[11px] text-text-subtle">
+                      <span className="text-xs text-text-subtle">
                         {Math.round(background.opacity * 100)}%
                       </span>
-                    </div>
+                    </Row>
                     <Slider
                       min={0}
                       max={100}
@@ -379,17 +380,17 @@ export function PropertiesPanel({
 
                   {background.kind === "dxf" && (
                     <Stack gap="xxxs">
-                      <span className="text-[11px] text-text-caption">
+                      <span className="text-xs text-text-caption">
                         {t("editor.field.layers")}
                       </span>
                       <Stack
                         gap="xxxs"
-                        className="max-h-32 overflow-y-auto border border-border-neutral-light rounded-md p-2"
+                        className="max-h-32 overflow-y-auto border border-border-neutral-light rounded-md p-xxs"
                       >
                         {background.layers.map(layer => (
                           <label
                             key={layer}
-                            className="flex items-center gap-xxs cursor-pointer text-[11px]"
+                            className="flex items-center gap-xxs cursor-pointer text-xs"
                           >
                             <input
                               type="checkbox"
@@ -430,7 +431,7 @@ export function PropertiesPanel({
               ) : (
                 <button
                   onClick={onUploadBackground}
-                  className="w-full text-xs text-text-body border border-border-neutral-light border-dashed rounded px-2 py-3 hover:bg-surface-neutral cursor-pointer transition-colors"
+                  className="w-full text-xs text-text-body border border-border-neutral-light border-dashed rounded px-xxs py-xs hover:bg-surface-neutral cursor-pointer transition-colors"
                 >
                   {t("editor.background.uploadCta")}
                 </button>
@@ -442,7 +443,7 @@ export function PropertiesPanel({
     }
 
     return (
-      <div className="w-60 shrink-0 border-l border-border-neutral-light bg-white p-4">
+      <div className="w-60 shrink-0 border-l border-border-neutral-light bg-white p-s">
         <p className="text-xs text-text-subtle">
           {t("editor.properties.noSelection")}
         </p>
@@ -475,7 +476,13 @@ export function PropertiesPanel({
 
   return (
     <div className="w-60 shrink-0 border-l border-border-neutral-light bg-white flex flex-col">
-      <div className="flex items-center justify-between px-3 py-2 border-b border-border-neutral-light">
+      <Row
+        align="center"
+        justify="between"
+        px="xs"
+        py="xxs"
+        className="border-b border-border-neutral-light"
+      >
         {debug && (
           <TabBar
             tabs={[
@@ -484,32 +491,38 @@ export function PropertiesPanel({
             ]}
             value={tab}
             onChange={id => setTab(id as typeof tab)}
-            itemClassName="px-1.5 py-0.5 text-[10px]"
+            itemClassName="px-tight py-hair text-xs"
           />
         )}
-      </div>
-      <div className="flex items-center justify-between px-3 py-2 border-b border-border-neutral-light">
+      </Row>
+      <Row
+        align="center"
+        justify="between"
+        px="xs"
+        py="xxs"
+        className="border-b border-border-neutral-light"
+      >
         <Text size="xs" weight="medium" color="body" as="span">
           {elementTypeLabel(element, t)}
         </Text>
-      </div>
+      </Row>
 
       {tab === "debug" && debug ? (
-        <div className="flex-1 overflow-auto p-2">
+        <div className="flex-1 overflow-auto p-xxs">
           <JsonDebugView data={element} />
         </div>
       ) : (
-        <Stack gap="s" className="p-3 overflow-y-auto flex-1">
+        <Stack gap="s" className="p-xs overflow-y-auto flex-1">
           {isSelectedUnlinked && (
             <Row
               gap="tight"
               align="start"
-              className="px-2 py-1.5 rounded bg-red-50 border border-red-200"
+              className="px-xxs py-tight rounded bg-red-50 border border-red-200"
             >
-              <span className="text-red-500 text-[10px] font-medium leading-4">
+              <span className="text-red-500 text-xs font-medium leading-4">
                 {t("editor.properties.unlinked")}
               </span>
-              <span className="text-red-400 text-[10px] leading-4">
+              <span className="text-red-400 text-xs leading-4">
                 {t("editor.properties.unlinkedHint")}
               </span>
             </Row>
@@ -526,12 +539,12 @@ export function PropertiesPanel({
             </Stack>
           )}
           <Stack gap="tight">
-            <div className="flex items-center justify-between">
+            <Row align="center" justify="between">
               <SectionLabel>{t("editor.field.opacity")}</SectionLabel>
-              <span className="text-[11px] text-text-subtle">
+              <span className="text-xs text-text-subtle">
                 {Math.round((element.properties.opacity ?? 1) * 100)}%
               </span>
-            </div>
+            </Row>
             <Slider
               min={0}
               max={100}
@@ -667,7 +680,7 @@ export function PropertiesPanel({
                     variant="outline"
                     color="neutral"
                     active={(element.properties.textAlign ?? "left") === align}
-                    className={`flex-1 py-1 ${
+                    className={`flex-1 py-xxxs ${
                       align === "left"
                         ? "rounded-r-none"
                         : align === "right"
@@ -723,7 +736,7 @@ export function PropertiesPanel({
           {fields.has("area") && (
             <Stack gap="tight">
               <SectionLabel>{t("editor.field.area")}</SectionLabel>
-              <div className="px-2 py-1 text-xs text-text-body bg-surface-neutral rounded border border-border-neutral-light">
+              <div className="px-xxs py-xxxs text-xs text-text-body bg-surface-neutral rounded border border-border-neutral-light">
                 {formatArea(dims.width, dims.height, dimensions, t, locale)}
               </div>
             </Stack>
@@ -732,7 +745,7 @@ export function PropertiesPanel({
           {fields.has("length") && (
             <Stack gap="tight">
               <SectionLabel>{t("editor.field.length")}</SectionLabel>
-              <div className="px-2 py-1 text-xs text-text-body bg-surface-neutral rounded border border-border-neutral-light">
+              <div className="px-xxs py-xxxs text-xs text-text-body bg-surface-neutral rounded border border-border-neutral-light">
                 {formatMeasurement(dims.length, dimensions, t, locale)}
               </div>
             </Stack>
@@ -748,7 +761,7 @@ export function PropertiesPanel({
                     variant="outline"
                     color="neutral"
                     active={element.properties.arrowHead?.style === style}
-                    className={`flex-1 py-1 ${
+                    className={`flex-1 py-xxxs ${
                       style === "triangle" ? "rounded-r-none" : "rounded-l-none"
                     }`}
                     onClick={() =>
@@ -785,7 +798,7 @@ export function PropertiesPanel({
         </Stack>
       )}
 
-      <Stack gap="xxs" className="p-3 border-t border-border-neutral-light">
+      <Stack gap="xxs" className="p-xs border-t border-border-neutral-light">
         {(element.type === "booth" ||
           element.type === "session_area" ||
           element.type === "meeting_room") && (

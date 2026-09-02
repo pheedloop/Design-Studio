@@ -135,12 +135,12 @@ export function CanvasResizeDialog({
         </>
       }
     >
-      <Stack gap="s" className="p-4">
+      <Stack gap="s" className="p-s">
         <Stack gap="tight">
           <SectionLabel>{t("editor.field.widthPx")}</SectionLabel>
           <NumberInput value={newWidth} onChange={setW} />
           {dimensions.unit !== "px" && (
-            <span className="text-[11px] text-text-subtle">
+            <span className="text-xs text-text-subtle">
               {formatMeasurement(newWidth, dimensions, t, locale)}
             </span>
           )}
@@ -154,7 +154,7 @@ export function CanvasResizeDialog({
             disabled={mode === "scale"}
           />
           {dimensions.unit !== "px" && (
-            <span className="text-[11px] text-text-subtle">
+            <span className="text-xs text-text-subtle">
               {formatMeasurement(newHeight, dimensions, t, locale)}
             </span>
           )}
@@ -182,7 +182,7 @@ export function CanvasResizeDialog({
               {t("editor.resize.scaleToFit")}
             </Button>
           </Row>
-          <span className="text-[11px] text-text-subtle">
+          <span className="text-xs text-text-subtle">
             {mode === "scale"
               ? t("editor.resize.scaleHint")
               : t("editor.resize.preserveHint")}
@@ -215,7 +215,7 @@ export function CanvasResizeDialog({
                 );
               })}
             </div>
-            <span className="text-[11px] text-text-subtle leading-relaxed">
+            <span className="text-xs text-text-subtle leading-relaxed">
               {t("editor.resize.anchorHint")}
             </span>
           </Stack>
@@ -224,7 +224,7 @@ export function CanvasResizeDialog({
         {onStartCrop && (
           <Stack
             gap="tight"
-            className="border-t border-border-neutral-faint pt-4"
+            className="border-t border-border-neutral-faint pt-s"
           >
             <SectionLabel>{t("editor.resize.cropSection")}</SectionLabel>
             <Button
@@ -237,14 +237,14 @@ export function CanvasResizeDialog({
             >
               {t("editor.resize.cropCta")}
             </Button>
-            <span className="text-[11px] text-text-subtle">
+            <span className="text-xs text-text-subtle">
               {t("editor.resize.cropHint")}
             </span>
           </Stack>
         )}
 
         {clippedCount > 0 && (
-          <p className="text-xs text-amber-600 bg-amber-50 border border-amber-200 rounded px-2 py-1.5">
+          <p className="text-xs text-amber-600 bg-amber-50 border border-amber-200 rounded px-xxs py-tight">
             {t("editor.resize.clipped", { count: clippedCount })}
           </p>
         )}

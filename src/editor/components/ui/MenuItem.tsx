@@ -17,7 +17,7 @@ export function MenuItem({
       onClick={onClick}
       disabled={disabled}
       title={disabled && premium ? t("editor.premiumFeature") : undefined}
-      className={`flex items-center justify-between w-full px-3 py-1.5 text-xs transition-colors ${
+      className={`flex items-center justify-between w-full px-xs py-tight text-xs transition-colors ${
         disabled
           ? "text-text-disabled cursor-default"
           : danger
@@ -27,13 +27,13 @@ export function MenuItem({
     >
       <span>{label}</span>
       {premium ? (
-        <span className="ml-6 flex items-center">
+        <span className="ml-m flex items-center">
           <TrophyIcon size={12} />
         </span>
       ) : (
         shortcut && (
           <span
-            className={`ml-6 ${disabled ? "text-text-disabled" : "text-text-subtle"}`}
+            className={`ml-m ${disabled ? "text-text-disabled" : "text-text-subtle"}`}
           >
             {shortcut}
           </span>

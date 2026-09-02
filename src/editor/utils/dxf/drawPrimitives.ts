@@ -1,4 +1,5 @@
 import type { DxfPrimitive } from "@/types";
+import { GRAY_600 } from "@/canvasColors";
 
 /** Minimal 2D-context surface used by the renderer. Both a real
  *  CanvasRenderingContext2D (dialog preview) and Konva's sceneFunc context
@@ -32,7 +33,7 @@ export interface DrawContext {
 
 /** Muted slate so the imported drawing reads as a background reference and
  *  booths drawn on top stand out. */
-export const DEFAULT_DXF_STROKE = "#475569";
+export const DEFAULT_DXF_STROKE = GRAY_600;
 
 export interface DrawOptions {
   stroke?: string;

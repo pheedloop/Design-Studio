@@ -11,6 +11,7 @@ import {
 import { Row } from "@/components/Row";
 import { Stack } from "@/components/Stack";
 import { Text } from "@/components/Text";
+import { GRAY_400 } from "@/canvasColors";
 import { LabelSection } from "./LabelSection";
 
 const TYPE_DISPLAY_NAMES: Record<string, string> = {
@@ -29,7 +30,7 @@ function formatTypeDisplayName(key: string): string {
 
 function toElementProperties(defaults: ElementTypeDefaults): ElementProperties {
   return {
-    color: defaults.color ?? "#94a3b8",
+    color: defaults.color ?? GRAY_400,
     zIndex: 1,
     labelColor: defaults.labelColor,
     labelFontSize: defaults.labelFontSize,
@@ -57,13 +58,13 @@ export function TypeSection({ typeKey, defaults, onChange }: TypeSectionProps) {
   return (
     <div className="border border-border-neutral-light rounded">
       <button
-        className="w-full flex items-center justify-between px-3 py-2 text-left hover:bg-surface-neutral transition-colors cursor-pointer"
+        className="w-full flex items-center justify-between px-xs py-xxs text-left hover:bg-surface-neutral transition-colors cursor-pointer"
         onClick={() => setOpen(o => !o)}
       >
         <Row gap="xxs" align="center">
           <span
             className="w-3 h-3 rounded-sm shrink-0 border border-border-neutral"
-            style={{ background: defaults.color ?? "#94a3b8" }}
+            style={{ background: defaults.color ?? GRAY_400 }}
           />
           <Text size="xs" weight="medium" color="body" as="span">
             {formatTypeDisplayName(typeKey)}
@@ -79,16 +80,16 @@ export function TypeSection({ typeKey, defaults, onChange }: TypeSectionProps) {
       {open && (
         <Stack
           gap="xs"
-          className="px-3 pb-3 border-t border-border-neutral-faint pt-3"
+          className="px-xs pb-xs border-t border-border-neutral-faint pt-xs"
         >
           <ColorSwatch
             label={t("editor.field.fill")}
-            value={defaults.color ?? "#94a3b8"}
+            value={defaults.color ?? GRAY_400}
             onChange={c => onChange({ color: c })}
           />
           <ColorSwatch
             label={t("editor.field.stroke")}
-            value={defaults.strokeColor ?? "#888888"}
+            value={defaults.strokeColor ?? GRAY_400}
             onChange={c => onChange({ strokeColor: c })}
           />
           <Stack gap="tight">
@@ -117,12 +118,12 @@ export function TypeSection({ typeKey, defaults, onChange }: TypeSectionProps) {
             </Stack>
           </Row>
           <Stack gap="tight">
-            <div className="flex items-center justify-between">
+            <Row align="center" justify="between">
               <SectionLabel>{t("editor.field.opacity")}</SectionLabel>
-              <span className="text-[11px] text-text-subtle">
+              <span className="text-xs text-text-subtle">
                 {Math.round(opacity * 100)}%
               </span>
-            </div>
+            </Row>
             <Slider
               min={0}
               max={100}
@@ -133,7 +134,7 @@ export function TypeSection({ typeKey, defaults, onChange }: TypeSectionProps) {
               className="w-full"
             />
           </Stack>
-          <div className="border-t border-border-neutral-faint pt-3">
+          <div className="border-t border-border-neutral-faint pt-xs">
             <LabelSection
               properties={toElementProperties(defaults)}
               onChange={updates =>

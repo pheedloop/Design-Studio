@@ -1,8 +1,9 @@
 import { Line, Circle } from "react-konva";
 import type { PolygonToolState } from "@/editor/tools/hooks/usePolygonInteraction";
+import { BRAND, GRAY_600 } from "@/canvasColors";
 
 const linePreviewStyle = {
-  stroke: "#475569",
+  stroke: GRAY_600,
   strokeWidth: 2,
   dash: [4, 4] as number[],
   listening: false,
@@ -53,7 +54,7 @@ export function PolygonPreview({ state }: PolygonPreviewProps) {
       {previewPoint && vertices.length >= 2 && (
         <Line
           points={[previewPoint.x, previewPoint.y, first.x, first.y]}
-          stroke="#475569"
+          stroke={GRAY_600}
           strokeWidth={1}
           dash={[3, 5]}
           opacity={0.5}
@@ -67,7 +68,7 @@ export function PolygonPreview({ state }: PolygonPreviewProps) {
           x={v.x}
           y={v.y}
           radius={i === 0 && nearFirst ? 6 : VERTEX_RADIUS}
-          fill={i === 0 && nearFirst ? "#007bff" : "#475569"}
+          fill={i === 0 && nearFirst ? BRAND : GRAY_600}
           listening={false}
         />
       ))}

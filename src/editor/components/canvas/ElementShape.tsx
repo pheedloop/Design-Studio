@@ -2,6 +2,7 @@ import { memo } from "react";
 import { Group } from "react-konva";
 import type { FloorPlanElement } from "@/types";
 import { useT } from "@/editor/i18n";
+import { BRAND, GRAY_400 } from "@/canvasColors";
 import { RectShape } from "./elements/RectShape";
 import { EllipseShape } from "./elements/EllipseShape";
 import { LineShape } from "./elements/LineShape";
@@ -63,8 +64,8 @@ function ElementShapeImpl({
   const strokeColor = isOverlapping
     ? "#dc2626"
     : isHovered
-      ? "#007bff"
-      : element.properties.strokeColor || "#888888";
+      ? BRAND
+      : element.properties.strokeColor || GRAY_400;
   const strokeWidth =
     isOverlapping || isHovered
       ? Math.max((element.properties.strokeWidth ?? 1) * 1.5, 2)

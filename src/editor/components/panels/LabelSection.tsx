@@ -8,6 +8,7 @@ import {
 } from "@/editor/components/ui";
 import { Row } from "@/components/Row";
 import { Stack } from "@/components/Stack";
+import { BLACK, WHITE } from "@/canvasColors";
 import { LabelPositionPicker } from "./LabelPositionPicker";
 import { PiEye, PiEyeSlash } from "react-icons/pi";
 import { useT } from "@/editor/i18n";
@@ -24,10 +25,10 @@ export function LabelSection({ properties, onChange }: LabelSectionProps) {
 
   return (
     <Stack gap="xs">
-      <div className="flex items-center justify-between">
+      <Row align="center" justify="between">
         <SectionLabel>{t("editor.field.label")}</SectionLabel>
         <button
-          className={`p-1 rounded transition-colors cursor-pointer ${
+          className={`p-xxxs rounded transition-colors cursor-pointer ${
             visible
               ? "text-text-caption hover:text-text-body"
               : "text-red-400 hover:text-red-600"
@@ -37,7 +38,7 @@ export function LabelSection({ properties, onChange }: LabelSectionProps) {
         >
           {visible ? <PiEye size={16} /> : <PiEyeSlash size={16} />}
         </button>
-      </div>
+      </Row>
 
       <LabelPositionPicker
         v={properties.labelPositionV}
@@ -47,7 +48,7 @@ export function LabelSection({ properties, onChange }: LabelSectionProps) {
 
       <ColorSwatch
         label={t("editor.field.color")}
-        value={properties.labelColor ?? "#ffffff"}
+        value={properties.labelColor ?? WHITE}
         onChange={c => onChange({ labelColor: c })}
       />
 
@@ -105,7 +106,7 @@ export function LabelSection({ properties, onChange }: LabelSectionProps) {
             onChange={e => {
               if (e.target.checked) {
                 onChange({
-                  labelBackground: { color: "#000000", opacity: 0.5 },
+                  labelBackground: { color: BLACK, opacity: 0.5 },
                 });
               } else {
                 onChange({ labelBackground: undefined });
@@ -115,7 +116,7 @@ export function LabelSection({ properties, onChange }: LabelSectionProps) {
           />
         </Row>
         {hasBg && properties.labelBackground && (
-          <Stack gap="xxs" className="pl-1">
+          <Stack gap="xxs" className="pl-xxxs">
             <ColorSwatch
               label=""
               value={properties.labelBackground.color}
@@ -126,7 +127,7 @@ export function LabelSection({ properties, onChange }: LabelSectionProps) {
               }
             />
             <Row gap="tight" align="center">
-              <span className="text-[11px] text-text-caption">
+              <span className="text-xs text-text-caption">
                 {t("editor.field.opacity")}
               </span>
               <Slider
@@ -143,7 +144,7 @@ export function LabelSection({ properties, onChange }: LabelSectionProps) {
                 }
                 className="flex-1"
               />
-              <span className="text-[10px] text-text-subtle w-7 text-right">
+              <span className="text-xs text-text-subtle w-7 text-right">
                 {Math.round(properties.labelBackground.opacity * 100)}%
               </span>
             </Row>

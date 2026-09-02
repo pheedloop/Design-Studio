@@ -1,5 +1,6 @@
 import { Line } from "react-konva";
 import type { GuideLine } from "@/editor/hooks/useAlignmentGuides";
+import { BRAND } from "@/canvasColors";
 
 interface AlignmentGuidesProps {
   guides: GuideLine[];
@@ -24,7 +25,7 @@ export function AlignmentGuides({
               guide.position,
               canvasHeight * 2,
             ]}
-            stroke="#007bff"
+            stroke={BRAND}
             strokeWidth={0.5}
             dash={[4, 4]}
             listening={false}
@@ -38,7 +39,7 @@ export function AlignmentGuides({
               canvasWidth * 2,
               guide.position,
             ]}
-            stroke="#007bff"
+            stroke={BRAND}
             strokeWidth={0.5}
             dash={[4, 4]}
             listening={false}

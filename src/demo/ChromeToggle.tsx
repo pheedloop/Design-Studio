@@ -22,7 +22,7 @@ export function ChromeToggle({
       onClick={onClick}
       title={title}
       className={[
-        "px-2 py-0.5 rounded cursor-pointer transition-colors",
+        "px-xxs py-hair rounded cursor-pointer transition-colors",
         active ? "bg-white/15 text-white" : "text-gray-500 hover:text-gray-300",
         className,
       ]

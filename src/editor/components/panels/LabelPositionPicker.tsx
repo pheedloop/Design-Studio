@@ -23,7 +23,7 @@ export function LabelPositionPicker({
   return (
     <Stack gap="tight">
       <SectionLabel>{t("editor.field.labelPosition")}</SectionLabel>
-      <div className="inline-grid grid-cols-3 gap-xxxs p-1.5 bg-surface-neutral rounded border border-border-neutral-light w-fit">
+      <div className="inline-grid grid-cols-3 gap-xxxs p-tight bg-surface-neutral rounded border border-border-neutral-light w-fit">
         {vValues.map(vv =>
           hValues.map(hh => {
             const active = vv === v && hh === h;

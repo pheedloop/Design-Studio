@@ -103,7 +103,13 @@ export function MapSheet({
           }
           className="absolute inset-0 w-full cursor-pointer"
         />
-        <div className="relative flex items-center justify-between w-full px-4 py-3 pointer-events-none">
+        <Row
+          align="center"
+          justify="between"
+          px="s"
+          py="xs"
+          className="relative w-full pointer-events-none"
+        >
           {hasTabs ? (
             <Row gap="xs" className="pointer-events-auto">
               {visibleTabs.map(tab => (
@@ -114,7 +120,7 @@ export function MapSheet({
                     setActiveTab(tab.id);
                     setExpanded(true);
                   }}
-                  className={`text-xs font-medium pb-0.5 cursor-pointer transition-colors ${
+                  className={`text-xs font-medium pb-hair cursor-pointer transition-colors ${
                     currentTab === tab.id
                       ? "text-primary-600 border-b-2 border-primary-500"
                       : "text-text-subtle hover:text-text-body"
@@ -137,7 +143,7 @@ export function MapSheet({
           ) : (
             <PiCaretUp size={14} className="text-text-subtle" />
           )}
-        </div>
+        </Row>
       </div>
 
       {expanded && (
@@ -162,7 +168,7 @@ export function MapSheet({
                       boothSlug: exhibitor.boothSlug,
                     });
                   }}
-                  className={`w-full text-left px-4 py-2.5 border-t border-border-neutral-faint cursor-pointer transition-colors ${
+                  className={`w-full text-left px-s py-snug border-t border-border-neutral-faint cursor-pointer transition-colors ${
                     isSelected ? "bg-primary-100" : "hover:bg-surface-neutral"
                   }`}
                 >
@@ -171,14 +177,14 @@ export function MapSheet({
                       <img
                         src={exhibitor.logo}
                         alt=""
-                        className="w-7 h-7 shrink-0 rounded-md border border-border-neutral-light bg-white object-contain p-0.5"
+                        className="w-7 h-7 shrink-0 rounded-md border border-border-neutral-light bg-white object-contain p-hair"
                       />
                     )}
                     <div>
                       <div className="text-xs font-medium text-text-heading">
                         {exhibitor.name}
                       </div>
-                      <div className="text-[11px] text-text-subtle">
+                      <div className="text-xs text-text-subtle">
                         {boothEl?.properties.name
                           ? t("viewer.boothLabel", {
                               code: boothEl.properties.name,
@@ -204,7 +210,7 @@ export function MapSheet({
                       sessionId: el.properties.sessionId ?? null,
                     })
                   }
-                  className={`w-full text-left px-4 py-2.5 border-t border-border-neutral-faint cursor-pointer transition-colors ${
+                  className={`w-full text-left px-s py-snug border-t border-border-neutral-faint cursor-pointer transition-colors ${
                     isSelected ? "bg-primary-100" : "hover:bg-surface-neutral"
                   }`}
                 >
@@ -228,7 +234,7 @@ export function MapSheet({
                       meetingRoomId: el.properties.meetingRoomId ?? null,
                     })
                   }
-                  className={`w-full text-left px-4 py-2.5 border-t border-border-neutral-faint cursor-pointer transition-colors ${
+                  className={`w-full text-left px-s py-snug border-t border-border-neutral-faint cursor-pointer transition-colors ${
                     isSelected ? "bg-primary-100" : "hover:bg-surface-neutral"
                   }`}
                 >

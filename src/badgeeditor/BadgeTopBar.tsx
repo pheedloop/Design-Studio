@@ -48,16 +48,23 @@ export function BadgeTopBar({
     ) : null;
 
   return (
-    <div className="flex items-center bg-white border-b border-border-neutral-light">
-      <div className="flex items-center justify-center w-12 shrink-0 h-10 border-r border-border-neutral-light text-text-subtle">
+    <Row
+      align="center"
+      className="bg-white border-b border-border-neutral-light"
+    >
+      <Row
+        align="center"
+        justify="center"
+        className="w-12 shrink-0 h-10 border-r border-border-neutral-light text-text-subtle"
+      >
         <PiIdentificationBadge size={20} />
-      </div>
+      </Row>
       {menu("file", "File", fileMenuItems)}
       {menu("edit", "Edit", editMenuItems)}
       {menu("view", "View", viewMenuItems)}
       <div className="flex-1" />
       {rightActions && (
-        <Row gap="xs" align="center" className="px-3">
+        <Row gap="xs" align="center" className="px-xs">
           {rightActions}
         </Row>
       )}
@@ -67,9 +74,9 @@ export function BadgeTopBar({
           title="Debug: View badge_layout JSON"
         >
           <PiBug size={16} />
-          <span className="text-[11px]">Debug</span>
+          <span className="text-xs">Debug</span>
         </MenuButton>
       )}
-    </div>
+    </Row>
   );
 }

@@ -1,4 +1,6 @@
 import { useRef, useEffect } from "react";
+import { GRAY_100, GRAY_200, GRAY_400, GRAY_500 } from "@/canvasColors";
+import { Row } from "@/components/Row";
 import { toUnit, type Unit } from "./units";
 
 // Rulers for the badge canvas. The badge coordinate system is 1 inch = `ppi`
@@ -22,10 +24,10 @@ interface BadgeRulersProps {
 
 const RULER_SIZE = 22;
 const FONT = "10px system-ui, sans-serif";
-const BG_COLOR = "#f9fafb";
-const TICK_COLOR = "#9ca3af";
-const TEXT_COLOR = "#6b7280";
-const BORDER_COLOR = "#e5e7eb";
+const BG_COLOR = GRAY_100;
+const TICK_COLOR = GRAY_400;
+const TEXT_COLOR = GRAY_500;
+const BORDER_COLOR = GRAY_200;
 const MAJOR_TICK_MIN_PX = 70;
 
 /** Pick a "nice" inch interval (1, 0.5, 0.25, 2, 5, ...). */
@@ -234,8 +236,7 @@ export function BadgeRulers({
         style={{ top: 0, left: 0, bottom: 0, width: RULER_SIZE }}
       />
       {/* Corner square — unit label */}
-      <div
-        className="absolute z-10 flex items-center justify-center select-none"
+      <Row
         style={{
           top: 0,
           left: 0,
@@ -248,9 +249,12 @@ export function BadgeRulers({
           color: TEXT_COLOR,
           fontFamily: "system-ui, sans-serif",
         }}
+        align="center"
+        justify="center"
+        className="absolute z-10 select-none"
       >
         {unit}
-      </div>
+      </Row>
     </>
   );
 }

@@ -1,4 +1,5 @@
 import { Rect, Circle } from "react-konva";
+import { GRAY_100, GRAY_400 } from "@/canvasColors";
 import type { SlotType } from "./model";
 import { PPI } from "./canvasMetrics";
 
@@ -23,8 +24,8 @@ const SLOT_SPECS = {
 
 /** Static lanyard hole-punch slots near the top of the front panel. */
 export function Slots({ slots, panelW }: { slots: SlotType; panelW: number }) {
-  const fill = "#f1f5f9";
-  const stroke = "#94a3b8";
+  const fill = GRAY_100;
+  const stroke = GRAY_400;
 
   if (slots === "two-circle") {
     const s = SLOT_SPECS.twoCircle;

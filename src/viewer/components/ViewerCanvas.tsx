@@ -6,6 +6,7 @@ import { isEmptySpaceClick } from "@/editor/utils/canvas";
 import { BackgroundImage } from "@/editor/components/canvas/BackgroundImage";
 import { DxfDrawing } from "@/editor/components/canvas/DxfDrawing";
 import type { ViewerMode, HoveredItem } from "@/viewer/types";
+import { GRAY_300, WHITE } from "@/canvasColors";
 import { ViewerElement } from "./ViewerElement";
 import { RouteOverlay } from "./RouteOverlay";
 import { ScaleBar } from "./ScaleBar";
@@ -149,8 +150,8 @@ export function ViewerCanvas({
               y={0}
               width={data.dimensions.width}
               height={data.dimensions.height}
-              fill="#ffffff"
-              stroke="#d1d5db"
+              fill={WHITE}
+              stroke={GRAY_300}
               strokeWidth={1}
             />
             {data.background?.kind === "image" && (

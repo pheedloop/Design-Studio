@@ -26,7 +26,7 @@ export function FitModeRadios({
           <Text size="xs" weight="medium" color="body" as="span">
             {t("editor.background.fitToCanvas")}
           </Text>
-          <p className="text-[11px] text-text-subtle">
+          <p className="text-xs text-text-subtle">
             {t("editor.background.fitToCanvasHint")}
           </p>
         </div>
@@ -43,7 +43,7 @@ export function FitModeRadios({
           <Text size="xs" weight="medium" color="body" as="span">
             {t("editor.background.resizeToFile")}
           </Text>
-          <p className="text-[11px] text-text-subtle">
+          <p className="text-xs text-text-subtle">
             {t("editor.background.resizeToFileHint")}
           </p>
         </div>

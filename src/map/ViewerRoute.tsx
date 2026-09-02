@@ -7,6 +7,7 @@ import type { ViewerMode } from "@/viewer/types";
 import type { FloorPlanData } from "@/types";
 import { exhibitionHallMap } from "@/sample-data/exhibition-hall-map";
 import { conferenceExpoExhibitors } from "@/sample-data/sample-exhibitors";
+import { Row } from "@/components/Row";
 
 export type Viewport = "desktop" | "mobile";
 
@@ -44,14 +45,18 @@ export function ViewerRoute({
 
   if (viewport === "mobile") {
     return (
-      <div className="h-full flex items-center justify-center bg-gray-800 overflow-hidden">
+      <Row
+        align="center"
+        justify="center"
+        className="h-full bg-gray-800 overflow-hidden"
+      >
         <div
           className="bg-white rounded-xl shadow-2xl overflow-hidden border-4 border-gray-700"
           style={{ width: 390, height: 844 }}
         >
           {viewer}
         </div>
-      </div>
+      </Row>
     );
   }
 

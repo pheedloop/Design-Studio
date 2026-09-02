@@ -38,7 +38,7 @@ export function HoverTooltip({
   return (
     <div
       ref={ref}
-      className="fixed pointer-events-none bg-white border border-border-neutral-light rounded-lg shadow-lg px-3 py-2 z-[9998] min-w-[140px] max-w-[240px]"
+      className="fixed pointer-events-none bg-white border border-border-neutral-light rounded-lg shadow-lg px-xs py-xxs z-[calc(var(--z-dialog)-1)] min-w-[140px] max-w-[240px]"
       style={{ left: pos.left, top: pos.top }}
     >
       {item.type === "booth" && exhibitor ? (
@@ -47,7 +47,7 @@ export function HoverTooltip({
           <span className="text-sm font-medium text-text-heading line-clamp-2">
             {exhibitor.name}
           </span>
-          {name && <span className="text-[11px] text-text-subtle">{name}</span>}
+          {name && <span className="text-xs text-text-subtle">{name}</span>}
         </Stack>
       ) : (
         <>
@@ -58,16 +58,16 @@ export function HoverTooltip({
           )}
           {item.type === "booth" ? (
             reserved ? (
-              <div className="mt-0.5 text-[11px] font-medium text-amber-600">
+              <div className="mt-hair text-xs font-medium text-amber-600">
                 {t("viewer.booth.reserved")}
               </div>
             ) : (
-              <div className="mt-0.5 text-[11px] text-text-subtle">
+              <div className="mt-hair text-xs text-text-subtle">
                 {t("viewer.booth.unoccupied")}
               </div>
             )
           ) : (
-            <div className="mt-0.5 text-[11px] font-medium text-text-subtle uppercase tracking-wide">
+            <div className="mt-hair text-xs font-medium text-text-subtle uppercase tracking-wide">
               {t(
                 TYPE_NAME[
                   item.type === "session_area" ? "session_area" : "meeting_room"

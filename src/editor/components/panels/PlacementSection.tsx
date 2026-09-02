@@ -52,10 +52,10 @@ export function PlacementSection({
         type="button"
         onClick={onToggle}
         className={[
-          "w-full flex items-center gap-snug py-2.5 text-left transition-colors border-l-2",
+          "w-full flex items-center gap-snug py-snug text-left transition-colors border-l-2",
           isOpen
             ? "bg-primary-100 border-primary-500 px-[10px]"
-            : "border-transparent px-3 hover:bg-surface-neutral",
+            : "border-transparent px-xs hover:bg-surface-neutral",
         ].join(" ")}
       >
         <span
@@ -102,7 +102,7 @@ export function PlacementSection({
       {isOpen && (
         <SectionShapeContext.Provider value={defaultShape}>
           {total === 0 ? (
-            <p className="px-3 py-2.5 text-xs text-text-subtle italic">
+            <p className="px-xs py-snug text-xs text-text-subtle italic">
               {t("editor.placement.noRecords")}
             </p>
           ) : (

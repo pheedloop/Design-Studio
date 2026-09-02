@@ -12,9 +12,9 @@ const base =
   "inline-flex items-center justify-center rounded font-medium cursor-pointer transition-colors disabled:cursor-not-allowed";
 
 const sizes = {
-  sm: "px-3 py-1.5 text-xs",
-  md: "px-4 py-2 text-sm",
-  lg: "px-5 py-2.5 text-sm",
+  sm: "px-xs py-tight text-xs",
+  md: "px-s py-xxs text-sm",
+  lg: "px-5 py-snug text-sm",
 };
 
 const styles = {
@@ -30,7 +30,7 @@ const styles = {
   },
   outline: {
     primary:
-      "border border-primary-200 text-primary-600 hover:bg-primary-50 disabled:border-border-neutral-light disabled:text-text-subtle disabled:hover:bg-transparent",
+      "border border-primary-200 text-primary-600 hover:bg-primary-100 disabled:border-border-neutral-light disabled:text-text-subtle disabled:hover:bg-transparent",
     neutral:
       "border border-border-neutral-light text-text-body hover:bg-surface-neutral disabled:border-border-neutral-light disabled:text-text-subtle disabled:hover:bg-transparent",
     negative:
@@ -40,7 +40,7 @@ const styles = {
   },
   ghost: {
     primary:
-      "text-primary-600 hover:bg-primary-50 disabled:text-text-subtle disabled:hover:bg-transparent",
+      "text-primary-600 hover:bg-primary-100 disabled:text-text-subtle disabled:hover:bg-transparent",
     neutral:
       "text-text-body hover:bg-surface-neutral disabled:text-text-subtle disabled:hover:bg-transparent",
     negative:

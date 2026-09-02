@@ -1,5 +1,4 @@
 import type { WalkableGrid, FloorPlanElement, Geometry } from "@/types";
-import type { Exhibitor } from "@/viewer/types";
 import { canvasToCellCoord } from "@/editor/utils/walkableGrid";
 
 interface Cell {
@@ -119,18 +118,4 @@ export function resolveBoothToCell(
 ): Cell | null {
   const center = getElementCenter(element.geometry);
   return findNearestWalkableCell(grid, center.x, center.y);
-}
-
-/** Resolve an exhibitor to its nearest walkable cell by finding their booth. */
-export function resolveExhibitorToCell(
-  grid: WalkableGrid,
-  exhibitor: Exhibitor,
-  elements: FloorPlanElement[],
-): Cell | null {
-  const booth = elements.find(
-    el =>
-      el.type === "booth" && el.properties.boothSlug === exhibitor.boothSlug,
-  );
-  if (!booth) return null;
-  return resolveBoothToCell(grid, booth);
 }

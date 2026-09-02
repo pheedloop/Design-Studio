@@ -30,10 +30,10 @@ export function PathingOptionsBar({
     <Row
       gap="s"
       align="center"
-      className="px-3 py-2 bg-white border-b border-border-neutral-light"
+      className="px-xs py-xxs bg-white border-b border-border-neutral-light"
     >
       <Row gap="tight" align="center">
-        <span className="text-[11px] text-text-caption">
+        <span className="text-xs text-text-caption">
           {t("editor.field.cellSize")}
         </span>
         <Select
@@ -49,7 +49,7 @@ export function PathingOptionsBar({
       </Row>
 
       <Row gap="tight" align="center">
-        <span className="text-[11px] text-text-caption">
+        <span className="text-xs text-text-caption">
           {t("editor.field.opacity")}
         </span>
         <Slider
@@ -60,7 +60,7 @@ export function PathingOptionsBar({
           onChange={e => onOpacityChange(Number(e.target.value))}
           className="w-16 h-1 accent-green-500"
         />
-        <span className="text-[10px] text-text-subtle w-7">
+        <span className="text-xs text-text-subtle w-7">
           {Math.round(opacity * 100)}%
         </span>
       </Row>
@@ -80,7 +80,7 @@ export function PathingOptionsBar({
 
       <button
         onClick={onAutoMarkObstacles}
-        className="flex items-center gap-xxxs px-2 py-1 text-xs text-text-body hover:bg-amber-50 hover:text-amber-700 rounded transition-colors cursor-pointer"
+        className="flex items-center gap-xxxs px-xxs py-xxxs text-xs text-text-body hover:bg-amber-50 hover:text-amber-700 rounded transition-colors cursor-pointer"
         title={t("editor.pathing.autoObstaclesHint")}
       >
         <PiMagicWand size={14} />

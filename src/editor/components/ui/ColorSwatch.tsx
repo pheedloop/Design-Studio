@@ -8,7 +8,7 @@ interface ColorSwatchProps {
 export function ColorSwatch({ label, value, onChange }: ColorSwatchProps) {
   return (
     <Row gap="tight" align="center">
-      <span className="text-[11px] text-text-caption">{label}</span>
+      <span className="text-xs text-text-caption">{label}</span>
       <div className="relative">
         <input
           type="color"
@@ -21,7 +21,7 @@ export function ColorSwatch({ label, value, onChange }: ColorSwatchProps) {
         type="text"
         value={value}
         onChange={e => onChange(e.target.value)}
-        className="w-[72px] px-1.5 py-0.5 text-[11px] font-mono border border-border-neutral-light rounded bg-white"
+        className="w-[72px] px-tight py-hair text-xs font-mono border border-border-neutral-light rounded bg-white"
       />
     </Row>
   );

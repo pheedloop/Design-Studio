@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Stage, Layer, Rect, Line, Transformer } from "react-konva";
 import type Konva from "konva";
+import { BLACK, BRAND, GRAY_300, GRAY_400, WHITE } from "@/canvasColors";
 import type { BadgeField, BadgePage, SlotType } from "./model";
 import { GridLayer } from "@/editor/components/canvas/GridLayer";
 import { PANEL_CORNER_IN, PPI } from "./canvasMetrics";
@@ -342,10 +343,10 @@ export function BadgeCanvas({
           width={panelW}
           height={panelH}
           cornerRadius={PANEL_CORNER_IN * PPI}
-          fill="#ffffff"
-          stroke="#cbd5e1"
+          fill={WHITE}
+          stroke={GRAY_300}
           strokeWidth={1}
-          shadowColor="#000000"
+          shadowColor={BLACK}
           shadowOpacity={0.12}
           shadowBlur={12}
           shadowOffsetY={2}
@@ -357,7 +358,7 @@ export function BadgeCanvas({
             width={panelW}
             height={panelH}
             spacing={gridSpacingPx}
-            color="#94a3b8"
+            color={GRAY_400}
             opacity={0.35}
           />
         )}
@@ -377,7 +378,7 @@ export function BadgeCanvas({
                 <Line
                   key={`tear-${i}`}
                   points={[0, y, panelW, y]}
-                  stroke="#94a3b8"
+                  stroke={GRAY_400}
                   strokeWidth={1}
                   dash={[2, 3]}
                   listening={false}
@@ -411,7 +412,7 @@ export function BadgeCanvas({
             y={multiBounds.y - 4}
             width={multiBounds.w + 8}
             height={multiBounds.h + 8}
-            stroke="#007bff"
+            stroke={BRAND}
             strokeWidth={1}
             dash={[6, 3]}
             listening={false}
@@ -449,7 +450,7 @@ export function BadgeCanvas({
             width={marquee.w}
             height={marquee.h}
             fill="rgba(0, 123, 255, 0.08)"
-            stroke="#007bff"
+            stroke={BRAND}
             strokeWidth={1}
             dash={[4, 4]}
             listening={false}

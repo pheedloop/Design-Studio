@@ -325,16 +325,19 @@ export function BackgroundUploadDialog({
         </>
       }
     >
-      <Stack gap="s" className="p-4">
+      <Stack gap="s" className="p-s">
         {!file ? (
-          <div
+          <Stack
+            gap="none"
             onClick={() => fileRef.current?.click()}
-            className="flex flex-col items-center justify-center h-40 border-2 border-dashed border-border-neutral rounded-lg cursor-pointer hover:border-primary-400 hover:bg-surface-neutral transition-colors"
+            align="center"
+            justify="center"
+            className="h-40 border-2 border-dashed border-border-neutral rounded-lg cursor-pointer hover:border-primary-400 hover:bg-surface-neutral transition-colors"
           >
             <span className="text-sm text-text-caption">
               {t("editor.background.chooseFile")}
             </span>
-            <span className="text-xs text-text-subtle mt-1">
+            <span className="text-xs text-text-subtle mt-xxxs">
               {t("editor.background.fileTypes")}
             </span>
             <input
@@ -344,16 +347,20 @@ export function BackgroundUploadDialog({
               onChange={handleFileChange}
               className="hidden"
             />
-            {error && <p className="text-xs text-red-600 mt-3">{t(error)}</p>}
-          </div>
+            {error && <p className="text-xs text-red-600 mt-xs">{t(error)}</p>}
+          </Stack>
         ) : kind === "dxf" ? (
           !parsed ? (
             <>
-              <div className="flex items-center justify-center h-40 bg-surface-neutral rounded-lg">
-                <span className="text-xs text-text-caption px-4 text-center truncate">
+              <Row
+                align="center"
+                justify="center"
+                className="h-40 bg-surface-neutral rounded-lg"
+              >
+                <span className="text-xs text-text-caption px-s text-center truncate">
                   {file.name}
                 </span>
-              </div>
+              </Row>
               {error && <p className="text-xs text-red-600">{t(error)}</p>}
               <Button
                 variant="ghost"
@@ -379,7 +386,7 @@ export function BackgroundUploadDialog({
                 </Text>
                 <Stack
                   gap="xxxs"
-                  className="max-h-40 overflow-y-auto border border-border-neutral-light rounded-md p-2"
+                  className="max-h-40 overflow-y-auto border border-border-neutral-light rounded-md p-xxs"
                 >
                   {parsed.layers.map(layer => (
                     <label
@@ -468,7 +475,11 @@ export function BackgroundUploadDialog({
           )
         ) : (
           <>
-            <div className="flex items-center justify-center h-40 bg-surface-neutral rounded-lg overflow-hidden">
+            <Row
+              align="center"
+              justify="center"
+              className="h-40 bg-surface-neutral rounded-lg overflow-hidden"
+            >
               {imagePreview ? (
                 <img
                   src={imagePreview}
@@ -476,11 +487,11 @@ export function BackgroundUploadDialog({
                   className="max-h-full max-w-full object-contain"
                 />
               ) : (
-                <span className="text-xs text-text-caption px-4 text-center truncate">
+                <span className="text-xs text-text-caption px-s text-center truncate">
                   {file.name}
                 </span>
               )}
-            </div>
+            </Row>
 
             <div className="text-xs text-text-caption">
               {imageSize

@@ -9,6 +9,7 @@ import type {
   ToolContext,
 } from "@/editor/tools/types";
 import { findToolForElement } from "@/editor/tools/registry";
+import { BRAND, GRAY_300, WHITE } from "@/canvasColors";
 import { ToolHost } from "./ToolHost";
 import { isEmptySpaceClick, getCanvasPoint } from "@/editor/utils/canvas";
 import { ElementShape } from "./ElementShape";
@@ -801,8 +802,8 @@ export function Canvas({
             y={0}
             width={data.dimensions.width}
             height={data.dimensions.height}
-            fill={data.backgroundColor ?? "#ffffff"}
-            stroke="#d1d5db"
+            fill={data.backgroundColor ?? WHITE}
+            stroke={GRAY_300}
             strokeWidth={1}
           />
           {data.background?.kind === "image" &&
@@ -936,7 +937,7 @@ export function Canvas({
                   y={minY - pad}
                   width={maxX - minX + pad * 2}
                   height={maxY - minY + pad * 2}
-                  stroke="#007bff"
+                  stroke={BRAND}
                   strokeWidth={1}
                   opacity={0.4}
                   dash={[6, 4]}

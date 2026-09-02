@@ -32,7 +32,7 @@ export function SearchBar({
       <Row
         gap="xxs"
         align="center"
-        className="px-3 py-2 bg-white border-b border-border-neutral-light"
+        className="px-xs py-xxs bg-white border-b border-border-neutral-light"
       >
         <PiMagnifyingGlass size={16} className="text-text-subtle shrink-0" />
         <input
@@ -65,7 +65,7 @@ export function SearchBar({
       {showDropdown && (
         <div className="absolute top-full left-0 right-0 bg-white border border-border-neutral-light border-t-0 rounded-b-lg shadow-lg z-50 max-h-60 overflow-y-auto">
           {results.length === 0 ? (
-            <div className="px-3 py-3 text-xs text-text-subtle">
+            <div className="px-xs py-xs text-xs text-text-subtle">
               {t("viewer.search.noResults")}
             </div>
           ) : (
@@ -79,7 +79,7 @@ export function SearchBar({
                     onQueryChange("");
                     inputRef.current?.blur();
                   }}
-                  className="w-full text-left px-3 py-2 hover:bg-surface-neutral cursor-pointer transition-colors"
+                  className="w-full text-left px-xs py-xxs hover:bg-surface-neutral cursor-pointer transition-colors"
                 >
                   <Row gap="xxs" align="center" justify="between">
                     <Text
@@ -92,13 +92,13 @@ export function SearchBar({
                       {result.exhibitorName || displayName(result, t)}
                     </Text>
                     <span
-                      className={`text-[10px] font-medium px-1.5 py-0.5 rounded shrink-0 ${badge.className}`}
+                      className={`text-xs font-medium px-tight py-hair rounded shrink-0 ${badge.className}`}
                     >
                       {t(badge.labelKey)}
                     </span>
                   </Row>
                   {result.exhibitorName && (
-                    <div className="text-[11px] text-text-subtle">
+                    <div className="text-xs text-text-subtle">
                       {displayName(result, t)}
                     </div>
                   )}
