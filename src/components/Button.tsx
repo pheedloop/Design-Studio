@@ -30,7 +30,7 @@ const styles = {
   },
   outline: {
     primary:
-      "border border-primary-200 text-primary-600 hover:bg-primary-50 disabled:border-border-neutral-light disabled:text-text-subtle disabled:hover:bg-transparent",
+      "border border-primary-200 text-primary-600 hover:bg-primary-100 disabled:border-border-neutral-light disabled:text-text-subtle disabled:hover:bg-transparent",
     neutral:
       "border border-border-neutral-light text-text-body hover:bg-surface-neutral disabled:border-border-neutral-light disabled:text-text-subtle disabled:hover:bg-transparent",
     negative:
@@ -40,7 +40,7 @@ const styles = {
   },
   ghost: {
     primary:
-      "text-primary-600 hover:bg-primary-50 disabled:text-text-subtle disabled:hover:bg-transparent",
+      "text-primary-600 hover:bg-primary-100 disabled:text-text-subtle disabled:hover:bg-transparent",
     neutral:
       "text-text-body hover:bg-surface-neutral disabled:text-text-subtle disabled:hover:bg-transparent",
     negative:

@@ -29,7 +29,7 @@ const states = {
       "text-text-caption hover:bg-surface-neutral hover:text-text-body disabled:text-text-disabled disabled:hover:bg-transparent",
   },
   bare: {
-    active: "text-primary-600 bg-primary-50",
+    active: "text-primary-600 bg-primary-100",
     inactive: "text-text-subtle hover:text-text-body",
   },
 };

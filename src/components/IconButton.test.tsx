@@ -63,7 +63,7 @@ describe("IconButton bare variant", () => {
         x
       </IconButton>,
     );
-    expect(cls()).toContain("text-primary-600 bg-primary-50");
+    expect(cls()).toContain("text-primary-600 bg-primary-100");
     expect(cls()).not.toContain("bg-primary-600");
   });
 
