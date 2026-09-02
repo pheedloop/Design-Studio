@@ -20,9 +20,9 @@ export function LegendCanvasOverlay({ legend }: LegendCanvasOverlayProps) {
               className="shrink-0 rounded-sm border border-gray-300"
               style={{ width: 12, height: 12, background: entry.color }}
             />
-            <span className="text-xs text-gray-700 leading-none">
+            <span className="text-xs text-text-body leading-none">
               {entry.label || (
-                <em className="text-gray-400">{t("common.unlabeled")}</em>
+                <em className="text-text-subtle">{t("common.unlabeled")}</em>
               )}
             </span>
           </div>

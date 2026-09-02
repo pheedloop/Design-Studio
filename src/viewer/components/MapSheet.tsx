@@ -115,7 +115,7 @@ export function MapSheet({
                   className={`text-xs font-medium pb-0.5 cursor-pointer transition-colors ${
                     currentTab === tab.id
                       ? "text-primary-600 border-b-2 border-primary-500"
-                      : "text-gray-400 hover:text-text-body"
+                      : "text-text-subtle hover:text-text-body"
                   }`}
                 >
                   {tab.label}
@@ -131,9 +131,9 @@ export function MapSheet({
             </span>
           )}
           {expanded ? (
-            <PiCaretDown size={14} className="text-gray-400" />
+            <PiCaretDown size={14} className="text-text-subtle" />
           ) : (
-            <PiCaretUp size={14} className="text-gray-400" />
+            <PiCaretUp size={14} className="text-text-subtle" />
           )}
         </div>
       </div>
@@ -173,10 +173,10 @@ export function MapSheet({
                       />
                     )}
                     <div>
-                      <div className="text-xs font-medium text-gray-800">
+                      <div className="text-xs font-medium text-text-heading">
                         {exhibitor.name}
                       </div>
-                      <div className="text-[11px] text-gray-400">
+                      <div className="text-[11px] text-text-subtle">
                         {boothEl?.properties.name
                           ? t("viewer.boothLabel", {
                               code: boothEl.properties.name,
@@ -206,7 +206,7 @@ export function MapSheet({
                     isSelected ? "bg-primary-100" : "hover:bg-surface-neutral"
                   }`}
                 >
-                  <div className="text-xs font-medium text-gray-800">
+                  <div className="text-xs font-medium text-text-heading">
                     {el.properties.name || t("viewer.unnamedSession")}
                   </div>
                 </button>
@@ -230,7 +230,7 @@ export function MapSheet({
                     isSelected ? "bg-primary-100" : "hover:bg-surface-neutral"
                   }`}
                 >
-                  <div className="text-xs font-medium text-gray-800">
+                  <div className="text-xs font-medium text-text-heading">
                     {el.properties.name || t("viewer.unnamedRoom")}
                   </div>
                 </button>

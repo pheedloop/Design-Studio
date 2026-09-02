@@ -53,7 +53,7 @@ export function PropertiesPanel({
     return (
       <div className="w-48 shrink-0 border-l border-gray-200 bg-white flex flex-col">
         <div className="flex-1 flex items-center justify-center p-6 text-center">
-          <span className="text-xs text-gray-400">
+          <span className="text-xs text-text-subtle">
             Select a field to edit its properties.
           </span>
         </div>
@@ -181,7 +181,7 @@ export function PropertiesPanel({
         )}
 
         {(field.kind === "qrCode" || field.kind === "image") && (
-          <p className="text-xs text-gray-400">
+          <p className="text-xs text-text-subtle">
             Drag to move; drag a corner to resize.
           </p>
         )}

@@ -145,7 +145,7 @@ export function BadgeSetupDialog({
               </Button>
             ))}
           </div>
-          <span className="text-[11px] text-gray-400">
+          <span className="text-[11px] text-text-subtle">
             {count} panel{count > 1 ? "s" : ""}, stacked top-to-bottom
           </span>
         </div>
@@ -178,9 +178,9 @@ export function BadgeSetupDialog({
           />
         </div>
 
-        <div className="text-xs text-gray-500">
+        <div className="text-xs text-text-caption">
           Prints as{" "}
-          <span className="font-medium text-gray-700">
+          <span className="font-medium text-text-body">
             {fmtUnit(w, unit)} × {fmtUnit(h * count, unit)} {unitLabel[unit]}
           </span>
           {count > 1 && " (unfolded)"}
@@ -213,7 +213,7 @@ export function BadgeSetupDialog({
                   key={i}
                   className="flex flex-col gap-1.5 px-2.5 py-2 rounded border border-gray-200"
                 >
-                  <span className="text-xs font-medium text-gray-700">
+                  <span className="text-xs font-medium text-text-body">
                     {pageRoleLabel(pageRoleForIndex(count, i))}
                   </span>
                   <Checkbox
@@ -227,7 +227,7 @@ export function BadgeSetupDialog({
                     onChange={v => setPanel(i, { tearaway: v })}
                   />
                   {cfg.tearaway && (
-                    <div className="flex items-center gap-2 text-xs text-gray-500 pl-5">
+                    <div className="flex items-center gap-2 text-xs text-text-caption pl-5">
                       <span>Stubs</span>
                       <div className="w-20">
                         <NumberInput

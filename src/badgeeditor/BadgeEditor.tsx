@@ -547,7 +547,7 @@ function BadgeEditorInner({
                   />
                 )}
                 {previewMode && (
-                  <span className="text-xs text-gray-500">
+                  <span className="text-xs text-text-caption">
                     Full preview · as printed (read-only)
                   </span>
                 )}
@@ -637,13 +637,13 @@ function BadgeEditorInner({
                 </div>
               )}
               {/* Footer — page + overall badge size, and zoom (mirrors StatusBar) */}
-              <div className="relative z-20 flex items-center justify-between px-3 py-1.5 bg-white border-t border-gray-200 text-xs text-gray-500">
+              <div className="relative z-20 flex items-center justify-between px-3 py-1.5 bg-white border-t border-gray-200 text-xs text-text-caption">
                 <div className="flex items-center gap-2">
                   <span>
                     Page {fmtUnit(doc.panelSize.width, unit)} ×{" "}
                     {fmtUnit(doc.panelSize.height, unit)} {unitLabel[unit]}
                   </span>
-                  <span className="text-gray-300">·</span>
+                  <span className="text-text-disabled">·</span>
                   <span>
                     Badge {fmtUnit(doc.panelSize.width, unit)} ×{" "}
                     {fmtUnit(doc.panelSize.height * doc.pages.length, unit)}{" "}
@@ -653,7 +653,7 @@ function BadgeEditorInner({
                 <IconButton
                   size="sm"
                   onClick={fitBadge}
-                  className="px-2 w-auto text-xs text-gray-500"
+                  className="px-2 w-auto text-xs text-text-caption"
                   title="Click to fit badge in view"
                 >
                   {Math.round(controls.scale * 100)}%
@@ -685,7 +685,7 @@ function BadgeEditorInner({
                     Delete
                   </Button>
                 </div>
-                <p className="p-3 text-xs text-gray-400">
+                <p className="p-3 text-xs text-text-subtle">
                   Drag to move them together, or select a single field to edit
                   its properties.
                 </p>

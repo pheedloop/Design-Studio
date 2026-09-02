@@ -47,7 +47,7 @@ export function DirectionsPanel({
   return (
     <div className="flex flex-col gap-2 p-3">
       <div className="flex items-center justify-between">
-        <span className="text-xs font-semibold text-gray-700">
+        <span className="text-xs font-semibold text-text-body">
           {t("viewer.directions.title")}
         </span>
         <IconButton variant="bare" size="sm" onClick={onClose}>
@@ -99,14 +99,14 @@ export function DirectionsPanel({
       )}
       {routeStatus === "ready" && routePath && routePath.length > 1 && (
         <div className="flex items-center gap-2 text-xs text-text-body bg-surface-neutral rounded-lg px-3 py-2">
-          <PiFootprints size={14} className="text-gray-400 shrink-0" />
+          <PiFootprints size={14} className="text-text-subtle shrink-0" />
           <span>{formatRouteDistance(routePath, dimensions, t, locale)}</span>
           {(() => {
             const pxDist = pathDistance(routePath);
             const realDist = pxToReal(pxDist, dimensions.pixelsPerUnit);
             const est = estimateWalkingTime(realDist, dimensions.unit);
             return est ? (
-              <span className="text-gray-400">
+              <span className="text-text-subtle">
                 &middot; {formatWalkingTime(est, t)}
               </span>
             ) : null;

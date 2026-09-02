@@ -5,8 +5,8 @@
 export function SeatplannerPlaceholder({ mode }: { mode: string }) {
   return (
     <div className="h-full flex flex-col items-center justify-center gap-2 bg-surface-neutral text-center">
-      <div className="text-2xl font-semibold text-gray-700">Seatplanner</div>
-      <div className="text-sm text-gray-500">
+      <div className="text-2xl font-semibold text-text-body">Seatplanner</div>
+      <div className="text-sm text-text-caption">
         The seatplanner {mode} is coming soon.
       </div>
     </div>

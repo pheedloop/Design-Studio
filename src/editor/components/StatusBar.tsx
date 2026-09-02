@@ -23,7 +23,7 @@ export function StatusBar({
   const t = useT();
 
   return (
-    <div className="relative z-20 flex items-center justify-between px-3 py-1.5 bg-white border-t border-gray-200 text-xs text-gray-500">
+    <div className="relative z-20 flex items-center justify-between px-3 py-1.5 bg-white border-t border-gray-200 text-xs text-text-caption">
       <div className="flex items-center gap-2">
         {isCalibrated && showUnit && (
           <select
@@ -40,7 +40,7 @@ export function StatusBar({
       <IconButton
         size="sm"
         onClick={onZoomReset}
-        className="px-2 w-auto text-xs text-gray-500"
+        className="px-2 w-auto text-xs text-text-caption"
         title={t("editor.statusBar.resetZoom")}
       >
         {Math.round(scale * 100)}%

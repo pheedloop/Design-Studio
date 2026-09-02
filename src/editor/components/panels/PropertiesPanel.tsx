@@ -246,7 +246,7 @@ export function PropertiesPanel({
           <div className="flex flex-col gap-1.5">
             <div className="flex items-center justify-between">
               <SectionLabel>{t("editor.field.opacity")}</SectionLabel>
-              <span className="text-[11px] text-gray-400">
+              <span className="text-[11px] text-text-subtle">
                 {commonOpacity !== undefined
                   ? `${Math.round(commonOpacity * 100)}%`
                   : t("editor.field.mixed")}
@@ -348,16 +348,16 @@ export function PropertiesPanel({
                       }}
                     />
                   ) : (
-                    <div className="text-[11px] text-gray-500 truncate">
+                    <div className="text-[11px] text-text-caption truncate">
                       {background.sourceFileName}
                     </div>
                   )}
                   <div className="flex flex-col gap-1.5">
                     <div className="flex items-center justify-between">
-                      <span className="text-[11px] text-gray-500">
+                      <span className="text-[11px] text-text-caption">
                         {t("editor.field.opacity")}
                       </span>
-                      <span className="text-[11px] text-gray-400">
+                      <span className="text-[11px] text-text-subtle">
                         {Math.round(background.opacity * 100)}%
                       </span>
                     </div>
@@ -376,7 +376,7 @@ export function PropertiesPanel({
 
                   {background.kind === "dxf" && (
                     <div className="flex flex-col gap-1">
-                      <span className="text-[11px] text-gray-500">
+                      <span className="text-[11px] text-text-caption">
                         {t("editor.field.layers")}
                       </span>
                       <div className="max-h-32 overflow-y-auto flex flex-col gap-1 border border-gray-200 rounded-md p-2">
@@ -393,7 +393,7 @@ export function PropertiesPanel({
                               onChange={() => onToggleDxfLayer?.(layer)}
                               className="accent-primary-600"
                             />
-                            <span className="flex-1 text-gray-700 truncate">
+                            <span className="flex-1 text-text-body truncate">
                               {layer}
                             </span>
                           </label>
@@ -437,7 +437,7 @@ export function PropertiesPanel({
 
     return (
       <div className="w-60 shrink-0 border-l border-gray-200 bg-white p-4">
-        <p className="text-xs text-gray-400">
+        <p className="text-xs text-text-subtle">
           {t("editor.properties.noSelection")}
         </p>
       </div>
@@ -518,7 +518,7 @@ export function PropertiesPanel({
           <div className="flex flex-col gap-1.5">
             <div className="flex items-center justify-between">
               <SectionLabel>{t("editor.field.opacity")}</SectionLabel>
-              <span className="text-[11px] text-gray-400">
+              <span className="text-[11px] text-text-subtle">
                 {Math.round((element.properties.opacity ?? 1) * 100)}%
               </span>
             </div>

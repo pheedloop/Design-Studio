@@ -26,9 +26,11 @@ export function ViewerLegend({ legend }: ViewerLegendProps) {
                   className="shrink-0 rounded-sm border border-gray-300"
                   style={{ width: 12, height: 12, background: entry.color }}
                 />
-                <span className="text-xs text-gray-700 leading-none whitespace-nowrap">
+                <span className="text-xs text-text-body leading-none whitespace-nowrap">
                   {entry.label || (
-                    <em className="text-gray-400">{t("common.unlabeled")}</em>
+                    <em className="text-text-subtle">
+                      {t("common.unlabeled")}
+                    </em>
                   )}
                 </span>
               </div>
@@ -43,9 +45,9 @@ export function ViewerLegend({ legend }: ViewerLegendProps) {
             {t("common.legend")}
           </span>
           {collapsed ? (
-            <PiCaretUp size={11} className="text-gray-400" />
+            <PiCaretUp size={11} className="text-text-subtle" />
           ) : (
-            <PiCaretDown size={11} className="text-gray-400" />
+            <PiCaretDown size={11} className="text-text-subtle" />
           )}
         </button>
       </div>

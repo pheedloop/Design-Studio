@@ -44,7 +44,7 @@ export function ToolSidebarHeader({
         </span>
       )}
       {!nameEditable ? (
-        <span className="flex-1 text-base font-semibold text-gray-800 truncate">
+        <span className="flex-1 text-base font-semibold text-text-heading truncate">
           {mapName}
         </span>
       ) : (

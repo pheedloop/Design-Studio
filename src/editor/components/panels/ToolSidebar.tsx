@@ -149,10 +149,10 @@ export function ToolSidebar({
     return (
       <div className="flex flex-col w-64 shrink-0 bg-white border-r border-gray-200 overflow-hidden">
         <div className="px-3 py-3 border-b border-gray-100">
-          <div className="text-[10px] uppercase tracking-wider text-gray-400 leading-none mb-1">
+          <div className="text-[10px] uppercase tracking-wider text-text-subtle leading-none mb-1">
             {t("editor.pathing.layerTitle")}
           </div>
-          <div className="text-base font-semibold text-gray-800 truncate">
+          <div className="text-base font-semibold text-text-heading truncate">
             {mapName}
           </div>
         </div>
@@ -176,10 +176,10 @@ export function ToolSidebar({
     return (
       <div className="flex flex-col w-64 shrink-0 bg-white border-r border-gray-200 overflow-hidden">
         <div className="px-3 py-3 border-b border-gray-100">
-          <div className="text-[10px] uppercase tracking-wider text-gray-400 leading-none mb-1">
+          <div className="text-[10px] uppercase tracking-wider text-text-subtle leading-none mb-1">
             {t("editor.background.layerTitle")}
           </div>
-          <div className="text-base font-semibold text-gray-800 truncate">
+          <div className="text-base font-semibold text-text-heading truncate">
             {mapName}
           </div>
         </div>
@@ -194,7 +194,7 @@ export function ToolSidebar({
             isActive={activeTool === "select"}
             onClick={() => onToolChange("select")}
           />
-          <p className="px-2 py-3 text-xs text-gray-400 leading-relaxed">
+          <p className="px-2 py-3 text-xs text-text-subtle leading-relaxed">
             {t("editor.background.layerHint")}
           </p>
         </div>

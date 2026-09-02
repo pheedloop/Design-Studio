@@ -20,33 +20,33 @@ const sizes = {
 const styles = {
   solid: {
     primary:
-      "bg-primary-600 text-white hover:bg-primary-700 disabled:bg-gray-200 disabled:text-gray-400",
+      "bg-primary-600 text-white hover:bg-primary-700 disabled:bg-gray-200 disabled:text-text-subtle",
     neutral:
-      "bg-gray-200 text-gray-700 hover:bg-gray-300 disabled:bg-gray-100 disabled:text-gray-400",
+      "bg-gray-200 text-text-body hover:bg-gray-300 disabled:bg-gray-100 disabled:text-text-subtle",
     negative:
-      "bg-red-600 text-white hover:bg-red-700 disabled:bg-gray-200 disabled:text-gray-400",
+      "bg-red-600 text-white hover:bg-red-700 disabled:bg-gray-200 disabled:text-text-subtle",
     positive:
-      "bg-green-600 text-white hover:bg-green-700 disabled:bg-gray-200 disabled:text-gray-400",
+      "bg-green-600 text-white hover:bg-green-700 disabled:bg-gray-200 disabled:text-text-subtle",
   },
   outline: {
     primary:
-      "border border-primary-200 text-primary-600 hover:bg-primary-50 disabled:border-gray-200 disabled:text-gray-400 disabled:hover:bg-transparent",
+      "border border-primary-200 text-primary-600 hover:bg-primary-50 disabled:border-gray-200 disabled:text-text-subtle disabled:hover:bg-transparent",
     neutral:
-      "border border-gray-200 text-text-body hover:bg-surface-neutral disabled:border-gray-200 disabled:text-gray-400 disabled:hover:bg-transparent",
+      "border border-gray-200 text-text-body hover:bg-surface-neutral disabled:border-gray-200 disabled:text-text-subtle disabled:hover:bg-transparent",
     negative:
-      "border border-red-200 text-red-600 hover:bg-red-50 disabled:border-gray-200 disabled:text-gray-400 disabled:hover:bg-transparent",
+      "border border-red-200 text-red-600 hover:bg-red-50 disabled:border-gray-200 disabled:text-text-subtle disabled:hover:bg-transparent",
     positive:
-      "border border-green-200 text-green-600 hover:bg-green-50 disabled:border-gray-200 disabled:text-gray-400 disabled:hover:bg-transparent",
+      "border border-green-200 text-green-600 hover:bg-green-50 disabled:border-gray-200 disabled:text-text-subtle disabled:hover:bg-transparent",
   },
   ghost: {
     primary:
-      "text-primary-600 hover:bg-primary-50 disabled:text-gray-400 disabled:hover:bg-transparent",
+      "text-primary-600 hover:bg-primary-50 disabled:text-text-subtle disabled:hover:bg-transparent",
     neutral:
-      "text-text-body hover:bg-gray-100 disabled:text-gray-400 disabled:hover:bg-transparent",
+      "text-text-body hover:bg-gray-100 disabled:text-text-subtle disabled:hover:bg-transparent",
     negative:
-      "text-red-600 hover:bg-red-50 disabled:text-gray-400 disabled:hover:bg-transparent",
+      "text-red-600 hover:bg-red-50 disabled:text-text-subtle disabled:hover:bg-transparent",
     positive:
-      "text-green-600 hover:bg-green-50 disabled:text-gray-400 disabled:hover:bg-transparent",
+      "text-green-600 hover:bg-green-50 disabled:text-text-subtle disabled:hover:bg-transparent",
   },
 };
 

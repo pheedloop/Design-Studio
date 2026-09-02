@@ -12,7 +12,7 @@ import { SectionLabel } from "@/editor/components/ui";
 import { FIELD_DEFS, type FieldDef } from "./fields";
 import { BadgeSidebarHeader } from "./BadgeSidebarHeader";
 
-const iconProps = { size: 16, className: "text-gray-400" };
+const iconProps = { size: 16, className: "text-text-subtle" };
 
 function iconFor(def: FieldDef) {
   if (def.kind === "qrCode") return <PiQrCode {...iconProps} />;

@@ -50,7 +50,7 @@ export function MapDebugDialog({ data, onClose }: MapDebugDialogProps) {
         {tab === "tree" ? (
           <JsonDebugView data={data} label="FloorPlanData" />
         ) : (
-          <pre className="text-xs text-gray-700 whitespace-pre-wrap font-mono">
+          <pre className="text-xs text-text-body whitespace-pre-wrap font-mono">
             {JSON.stringify(data, null, 2)}
           </pre>
         )}

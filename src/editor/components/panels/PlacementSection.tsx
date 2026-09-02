@@ -67,10 +67,10 @@ export function PlacementSection({
           }}
         />
         <span className="flex-1 min-w-0">
-          <span className="block text-sm font-semibold text-gray-800 truncate">
+          <span className="block text-sm font-semibold text-text-heading truncate">
             {title}
           </span>
-          <span className="block text-xs text-gray-400 tabular-nums">
+          <span className="block text-xs text-text-subtle tabular-nums">
             {t("editor.placement.counts", { placed, unplaced })}
           </span>
         </span>
@@ -93,7 +93,7 @@ export function PlacementSection({
         >
           <PiSparkle size={14} />
         </span>
-        <span className="shrink-0 text-gray-400">
+        <span className="shrink-0 text-text-subtle">
           {isOpen ? <PiCaretUp size={12} /> : <PiCaretDown size={12} />}
         </span>
       </button>
@@ -102,7 +102,7 @@ export function PlacementSection({
       {isOpen && (
         <SectionShapeContext.Provider value={defaultShape}>
           {total === 0 ? (
-            <p className="px-3 py-2.5 text-xs text-gray-400 italic">
+            <p className="px-3 py-2.5 text-xs text-text-subtle italic">
               {t("editor.placement.noRecords")}
             </p>
           ) : (

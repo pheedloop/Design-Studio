@@ -21,10 +21,10 @@ export function FitModeRadios({
           className="accent-primary-600"
         />
         <div>
-          <span className="text-xs font-medium text-gray-700">
+          <span className="text-xs font-medium text-text-body">
             {t("editor.background.fitToCanvas")}
           </span>
-          <p className="text-[11px] text-gray-400">
+          <p className="text-[11px] text-text-subtle">
             {t("editor.background.fitToCanvasHint")}
           </p>
         </div>
@@ -38,10 +38,10 @@ export function FitModeRadios({
           className="accent-primary-600"
         />
         <div>
-          <span className="text-xs font-medium text-gray-700">
+          <span className="text-xs font-medium text-text-body">
             {t("editor.background.resizeToFile")}
           </span>
-          <p className="text-[11px] text-gray-400">
+          <p className="text-[11px] text-text-subtle">
             {t("editor.background.resizeToFileHint")}
           </p>
         </div>

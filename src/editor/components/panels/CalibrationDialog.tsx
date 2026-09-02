@@ -72,7 +72,7 @@ export function CalibrationDialog({
       }
     >
       <div className="flex flex-col gap-4 p-4">
-        <p className="text-xs text-gray-500">
+        <p className="text-xs text-text-caption">
           {t("editor.calibration.prompt", {
             distance: t("common.measurement", {
               value: formatNumber(Math.round(pixelDistance), locale, 0),
@@ -104,7 +104,7 @@ export function CalibrationDialog({
         </div>
 
         {displayUnit === "in" && distance > 0 && (
-          <p className="text-[11px] text-gray-400">
+          <p className="text-[11px] text-text-subtle">
             {t("editor.calibration.equals", {
               measurement: t("common.measurement", {
                 value: formatNumber(distance / 12, locale, 2),

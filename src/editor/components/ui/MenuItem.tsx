@@ -19,10 +19,10 @@ export function MenuItem({
       title={disabled && premium ? t("editor.premiumFeature") : undefined}
       className={`flex items-center justify-between w-full px-3 py-1.5 text-xs transition-colors ${
         disabled
-          ? "text-gray-300 cursor-default"
+          ? "text-text-disabled cursor-default"
           : danger
             ? "text-red-600 hover:bg-red-50 cursor-pointer"
-            : "text-gray-700 hover:bg-gray-100 cursor-pointer"
+            : "text-text-body hover:bg-gray-100 cursor-pointer"
       }`}
     >
       <span>{label}</span>
@@ -33,7 +33,7 @@ export function MenuItem({
       ) : (
         shortcut && (
           <span
-            className={`ml-6 ${disabled ? "text-gray-300" : "text-gray-400"}`}
+            className={`ml-6 ${disabled ? "text-text-disabled" : "text-text-subtle"}`}
           >
             {shortcut}
           </span>

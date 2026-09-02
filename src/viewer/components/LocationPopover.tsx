@@ -23,7 +23,7 @@ export function LocationPopover({
 
   return (
     <Popover x={x} y={y} onClose={onClose}>
-      <div className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
+      <div className="text-xs font-semibold text-text-caption uppercase tracking-wide">
         {t(TYPE_NAME[type])}
       </div>
       <div className="mt-1 text-sm font-medium text-text-heading">{name}</div>

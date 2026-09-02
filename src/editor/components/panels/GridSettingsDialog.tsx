@@ -88,7 +88,7 @@ export function GridSettingsDialog({
               }
               className="flex-1"
             />
-            <span className="text-xs text-gray-400 w-8 text-right">
+            <span className="text-xs text-text-subtle w-8 text-right">
               {Math.round(local.gridOpacity * 100)}%
             </span>
           </div>

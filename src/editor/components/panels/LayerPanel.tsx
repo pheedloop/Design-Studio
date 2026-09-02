@@ -83,9 +83,9 @@ export function LayerPanel({
                 title={locked ? t("editor.premiumFeature") : undefined}
                 className={`flex items-center gap-2 px-3 py-1.5 text-xs transition-colors ${
                   locked
-                    ? "text-gray-300 cursor-not-allowed"
+                    ? "text-text-disabled cursor-not-allowed"
                     : isActive
-                      ? "bg-gray-100 font-semibold text-gray-800 cursor-pointer"
+                      ? "bg-gray-100 font-semibold text-text-heading cursor-pointer"
                       : "text-text-body hover:bg-surface-neutral cursor-pointer"
                 }`}
                 onClick={locked ? undefined : () => onSetActiveLayer(layer.id)}

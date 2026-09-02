@@ -37,10 +37,10 @@ export function LocationField({
   if (value) {
     return (
       <div className="flex items-center gap-2 px-3 py-2 bg-surface-neutral rounded-lg border border-gray-200">
-        <span className="text-[10px] font-semibold text-gray-400 uppercase w-8 shrink-0">
+        <span className="text-[10px] font-semibold text-text-subtle uppercase w-8 shrink-0">
           {label}
         </span>
-        <span className="flex-1 text-xs font-medium text-gray-800 truncate">
+        <span className="flex-1 text-xs font-medium text-text-heading truncate">
           {locationLabel(value, t)}
         </span>
         <IconButton
@@ -61,10 +61,10 @@ export function LocationField({
   return (
     <div className="relative">
       <div className="flex items-center gap-2 px-3 py-2 bg-white rounded-lg border border-gray-200 focus-within:border-blue-400">
-        <span className="text-[10px] font-semibold text-gray-400 uppercase w-8 shrink-0">
+        <span className="text-[10px] font-semibold text-text-subtle uppercase w-8 shrink-0">
           {label}
         </span>
-        <PiMagnifyingGlass size={12} className="text-gray-300 shrink-0" />
+        <PiMagnifyingGlass size={12} className="text-text-disabled shrink-0" />
         <input
           ref={inputRef}
           type="text"
@@ -73,14 +73,14 @@ export function LocationField({
           onFocus={() => setFocused(true)}
           onBlur={() => setTimeout(() => setFocused(false), 150)}
           placeholder={placeholder}
-          className="flex-1 text-xs text-gray-800 placeholder:text-gray-400 outline-none bg-transparent"
+          className="flex-1 text-xs text-text-heading placeholder:text-text-subtle outline-none bg-transparent"
         />
       </div>
 
       {showDropdown && (
         <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-44 overflow-y-auto">
           {results.length === 0 ? (
-            <div className="px-3 py-2 text-xs text-gray-400">
+            <div className="px-3 py-2 text-xs text-text-subtle">
               {t("viewer.search.noResults")}
             </div>
           ) : (
@@ -97,7 +97,7 @@ export function LocationField({
                   className="w-full text-left px-3 py-1.5 hover:bg-surface-neutral cursor-pointer transition-colors"
                 >
                   <div className="flex items-center justify-between gap-2">
-                    <span className="text-xs font-medium text-gray-800 truncate">
+                    <span className="text-xs font-medium text-text-heading truncate">
                       {result.exhibitorName || displayName(result, t)}
                     </span>
                     <span

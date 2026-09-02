@@ -134,7 +134,7 @@ export function SeatPlanViewerDemo({ translate }: { translate?: Translate }) {
       className={`px-3 py-1 rounded text-xs font-medium transition-colors ${
         viewerMode === m
           ? "bg-white text-text-heading shadow-sm"
-          : "text-gray-500 hover:text-gray-800"
+          : "text-text-caption hover:text-text-heading"
       }`}
     >
       {label}

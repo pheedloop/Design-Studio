@@ -147,7 +147,7 @@ export function LegendDialog({ legend, onSave, onClose }: LegendDialogProps) {
                 {/* Raw: the red hover marks the destructive action, and a tone
                     prop for one site fails the ≥2-consumer bar. */}
                 <button
-                  className="p-1 rounded text-gray-400 hover:text-red-500 transition-colors cursor-pointer"
+                  className="p-1 rounded text-text-subtle hover:text-red-500 transition-colors cursor-pointer"
                   onClick={() => removeEntry(entry.id)}
                   title={t("editor.legend.removeEntry")}
                 >
@@ -159,7 +159,7 @@ export function LegendDialog({ legend, onSave, onClose }: LegendDialogProps) {
         )}
 
         {local.entries.length === 0 && (
-          <p className="text-xs text-gray-400 text-center py-2">
+          <p className="text-xs text-text-subtle text-center py-2">
             {t("editor.legend.empty")}
           </p>
         )}

@@ -29,7 +29,7 @@ export function TypeDefaultsDialog({
       maxHeight="80vh"
     >
       <div className="overflow-y-auto flex-1 p-4 flex flex-col gap-3">
-        <p className="text-xs text-gray-500 leading-snug">
+        <p className="text-xs text-text-caption leading-snug">
           {t("editor.dialog.elementDefaultsHint")}
         </p>
         <TypeDefaultsPanel

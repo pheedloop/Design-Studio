@@ -31,13 +31,13 @@ export function Dialog({
         style={{ width, maxHeight }}
       >
         <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200 shrink-0">
-          <h2 className="text-sm font-semibold text-gray-800">{title}</h2>
+          <h2 className="text-sm font-semibold text-text-heading">{title}</h2>
           <div className="flex items-center gap-2">
             {headerActions}
             <button
               onClick={onClose}
               aria-label={t("editor.action.close")}
-              className="text-gray-400 hover:text-text-body text-lg leading-none cursor-pointer"
+              className="text-text-subtle hover:text-text-body text-lg leading-none cursor-pointer"
             >
               &times;
             </button>

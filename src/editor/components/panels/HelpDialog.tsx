@@ -280,7 +280,7 @@ export function HelpDialog({ onClose }: HelpDialogProps) {
           GETTING_STARTED.map((section, index) => (
             <div key={section.headingKey}>
               <h3
-                className={`text-xs font-semibold text-gray-800 mb-2 ${index > 0 ? "mt-4" : ""}`}
+                className={`text-xs font-semibold text-text-heading mb-2 ${index > 0 ? "mt-4" : ""}`}
               >
                 {t(section.headingKey)}
               </h3>
@@ -295,7 +295,7 @@ export function HelpDialog({ onClose }: HelpDialogProps) {
         {tab === "shortcuts" &&
           shortcuts.map(section => (
             <div key={section.categoryKey} className="mb-4">
-              <div className="text-[10px] font-medium text-gray-400 uppercase tracking-wide mb-1.5">
+              <div className="text-[10px] font-medium text-text-subtle uppercase tracking-wide mb-1.5">
                 {t(section.categoryKey)}
               </div>
               <div className="space-y-1">
@@ -307,7 +307,7 @@ export function HelpDialog({ onClose }: HelpDialogProps) {
                     <span className="text-xs text-text-body">
                       {t(item.descriptionKey)}
                     </span>
-                    <kbd className="text-[10px] font-mono text-gray-500 bg-gray-100 border border-gray-200 rounded px-1.5 py-0.5">
+                    <kbd className="text-[10px] font-mono text-text-caption bg-gray-100 border border-gray-200 rounded px-1.5 py-0.5">
                       {item.keysKey ? t(item.keysKey) : item.keys}
                     </kbd>
                   </div>
@@ -318,12 +318,12 @@ export function HelpDialog({ onClose }: HelpDialogProps) {
 
         {tab === "menus" && (
           <>
-            <p className="text-xs text-gray-500 mb-4">
+            <p className="text-xs text-text-caption mb-4">
               {t("editor.help.menusIntro")}
             </p>
             {menus.map(menu => (
               <div key={menu.nameKey} className="mb-4">
-                <div className="text-[10px] font-medium text-gray-400 uppercase tracking-wide mb-1.5">
+                <div className="text-[10px] font-medium text-text-subtle uppercase tracking-wide mb-1.5">
                   {t(menu.nameKey)}
                 </div>
                 <div className="space-y-1">

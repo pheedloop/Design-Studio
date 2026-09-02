@@ -65,7 +65,7 @@ export function PlacementFilterBar({
               style={{ borderRadius: shape === "ellipse" ? "9999px" : "0px" }}
             />
             {t(PLACEMENT_SHAPE_LABEL[shape])}
-            <PiCaretDown size={10} className="text-gray-400" />
+            <PiCaretDown size={10} className="text-text-subtle" />
           </button>
           {shapeOpen && (
             <div className="absolute top-full left-0 mt-0.5 bg-white border border-gray-200 rounded shadow-md z-20 py-0.5 w-28">
@@ -81,7 +81,7 @@ export function PlacementFilterBar({
                     "w-full text-left flex items-center gap-1.5 px-2 py-1.5 text-xs hover:bg-surface-neutral transition-colors",
                     shape === s
                       ? "text-primary-600 font-medium"
-                      : "text-gray-700",
+                      : "text-text-body",
                   ].join(" ")}
                 >
                   <span
@@ -124,7 +124,7 @@ export function PlacementFilterBar({
           </IconButton>
           {filterOpen && (
             <div className="absolute right-0 top-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-20 py-1.5 w-36">
-              <div className="px-2.5 pb-1 text-[10px] uppercase tracking-wider text-gray-400 font-medium">
+              <div className="px-2.5 pb-1 text-[10px] uppercase tracking-wider text-text-subtle font-medium">
                 {t("editor.placement.status")}
               </div>
               {(["all", "unplaced", "placed"] as const).map(f => (
@@ -142,7 +142,7 @@ export function PlacementFilterBar({
                     }}
                     className="accent-primary-600"
                   />
-                  <span className="text-gray-700">
+                  <span className="text-text-body">
                     {f === "all"
                       ? t("editor.placement.statusAll")
                       : f === "placed"

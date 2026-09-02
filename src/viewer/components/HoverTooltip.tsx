@@ -43,15 +43,15 @@ export function HoverTooltip({
       {item.type === "booth" && exhibitor ? (
         <div className="flex flex-col items-center gap-1.5 text-center">
           <ExhibitorLogo exhibitor={exhibitor} size="sm" />
-          <span className="text-sm font-medium text-gray-800 line-clamp-2">
+          <span className="text-sm font-medium text-text-heading line-clamp-2">
             {exhibitor.name}
           </span>
-          {name && <span className="text-[11px] text-gray-400">{name}</span>}
+          {name && <span className="text-[11px] text-text-subtle">{name}</span>}
         </div>
       ) : (
         <>
           {name && (
-            <div className="text-xs font-semibold text-gray-800 truncate">
+            <div className="text-xs font-semibold text-text-heading truncate">
               {name}
             </div>
           )}
@@ -61,12 +61,12 @@ export function HoverTooltip({
                 {t("viewer.booth.reserved")}
               </div>
             ) : (
-              <div className="mt-0.5 text-[11px] text-gray-400">
+              <div className="mt-0.5 text-[11px] text-text-subtle">
                 {t("viewer.booth.unoccupied")}
               </div>
             )
           ) : (
-            <div className="mt-0.5 text-[11px] font-medium text-gray-400 uppercase tracking-wide">
+            <div className="mt-0.5 text-[11px] font-medium text-text-subtle uppercase tracking-wide">
               {t(
                 TYPE_NAME[
                   item.type === "session_area" ? "session_area" : "meeting_room"

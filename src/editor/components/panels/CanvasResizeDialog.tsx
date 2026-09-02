@@ -138,7 +138,7 @@ export function CanvasResizeDialog({
           <SectionLabel>{t("editor.field.widthPx")}</SectionLabel>
           <NumberInput value={newWidth} onChange={setW} />
           {dimensions.unit !== "px" && (
-            <span className="text-[11px] text-gray-400">
+            <span className="text-[11px] text-text-subtle">
               {formatMeasurement(newWidth, dimensions, t, locale)}
             </span>
           )}
@@ -152,7 +152,7 @@ export function CanvasResizeDialog({
             disabled={mode === "scale"}
           />
           {dimensions.unit !== "px" && (
-            <span className="text-[11px] text-gray-400">
+            <span className="text-[11px] text-text-subtle">
               {formatMeasurement(newHeight, dimensions, t, locale)}
             </span>
           )}
@@ -180,7 +180,7 @@ export function CanvasResizeDialog({
               {t("editor.resize.scaleToFit")}
             </Button>
           </div>
-          <span className="text-[11px] text-gray-400">
+          <span className="text-[11px] text-text-subtle">
             {mode === "scale"
               ? t("editor.resize.scaleHint")
               : t("editor.resize.preserveHint")}
@@ -213,7 +213,7 @@ export function CanvasResizeDialog({
                 );
               })}
             </div>
-            <span className="text-[11px] text-gray-400 leading-relaxed">
+            <span className="text-[11px] text-text-subtle leading-relaxed">
               {t("editor.resize.anchorHint")}
             </span>
           </div>
@@ -232,7 +232,7 @@ export function CanvasResizeDialog({
             >
               {t("editor.resize.cropCta")}
             </Button>
-            <span className="text-[11px] text-gray-400">
+            <span className="text-[11px] text-text-subtle">
               {t("editor.resize.cropHint")}
             </span>
           </div>

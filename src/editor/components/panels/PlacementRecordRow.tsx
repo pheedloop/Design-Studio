@@ -20,10 +20,10 @@ export function PlacementRecordRow({
       recordType={category.elementType}
       recordId={category.getRecordId(record)}
     >
-      <span className="flex-1 text-gray-700 truncate">
+      <span className="flex-1 text-text-body truncate">
         {category.getPrimaryLabel(record)}
         {secondary && (
-          <span className="text-gray-400 ml-1 text-xs">· {secondary}</span>
+          <span className="text-text-subtle ml-1 text-xs">· {secondary}</span>
         )}
       </span>
       {isPlaced ? (

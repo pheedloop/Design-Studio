@@ -28,7 +28,7 @@ export function BoothPopover({
 
   return (
     <Popover x={x} y={y} onClose={onClose}>
-      <div className="text-center text-[11px] font-medium text-gray-400">
+      <div className="text-center text-[11px] font-medium text-text-subtle">
         {boothCode}
       </div>
       {exhibitor ? (
@@ -52,7 +52,7 @@ export function BoothPopover({
           </div>
         )
       ) : (
-        <div className="mt-1 text-center text-[11px] text-gray-400">
+        <div className="mt-1 text-center text-[11px] text-text-subtle">
           {t("viewer.booth.noExhibitor")}
         </div>
       )}

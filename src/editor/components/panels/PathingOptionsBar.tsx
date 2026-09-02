@@ -28,7 +28,7 @@ export function PathingOptionsBar({
   return (
     <div className="flex items-center gap-4 px-3 py-2 bg-white border-b border-gray-200">
       <div className="flex items-center gap-1.5">
-        <span className="text-[11px] text-gray-500">
+        <span className="text-[11px] text-text-caption">
           {t("editor.field.cellSize")}
         </span>
         <Select
@@ -44,7 +44,7 @@ export function PathingOptionsBar({
       </div>
 
       <div className="flex items-center gap-1.5">
-        <span className="text-[11px] text-gray-500">
+        <span className="text-[11px] text-text-caption">
           {t("editor.field.opacity")}
         </span>
         <Slider
@@ -55,7 +55,7 @@ export function PathingOptionsBar({
           onChange={e => onOpacityChange(Number(e.target.value))}
           className="w-16 h-1 accent-green-500"
         />
-        <span className="text-[10px] text-gray-400 w-7">
+        <span className="text-[10px] text-text-subtle w-7">
           {Math.round(opacity * 100)}%
         </span>
       </div>

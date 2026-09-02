@@ -7,7 +7,7 @@ interface ColorSwatchProps {
 export function ColorSwatch({ label, value, onChange }: ColorSwatchProps) {
   return (
     <div className="flex items-center gap-1.5">
-      <span className="text-[11px] text-gray-500">{label}</span>
+      <span className="text-[11px] text-text-caption">{label}</span>
       <div className="relative">
         <input
           type="color"

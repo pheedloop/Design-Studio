@@ -27,7 +27,7 @@ export function LabelSection({ properties, onChange }: LabelSectionProps) {
         <button
           className={`p-1 rounded transition-colors cursor-pointer ${
             visible
-              ? "text-gray-500 hover:text-gray-700"
+              ? "text-text-caption hover:text-text-body"
               : "text-red-400 hover:text-red-600"
           }`}
           onClick={() => onChange({ labelVisible: !visible })}
@@ -124,7 +124,7 @@ export function LabelSection({ properties, onChange }: LabelSectionProps) {
               }
             />
             <div className="flex items-center gap-1.5">
-              <span className="text-[11px] text-gray-500">
+              <span className="text-[11px] text-text-caption">
                 {t("editor.field.opacity")}
               </span>
               <Slider
@@ -141,7 +141,7 @@ export function LabelSection({ properties, onChange }: LabelSectionProps) {
                 }
                 className="flex-1"
               />
-              <span className="text-[10px] text-gray-400 w-7 text-right">
+              <span className="text-[10px] text-text-subtle w-7 text-right">
                 {Math.round(properties.labelBackground.opacity * 100)}%
               </span>
             </div>

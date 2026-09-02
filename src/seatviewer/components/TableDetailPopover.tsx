@@ -67,10 +67,10 @@ export function TableDetailPopover({
     >
       <div className="flex items-start gap-2 p-3 border-b border-gray-200">
         <div className="flex-1 min-w-0">
-          <h3 className="m-0 text-base font-medium text-gray-700">
+          <h3 className="m-0 text-base font-medium text-text-body">
             {tableName}
           </h3>
-          <span className="text-xs text-gray-400 tabular-nums">
+          <span className="text-xs text-text-subtle tabular-nums">
             {t("seatviewer.table.seatsFree", {
               count: seatsFree,
               total: table.seatCount,
@@ -94,7 +94,7 @@ export function TableDetailPopover({
 
       {!hideAttendeeDetails && (
         <div className="max-h-44 overflow-y-auto scrollbar">
-          <div className="px-3 pt-2.5 pb-1 text-[10px] tracking-wider uppercase text-gray-400 font-semibold">
+          <div className="px-3 pt-2.5 pb-1 text-[10px] tracking-wider uppercase text-text-subtle font-semibold">
             {occupantHeading(
               {
                 loading: !!occupantsLoading,
@@ -110,10 +110,10 @@ export function TableDetailPopover({
                 {initials(o)}
               </span>
               <span className="flex-1 min-w-0">
-                <span className="block text-sm font-medium text-gray-700 truncate">
+                <span className="block text-sm font-medium text-text-body truncate">
                   {o.firstName} {o.lastName}
                 </span>
-                <span className="block text-xs text-gray-500 truncate">
+                <span className="block text-xs text-text-caption truncate">
                   {o.organization || o.email}
                 </span>
               </span>
@@ -121,7 +121,7 @@ export function TableDetailPopover({
                 <button
                   type="button"
                   onClick={() => onUnassign(o.seatSelectionCode as number)}
-                  className="shrink-0 text-xs text-gray-400 hover:text-[#b42318] hover:bg-[rgba(235,87,87,0.12)] px-1.5 py-1 rounded cursor-pointer"
+                  className="shrink-0 text-xs text-text-subtle hover:text-[#b42318] hover:bg-[rgba(235,87,87,0.12)] px-1.5 py-1 rounded cursor-pointer"
                 >
                   {t("seatviewer.table.remove")}
                 </button>
@@ -143,7 +143,7 @@ export function TableDetailPopover({
           {assigning ? t("seatviewer.table.assigning") : assignLabel}
         </Button>
         {assignHint && (
-          <p className="text-xs text-gray-500 text-center mt-2 m-0">
+          <p className="text-xs text-text-caption text-center mt-2 m-0">
             {assignHint}
           </p>
         )}

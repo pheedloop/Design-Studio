@@ -62,14 +62,14 @@ export function TypeSection({ typeKey, defaults, onChange }: TypeSectionProps) {
             className="w-3 h-3 rounded-sm shrink-0 border border-gray-300"
             style={{ background: defaults.color ?? "#94a3b8" }}
           />
-          <span className="text-xs font-medium text-gray-700">
+          <span className="text-xs font-medium text-text-body">
             {formatTypeDisplayName(typeKey)}
           </span>
         </div>
         {open ? (
-          <PiCaretDown size={12} className="text-gray-400" />
+          <PiCaretDown size={12} className="text-text-subtle" />
         ) : (
-          <PiCaretRight size={12} className="text-gray-400" />
+          <PiCaretRight size={12} className="text-text-subtle" />
         )}
       </button>
 
@@ -113,7 +113,7 @@ export function TypeSection({ typeKey, defaults, onChange }: TypeSectionProps) {
           <div className="flex flex-col gap-1.5">
             <div className="flex items-center justify-between">
               <SectionLabel>{t("editor.field.opacity")}</SectionLabel>
-              <span className="text-[11px] text-gray-400">
+              <span className="text-[11px] text-text-subtle">
                 {Math.round(opacity * 100)}%
               </span>
             </div>
