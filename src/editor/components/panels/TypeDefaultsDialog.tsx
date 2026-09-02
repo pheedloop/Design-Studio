@@ -1,5 +1,6 @@
 import type { TypeStyles, ElementTypeDefaults } from "@/types";
 import { Dialog } from "@/editor/components/ui";
+import { Stack } from "@/components/Stack";
 import { TypeDefaultsPanel } from "./TypeDefaultsPanel";
 import { useT } from "@/editor/i18n";
 
@@ -28,7 +29,7 @@ export function TypeDefaultsDialog({
       width="400px"
       maxHeight="80vh"
     >
-      <div className="overflow-y-auto flex-1 p-4 flex flex-col gap-xs">
+      <Stack gap="xs" className="overflow-y-auto flex-1 p-4">
         <p className="text-xs text-text-caption leading-snug">
           {t("editor.dialog.elementDefaultsHint")}
         </p>
@@ -37,7 +38,7 @@ export function TypeDefaultsDialog({
           typeKeys={typeKeys}
           onUpdateTypeStyles={onUpdateTypeStyles}
         />
-      </div>
+      </Stack>
     </Dialog>
   );
 }

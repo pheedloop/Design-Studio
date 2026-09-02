@@ -14,6 +14,7 @@ import type {
   LocationClick,
   ViewerMode,
 } from "./types";
+import { Row } from "@/components/Row";
 import type { SearchResult } from "./hooks/useSearch";
 import { useSearch } from "./hooks/useSearch";
 import { buildSearchPlaceholder } from "./utils/searchPlaceholder";
@@ -306,7 +307,7 @@ function MapViewerInner({
         ref={containerRef}
         className="pl-map-editor flex flex-col h-full relative"
       >
-        <div className="flex items-center gap-0 bg-white">
+        <Row gap="none" align="center" className="bg-white">
           <div className="flex-1 min-w-0">
             <SearchBar
               query={query}
@@ -327,7 +328,7 @@ function MapViewerInner({
               </span>
             </button>
           )}
-        </div>
+        </Row>
         <div className="flex flex-1 overflow-hidden relative">
           <ViewerCanvas
             data={data}

@@ -25,6 +25,8 @@ import {
   ColorSwatch,
 } from "@/editor/components/ui";
 import { JsonDebugView } from "@/editor/components/debug";
+import { Row } from "@/components/Row";
+import { Stack } from "@/components/Stack";
 import { LabelSection } from "./LabelSection";
 
 const TEXT_ALIGN_LABEL: Record<"left" | "center" | "right", StringKey> = {
@@ -242,8 +244,8 @@ export function PropertiesPanel({
             {t("editor.selection.count", { count: selectedCount })}
           </span>
         </div>
-        <div className="flex flex-col gap-s p-3 overflow-y-auto flex-1">
-          <div className="flex flex-col gap-tight">
+        <Stack gap="s" className="p-3 overflow-y-auto flex-1">
+          <Stack gap="tight">
             <div className="flex items-center justify-between">
               <SectionLabel>{t("editor.field.opacity")}</SectionLabel>
               <span className="text-[11px] text-text-subtle">
@@ -267,7 +269,7 @@ export function PropertiesPanel({
               }
               className="w-full"
             />
-          </div>
+          </Stack>
 
           {hasLabelable && (
             <>
@@ -275,7 +277,7 @@ export function PropertiesPanel({
                 properties={mixedProps as ElementProperties}
                 onChange={updates => onBatchUpdateProperties(updates)}
               />
-              <div className="flex gap-xxs">
+              <Row gap="xxs">
                 <Button
                   variant="outline"
                   color="neutral"
@@ -296,10 +298,10 @@ export function PropertiesPanel({
                 >
                   {t("editor.label.showAll")}
                 </Button>
-              </div>
+              </Row>
             </>
           )}
-        </div>
+        </Stack>
         <div className="p-3 border-t border-border-neutral-light">
           <Button
             variant="outline"
@@ -323,20 +325,20 @@ export function PropertiesPanel({
               {t("editor.field.background")}
             </span>
           </div>
-          <div className="flex flex-col gap-s p-3 overflow-y-auto flex-1">
-            <div className="flex flex-col gap-tight">
+          <Stack gap="s" className="p-3 overflow-y-auto flex-1">
+            <Stack gap="tight">
               <SectionLabel>{t("editor.field.backgroundColor")}</SectionLabel>
               <ColorSwatch
                 label=""
                 value={backgroundColor ?? "#ffffff"}
                 onChange={c => onBackgroundColorChange?.(c)}
               />
-            </div>
+            </Stack>
 
-            <div className="flex flex-col gap-tight">
+            <Stack gap="tight">
               <SectionLabel>{t("editor.field.backgroundFile")}</SectionLabel>
               {background ? (
-                <div className="flex flex-col gap-xxs">
+                <Stack gap="xxs">
                   {background.kind === "image" ? (
                     <div
                       className="w-full h-20 rounded border border-border-neutral-light bg-surface-neutral"
@@ -352,7 +354,7 @@ export function PropertiesPanel({
                       {background.sourceFileName}
                     </div>
                   )}
-                  <div className="flex flex-col gap-tight">
+                  <Stack gap="tight">
                     <div className="flex items-center justify-between">
                       <span className="text-[11px] text-text-caption">
                         {t("editor.field.opacity")}
@@ -372,14 +374,17 @@ export function PropertiesPanel({
                       }
                       className="w-full"
                     />
-                  </div>
+                  </Stack>
 
                   {background.kind === "dxf" && (
-                    <div className="flex flex-col gap-xxxs">
+                    <Stack gap="xxxs">
                       <span className="text-[11px] text-text-caption">
                         {t("editor.field.layers")}
                       </span>
-                      <div className="max-h-32 overflow-y-auto flex flex-col gap-xxxs border border-border-neutral-light rounded-md p-2">
+                      <Stack
+                        gap="xxxs"
+                        className="max-h-32 overflow-y-auto border border-border-neutral-light rounded-md p-2"
+                      >
                         {background.layers.map(layer => (
                           <label
                             key={layer}
@@ -398,11 +403,11 @@ export function PropertiesPanel({
                             </span>
                           </label>
                         ))}
-                      </div>
-                    </div>
+                      </Stack>
+                    </Stack>
                   )}
 
-                  <div className="flex gap-xxs">
+                  <Row gap="xxs">
                     <Button
                       variant="outline"
                       color="neutral"
@@ -419,8 +424,8 @@ export function PropertiesPanel({
                     >
                       {t("editor.background.remove")}
                     </Button>
-                  </div>
-                </div>
+                  </Row>
+                </Stack>
               ) : (
                 <button
                   onClick={onUploadBackground}
@@ -429,8 +434,8 @@ export function PropertiesPanel({
                   {t("editor.background.uploadCta")}
                 </button>
               )}
-            </div>
-          </div>
+            </Stack>
+          </Stack>
         </div>
       );
     }
@@ -493,19 +498,23 @@ export function PropertiesPanel({
           <JsonDebugView data={element} />
         </div>
       ) : (
-        <div className="flex flex-col gap-s p-3 overflow-y-auto flex-1">
+        <Stack gap="s" className="p-3 overflow-y-auto flex-1">
           {isSelectedUnlinked && (
-            <div className="flex items-start gap-tight px-2 py-1.5 rounded bg-red-50 border border-red-200">
+            <Row
+              gap="tight"
+              align="start"
+              className="px-2 py-1.5 rounded bg-red-50 border border-red-200"
+            >
               <span className="text-red-500 text-[10px] font-medium leading-4">
                 {t("editor.properties.unlinked")}
               </span>
               <span className="text-red-400 text-[10px] leading-4">
                 {t("editor.properties.unlinkedHint")}
               </span>
-            </div>
+            </Row>
           )}
           {fields.has("name") && (
-            <div className="flex flex-col gap-tight">
+            <Stack gap="tight">
               <SectionLabel>{t("editor.field.name")}</SectionLabel>
               <TextInput
                 value={element.properties.name || ""}
@@ -513,9 +522,9 @@ export function PropertiesPanel({
                   onUpdateProperties(element.id, { name: e.target.value })
                 }
               />
-            </div>
+            </Stack>
           )}
-          <div className="flex flex-col gap-tight">
+          <Stack gap="tight">
             <div className="flex items-center justify-between">
               <SectionLabel>{t("editor.field.opacity")}</SectionLabel>
               <span className="text-[11px] text-text-subtle">
@@ -540,7 +549,7 @@ export function PropertiesPanel({
               }}
               className="w-full"
             />
-          </div>
+          </Stack>
 
           {(geo.shape === "rect" ||
             geo.shape === "ellipse" ||
@@ -559,7 +568,7 @@ export function PropertiesPanel({
             )}
 
           {fields.has("text") && (
-            <div className="flex flex-col gap-tight">
+            <Stack gap="tight">
               <SectionLabel>{t("editor.field.text")}</SectionLabel>
               <TextArea
                 value={element.properties.text || ""}
@@ -568,11 +577,11 @@ export function PropertiesPanel({
                   onUpdateProperties(element.id, { text: e.target.value })
                 }
               />
-            </div>
+            </Stack>
           )}
 
           {fields.has("fontSize") && (
-            <div className="flex flex-col gap-tight">
+            <Stack gap="tight">
               <SectionLabel>{t("editor.field.fontSize")}</SectionLabel>
               <NumberInput
                 value={element.properties.fontSize ?? 16}
@@ -580,15 +589,15 @@ export function PropertiesPanel({
                   onUpdateProperties(element.id, { fontSize: Math.max(1, v) })
                 }
               />
-            </div>
+            </Stack>
           )}
 
           {(fields.has("fontWeight") ||
             fields.has("fontStyle") ||
             fields.has("textDecoration")) && (
-            <div className="flex flex-col gap-tight">
+            <Stack gap="tight">
               <SectionLabel>{t("editor.field.style")}</SectionLabel>
-              <div className="flex gap-xxxs">
+              <Row gap="xxxs">
                 {fields.has("fontWeight") && (
                   <Button
                     variant="outline"
@@ -643,12 +652,12 @@ export function PropertiesPanel({
                     U
                   </Button>
                 )}
-              </div>
-            </div>
+              </Row>
+            </Stack>
           )}
 
           {fields.has("textAlign") && (
-            <div className="flex flex-col gap-tight">
+            <Stack gap="tight">
               <SectionLabel>{t("editor.field.alignment")}</SectionLabel>
               <div className="flex">
                 {(["left", "center", "right"] as const).map(align => (
@@ -672,12 +681,12 @@ export function PropertiesPanel({
                   </Button>
                 ))}
               </div>
-            </div>
+            </Stack>
           )}
 
           {(fields.has("width") || fields.has("height")) &&
             (geo.shape === "rect" || geo.shape === "ellipse") && (
-              <div className="flex flex-col gap-tight">
+              <Stack gap="tight">
                 <SectionLabel>{t("editor.field.size")}</SectionLabel>
                 {fields.has("width") && (
                   <FieldRow label={t("editor.field.widthShort")}>
@@ -695,11 +704,11 @@ export function PropertiesPanel({
                     />
                   </FieldRow>
                 )}
-              </div>
+              </Stack>
             )}
 
           {fields.has("rotation") && (
-            <div className="flex flex-col gap-tight">
+            <Stack gap="tight">
               <SectionLabel>{t("editor.field.rotation")}</SectionLabel>
               <FieldRow label="°">
                 <NumberInput
@@ -707,29 +716,29 @@ export function PropertiesPanel({
                   onChange={r => onUpdateGeometry(element.id, { rotation: r })}
                 />
               </FieldRow>
-            </div>
+            </Stack>
           )}
 
           {fields.has("area") && (
-            <div className="flex flex-col gap-tight">
+            <Stack gap="tight">
               <SectionLabel>{t("editor.field.area")}</SectionLabel>
               <div className="px-2 py-1 text-xs text-text-body bg-surface-neutral rounded border border-border-neutral-light">
                 {formatArea(dims.width, dims.height, dimensions, t, locale)}
               </div>
-            </div>
+            </Stack>
           )}
 
           {fields.has("length") && (
-            <div className="flex flex-col gap-tight">
+            <Stack gap="tight">
               <SectionLabel>{t("editor.field.length")}</SectionLabel>
               <div className="px-2 py-1 text-xs text-text-body bg-surface-neutral rounded border border-border-neutral-light">
                 {formatMeasurement(dims.length, dimensions, t, locale)}
               </div>
-            </div>
+            </Stack>
           )}
 
           {fields.has("arrowHeadStyle") && element.properties.arrowHead && (
-            <div className="flex flex-col gap-tight">
+            <Stack gap="tight">
               <SectionLabel>{t("editor.field.arrowStyle")}</SectionLabel>
               <div className="flex">
                 {(["triangle", "chevron"] as const).map(style => (
@@ -751,11 +760,11 @@ export function PropertiesPanel({
                   </Button>
                 ))}
               </div>
-            </div>
+            </Stack>
           )}
 
           {fields.has("arrowHeadSize") && element.properties.arrowHead && (
-            <div className="flex flex-col gap-tight">
+            <Stack gap="tight">
               <SectionLabel>{t("editor.field.arrowSize")}</SectionLabel>
               <FieldRow label={t("common.unit.px")}>
                 <NumberInput
@@ -770,12 +779,12 @@ export function PropertiesPanel({
                   }
                 />
               </FieldRow>
-            </div>
+            </Stack>
           )}
-        </div>
+        </Stack>
       )}
 
-      <div className="flex flex-col gap-xxs p-3 border-t border-border-neutral-light">
+      <Stack gap="xxs" className="p-3 border-t border-border-neutral-light">
         {(element.type === "booth" ||
           element.type === "session_area" ||
           element.type === "meeting_room") && (
@@ -801,7 +810,7 @@ export function PropertiesPanel({
         >
           {t("editor.action.delete")}
         </Button>
-      </div>
+      </Stack>
     </div>
   );
 }

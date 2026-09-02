@@ -1,5 +1,7 @@
 import type { Legend } from "@/types";
 import { useT } from "@/editor/i18n";
+import { Row } from "@/components/Row";
+import { Stack } from "@/components/Stack";
 
 interface LegendCanvasOverlayProps {
   legend: Legend;
@@ -13,9 +15,12 @@ export function LegendCanvasOverlay({ legend }: LegendCanvasOverlayProps) {
 
   return (
     <div className="absolute bottom-4 right-4 z-10 pointer-events-none select-none">
-      <div className="bg-white border border-border-neutral-light rounded shadow-sm px-3 py-2 flex flex-col gap-tight">
+      <Stack
+        gap="tight"
+        className="bg-white border border-border-neutral-light rounded shadow-sm px-3 py-2"
+      >
         {visibleEntries.map(entry => (
-          <div key={entry.id} className="flex items-center gap-xxs">
+          <Row key={entry.id} gap="xxs" align="center">
             <span
               className="shrink-0 rounded-sm border border-border-neutral"
               style={{ width: 12, height: 12, background: entry.color }}
@@ -25,9 +30,9 @@ export function LegendCanvasOverlay({ legend }: LegendCanvasOverlayProps) {
                 <em className="text-text-subtle">{t("common.unlabeled")}</em>
               )}
             </span>
-          </div>
+          </Row>
         ))}
-      </div>
+      </Stack>
     </div>
   );
 }

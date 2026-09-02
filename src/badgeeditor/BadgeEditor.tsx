@@ -12,6 +12,7 @@ import { useHistory } from "@/editor/hooks/useHistory";
 import { Button } from "@/components/Button";
 import { IconButton } from "@/components/IconButton";
 import { TabBar, type MenuEntry } from "@/editor/components/ui";
+import { Row } from "@/components/Row";
 import { BadgeTopBar } from "./BadgeTopBar";
 import { modKey } from "@/editor/utils/platform";
 import { I18nProvider } from "@/i18n/I18nProvider";
@@ -537,7 +538,11 @@ function BadgeEditorInner({
             if (!previewMode && doc.pages.length <= 1 && !showAlign)
               return null;
             return (
-              <div className="relative z-20 flex items-center gap-xs px-3 h-[43px] bg-white border-b border-border-neutral-light shrink-0">
+              <Row
+                gap="xs"
+                align="center"
+                className="relative z-20 px-3 h-[43px] bg-white border-b border-border-neutral-light shrink-0"
+              >
                 {!previewMode && doc.pages.length > 1 && (
                   <TabBar
                     tabs={pageTabs}
@@ -553,7 +558,7 @@ function BadgeEditorInner({
                 )}
                 <div className="flex-1" />
                 {showAlign && (
-                  <div className="flex items-center gap-hair">
+                  <Row gap="hair" align="center">
                     <AlignmentControls
                       onAlignLeft={() => runAlign(alignLeft)}
                       onAlignCenterH={() => runAlign(alignCenterH)}
@@ -572,9 +577,9 @@ function BadgeEditorInner({
                           : undefined
                       }
                     />
-                  </div>
+                  </Row>
                 )}
-              </div>
+              </Row>
             );
           })()}
 
@@ -638,7 +643,7 @@ function BadgeEditorInner({
               )}
               {/* Footer — page + overall badge size, and zoom (mirrors StatusBar) */}
               <div className="relative z-20 flex items-center justify-between px-3 py-1.5 bg-white border-t border-border-neutral-light text-xs text-text-caption">
-                <div className="flex items-center gap-xxs">
+                <Row gap="xxs" align="center">
                   <span>
                     Page {fmtUnit(doc.panelSize.width, unit)} ×{" "}
                     {fmtUnit(doc.panelSize.height, unit)} {unitLabel[unit]}
@@ -649,7 +654,7 @@ function BadgeEditorInner({
                     {fmtUnit(doc.panelSize.height * doc.pages.length, unit)}{" "}
                     {unitLabel[unit]}
                   </span>
-                </div>
+                </Row>
                 <IconButton
                   size="sm"
                   onClick={fitBadge}

@@ -4,6 +4,7 @@ import { IconButton } from "@/components/IconButton";
 import type { SearchResult } from "@/viewer/hooks/useSearch";
 import { TYPE_BADGE, displayName } from "@/viewer/utils/elementTypes";
 import { useT } from "@/viewer/i18n";
+import { Row } from "@/components/Row";
 
 interface SearchBarProps {
   query: string;
@@ -27,7 +28,11 @@ export function SearchBar({
 
   return (
     <div className="relative">
-      <div className="flex items-center gap-xxs px-3 py-2 bg-white border-b border-border-neutral-light">
+      <Row
+        gap="xxs"
+        align="center"
+        className="px-3 py-2 bg-white border-b border-border-neutral-light"
+      >
         <PiMagnifyingGlass size={16} className="text-text-subtle shrink-0" />
         <input
           ref={inputRef}
@@ -54,7 +59,7 @@ export function SearchBar({
             <PiX size={14} />
           </IconButton>
         )}
-      </div>
+      </Row>
 
       {showDropdown && (
         <div className="absolute top-full left-0 right-0 bg-white border border-border-neutral-light border-t-0 rounded-b-lg shadow-lg z-50 max-h-60 overflow-y-auto">
@@ -75,7 +80,7 @@ export function SearchBar({
                   }}
                   className="w-full text-left px-3 py-2 hover:bg-surface-neutral cursor-pointer transition-colors"
                 >
-                  <div className="flex items-center justify-between gap-xxs">
+                  <Row gap="xxs" align="center" justify="between">
                     <span className="text-xs font-medium text-text-heading truncate">
                       {result.exhibitorName || displayName(result, t)}
                     </span>
@@ -84,7 +89,7 @@ export function SearchBar({
                     >
                       {t(badge.labelKey)}
                     </span>
-                  </div>
+                  </Row>
                   {result.exhibitorName && (
                     <div className="text-[11px] text-text-subtle">
                       {displayName(result, t)}

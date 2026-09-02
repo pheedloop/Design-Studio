@@ -1,4 +1,5 @@
 import type { Exhibitor } from "@/viewer/types";
+import { Stack } from "@/components/Stack";
 import { Popover } from "./Popover";
 import { ExhibitorLogo } from "./ExhibitorLogo";
 import { useT } from "@/viewer/i18n";
@@ -44,12 +45,12 @@ export function BoothPopover({
             </div>
           </button>
         ) : (
-          <div className="mt-1 flex flex-col items-center gap-xxs text-center">
+          <Stack gap="xxs" align="center" className="mt-1 text-center">
             <ExhibitorLogo exhibitor={exhibitor} />
             <div className="text-sm font-medium text-text-heading line-clamp-2">
               {exhibitor.name}
             </div>
-          </div>
+          </Stack>
         )
       ) : (
         <div className="mt-1 text-center text-[11px] text-text-subtle">

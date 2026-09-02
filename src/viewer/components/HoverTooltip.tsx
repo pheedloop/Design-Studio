@@ -1,5 +1,6 @@
 import type { Exhibitor, HoveredItem } from "@/viewer/types";
 import { usePopoverPosition } from "@/viewer/hooks/usePopoverPosition";
+import { Stack } from "@/components/Stack";
 import { ExhibitorLogo } from "./ExhibitorLogo";
 import { TYPE_NAME } from "@/viewer/utils/elementTypes";
 import { useT } from "@/viewer/i18n";
@@ -41,13 +42,13 @@ export function HoverTooltip({
       style={{ left: pos.left, top: pos.top }}
     >
       {item.type === "booth" && exhibitor ? (
-        <div className="flex flex-col items-center gap-tight text-center">
+        <Stack gap="tight" align="center" className="text-center">
           <ExhibitorLogo exhibitor={exhibitor} size="sm" />
           <span className="text-sm font-medium text-text-heading line-clamp-2">
             {exhibitor.name}
           </span>
           {name && <span className="text-[11px] text-text-subtle">{name}</span>}
-        </div>
+        </Stack>
       ) : (
         <>
           {name && (

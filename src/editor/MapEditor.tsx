@@ -7,6 +7,7 @@ import {
   useLayoutEffect,
 } from "react";
 import { MdOutlineTableBar } from "react-icons/md";
+import { Row } from "@/components/Row";
 import type { ActiveTool, EditorMode, PathingTool } from "./types";
 import { usePlacementRecords } from "./hooks/usePlacementRecords";
 import {
@@ -1671,7 +1672,12 @@ function MapEditorInner({
         ]}
       />
       {dxfHydrationError && (
-        <div className="flex items-center justify-between gap-xs bg-red-50 border-b border-red-200 px-4 py-2 text-xs text-red-700">
+        <Row
+          gap="xs"
+          align="center"
+          justify="between"
+          className="bg-red-50 border-b border-red-200 px-4 py-2 text-xs text-red-700"
+        >
           <span>{dxfHydrationError}</span>
           <button
             type="button"
@@ -1681,7 +1687,7 @@ function MapEditorInner({
           >
             ✕
           </button>
-        </div>
+        </Row>
       )}
       <div className="flex flex-1 overflow-hidden">
         <ToolSidebar
@@ -2011,7 +2017,11 @@ function MapEditorInner({
         />
       )}
       {isCropping && (
-        <div className="fixed top-4 left-1/2 -translate-x-1/2 z-[60] flex items-center gap-xxs bg-white border border-border-neutral-light shadow-lg rounded-lg px-3 py-2">
+        <Row
+          gap="xxs"
+          align="center"
+          className="fixed top-4 left-1/2 -translate-x-1/2 z-[60] bg-white border border-border-neutral-light shadow-lg rounded-lg px-3 py-2"
+        >
           <span className="text-xs text-text-body">
             {t("editor.crop.hint")}
           </span>
@@ -2021,7 +2031,7 @@ function MapEditorInner({
           <Button variant="outline" color="neutral" onClick={handleCancelCrop}>
             {t("editor.action.cancel")}
           </Button>
-        </div>
+        </Row>
       )}
       {showResizeDialog && (
         <CanvasResizeDialog

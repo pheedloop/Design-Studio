@@ -13,6 +13,7 @@ import {
   buildSeatPlanRoster,
   MY_TICKET_CODES,
 } from "@/sample-data/seatplan-roster";
+import { Row } from "@/components/Row";
 
 const MINE = new Set<string>(MY_TICKET_CODES);
 
@@ -143,13 +144,21 @@ export function SeatPlanViewerDemo({ translate }: { translate?: Translate }) {
 
   return (
     <div className="flex flex-col h-full">
-      <div className="flex items-center gap-xs px-3 py-1.5 bg-surface-neutral border-b border-border-neutral-light text-xs shrink-0">
-        <div className="flex items-center gap-xxxs bg-surface-muted rounded p-0.5">
+      <Row
+        gap="xs"
+        align="center"
+        className="px-3 py-1.5 bg-surface-neutral border-b border-border-neutral-light text-xs shrink-0"
+      >
+        <Row
+          gap="xxxs"
+          align="center"
+          className="bg-surface-muted rounded p-0.5"
+        >
           {tab("admin", "Admin")}
           {tab("attendee", "Attendee")}
-        </div>
+        </Row>
         {viewerMode === "attendee" && (
-          <div className="flex items-center gap-s text-text-body">
+          <Row gap="s" align="center" className="text-text-body">
             <Checkbox
               label="Lock selection"
               checked={lockSelection}
@@ -160,9 +169,9 @@ export function SeatPlanViewerDemo({ translate }: { translate?: Translate }) {
               checked={hideDetails}
               onChange={setHideDetails}
             />
-          </div>
+          </Row>
         )}
-      </div>
+      </Row>
 
       <div className="flex-1 min-h-0">
         <SeatPlanViewer

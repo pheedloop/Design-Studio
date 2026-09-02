@@ -1,5 +1,6 @@
 import type { FitMode } from "@/editor/utils/dxf/bakeDrawing";
 import type { T } from "@/editor/i18n";
+import { Stack } from "@/components/Stack";
 
 export function FitModeRadios({
   mode,
@@ -11,7 +12,7 @@ export function FitModeRadios({
   t: T;
 }) {
   return (
-    <div className="flex flex-col gap-xxs">
+    <Stack gap="xxs">
       <label className="flex items-center gap-xxs cursor-pointer">
         <input
           type="radio"
@@ -46,6 +47,6 @@ export function FitModeRadios({
           </p>
         </div>
       </label>
-    </div>
+    </Stack>
   );
 }

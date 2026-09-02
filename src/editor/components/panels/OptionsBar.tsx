@@ -1,5 +1,6 @@
 import { Button } from "@/components/Button";
 import { ColorSwatch, NumberInput } from "@/editor/components/ui";
+import { Row } from "@/components/Row";
 import { AlignmentControls } from "./AlignmentControls";
 import type { OptionsBarField } from "@/editor/components/canvas/elements/types";
 import { useT } from "@/editor/i18n";
@@ -65,7 +66,11 @@ export function OptionsBar({
   ].filter(Boolean);
 
   return (
-    <div className="flex items-center gap-s px-3 py-2 bg-white border-b border-border-neutral-light h-[43px]">
+    <Row
+      gap="s"
+      align="center"
+      className="px-3 py-2 bg-white border-b border-border-neutral-light h-[43px]"
+    >
       {fields.has("fill") && (
         <ColorSwatch
           label={t("editor.field.fill")}
@@ -81,7 +86,7 @@ export function OptionsBar({
         />
       )}
       {fields.has("strokeWidth") && (
-        <div className="flex items-center gap-tight">
+        <Row gap="tight" align="center">
           <span className="text-[11px] text-text-caption">
             {t("editor.field.stroke")}
           </span>
@@ -93,12 +98,12 @@ export function OptionsBar({
               }
             />
           </div>
-        </div>
+        </Row>
       )}
       {groupActions.length > 0 && (
         <>
           <div className="w-px h-4 bg-surface-muted shrink-0" />
-          <div className="flex items-center gap-xxxs">
+          <Row gap="xxxs" align="center">
             {onExitGroup && (
               <Button
                 variant="outline"
@@ -139,13 +144,13 @@ export function OptionsBar({
                 {t("editor.group.group")}
               </Button>
             )}
-          </div>
+          </Row>
         </>
       )}
       {alignActions.length > 0 && (
         <>
           <div className="w-px h-4 bg-surface-muted shrink-0" />
-          <div className="flex items-center gap-hair">
+          <Row gap="hair" align="center">
             <AlignmentControls
               onAlignLeft={onAlignLeft}
               onAlignCenterH={onAlignCenterH}
@@ -169,9 +174,9 @@ export function OptionsBar({
                 </Button>
               </>
             )}
-          </div>
+          </Row>
         </>
       )}
-    </div>
+    </Row>
   );
 }

@@ -9,6 +9,8 @@ import {
 import type { Unit } from "@/types";
 import { useLocale, useT } from "@/editor/i18n";
 import { formatNumber } from "@/i18n/format";
+import { Row } from "@/components/Row";
+import { Stack } from "@/components/Stack";
 
 type DisplayUnit = Unit | "in";
 
@@ -71,7 +73,7 @@ export function CalibrationDialog({
         </>
       }
     >
-      <div className="flex flex-col gap-s p-4">
+      <Stack gap="s" className="p-4">
         <p className="text-xs text-text-caption">
           {t("editor.calibration.prompt", {
             distance: t("common.measurement", {
@@ -81,16 +83,16 @@ export function CalibrationDialog({
           })}
         </p>
 
-        <div className="flex gap-xs items-end">
-          <div className="flex flex-col gap-tight flex-1">
+        <Row gap="xs" align="end">
+          <Stack gap="tight" className="flex-1">
             <SectionLabel>{t("editor.field.distance")}</SectionLabel>
             <NumberInput
               value={distance}
               onChange={v => setDistance(Math.max(0, v))}
               step={1}
             />
-          </div>
-          <div className="flex flex-col gap-tight">
+          </Stack>
+          <Stack gap="tight">
             <SectionLabel>{t("editor.field.unit")}</SectionLabel>
             <Select
               value={displayUnit}
@@ -100,8 +102,8 @@ export function CalibrationDialog({
               <option value="in">{t("editor.unit.inches")}</option>
               <option value="m">{t("editor.unit.meters")}</option>
             </Select>
-          </div>
-        </div>
+          </Stack>
+        </Row>
 
         {displayUnit === "in" && distance > 0 && (
           <p className="text-[11px] text-text-subtle">
@@ -113,7 +115,7 @@ export function CalibrationDialog({
             })}
           </p>
         )}
-      </div>
+      </Stack>
     </Dialog>
   );
 }

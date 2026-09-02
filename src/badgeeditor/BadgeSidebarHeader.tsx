@@ -1,4 +1,5 @@
 import { InlineRenameField } from "@/components/InlineRenameField";
+import { Row } from "@/components/Row";
 import { useT } from "./i18n";
 
 export function BadgeSidebarHeader({
@@ -11,12 +12,16 @@ export function BadgeSidebarHeader({
   const t = useT();
 
   return (
-    <div className="px-3 h-[43px] shrink-0 border-b border-border-neutral-light flex items-center gap-xxs min-w-0">
+    <Row
+      gap="xxs"
+      align="center"
+      className="px-3 h-[43px] shrink-0 border-b border-border-neutral-light min-w-0"
+    >
       <InlineRenameField
         value={name}
         onCommit={onNameChange}
         title={t("badgeeditor.sidebar.clickToRename")}
       />
-    </div>
+    </Row>
   );
 }

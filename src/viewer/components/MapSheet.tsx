@@ -3,6 +3,7 @@ import { PiCaretUp, PiCaretDown } from "react-icons/pi";
 import type { FloorPlanElement } from "@/types";
 import type { Exhibitor, HoveredItem } from "@/viewer/types";
 import { useT } from "@/viewer/i18n";
+import { Row } from "@/components/Row";
 
 interface MapSheetProps {
   elements: FloorPlanElement[];
@@ -103,7 +104,7 @@ export function MapSheet({
         />
         <div className="relative flex items-center justify-between w-full px-4 py-3 pointer-events-none">
           {hasTabs ? (
-            <div className="flex gap-xs pointer-events-auto">
+            <Row gap="xs" className="pointer-events-auto">
               {visibleTabs.map(tab => (
                 <button
                   key={tab.id}
@@ -121,7 +122,7 @@ export function MapSheet({
                   {tab.label}
                 </button>
               ))}
-            </div>
+            </Row>
           ) : (
             <span className="text-xs font-medium text-text-body">
               {t("viewer.labelWithCount", {
@@ -164,7 +165,7 @@ export function MapSheet({
                     isSelected ? "bg-primary-100" : "hover:bg-surface-neutral"
                   }`}
                 >
-                  <div className="flex items-center gap-xxs">
+                  <Row gap="xxs" align="center">
                     {exhibitor.logo && (
                       <img
                         src={exhibitor.logo}
@@ -184,7 +185,7 @@ export function MapSheet({
                           : ""}
                       </div>
                     </div>
-                  </div>
+                  </Row>
                 </button>
               );
             })}

@@ -8,6 +8,8 @@ import {
   SectionLabel,
   Slider,
 } from "@/editor/components/ui";
+import { Row } from "@/components/Row";
+import { Stack } from "@/components/Stack";
 import { LabelSection } from "./LabelSection";
 
 const TYPE_DISPLAY_NAMES: Record<string, string> = {
@@ -57,7 +59,7 @@ export function TypeSection({ typeKey, defaults, onChange }: TypeSectionProps) {
         className="w-full flex items-center justify-between px-3 py-2 text-left hover:bg-surface-neutral transition-colors cursor-pointer"
         onClick={() => setOpen(o => !o)}
       >
-        <div className="flex items-center gap-xxs">
+        <Row gap="xxs" align="center">
           <span
             className="w-3 h-3 rounded-sm shrink-0 border border-border-neutral"
             style={{ background: defaults.color ?? "#94a3b8" }}
@@ -65,7 +67,7 @@ export function TypeSection({ typeKey, defaults, onChange }: TypeSectionProps) {
           <span className="text-xs font-medium text-text-body">
             {formatTypeDisplayName(typeKey)}
           </span>
-        </div>
+        </Row>
         {open ? (
           <PiCaretDown size={12} className="text-text-subtle" />
         ) : (
@@ -74,7 +76,10 @@ export function TypeSection({ typeKey, defaults, onChange }: TypeSectionProps) {
       </button>
 
       {open && (
-        <div className="flex flex-col gap-xs px-3 pb-3 border-t border-border-neutral-faint pt-3">
+        <Stack
+          gap="xs"
+          className="px-3 pb-3 border-t border-border-neutral-faint pt-3"
+        >
           <ColorSwatch
             label={t("editor.field.fill")}
             value={defaults.color ?? "#94a3b8"}
@@ -85,7 +90,7 @@ export function TypeSection({ typeKey, defaults, onChange }: TypeSectionProps) {
             value={defaults.strokeColor ?? "#888888"}
             onChange={c => onChange({ strokeColor: c })}
           />
-          <div className="flex flex-col gap-tight">
+          <Stack gap="tight">
             <SectionLabel>{t("editor.field.strokeWidth")}</SectionLabel>
             <div className="w-20">
               <NumberInput
@@ -93,24 +98,24 @@ export function TypeSection({ typeKey, defaults, onChange }: TypeSectionProps) {
                 onChange={v => onChange({ strokeWidth: Math.max(0, v) })}
               />
             </div>
-          </div>
-          <div className="flex gap-xs">
-            <div className="flex flex-col gap-tight flex-1">
+          </Stack>
+          <Row gap="xs">
+            <Stack gap="tight" className="flex-1">
               <SectionLabel>{t("editor.field.defaultWidth")}</SectionLabel>
               <NumberInput
                 value={defaults.defaultWidth ?? 120}
                 onChange={v => onChange({ defaultWidth: Math.max(1, v) })}
               />
-            </div>
-            <div className="flex flex-col gap-tight flex-1">
+            </Stack>
+            <Stack gap="tight" className="flex-1">
               <SectionLabel>{t("editor.field.defaultHeight")}</SectionLabel>
               <NumberInput
                 value={defaults.defaultHeight ?? 80}
                 onChange={v => onChange({ defaultHeight: Math.max(1, v) })}
               />
-            </div>
-          </div>
-          <div className="flex flex-col gap-tight">
+            </Stack>
+          </Row>
+          <Stack gap="tight">
             <div className="flex items-center justify-between">
               <SectionLabel>{t("editor.field.opacity")}</SectionLabel>
               <span className="text-[11px] text-text-subtle">
@@ -126,7 +131,7 @@ export function TypeSection({ typeKey, defaults, onChange }: TypeSectionProps) {
               }
               className="w-full"
             />
-          </div>
+          </Stack>
           <div className="border-t border-border-neutral-faint pt-3">
             <LabelSection
               properties={toElementProperties(defaults)}
@@ -135,7 +140,7 @@ export function TypeSection({ typeKey, defaults, onChange }: TypeSectionProps) {
               }
             />
           </div>
-        </div>
+        </Stack>
       )}
     </div>
   );

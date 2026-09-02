@@ -13,6 +13,8 @@ import {
   PiPlus,
 } from "react-icons/pi";
 import { useT } from "@/editor/i18n";
+import { Row } from "@/components/Row";
+import { Stack } from "@/components/Stack";
 
 interface LegendDialogProps {
   legend: Legend;
@@ -84,7 +86,7 @@ export function LegendDialog({ legend, onSave, onClose }: LegendDialogProps) {
         </Button>
       }
     >
-      <div className="flex flex-col gap-s p-4 overflow-y-auto flex-1">
+      <Stack gap="s" className="p-4 overflow-y-auto flex-1">
         {/* Global visibility toggle */}
         <Checkbox
           label={t("editor.legend.showOnMap")}
@@ -94,9 +96,9 @@ export function LegendDialog({ legend, onSave, onClose }: LegendDialogProps) {
 
         {/* Entry list */}
         {local.entries.length > 0 && (
-          <div className="flex flex-col gap-xxs">
+          <Stack gap="xxs">
             {local.entries.map((entry, idx) => (
-              <div key={entry.id} className="flex items-center gap-xxs">
+              <Row key={entry.id} gap="xxs" align="center">
                 <ColorSwatch
                   label=""
                   value={entry.color}
@@ -153,9 +155,9 @@ export function LegendDialog({ legend, onSave, onClose }: LegendDialogProps) {
                 >
                   <PiTrash size={14} />
                 </button>
-              </div>
+              </Row>
             ))}
-          </div>
+          </Stack>
         )}
 
         {local.entries.length === 0 && (
@@ -172,7 +174,7 @@ export function LegendDialog({ legend, onSave, onClose }: LegendDialogProps) {
           <PiPlus size={13} />
           {t("editor.legend.addEntry")}
         </button>
-      </div>
+      </Stack>
     </Dialog>
   );
 }

@@ -2,6 +2,8 @@ import { useState } from "react";
 import type { Legend } from "@/types";
 import { PiCaretUp, PiCaretDown } from "react-icons/pi";
 import { useT } from "@/viewer/i18n";
+import { Row } from "@/components/Row";
+import { Stack } from "@/components/Stack";
 
 interface ViewerLegendProps {
   legend: Legend;
@@ -19,9 +21,12 @@ export function ViewerLegend({ legend }: ViewerLegendProps) {
     <div className="absolute bottom-4 right-4 z-20 select-none">
       <div className="bg-white border border-border-neutral-light rounded shadow-sm overflow-hidden min-w-[120px]">
         {!collapsed && (
-          <div className="px-3 py-2 border-b border-border-neutral-faint flex flex-col gap-tight">
+          <Stack
+            gap="tight"
+            className="px-3 py-2 border-b border-border-neutral-faint"
+          >
             {visibleEntries.map(entry => (
-              <div key={entry.id} className="flex items-center gap-xxs">
+              <Row key={entry.id} gap="xxs" align="center">
                 <span
                   className="shrink-0 rounded-sm border border-border-neutral"
                   style={{ width: 12, height: 12, background: entry.color }}
@@ -33,9 +38,9 @@ export function ViewerLegend({ legend }: ViewerLegendProps) {
                     </em>
                   )}
                 </span>
-              </div>
+              </Row>
             ))}
-          </div>
+          </Stack>
         )}
         <button
           className="flex items-center justify-between gap-s px-3 py-1.5 w-full cursor-pointer hover:bg-surface-neutral transition-colors"

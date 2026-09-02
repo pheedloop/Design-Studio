@@ -12,6 +12,8 @@ import {
   FieldRow,
   TextInput,
 } from "@/editor/components/ui";
+import { Row } from "@/components/Row";
+import { Stack } from "@/components/Stack";
 import { inchToPx, type BadgeField, type TextAlign } from "./model";
 import { getFieldDef, isLiteralTextField, isUserFieldEditable } from "./fields";
 import { Checkbox } from "@/components/Checkbox";
@@ -83,19 +85,19 @@ export function PropertiesPanel({
         </IconButton>
       </div>
 
-      <div className="flex flex-col gap-s p-3 overflow-y-auto flex-1">
+      <Stack gap="s" className="p-3 overflow-y-auto flex-1">
         {isLiteralTextField(field.field) && (
-          <div className="flex flex-col gap-tight">
+          <Stack gap="tight">
             <SectionLabel>Text</SectionLabel>
             <TextInput
               value={field.text ?? ""}
               onChange={e => onChange({ text: e.target.value })}
             />
-          </div>
+          </Stack>
         )}
 
         {isText && (
-          <div className="flex flex-col gap-xxs">
+          <Stack gap="xxs">
             <FieldRow label="Size">
               <Select
                 className="w-full"
@@ -110,7 +112,7 @@ export function PropertiesPanel({
               </Select>
             </FieldRow>
             <FieldRow label="Align">
-              <div className="flex gap-xxxs">
+              <Row gap="xxxs">
                 {ALIGNMENTS.map(a => (
                   <IconButton
                     key={a.value}
@@ -122,9 +124,9 @@ export function PropertiesPanel({
                     {a.icon}
                   </IconButton>
                 ))}
-              </div>
+              </Row>
             </FieldRow>
-          </div>
+          </Stack>
         )}
 
         {field.kind === "tickets" && (
@@ -144,7 +146,7 @@ export function PropertiesPanel({
         )}
 
         {(isText || field.kind === "tickets") && (
-          <div className="flex flex-col gap-xxs">
+          <Stack gap="xxs">
             <Checkbox
               label="Invert (180°)"
               checked={Boolean(field.inverted)}
@@ -157,13 +159,13 @@ export function PropertiesPanel({
                 onChange={v => onChange({ userEditable: v })}
               />
             )}
-          </div>
+          </Stack>
         )}
 
         {isLiteralTextField(field.field) && (
-          <div className="flex flex-col gap-tight">
+          <Stack gap="tight">
             <SectionLabel>Insert token</SectionLabel>
-            <div className="flex flex-wrap gap-xxxs">
+            <Row gap="xxxs" className="flex-wrap">
               {TOKENS.map(t => (
                 <button
                   key={t}
@@ -176,8 +178,8 @@ export function PropertiesPanel({
                   {t.replace(/[{}]/g, "").trim()}
                 </button>
               ))}
-            </div>
-          </div>
+            </Row>
+          </Stack>
         )}
 
         {(field.kind === "qrCode" || field.kind === "image") && (
@@ -185,7 +187,7 @@ export function PropertiesPanel({
             Drag to move; drag a corner to resize.
           </p>
         )}
-      </div>
+      </Stack>
     </div>
   );
 }

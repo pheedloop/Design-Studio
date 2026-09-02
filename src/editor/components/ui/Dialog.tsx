@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { useT } from "@/editor/i18n";
+import { Row } from "@/components/Row";
 
 interface DialogProps {
   title: string;
@@ -32,7 +33,7 @@ export function Dialog({
       >
         <div className="flex items-center justify-between px-4 py-3 border-b border-border-neutral-light shrink-0">
           <h2 className="text-sm font-semibold text-text-heading">{title}</h2>
-          <div className="flex items-center gap-xxs">
+          <Row gap="xxs" align="center">
             {headerActions}
             <button
               onClick={onClose}
@@ -41,13 +42,18 @@ export function Dialog({
             >
               &times;
             </button>
-          </div>
+          </Row>
         </div>
         <div className="flex-1 min-h-0 overflow-y-auto">{children}</div>
         {footer && (
-          <div className="flex items-center justify-end gap-xxs px-4 py-3 border-t border-border-neutral-light shrink-0">
+          <Row
+            gap="xxs"
+            align="center"
+            justify="end"
+            className="px-4 py-3 border-t border-border-neutral-light shrink-0"
+          >
             {footer}
-          </div>
+          </Row>
         )}
       </div>
     </div>

@@ -6,6 +6,8 @@ import {
   ColorSwatch,
   Slider,
 } from "@/editor/components/ui";
+import { Row } from "@/components/Row";
+import { Stack } from "@/components/Stack";
 import { LabelPositionPicker } from "./LabelPositionPicker";
 import { PiEye, PiEyeSlash } from "react-icons/pi";
 import { useT } from "@/editor/i18n";
@@ -21,7 +23,7 @@ export function LabelSection({ properties, onChange }: LabelSectionProps) {
   const hasBg = !!properties.labelBackground;
 
   return (
-    <div className="flex flex-col gap-xs">
+    <Stack gap="xs">
       <div className="flex items-center justify-between">
         <SectionLabel>{t("editor.field.label")}</SectionLabel>
         <button
@@ -49,7 +51,7 @@ export function LabelSection({ properties, onChange }: LabelSectionProps) {
         onChange={c => onChange({ labelColor: c })}
       />
 
-      <div className="flex flex-col gap-tight">
+      <Stack gap="tight">
         <SectionLabel>{t("editor.field.fontSize")}</SectionLabel>
         <div className="w-20">
           <NumberInput
@@ -57,11 +59,11 @@ export function LabelSection({ properties, onChange }: LabelSectionProps) {
             onChange={v => onChange({ labelFontSize: Math.max(6, v) })}
           />
         </div>
-      </div>
+      </Stack>
 
-      <div className="flex flex-col gap-tight">
+      <Stack gap="tight">
         <SectionLabel>{t("editor.field.style")}</SectionLabel>
-        <div className="flex gap-xxxs">
+        <Row gap="xxxs">
           <Button
             variant="outline"
             color="neutral"
@@ -91,11 +93,11 @@ export function LabelSection({ properties, onChange }: LabelSectionProps) {
           >
             U
           </Button>
-        </div>
-      </div>
+        </Row>
+      </Stack>
 
-      <div className="flex flex-col gap-tight">
-        <div className="flex items-center gap-xxs">
+      <Stack gap="tight">
+        <Row gap="xxs" align="center">
           <SectionLabel>{t("editor.field.background")}</SectionLabel>
           <input
             type="checkbox"
@@ -111,9 +113,9 @@ export function LabelSection({ properties, onChange }: LabelSectionProps) {
             }}
             className="cursor-pointer"
           />
-        </div>
+        </Row>
         {hasBg && properties.labelBackground && (
-          <div className="flex flex-col gap-xxs pl-1">
+          <Stack gap="xxs" className="pl-1">
             <ColorSwatch
               label=""
               value={properties.labelBackground.color}
@@ -123,7 +125,7 @@ export function LabelSection({ properties, onChange }: LabelSectionProps) {
                 })
               }
             />
-            <div className="flex items-center gap-tight">
+            <Row gap="tight" align="center">
               <span className="text-[11px] text-text-caption">
                 {t("editor.field.opacity")}
               </span>
@@ -144,10 +146,10 @@ export function LabelSection({ properties, onChange }: LabelSectionProps) {
               <span className="text-[10px] text-text-subtle w-7 text-right">
                 {Math.round(properties.labelBackground.opacity * 100)}%
               </span>
-            </div>
-          </div>
+            </Row>
+          </Stack>
         )}
-      </div>
-    </div>
+      </Stack>
+    </Stack>
   );
 }

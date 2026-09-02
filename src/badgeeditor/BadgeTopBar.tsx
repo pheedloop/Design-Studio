@@ -2,6 +2,7 @@ import { useState, type ReactNode } from "react";
 import { PiIdentificationBadge, PiBug } from "react-icons/pi";
 import { DropdownMenu, MenuButton } from "@/editor/components/ui";
 import type { MenuEntry } from "@/editor/components/ui";
+import { Row } from "@/components/Row";
 
 interface BadgeTopBarProps {
   fileMenuItems?: MenuEntry[];
@@ -56,7 +57,9 @@ export function BadgeTopBar({
       {menu("view", "View", viewMenuItems)}
       <div className="flex-1" />
       {rightActions && (
-        <div className="flex items-center gap-xs px-3">{rightActions}</div>
+        <Row gap="xs" align="center" className="px-3">
+          {rightActions}
+        </Row>
       )}
       {debug && (
         <MenuButton

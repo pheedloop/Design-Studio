@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import type { FloorPlanElement } from "@/types";
 import { useT } from "@/viewer/i18n";
 import type { Exhibitor, HoveredItem } from "@/viewer/types";
+import { Row } from "@/components/Row";
 
 interface MapSidebarProps {
   elements: FloorPlanElement[];
@@ -137,7 +138,7 @@ export function MapSidebar({
                   isSelected ? "bg-primary-100" : "hover:bg-surface-neutral"
                 }`}
               >
-                <div className="flex items-center gap-xxs">
+                <Row gap="xxs" align="center">
                   {exhibitor.logo && (
                     <img
                       src={exhibitor.logo}
@@ -157,7 +158,7 @@ export function MapSidebar({
                         : ""}
                     </div>
                   </div>
-                </div>
+                </Row>
               </button>
             );
           })}

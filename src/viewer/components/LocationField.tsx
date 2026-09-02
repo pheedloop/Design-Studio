@@ -9,6 +9,7 @@ import {
   locationLabel,
 } from "@/viewer/utils/elementTypes";
 import type { T } from "@/viewer/i18n";
+import { Row } from "@/components/Row";
 
 export function LocationField({
   label,
@@ -36,7 +37,11 @@ export function LocationField({
 
   if (value) {
     return (
-      <div className="flex items-center gap-xxs px-3 py-2 bg-surface-neutral rounded-lg border border-border-neutral-light">
+      <Row
+        gap="xxs"
+        align="center"
+        className="px-3 py-2 bg-surface-neutral rounded-lg border border-border-neutral-light"
+      >
         <span className="text-[10px] font-semibold text-text-subtle uppercase w-8 shrink-0">
           {label}
         </span>
@@ -54,13 +59,17 @@ export function LocationField({
         >
           <PiX size={12} />
         </IconButton>
-      </div>
+      </Row>
     );
   }
 
   return (
     <div className="relative">
-      <div className="flex items-center gap-xxs px-3 py-2 bg-white rounded-lg border border-border-neutral-light focus-within:border-blue-400">
+      <Row
+        gap="xxs"
+        align="center"
+        className="px-3 py-2 bg-white rounded-lg border border-border-neutral-light focus-within:border-blue-400"
+      >
         <span className="text-[10px] font-semibold text-text-subtle uppercase w-8 shrink-0">
           {label}
         </span>
@@ -75,7 +84,7 @@ export function LocationField({
           placeholder={placeholder}
           className="flex-1 text-xs text-text-heading placeholder:text-text-subtle outline-none bg-transparent"
         />
-      </div>
+      </Row>
 
       {showDropdown && (
         <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-border-neutral-light rounded-lg shadow-lg z-50 max-h-44 overflow-y-auto">
@@ -96,7 +105,7 @@ export function LocationField({
                   }}
                   className="w-full text-left px-3 py-1.5 hover:bg-surface-neutral cursor-pointer transition-colors"
                 >
-                  <div className="flex items-center justify-between gap-xxs">
+                  <Row gap="xxs" align="center" justify="between">
                     <span className="text-xs font-medium text-text-heading truncate">
                       {result.exhibitorName || displayName(result, t)}
                     </span>
@@ -105,7 +114,7 @@ export function LocationField({
                     >
                       {t(badge.labelKey)}
                     </span>
-                  </div>
+                  </Row>
                 </button>
               );
             })

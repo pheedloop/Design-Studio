@@ -8,6 +8,7 @@ import {
 import { ICON_CATEGORY_LABEL, ICON_LABEL } from "@/editor/utils/iconLabels";
 import { useT } from "@/editor/i18n";
 import { useDismiss } from "@/hooks/useDismiss";
+import { Row } from "@/components/Row";
 
 interface IconPickerProps {
   selectedId: string | null;
@@ -72,7 +73,11 @@ export function IconPicker({
       className="bg-white border border-border-neutral-light rounded-lg shadow-lg z-[9999] w-[280px] max-h-[400px] flex flex-col"
       style={{ position: "fixed", left: anchorRect.right + 8, top }}
     >
-      <div className="flex items-center gap-xxs px-3 py-2 border-b border-border-neutral-light">
+      <Row
+        gap="xxs"
+        align="center"
+        className="px-3 py-2 border-b border-border-neutral-light"
+      >
         <PiMagnifyingGlass size={14} className="text-text-subtle shrink-0" />
         <input
           ref={inputRef}
@@ -82,7 +87,7 @@ export function IconPicker({
           placeholder={t("editor.icon.search")}
           className="flex-1 text-xs text-text-heading placeholder:text-text-subtle outline-none bg-transparent"
         />
-      </div>
+      </Row>
 
       <div className="flex-1 overflow-y-auto p-2">
         {filtered ? (
@@ -91,9 +96,9 @@ export function IconPicker({
               {t("editor.icon.noResults")}
             </p>
           ) : (
-            <div className="flex flex-wrap gap-hair">
+            <Row gap="hair" className="flex-wrap">
               {filtered.map(renderIcon)}
-            </div>
+            </Row>
           )
         ) : (
           ICON_CATEGORIES.map(category => (
@@ -101,11 +106,11 @@ export function IconPicker({
               <div className="text-[10px] font-medium text-text-subtle uppercase tracking-wide px-1 mb-1">
                 {t(ICON_CATEGORY_LABEL[category])}
               </div>
-              <div className="flex flex-wrap gap-hair">
+              <Row gap="hair" className="flex-wrap">
                 {iconRegistry
                   .filter(e => e.category === category)
                   .map(renderIcon)}
-              </div>
+              </Row>
             </div>
           ))
         )}

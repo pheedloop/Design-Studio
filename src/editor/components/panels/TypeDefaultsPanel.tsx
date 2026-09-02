@@ -1,5 +1,6 @@
 import type { TypeStyles, ElementTypeDefaults } from "@/types";
 import { DEFAULT_TYPE_STYLES } from "@/types";
+import { Stack } from "@/components/Stack";
 import { TypeSection } from "./TypeSection";
 
 interface TypeDefaultsPanelProps {
@@ -21,7 +22,7 @@ export function TypeDefaultsPanel({
   const keys = typeKeys ?? Object.keys(merged);
 
   return (
-    <div className="flex flex-col gap-xxs">
+    <Stack gap="xxs">
       {keys.map(key => (
         <TypeSection
           key={key}
@@ -30,6 +31,6 @@ export function TypeDefaultsPanel({
           onChange={updates => onUpdateTypeStyles(key, updates)}
         />
       ))}
-    </div>
+    </Stack>
   );
 }

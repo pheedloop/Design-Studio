@@ -2,6 +2,8 @@ import { useState } from "react";
 import { Checkbox } from "@/components/Checkbox";
 import { Button } from "@/components/Button";
 import { Dialog, NumberInput, SectionLabel } from "@/editor/components/ui";
+import { Row } from "@/components/Row";
+import { Stack } from "@/components/Stack";
 import { fmtUnit, unitLabel, unitName, type Unit } from "./units";
 import {
   PAGE_COUNT,
@@ -128,10 +130,10 @@ export function BadgeSetupDialog({
         </>
       }
     >
-      <div className="flex flex-col gap-s p-4">
-        <div className="flex flex-col gap-tight">
+      <Stack gap="s" className="p-4">
+        <Stack gap="tight">
           <SectionLabel>Fold</SectionLabel>
-          <div className="flex gap-xxs">
+          <Row gap="xxs">
             {FOLD_OPTIONS.map(o => (
               <Button
                 key={o.value}
@@ -144,15 +146,15 @@ export function BadgeSetupDialog({
                 {o.label}
               </Button>
             ))}
-          </div>
+          </Row>
           <span className="text-[11px] text-text-subtle">
             {count} panel{count > 1 ? "s" : ""}, stacked top-to-bottom
           </span>
-        </div>
+        </Stack>
 
-        <div className="flex flex-col gap-tight">
+        <Stack gap="tight">
           <SectionLabel>Units</SectionLabel>
-          <div className="flex gap-xxs">
+          <Row gap="xxs">
             {(["in", "cm"] as Unit[]).map(u => (
               <Button
                 key={u}
@@ -165,10 +167,10 @@ export function BadgeSetupDialog({
                 {unitName[u]}
               </Button>
             ))}
-          </div>
-        </div>
+          </Row>
+        </Stack>
 
-        <div className="flex gap-xs">
+        <Row gap="xs">
           <DimField label="Panel width" value={w} unit={unit} onChange={setW} />
           <DimField
             label="Panel height"
@@ -176,7 +178,7 @@ export function BadgeSetupDialog({
             unit={unit}
             onChange={setH}
           />
-        </div>
+        </Row>
 
         <div className="text-xs text-text-caption">
           Prints as{" "}
@@ -186,9 +188,9 @@ export function BadgeSetupDialog({
           {count > 1 && " (unfolded)"}
         </div>
 
-        <div className="flex flex-col gap-tight">
+        <Stack gap="tight">
           <SectionLabel>Lanyard slots</SectionLabel>
-          <div className="flex gap-xxs">
+          <Row gap="xxs">
             {SLOT_OPTIONS.map(o => (
               <Button
                 key={o.value}
@@ -201,17 +203,18 @@ export function BadgeSetupDialog({
                 {o.label}
               </Button>
             ))}
-          </div>
-        </div>
+          </Row>
+        </Stack>
 
         {count > 1 && (
-          <div className="flex flex-col gap-tight">
+          <Stack gap="tight">
             <SectionLabel>Panels</SectionLabel>
-            <div className="flex flex-col gap-tight">
+            <Stack gap="tight">
               {panels.map((cfg, i) => (
-                <div
+                <Stack
                   key={i}
-                  className="flex flex-col gap-tight px-2.5 py-2 rounded border border-border-neutral-light"
+                  gap="tight"
+                  className="px-2.5 py-2 rounded border border-border-neutral-light"
                 >
                   <span className="text-xs font-medium text-text-body">
                     {pageRoleLabel(pageRoleForIndex(count, i))}
@@ -227,7 +230,11 @@ export function BadgeSetupDialog({
                     onChange={v => setPanel(i, { tearaway: v })}
                   />
                   {cfg.tearaway && (
-                    <div className="flex items-center gap-xxs text-xs text-text-caption pl-5">
+                    <Row
+                      gap="xxs"
+                      align="center"
+                      className="text-xs text-text-caption pl-5"
+                    >
                       <span>Stubs</span>
                       <div className="w-20">
                         <NumberInput
@@ -237,14 +244,14 @@ export function BadgeSetupDialog({
                           }
                         />
                       </div>
-                    </div>
+                    </Row>
                   )}
-                </div>
+                </Stack>
               ))}
-            </div>
-          </div>
+            </Stack>
+          </Stack>
         )}
-      </div>
+      </Stack>
     </Dialog>
   );
 }

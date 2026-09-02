@@ -14,6 +14,8 @@ import {
   formatWalkingTime,
 } from "@/utils/unitConversion";
 import { useLocale, useT } from "@/viewer/i18n";
+import { Row } from "@/components/Row";
+import { Stack } from "@/components/Stack";
 import { LocationField } from "./LocationField";
 
 interface DirectionsPanelProps {
@@ -45,7 +47,7 @@ export function DirectionsPanel({
   const locale = useLocale();
 
   return (
-    <div className="flex flex-col gap-xxs p-3">
+    <Stack gap="xxs" className="p-3">
       <div className="flex items-center justify-between">
         <span className="text-xs font-semibold text-text-body">
           {t("viewer.directions.title")}
@@ -55,8 +57,8 @@ export function DirectionsPanel({
         </IconButton>
       </div>
 
-      <div className="flex gap-xxs">
-        <div className="flex flex-col gap-xxs flex-1 min-w-0">
+      <Row gap="xxs">
+        <Stack gap="xxs" className="flex-1 min-w-0">
           <LocationField
             label={t("viewer.directions.from")}
             placeholder={t("viewer.directions.fromPlaceholder")}
@@ -75,7 +77,7 @@ export function DirectionsPanel({
             onSelect={onSelectEnd}
             onClear={() => onSelectEnd(null)}
           />
-        </div>
+        </Stack>
 
         <IconButton
           size="sm"
@@ -85,7 +87,7 @@ export function DirectionsPanel({
         >
           <PiArrowsDownUp size={16} />
         </IconButton>
-      </div>
+      </Row>
 
       {routeStatus === "no-route" && (
         <div className="text-xs text-red-500 bg-red-50 rounded-lg px-3 py-2">
@@ -98,7 +100,11 @@ export function DirectionsPanel({
         </div>
       )}
       {routeStatus === "ready" && routePath && routePath.length > 1 && (
-        <div className="flex items-center gap-xxs text-xs text-text-body bg-surface-neutral rounded-lg px-3 py-2">
+        <Row
+          gap="xxs"
+          align="center"
+          className="text-xs text-text-body bg-surface-neutral rounded-lg px-3 py-2"
+        >
           <PiFootprints size={14} className="text-text-subtle shrink-0" />
           <span>{formatRouteDistance(routePath, dimensions, t, locale)}</span>
           {(() => {
@@ -111,8 +117,8 @@ export function DirectionsPanel({
               </span>
             ) : null;
           })()}
-        </div>
+        </Row>
       )}
-    </div>
+    </Stack>
   );
 }

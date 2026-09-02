@@ -2,6 +2,7 @@ import { PiMagicWand, PiPath } from "react-icons/pi";
 import { Button } from "@/components/Button";
 import { Select, Slider } from "@/editor/components/ui";
 import { useT } from "@/editor/i18n";
+import { Row } from "@/components/Row";
 
 interface PathingOptionsBarProps {
   cellSize: number;
@@ -26,8 +27,12 @@ export function PathingOptionsBar({
 }: PathingOptionsBarProps) {
   const t = useT();
   return (
-    <div className="flex items-center gap-s px-3 py-2 bg-white border-b border-border-neutral-light">
-      <div className="flex items-center gap-tight">
+    <Row
+      gap="s"
+      align="center"
+      className="px-3 py-2 bg-white border-b border-border-neutral-light"
+    >
+      <Row gap="tight" align="center">
         <span className="text-[11px] text-text-caption">
           {t("editor.field.cellSize")}
         </span>
@@ -41,9 +46,9 @@ export function PathingOptionsBar({
             </option>
           ))}
         </Select>
-      </div>
+      </Row>
 
-      <div className="flex items-center gap-tight">
+      <Row gap="tight" align="center">
         <span className="text-[11px] text-text-caption">
           {t("editor.field.opacity")}
         </span>
@@ -58,7 +63,7 @@ export function PathingOptionsBar({
         <span className="text-[10px] text-text-subtle w-7">
           {Math.round(opacity * 100)}%
         </span>
-      </div>
+      </Row>
 
       <div className="h-4 w-px bg-surface-muted" />
 
@@ -92,6 +97,6 @@ export function PathingOptionsBar({
       >
         {t("editor.pathing.clear")}
       </Button>
-    </div>
+    </Row>
   );
 }

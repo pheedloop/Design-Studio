@@ -8,6 +8,8 @@ import {
   ColorSwatch,
 } from "@/editor/components/ui";
 import { useT } from "@/editor/i18n";
+import { Row } from "@/components/Row";
+import { Stack } from "@/components/Stack";
 
 export interface GridSettings {
   showGrid: boolean;
@@ -53,8 +55,8 @@ export function GridSettingsDialog({
         </>
       }
     >
-      <div className="flex flex-col gap-s p-4">
-        <div className="flex flex-col gap-tight">
+      <Stack gap="s" className="p-4">
+        <Stack gap="tight">
           <SectionLabel>{t("editor.field.spacingPx")}</SectionLabel>
           <NumberInput
             value={local.gridSpacing}
@@ -62,20 +64,20 @@ export function GridSettingsDialog({
               setLocal(s => ({ ...s, gridSpacing: Math.max(5, v) }))
             }
           />
-        </div>
+        </Stack>
 
-        <div className="flex flex-col gap-tight">
+        <Stack gap="tight">
           <SectionLabel>{t("editor.field.color")}</SectionLabel>
           <ColorSwatch
             label=""
             value={local.gridColor}
             onChange={c => setLocal(s => ({ ...s, gridColor: c }))}
           />
-        </div>
+        </Stack>
 
-        <div className="flex flex-col gap-tight">
+        <Stack gap="tight">
           <SectionLabel>{t("editor.field.opacity")}</SectionLabel>
-          <div className="flex items-center gap-xxs">
+          <Row gap="xxs" align="center">
             <Slider
               min={5}
               max={100}
@@ -91,9 +93,9 @@ export function GridSettingsDialog({
             <span className="text-xs text-text-subtle w-8 text-right">
               {Math.round(local.gridOpacity * 100)}%
             </span>
-          </div>
-        </div>
-      </div>
+          </Row>
+        </Stack>
+      </Stack>
     </Dialog>
   );
 }

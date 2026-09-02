@@ -1,6 +1,7 @@
 import { IconButton } from "@/components/IconButton";
 import { useT } from "@/editor/i18n";
 import type { Unit } from "@/types";
+import { Row } from "@/components/Row";
 
 interface StatusBarProps {
   scale: number;
@@ -24,7 +25,7 @@ export function StatusBar({
 
   return (
     <div className="relative z-20 flex items-center justify-between px-3 py-1.5 bg-white border-t border-border-neutral-light text-xs text-text-caption">
-      <div className="flex items-center gap-xxs">
+      <Row gap="xxs" align="center">
         {isCalibrated && showUnit && (
           <select
             value={unit}
@@ -36,7 +37,7 @@ export function StatusBar({
             <option value="m">{t("editor.unit.meters")}</option>
           </select>
         )}
-      </div>
+      </Row>
       <IconButton
         size="sm"
         onClick={onZoomReset}

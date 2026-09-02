@@ -7,6 +7,7 @@ import { IconButton } from "@/components/IconButton";
 import { TrophyIcon } from "@/editor/components/ui";
 import { useT } from "@/editor/i18n";
 import { useDismiss } from "@/hooks/useDismiss";
+import { Row } from "@/components/Row";
 
 interface LayerPanelProps {
   layers: LayerDefinition[];
@@ -47,15 +48,19 @@ export function LayerPanel({
       className="absolute right-2 z-[9001]"
       style={{ top: topOffset }}
     >
-      <div className="flex items-center gap-tight">
+      <Row gap="tight" align="center">
         {activeLayer && (
-          <div className="flex items-center gap-tight px-2 py-1 bg-white border border-border-neutral-light rounded-lg shadow-md text-xs text-text-body">
+          <Row
+            gap="tight"
+            align="center"
+            className="px-2 py-1 bg-white border border-border-neutral-light rounded-lg shadow-md text-xs text-text-body"
+          >
             <span
               className="w-2 h-2 rounded-full"
               style={{ backgroundColor: LAYER_COLORS[activeLayer.id] }}
             />
             {activeLayer.name}
-          </div>
+          </Row>
         )}
         <IconButton
           active={open}
@@ -65,7 +70,7 @@ export function LayerPanel({
         >
           <PiStack size={18} />
         </IconButton>
-      </div>
+      </Row>
 
       {open && (
         <div className="absolute top-full right-0 mt-1 bg-white border border-border-neutral-light rounded-md shadow-lg py-1 min-w-[180px]">

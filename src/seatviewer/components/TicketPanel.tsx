@@ -17,6 +17,8 @@ import {
   SEAT_FLAG_LABEL_KEYS,
 } from "@/seatviewer/logic";
 import { useT } from "@/seatviewer/i18n";
+import { Row } from "@/components/Row";
+import { Stack } from "@/components/Stack";
 
 interface TicketPanelProps {
   mode: SeatPlanMode;
@@ -170,9 +172,11 @@ export function TicketPanel({
 
     if (ticket.tableCode) {
       return (
-        <div
+        <Row
           key={ticket.code}
-          className="w-full flex items-center gap-xs px-4 py-2.5 border-b border-border-neutral-light"
+          gap="xs"
+          align="center"
+          className="w-full px-4 py-2.5 border-b border-border-neutral-light"
         >
           <span className="size-[18px] shrink-0 grid place-items-center rounded-full bg-[#00a863] text-white">
             <PiCheck size={11} strokeWidth={3} />
@@ -190,7 +194,7 @@ export function TicketPanel({
               </button>
             )}
           </span>
-        </div>
+        </Row>
       );
     }
 
@@ -282,8 +286,8 @@ export function TicketPanel({
 
   return (
     <aside className="w-80 shrink-0 bg-surface-contrast border-r border-border-neutral-light flex flex-col min-h-0">
-      <div className="p-4 border-b border-border-neutral-light flex flex-col gap-xs">
-        <div className="flex items-baseline gap-xxs">
+      <Stack gap="xs" className="p-4 border-b border-border-neutral-light">
+        <Row gap="xxs" align="baseline">
           <h2 className="text-base font-medium text-text-body m-0">
             {t("seatviewer.tickets.holders")}
           </h2>
@@ -293,7 +297,7 @@ export function TicketPanel({
               selected: selectedCodes.size,
             })}
           </span>
-        </div>
+        </Row>
         <div className="relative">
           <PiMagnifyingGlass
             className="absolute left-2.5 top-1/2 -translate-y-1/2 text-text-subtle"
@@ -309,10 +313,11 @@ export function TicketPanel({
           />
         </div>
         {filterOptions && filterOptions.length > 0 && (
-          <div
-            className="flex flex-wrap gap-tight"
+          <Row
             role="group"
             aria-label={t("seatviewer.tickets.filterLabel")}
+            gap="tight"
+            className="flex-wrap"
           >
             {filterOptions.map(opt => {
               const active = activeFilterIds?.includes(opt.id) ?? false;
@@ -332,9 +337,9 @@ export function TicketPanel({
                 </button>
               );
             })}
-          </div>
+          </Row>
         )}
-      </div>
+      </Stack>
 
       <div
         ref={listRef}

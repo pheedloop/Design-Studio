@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { PiCaretDown, PiMagnifyingGlass, PiFunnel, PiX } from "react-icons/pi";
 import { IconButton } from "@/components/IconButton";
 import { useT, type StringKey } from "@/editor/i18n";
+import { Row } from "@/components/Row";
 
 /** The ellipse option is offered as "Circle" — the placement grid only ever squares it. */
 const PLACEMENT_SHAPE_LABEL: Record<"rect" | "ellipse", StringKey> = {
@@ -49,7 +50,7 @@ export function PlacementFilterBar({
   return (
     <div className="border-b border-border-neutral-faint bg-white">
       {/* Toolbar row */}
-      <div className="flex items-center gap-tight px-3 py-1.5">
+      <Row gap="tight" align="center" className="px-3 py-1.5">
         {/* Shape picker */}
         <div className="relative">
           <button
@@ -154,7 +155,7 @@ export function PlacementFilterBar({
             </div>
           )}
         </div>
-      </div>
+      </Row>
 
       {/* Expandable search input */}
       {searchOpen && (
