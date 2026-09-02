@@ -10,6 +10,7 @@ import {
 } from "@/editor/components/ui";
 import { Row } from "@/components/Row";
 import { Stack } from "@/components/Stack";
+import { Text } from "@/components/Text";
 import { LabelSection } from "./LabelSection";
 
 const TYPE_DISPLAY_NAMES: Record<string, string> = {
@@ -64,9 +65,9 @@ export function TypeSection({ typeKey, defaults, onChange }: TypeSectionProps) {
             className="w-3 h-3 rounded-sm shrink-0 border border-border-neutral"
             style={{ background: defaults.color ?? "#94a3b8" }}
           />
-          <span className="text-xs font-medium text-text-body">
+          <Text size="xs" weight="medium" color="body" as="span">
             {formatTypeDisplayName(typeKey)}
-          </span>
+          </Text>
         </Row>
         {open ? (
           <PiCaretDown size={12} className="text-text-subtle" />

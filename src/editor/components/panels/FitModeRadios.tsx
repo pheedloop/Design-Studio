@@ -1,6 +1,7 @@
 import type { FitMode } from "@/editor/utils/dxf/bakeDrawing";
 import type { T } from "@/editor/i18n";
 import { Stack } from "@/components/Stack";
+import { Text } from "@/components/Text";
 
 export function FitModeRadios({
   mode,
@@ -22,9 +23,9 @@ export function FitModeRadios({
           className="accent-primary-600"
         />
         <div>
-          <span className="text-xs font-medium text-text-body">
+          <Text size="xs" weight="medium" color="body" as="span">
             {t("editor.background.fitToCanvas")}
-          </span>
+          </Text>
           <p className="text-[11px] text-text-subtle">
             {t("editor.background.fitToCanvasHint")}
           </p>
@@ -39,9 +40,9 @@ export function FitModeRadios({
           className="accent-primary-600"
         />
         <div>
-          <span className="text-xs font-medium text-text-body">
+          <Text size="xs" weight="medium" color="body" as="span">
             {t("editor.background.resizeToFile")}
-          </span>
+          </Text>
           <p className="text-[11px] text-text-subtle">
             {t("editor.background.resizeToFileHint")}
           </p>

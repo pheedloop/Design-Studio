@@ -13,6 +13,7 @@ import { Button } from "@/components/Button";
 import { IconButton } from "@/components/IconButton";
 import { TabBar, type MenuEntry } from "@/editor/components/ui";
 import { Row } from "@/components/Row";
+import { Text } from "@/components/Text";
 import { BadgeTopBar } from "./BadgeTopBar";
 import { modKey } from "@/editor/utils/platform";
 import { I18nProvider } from "@/i18n/I18nProvider";
@@ -678,9 +679,9 @@ function BadgeEditorInner({
             ) : previewMode ? null : selectedIds.size > 1 ? (
               <aside className="w-52 shrink-0 border-l border-border-neutral-light bg-white flex flex-col">
                 <div className="px-3 py-2 border-b border-border-neutral-light flex items-center justify-between">
-                  <span className="text-xs font-medium text-text-body">
+                  <Text size="xs" weight="medium" color="body" as="span">
                     {selectedIds.size} fields selected
-                  </span>
+                  </Text>
                   <Button
                     variant="ghost"
                     color="negative"

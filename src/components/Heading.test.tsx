@@ -42,6 +42,19 @@ describe("Heading", () => {
     );
   });
 
+  // The repo's densest heading is 10px, below ditto's scale, so xs exists here
+  // and does not there.
+  it("supports the xs size ditto's scale stops short of", () => {
+    render(
+      <Heading level={3} size="xs">
+        x
+      </Heading>,
+    );
+    expect(screen.getByRole("heading", { level: 3 }).className).toBe(
+      "text-xs font-medium text-text-heading",
+    );
+  });
+
   it("appends className last", () => {
     render(
       <Heading level={2} className="truncate">

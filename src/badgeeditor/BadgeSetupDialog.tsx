@@ -4,6 +4,7 @@ import { Button } from "@/components/Button";
 import { Dialog, NumberInput, SectionLabel } from "@/editor/components/ui";
 import { Row } from "@/components/Row";
 import { Stack } from "@/components/Stack";
+import { Text } from "@/components/Text";
 import { fmtUnit, unitLabel, unitName, type Unit } from "./units";
 import {
   PAGE_COUNT,
@@ -216,9 +217,9 @@ export function BadgeSetupDialog({
                   gap="tight"
                   className="px-2.5 py-2 rounded border border-border-neutral-light"
                 >
-                  <span className="text-xs font-medium text-text-body">
+                  <Text size="xs" weight="medium" color="body" as="span">
                     {pageRoleLabel(pageRoleForIndex(count, i))}
-                  </span>
+                  </Text>
                   <Checkbox
                     label="Prints upside-down"
                     checked={cfg.inverted}

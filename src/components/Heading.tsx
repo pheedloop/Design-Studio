@@ -2,7 +2,7 @@ import type { HTMLAttributes, ReactNode } from "react";
 import { cn } from "@/utils/cn";
 
 export type HeadingLevel = 1 | 2 | 3 | 4 | 5 | 6;
-export type HeadingSize = "sm" | "base" | "lg" | "xl" | "2xl" | "3xl";
+export type HeadingSize = "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl";
 export type HeadingWeight = "medium" | "semibold";
 export type HeadingColor = "heading" | "body" | "subtle" | "primary" | "invert";
 
@@ -28,6 +28,7 @@ const levelWeight: Record<HeadingLevel, HeadingWeight> = {
 };
 
 const sizeClasses: Record<HeadingSize, string> = {
+  xs: "text-xs",
   sm: "text-sm",
   base: "text-base",
   lg: "text-lg",

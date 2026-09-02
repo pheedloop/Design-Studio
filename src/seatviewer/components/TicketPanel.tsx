@@ -19,6 +19,8 @@ import {
 import { useT } from "@/seatviewer/i18n";
 import { Row } from "@/components/Row";
 import { Stack } from "@/components/Stack";
+import { Text } from "@/components/Text";
+import { Heading } from "@/components/Heading";
 
 interface TicketPanelProps {
   mode: SeatPlanMode;
@@ -161,9 +163,9 @@ export function TicketPanel({
 
     const label = (
       <span className="flex-1 min-w-0 flex flex-col sm:flex-row sm:items-baseline sm:gap-xxs">
-        <span className="truncate text-sm font-medium text-text-body">
+        <Text size="sm" weight="medium" color="body" as="span" truncate>
           {attendeeName(ticket)}
-        </span>
+        </Text>
         <span className="truncate text-sm text-text-caption">
           {ticket.ticketName}
         </span>
@@ -247,9 +249,15 @@ export function TicketPanel({
           onClick={() => setExpanded(prev => !prev)}
           className="w-full flex items-center gap-xxs px-4 py-3 text-left cursor-pointer hover:bg-surface-neutral"
         >
-          <h2 className="text-base font-medium text-text-body m-0">
+          <Heading
+            level={2}
+            size="base"
+            weight="medium"
+            color="body"
+            className="m-0"
+          >
             {t("seatviewer.tickets.yours")}
-          </h2>
+          </Heading>
           <span className="text-sm text-text-subtle tabular-nums">
             {tickets.length}
           </span>
@@ -288,9 +296,15 @@ export function TicketPanel({
     <aside className="w-80 shrink-0 bg-surface-contrast border-r border-border-neutral-light flex flex-col min-h-0">
       <Stack gap="xs" className="p-4 border-b border-border-neutral-light">
         <Row gap="xxs" align="baseline">
-          <h2 className="text-base font-medium text-text-body m-0">
+          <Heading
+            level={2}
+            size="base"
+            weight="medium"
+            color="body"
+            className="m-0"
+          >
             {t("seatviewer.tickets.holders")}
-          </h2>
+          </Heading>
           <span className="text-sm text-text-subtle tabular-nums">
             {t("seatviewer.tickets.counts", {
               total: totalTickets ?? tickets.length,

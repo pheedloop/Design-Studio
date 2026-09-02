@@ -27,6 +27,7 @@ import {
 import { JsonDebugView } from "@/editor/components/debug";
 import { Row } from "@/components/Row";
 import { Stack } from "@/components/Stack";
+import { Text } from "@/components/Text";
 import { LabelSection } from "./LabelSection";
 
 const TEXT_ALIGN_LABEL: Record<"left" | "center" | "right", StringKey> = {
@@ -240,9 +241,9 @@ export function PropertiesPanel({
     return (
       <div className="w-60 shrink-0 border-l border-border-neutral-light bg-white flex flex-col">
         <div className="px-3 py-2 border-b border-border-neutral-light">
-          <span className="text-xs font-medium text-text-body">
+          <Text size="xs" weight="medium" color="body" as="span">
             {t("editor.selection.count", { count: selectedCount })}
-          </span>
+          </Text>
         </div>
         <Stack gap="s" className="p-3 overflow-y-auto flex-1">
           <Stack gap="tight">
@@ -321,9 +322,9 @@ export function PropertiesPanel({
       return (
         <div className="w-60 shrink-0 border-l border-border-neutral-light bg-white flex flex-col">
           <div className="px-3 py-2 border-b border-border-neutral-light">
-            <span className="text-xs font-medium text-text-body">
+            <Text size="xs" weight="medium" color="body" as="span">
               {t("editor.field.background")}
-            </span>
+            </Text>
           </div>
           <Stack gap="s" className="p-3 overflow-y-auto flex-1">
             <Stack gap="tight">
@@ -488,9 +489,9 @@ export function PropertiesPanel({
         )}
       </div>
       <div className="flex items-center justify-between px-3 py-2 border-b border-border-neutral-light">
-        <span className="text-xs font-medium text-text-body">
+        <Text size="xs" weight="medium" color="body" as="span">
           {elementTypeLabel(element, t)}
-        </span>
+        </Text>
       </div>
 
       {tab === "debug" && debug ? (

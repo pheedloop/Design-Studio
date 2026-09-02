@@ -4,6 +4,7 @@ import { PiCaretUp, PiCaretDown } from "react-icons/pi";
 import { useT } from "@/viewer/i18n";
 import { Row } from "@/components/Row";
 import { Stack } from "@/components/Stack";
+import { Text } from "@/components/Text";
 
 interface ViewerLegendProps {
   legend: Legend;
@@ -46,9 +47,9 @@ export function ViewerLegend({ legend }: ViewerLegendProps) {
           className="flex items-center justify-between gap-s px-3 py-1.5 w-full cursor-pointer hover:bg-surface-neutral transition-colors"
           onClick={() => setCollapsed(c => !c)}
         >
-          <span className="text-xs font-medium text-text-body">
+          <Text size="xs" weight="medium" color="body" as="span">
             {t("common.legend")}
-          </span>
+          </Text>
           {collapsed ? (
             <PiCaretUp size={11} className="text-text-subtle" />
           ) : (

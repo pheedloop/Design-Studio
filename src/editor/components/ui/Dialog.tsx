@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { useT } from "@/editor/i18n";
 import { Row } from "@/components/Row";
+import { Heading } from "@/components/Heading";
 
 interface DialogProps {
   title: string;
@@ -32,7 +33,9 @@ export function Dialog({
         style={{ width, maxHeight }}
       >
         <div className="flex items-center justify-between px-4 py-3 border-b border-border-neutral-light shrink-0">
-          <h2 className="text-sm font-semibold text-text-heading">{title}</h2>
+          <Heading level={2} size="sm" weight="semibold">
+            {title}
+          </Heading>
           <Row gap="xxs" align="center">
             {headerActions}
             <button

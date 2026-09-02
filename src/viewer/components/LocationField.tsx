@@ -10,6 +10,7 @@ import {
 } from "@/viewer/utils/elementTypes";
 import type { T } from "@/viewer/i18n";
 import { Row } from "@/components/Row";
+import { Text } from "@/components/Text";
 
 export function LocationField({
   label,
@@ -106,9 +107,15 @@ export function LocationField({
                   className="w-full text-left px-3 py-1.5 hover:bg-surface-neutral cursor-pointer transition-colors"
                 >
                   <Row gap="xxs" align="center" justify="between">
-                    <span className="text-xs font-medium text-text-heading truncate">
+                    <Text
+                      size="xs"
+                      weight="medium"
+                      color="heading"
+                      as="span"
+                      truncate
+                    >
                       {result.exhibitorName || displayName(result, t)}
-                    </span>
+                    </Text>
                     <span
                       className={`text-[10px] font-medium px-1.5 py-0.5 rounded shrink-0 ${badge.className}`}
                     >

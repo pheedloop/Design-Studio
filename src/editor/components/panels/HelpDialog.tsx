@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Dialog, TabBar } from "@/editor/components/ui";
 import { useT, type StringKey, type T } from "@/editor/i18n";
+import { Heading } from "@/components/Heading";
 
 const isMac = navigator.platform.toUpperCase().includes("MAC");
 const mod = isMac ? "⌘" : "Ctrl";
@@ -279,11 +280,14 @@ export function HelpDialog({ onClose }: HelpDialogProps) {
         {tab === "start" &&
           GETTING_STARTED.map((section, index) => (
             <div key={section.headingKey}>
-              <h3
-                className={`text-xs font-semibold text-text-heading mb-2 ${index > 0 ? "mt-4" : ""}`}
+              <Heading
+                level={3}
+                size="xs"
+                weight="semibold"
+                className={`mb-2 ${index > 0 ? "mt-4" : ""}`}
               >
                 {t(section.headingKey)}
-              </h3>
+              </Heading>
               <ul className="text-xs text-text-body space-y-1.5">
                 {section.bulletKeys.map(bulletKey => (
                   <li key={bulletKey}>{t(bulletKey, { mod })}</li>

@@ -6,6 +6,7 @@ import { occupancyLevel, type OccupancyLevel } from "@/seatviewer/logic";
 import { useT } from "@/seatviewer/i18n";
 import { occupantHeading } from "@/seatviewer/labels";
 import { Row } from "@/components/Row";
+import { Heading } from "@/components/Heading";
 
 interface TableDetailPopoverProps {
   table: SeatTableState;
@@ -72,9 +73,15 @@ export function TableDetailPopover({
         className="p-3 border-b border-border-neutral-light"
       >
         <div className="flex-1 min-w-0">
-          <h3 className="m-0 text-base font-medium text-text-body">
+          <Heading
+            level={3}
+            size="base"
+            weight="medium"
+            color="body"
+            className="m-0"
+          >
             {tableName}
-          </h3>
+          </Heading>
           <span className="text-xs text-text-subtle tabular-nums">
             {t("seatviewer.table.seatsFree", {
               count: seatsFree,

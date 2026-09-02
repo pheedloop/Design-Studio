@@ -5,6 +5,7 @@ import type { SearchResult } from "@/viewer/hooks/useSearch";
 import { TYPE_BADGE, displayName } from "@/viewer/utils/elementTypes";
 import { useT } from "@/viewer/i18n";
 import { Row } from "@/components/Row";
+import { Text } from "@/components/Text";
 
 interface SearchBarProps {
   query: string;
@@ -81,9 +82,15 @@ export function SearchBar({
                   className="w-full text-left px-3 py-2 hover:bg-surface-neutral cursor-pointer transition-colors"
                 >
                   <Row gap="xxs" align="center" justify="between">
-                    <span className="text-xs font-medium text-text-heading truncate">
+                    <Text
+                      size="xs"
+                      weight="medium"
+                      color="heading"
+                      as="span"
+                      truncate
+                    >
                       {result.exhibitorName || displayName(result, t)}
-                    </span>
+                    </Text>
                     <span
                       className={`text-[10px] font-medium px-1.5 py-0.5 rounded shrink-0 ${badge.className}`}
                     >

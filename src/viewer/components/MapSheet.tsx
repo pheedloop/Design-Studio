@@ -4,6 +4,7 @@ import type { FloorPlanElement } from "@/types";
 import type { Exhibitor, HoveredItem } from "@/viewer/types";
 import { useT } from "@/viewer/i18n";
 import { Row } from "@/components/Row";
+import { Text } from "@/components/Text";
 
 interface MapSheetProps {
   elements: FloorPlanElement[];
@@ -124,12 +125,12 @@ export function MapSheet({
               ))}
             </Row>
           ) : (
-            <span className="text-xs font-medium text-text-body">
+            <Text size="xs" weight="medium" color="body" as="span">
               {t("viewer.labelWithCount", {
                 label: visibleTabs[0]?.label ?? "",
                 count: visibleTabs[0]?.count ?? 0,
               })}
-            </span>
+            </Text>
           )}
           {expanded ? (
             <PiCaretDown size={14} className="text-text-subtle" />

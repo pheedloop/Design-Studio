@@ -16,6 +16,7 @@ import {
 import { useLocale, useT } from "@/viewer/i18n";
 import { Row } from "@/components/Row";
 import { Stack } from "@/components/Stack";
+import { Text } from "@/components/Text";
 import { LocationField } from "./LocationField";
 
 interface DirectionsPanelProps {
@@ -49,9 +50,9 @@ export function DirectionsPanel({
   return (
     <Stack gap="xxs" className="p-3">
       <div className="flex items-center justify-between">
-        <span className="text-xs font-semibold text-text-body">
+        <Text size="xs" weight="semibold" color="body" as="span">
           {t("viewer.directions.title")}
-        </span>
+        </Text>
         <IconButton variant="bare" size="sm" onClick={onClose}>
           <PiX size={16} />
         </IconButton>

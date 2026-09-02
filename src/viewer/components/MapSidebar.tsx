@@ -3,6 +3,7 @@ import type { FloorPlanElement } from "@/types";
 import { useT } from "@/viewer/i18n";
 import type { Exhibitor, HoveredItem } from "@/viewer/types";
 import { Row } from "@/components/Row";
+import { Text } from "@/components/Text";
 
 interface MapSidebarProps {
   elements: FloorPlanElement[];
@@ -107,12 +108,12 @@ export function MapSidebar({
       {/* Single tab header — mirrors original ExhibitorList when no tabs needed */}
       {visibleTabs.length === 1 && (
         <div className="px-3 py-2 border-b border-border-neutral-light">
-          <span className="text-xs font-medium text-text-body">
+          <Text size="xs" weight="medium" color="body" as="span">
             {t("viewer.labelWithCount", {
               label: visibleTabs[0].label,
               count: visibleTabs[0].count,
             })}
-          </span>
+          </Text>
         </div>
       )}
 

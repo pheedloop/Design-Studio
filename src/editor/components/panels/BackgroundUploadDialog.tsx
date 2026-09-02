@@ -11,6 +11,7 @@ import {
 import { useT, type StringKey } from "@/editor/i18n";
 import { Row } from "@/components/Row";
 import { Stack } from "@/components/Stack";
+import { Text } from "@/components/Text";
 import { FitModeRadios } from "./FitModeRadios";
 
 /** Serialized-size budget for the imported DXF primitives. pikachu caps the
@@ -373,9 +374,9 @@ export function BackgroundUploadDialog({
               />
 
               <Stack gap="xxxs">
-                <span className="text-xs font-medium text-text-body">
+                <Text size="xs" weight="medium" color="body" as="span">
                   {t("editor.background.layersToImport")}
-                </span>
+                </Text>
                 <Stack
                   gap="xxxs"
                   className="max-h-40 overflow-y-auto border border-border-neutral-light rounded-md p-2"

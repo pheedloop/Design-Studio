@@ -14,6 +14,7 @@ import {
 } from "@/editor/components/ui";
 import { Row } from "@/components/Row";
 import { Stack } from "@/components/Stack";
+import { Text } from "@/components/Text";
 import { inchToPx, type BadgeField, type TextAlign } from "./model";
 import { getFieldDef, isLiteralTextField, isUserFieldEditable } from "./fields";
 import { Checkbox } from "@/components/Checkbox";
@@ -77,9 +78,9 @@ export function PropertiesPanel({
   return (
     <div className="w-52 shrink-0 border-l border-border-neutral-light bg-white flex flex-col">
       <div className="px-3 py-2 border-b border-border-neutral-light flex items-center justify-between">
-        <span className="text-xs font-medium text-text-body truncate">
+        <Text size="xs" weight="medium" color="body" as="span" truncate>
           {label}
-        </span>
+        </Text>
         <IconButton size="sm" onClick={onDelete} title="Delete field">
           <PiTrash size={15} />
         </IconButton>
