@@ -542,14 +542,14 @@ function BadgeEditorInner({
               <Row
                 gap="xs"
                 align="center"
-                className="relative z-20 px-3 h-[43px] bg-white border-b border-border-neutral-light shrink-0"
+                className="relative z-20 px-xs h-[43px] bg-white border-b border-border-neutral-light shrink-0"
               >
                 {!previewMode && doc.pages.length > 1 && (
                   <TabBar
                     tabs={pageTabs}
                     value={String(pageIndex)}
                     onChange={id => selectPage(Number(id))}
-                    itemClassName="px-3 py-1.5 text-xs"
+                    itemClassName="px-xs py-tight text-xs"
                   />
                 )}
                 {previewMode && (
@@ -589,7 +589,7 @@ function BadgeEditorInner({
             <div className="flex flex-col flex-1 min-w-0 min-h-0">
               {/* Invert ribbon — contextual to the active folded-back panel. */}
               {!previewMode && pageInverts[pageIndex] && (
-                <div className="shrink-0 bg-amber-50 border-b border-amber-200 px-3 py-1.5 text-xs text-amber-700">
+                <div className="shrink-0 bg-amber-50 border-b border-amber-200 px-xs py-tight text-xs text-amber-700">
                   ⤓ This panel prints upside-down automatically.
                 </div>
               )}
@@ -643,7 +643,7 @@ function BadgeEditorInner({
                 </div>
               )}
               {/* Footer — page + overall badge size, and zoom (mirrors StatusBar) */}
-              <div className="relative z-20 flex items-center justify-between px-3 py-1.5 bg-white border-t border-border-neutral-light text-xs text-text-caption">
+              <div className="relative z-20 flex items-center justify-between px-xs py-tight bg-white border-t border-border-neutral-light text-xs text-text-caption">
                 <Row gap="xxs" align="center">
                   <span>
                     Page {fmtUnit(doc.panelSize.width, unit)} ×{" "}
@@ -659,7 +659,7 @@ function BadgeEditorInner({
                 <IconButton
                   size="sm"
                   onClick={fitBadge}
-                  className="px-2 w-auto text-xs text-text-caption"
+                  className="px-xxs w-auto text-xs text-text-caption"
                   title="Click to fit badge in view"
                 >
                   {Math.round(controls.scale * 100)}%
@@ -669,16 +669,16 @@ function BadgeEditorInner({
 
             {showLayout ? (
               <aside className="w-72 shrink-0 border-l border-border-neutral-light bg-white flex flex-col">
-                <div className="px-3 py-2 border-b border-border-neutral-light text-xs font-medium text-text-body">
+                <div className="px-xs py-xxs border-b border-border-neutral-light text-xs font-medium text-text-body">
                   badge_layout · {flattened.width}" × {flattened.height}"
                 </div>
-                <pre className="flex-1 overflow-auto text-[11px] leading-tight p-3 text-text-body">
+                <pre className="flex-1 overflow-auto text-[11px] leading-tight p-xs text-text-body">
                   {JSON.stringify(flattened.layout, null, 2)}
                 </pre>
               </aside>
             ) : previewMode ? null : selectedIds.size > 1 ? (
               <aside className="w-52 shrink-0 border-l border-border-neutral-light bg-white flex flex-col">
-                <div className="px-3 py-2 border-b border-border-neutral-light flex items-center justify-between">
+                <div className="px-xs py-xxs border-b border-border-neutral-light flex items-center justify-between">
                   <Text size="xs" weight="medium" color="body" as="span">
                     {selectedIds.size} fields selected
                   </Text>
@@ -691,7 +691,7 @@ function BadgeEditorInner({
                     Delete
                   </Button>
                 </div>
-                <p className="p-3 text-xs text-text-subtle">
+                <p className="p-xs text-xs text-text-subtle">
                   Drag to move them together, or select a single field to edit
                   its properties.
                 </p>

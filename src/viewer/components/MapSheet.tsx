@@ -103,7 +103,7 @@ export function MapSheet({
           }
           className="absolute inset-0 w-full cursor-pointer"
         />
-        <div className="relative flex items-center justify-between w-full px-4 py-3 pointer-events-none">
+        <div className="relative flex items-center justify-between w-full px-s py-xs pointer-events-none">
           {hasTabs ? (
             <Row gap="xs" className="pointer-events-auto">
               {visibleTabs.map(tab => (
@@ -114,7 +114,7 @@ export function MapSheet({
                     setActiveTab(tab.id);
                     setExpanded(true);
                   }}
-                  className={`text-xs font-medium pb-0.5 cursor-pointer transition-colors ${
+                  className={`text-xs font-medium pb-hair cursor-pointer transition-colors ${
                     currentTab === tab.id
                       ? "text-primary-600 border-b-2 border-primary-500"
                       : "text-text-subtle hover:text-text-body"
@@ -162,7 +162,7 @@ export function MapSheet({
                       boothSlug: exhibitor.boothSlug,
                     });
                   }}
-                  className={`w-full text-left px-4 py-2.5 border-t border-border-neutral-faint cursor-pointer transition-colors ${
+                  className={`w-full text-left px-s py-snug border-t border-border-neutral-faint cursor-pointer transition-colors ${
                     isSelected ? "bg-primary-100" : "hover:bg-surface-neutral"
                   }`}
                 >
@@ -171,7 +171,7 @@ export function MapSheet({
                       <img
                         src={exhibitor.logo}
                         alt=""
-                        className="w-7 h-7 shrink-0 rounded-md border border-border-neutral-light bg-white object-contain p-0.5"
+                        className="w-7 h-7 shrink-0 rounded-md border border-border-neutral-light bg-white object-contain p-hair"
                       />
                     )}
                     <div>
@@ -204,7 +204,7 @@ export function MapSheet({
                       sessionId: el.properties.sessionId ?? null,
                     })
                   }
-                  className={`w-full text-left px-4 py-2.5 border-t border-border-neutral-faint cursor-pointer transition-colors ${
+                  className={`w-full text-left px-s py-snug border-t border-border-neutral-faint cursor-pointer transition-colors ${
                     isSelected ? "bg-primary-100" : "hover:bg-surface-neutral"
                   }`}
                 >
@@ -228,7 +228,7 @@ export function MapSheet({
                       meetingRoomId: el.properties.meetingRoomId ?? null,
                     })
                   }
-                  className={`w-full text-left px-4 py-2.5 border-t border-border-neutral-faint cursor-pointer transition-colors ${
+                  className={`w-full text-left px-s py-snug border-t border-border-neutral-faint cursor-pointer transition-colors ${
                     isSelected ? "bg-primary-100" : "hover:bg-surface-neutral"
                   }`}
                 >

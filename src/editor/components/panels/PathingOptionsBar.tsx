@@ -30,7 +30,7 @@ export function PathingOptionsBar({
     <Row
       gap="s"
       align="center"
-      className="px-3 py-2 bg-white border-b border-border-neutral-light"
+      className="px-xs py-xxs bg-white border-b border-border-neutral-light"
     >
       <Row gap="tight" align="center">
         <span className="text-[11px] text-text-caption">
@@ -80,7 +80,7 @@ export function PathingOptionsBar({
 
       <button
         onClick={onAutoMarkObstacles}
-        className="flex items-center gap-xxxs px-2 py-1 text-xs text-text-body hover:bg-amber-50 hover:text-amber-700 rounded transition-colors cursor-pointer"
+        className="flex items-center gap-xxxs px-xxs py-xxxs text-xs text-text-body hover:bg-amber-50 hover:text-amber-700 rounded transition-colors cursor-pointer"
         title={t("editor.pathing.autoObstaclesHint")}
       >
         <PiMagicWand size={14} />

@@ -43,9 +43,9 @@ describe("IconButton filled variant", () => {
 
 describe("IconButton bare variant", () => {
   it.each([
-    ["sm", "p-0.5"],
-    ["md", "p-1"],
-    ["lg", "p-1.5"],
+    ["sm", "p-hair"],
+    ["md", "p-xxxs"],
+    ["lg", "p-tight"],
   ] as const)("sizes by padding at %s, not a fixed box", (size, pad) => {
     render(
       <IconButton variant="bare" size={size}>

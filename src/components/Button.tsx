@@ -12,9 +12,9 @@ const base =
   "inline-flex items-center justify-center rounded font-medium cursor-pointer transition-colors disabled:cursor-not-allowed";
 
 const sizes = {
-  sm: "px-3 py-1.5 text-xs",
-  md: "px-4 py-2 text-sm",
-  lg: "px-5 py-2.5 text-sm",
+  sm: "px-xs py-tight text-xs",
+  md: "px-s py-xxs text-sm",
+  lg: "px-5 py-snug text-sm",
 };
 
 const styles = {

@@ -46,7 +46,7 @@ export function ArrangeGridDialog({
         </>
       }
     >
-      <Stack gap="s" className="p-4">
+      <Stack gap="s" className="p-s">
         <p className="text-xs text-text-caption">
           {t("editor.selection.count", { count: elementCount })}
         </p>
@@ -63,7 +63,7 @@ export function ArrangeGridDialog({
           </Stack>
           <Stack gap="tight" className="flex-1">
             <SectionLabel>{t("editor.field.rowsComputed")}</SectionLabel>
-            <div className="flex items-center h-[30px] px-2 text-xs text-text-subtle bg-surface-neutral border border-border-neutral-light rounded">
+            <div className="flex items-center h-[30px] px-xxs text-xs text-text-subtle bg-surface-neutral border border-border-neutral-light rounded">
               {rows}
             </div>
           </Stack>

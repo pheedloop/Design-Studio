@@ -86,7 +86,7 @@ export function LegendDialog({ legend, onSave, onClose }: LegendDialogProps) {
         </Button>
       }
     >
-      <Stack gap="s" className="p-4 overflow-y-auto flex-1">
+      <Stack gap="s" className="p-s overflow-y-auto flex-1">
         {/* Global visibility toggle */}
         <Checkbox
           label={t("editor.legend.showOnMap")}
@@ -149,7 +149,7 @@ export function LegendDialog({ legend, onSave, onClose }: LegendDialogProps) {
                 {/* Raw: the red hover marks the destructive action, and a tone
                     prop for one site fails the ≥2-consumer bar. */}
                 <button
-                  className="p-1 rounded text-text-subtle hover:text-red-500 transition-colors cursor-pointer"
+                  className="p-xxxs rounded text-text-subtle hover:text-red-500 transition-colors cursor-pointer"
                   onClick={() => removeEntry(entry.id)}
                   title={t("editor.legend.removeEntry")}
                 >
@@ -161,7 +161,7 @@ export function LegendDialog({ legend, onSave, onClose }: LegendDialogProps) {
         )}
 
         {local.entries.length === 0 && (
-          <p className="text-xs text-text-subtle text-center py-2">
+          <p className="text-xs text-text-subtle text-center py-xxs">
             {t("editor.legend.empty")}
           </p>
         )}

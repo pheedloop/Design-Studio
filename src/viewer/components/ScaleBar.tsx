@@ -37,7 +37,7 @@ export function ScaleBar({ dimensions, scale }: ScaleBarProps) {
       align="start"
       className="absolute bottom-4 left-4 z-10 pointer-events-none select-none"
     >
-      <span className="text-[10px] font-medium text-text-body bg-white/80 px-1 rounded">
+      <span className="text-[10px] font-medium text-text-body bg-white/80 px-xxxs rounded">
         {t("common.measurement", {
           value: formatNumber(
             niceUnits,

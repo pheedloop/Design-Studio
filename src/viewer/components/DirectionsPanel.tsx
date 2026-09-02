@@ -48,7 +48,7 @@ export function DirectionsPanel({
   const locale = useLocale();
 
   return (
-    <Stack gap="xxs" className="p-3">
+    <Stack gap="xxs" className="p-xs">
       <div className="flex items-center justify-between">
         <Text size="xs" weight="semibold" color="body" as="span">
           {t("viewer.directions.title")}
@@ -91,12 +91,12 @@ export function DirectionsPanel({
       </Row>
 
       {routeStatus === "no-route" && (
-        <div className="text-xs text-red-500 bg-red-50 rounded-lg px-3 py-2">
+        <div className="text-xs text-red-500 bg-red-50 rounded-lg px-xs py-xxs">
           {t("viewer.directions.noRoute")}
         </div>
       )}
       {routeStatus === "same-location" && (
-        <div className="text-xs text-amber-600 bg-amber-50 rounded-lg px-3 py-2">
+        <div className="text-xs text-amber-600 bg-amber-50 rounded-lg px-xs py-xxs">
           {t("viewer.directions.sameLocation")}
         </div>
       )}
@@ -104,7 +104,7 @@ export function DirectionsPanel({
         <Row
           gap="xxs"
           align="center"
-          className="text-xs text-text-body bg-surface-neutral rounded-lg px-3 py-2"
+          className="text-xs text-text-body bg-surface-neutral rounded-lg px-xs py-xxs"
         >
           <PiFootprints size={14} className="text-text-subtle shrink-0" />
           <span>{formatRouteDistance(routePath, dimensions, t, locale)}</span>

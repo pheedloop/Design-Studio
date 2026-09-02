@@ -41,7 +41,7 @@ export function LocationField({
       <Row
         gap="xxs"
         align="center"
-        className="px-3 py-2 bg-surface-neutral rounded-lg border border-border-neutral-light"
+        className="px-xs py-xxs bg-surface-neutral rounded-lg border border-border-neutral-light"
       >
         <span className="text-[10px] font-semibold text-text-subtle uppercase w-8 shrink-0">
           {label}
@@ -69,7 +69,7 @@ export function LocationField({
       <Row
         gap="xxs"
         align="center"
-        className="px-3 py-2 bg-white rounded-lg border border-border-neutral-light focus-within:border-blue-400"
+        className="px-xs py-xxs bg-white rounded-lg border border-border-neutral-light focus-within:border-blue-400"
       >
         <span className="text-[10px] font-semibold text-text-subtle uppercase w-8 shrink-0">
           {label}
@@ -88,9 +88,9 @@ export function LocationField({
       </Row>
 
       {showDropdown && (
-        <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-border-neutral-light rounded-lg shadow-lg z-50 max-h-44 overflow-y-auto">
+        <div className="absolute top-full left-0 right-0 mt-xxxs bg-white border border-border-neutral-light rounded-lg shadow-lg z-50 max-h-44 overflow-y-auto">
           {results.length === 0 ? (
-            <div className="px-3 py-2 text-xs text-text-subtle">
+            <div className="px-xs py-xxs text-xs text-text-subtle">
               {t("viewer.search.noResults")}
             </div>
           ) : (
@@ -104,7 +104,7 @@ export function LocationField({
                     setQuery("");
                     inputRef.current?.blur();
                   }}
-                  className="w-full text-left px-3 py-1.5 hover:bg-surface-neutral cursor-pointer transition-colors"
+                  className="w-full text-left px-xs py-tight hover:bg-surface-neutral cursor-pointer transition-colors"
                 >
                   <Row gap="xxs" align="center" justify="between">
                     <Text
@@ -117,7 +117,7 @@ export function LocationField({
                       {result.exhibitorName || displayName(result, t)}
                     </Text>
                     <span
-                      className={`text-[10px] font-medium px-1.5 py-0.5 rounded shrink-0 ${badge.className}`}
+                      className={`text-[10px] font-medium px-tight py-hair rounded shrink-0 ${badge.className}`}
                     >
                       {t(badge.labelKey)}
                     </span>

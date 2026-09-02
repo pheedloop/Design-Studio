@@ -55,7 +55,7 @@ export function GridSettingsDialog({
         </>
       }
     >
-      <Stack gap="s" className="p-4">
+      <Stack gap="s" className="p-s">
         <Stack gap="tight">
           <SectionLabel>{t("editor.field.spacingPx")}</SectionLabel>
           <NumberInput

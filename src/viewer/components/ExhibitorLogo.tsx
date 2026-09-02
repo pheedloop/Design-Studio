@@ -13,7 +13,7 @@ export function ExhibitorLogo({
     <img
       src={exhibitor.logo}
       alt=""
-      className={`${box} rounded-md border border-border-neutral-light bg-white object-contain p-1`}
+      className={`${box} rounded-md border border-border-neutral-light bg-white object-contain p-xxxs`}
     />
   );
 }

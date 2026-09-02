@@ -325,7 +325,7 @@ export function BackgroundUploadDialog({
         </>
       }
     >
-      <Stack gap="s" className="p-4">
+      <Stack gap="s" className="p-s">
         {!file ? (
           <div
             onClick={() => fileRef.current?.click()}
@@ -334,7 +334,7 @@ export function BackgroundUploadDialog({
             <span className="text-sm text-text-caption">
               {t("editor.background.chooseFile")}
             </span>
-            <span className="text-xs text-text-subtle mt-1">
+            <span className="text-xs text-text-subtle mt-xxxs">
               {t("editor.background.fileTypes")}
             </span>
             <input
@@ -344,13 +344,13 @@ export function BackgroundUploadDialog({
               onChange={handleFileChange}
               className="hidden"
             />
-            {error && <p className="text-xs text-red-600 mt-3">{t(error)}</p>}
+            {error && <p className="text-xs text-red-600 mt-xs">{t(error)}</p>}
           </div>
         ) : kind === "dxf" ? (
           !parsed ? (
             <>
               <div className="flex items-center justify-center h-40 bg-surface-neutral rounded-lg">
-                <span className="text-xs text-text-caption px-4 text-center truncate">
+                <span className="text-xs text-text-caption px-s text-center truncate">
                   {file.name}
                 </span>
               </div>
@@ -379,7 +379,7 @@ export function BackgroundUploadDialog({
                 </Text>
                 <Stack
                   gap="xxxs"
-                  className="max-h-40 overflow-y-auto border border-border-neutral-light rounded-md p-2"
+                  className="max-h-40 overflow-y-auto border border-border-neutral-light rounded-md p-xxs"
                 >
                   {parsed.layers.map(layer => (
                     <label
@@ -476,7 +476,7 @@ export function BackgroundUploadDialog({
                   className="max-h-full max-w-full object-contain"
                 />
               ) : (
-                <span className="text-xs text-text-caption px-4 text-center truncate">
+                <span className="text-xs text-text-caption px-s text-center truncate">
                   {file.name}
                 </span>
               )}

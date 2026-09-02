@@ -70,7 +70,7 @@ export function TableDetailPopover({
       <Row
         gap="xxs"
         align="start"
-        className="p-3 border-b border-border-neutral-light"
+        className="p-xs border-b border-border-neutral-light"
       >
         <div className="flex-1 min-w-0">
           <Heading level={3} className="m-0">
@@ -84,7 +84,7 @@ export function TableDetailPopover({
           </span>
         </div>
         <span
-          className={`text-xs font-medium tabular-nums px-2 py-0.5 rounded-full whitespace-nowrap ${OCC_BADGE[level]}`}
+          className={`text-xs font-medium tabular-nums px-xxs py-hair rounded-full whitespace-nowrap ${OCC_BADGE[level]}`}
         >
           {table.occupancy}/{table.seatCount}
         </span>
@@ -100,7 +100,7 @@ export function TableDetailPopover({
 
       {!hideAttendeeDetails && (
         <div className="max-h-44 overflow-y-auto scrollbar">
-          <div className="px-3 pt-2.5 pb-1 text-[10px] tracking-wider uppercase text-text-subtle font-semibold">
+          <div className="px-xs pt-snug pb-xxxs text-[10px] tracking-wider uppercase text-text-subtle font-semibold">
             {occupantHeading(
               {
                 loading: !!occupantsLoading,
@@ -111,7 +111,12 @@ export function TableDetailPopover({
             )}
           </div>
           {occupants.map(o => (
-            <Row key={o.code} gap="snug" align="center" className="px-3 py-1.5">
+            <Row
+              key={o.code}
+              gap="snug"
+              align="center"
+              className="px-xs py-tight"
+            >
               <span className="size-6 shrink-0 grid place-items-center rounded-full text-[10px] font-semibold bg-primary-100 text-primary-600">
                 {initials(o)}
               </span>
@@ -127,7 +132,7 @@ export function TableDetailPopover({
                 <button
                   type="button"
                   onClick={() => onUnassign(o.seatSelectionCode as number)}
-                  className="shrink-0 text-xs text-text-subtle hover:text-[#b42318] hover:bg-[rgba(235,87,87,0.12)] px-1.5 py-1 rounded cursor-pointer"
+                  className="shrink-0 text-xs text-text-subtle hover:text-[#b42318] hover:bg-[rgba(235,87,87,0.12)] px-tight py-xxxs rounded cursor-pointer"
                 >
                   {t("seatviewer.table.remove")}
                 </button>
@@ -137,7 +142,7 @@ export function TableDetailPopover({
         </div>
       )}
 
-      <div className="p-3 border-t border-border-neutral-light bg-surface-neutral">
+      <div className="p-xs border-t border-border-neutral-light bg-surface-neutral">
         <Button
           variant="solid"
           color="primary"
@@ -149,7 +154,7 @@ export function TableDetailPopover({
           {assigning ? t("seatviewer.table.assigning") : assignLabel}
         </Button>
         {assignHint && (
-          <p className="text-xs text-text-caption text-center mt-2 m-0">
+          <p className="text-xs text-text-caption text-center mt-xxs m-0">
             {assignHint}
           </p>
         )}

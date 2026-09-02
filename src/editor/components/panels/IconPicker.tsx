@@ -76,7 +76,7 @@ export function IconPicker({
       <Row
         gap="xxs"
         align="center"
-        className="px-3 py-2 border-b border-border-neutral-light"
+        className="px-xs py-xxs border-b border-border-neutral-light"
       >
         <PiMagnifyingGlass size={14} className="text-text-subtle shrink-0" />
         <input
@@ -89,10 +89,10 @@ export function IconPicker({
         />
       </Row>
 
-      <div className="flex-1 overflow-y-auto p-2">
+      <div className="flex-1 overflow-y-auto p-xxs">
         {filtered ? (
           filtered.length === 0 ? (
-            <p className="text-xs text-text-subtle p-2">
+            <p className="text-xs text-text-subtle p-xxs">
               {t("editor.icon.noResults")}
             </p>
           ) : (
@@ -102,8 +102,8 @@ export function IconPicker({
           )
         ) : (
           ICON_CATEGORIES.map(category => (
-            <div key={category} className="mb-3">
-              <div className="text-[10px] font-medium text-text-subtle uppercase tracking-wide px-1 mb-1">
+            <div key={category} className="mb-xs">
+              <div className="text-[10px] font-medium text-text-subtle uppercase tracking-wide px-xxxs mb-xxxs">
                 {t(ICON_CATEGORY_LABEL[category])}
               </div>
               <Row gap="hair" className="flex-wrap">

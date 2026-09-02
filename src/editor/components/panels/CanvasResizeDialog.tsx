@@ -135,7 +135,7 @@ export function CanvasResizeDialog({
         </>
       }
     >
-      <Stack gap="s" className="p-4">
+      <Stack gap="s" className="p-s">
         <Stack gap="tight">
           <SectionLabel>{t("editor.field.widthPx")}</SectionLabel>
           <NumberInput value={newWidth} onChange={setW} />
@@ -224,7 +224,7 @@ export function CanvasResizeDialog({
         {onStartCrop && (
           <Stack
             gap="tight"
-            className="border-t border-border-neutral-faint pt-4"
+            className="border-t border-border-neutral-faint pt-s"
           >
             <SectionLabel>{t("editor.resize.cropSection")}</SectionLabel>
             <Button
@@ -244,7 +244,7 @@ export function CanvasResizeDialog({
         )}
 
         {clippedCount > 0 && (
-          <p className="text-xs text-amber-600 bg-amber-50 border border-amber-200 rounded px-2 py-1.5">
+          <p className="text-xs text-amber-600 bg-amber-50 border border-amber-200 rounded px-xxs py-tight">
             {t("editor.resize.clipped", { count: clippedCount })}
           </p>
         )}

@@ -46,8 +46,8 @@ export function BadgeSidebar({
   return (
     <div className="flex flex-col w-48 shrink-0 bg-white border-r border-border-neutral-light overflow-hidden">
       <BadgeSidebarHeader name={name} onNameChange={onNameChange} />
-      <div className="flex-1 overflow-y-auto py-2 px-1">
-        <div className="px-2 pb-1">
+      <div className="flex-1 overflow-y-auto py-xxs px-xxxs">
+        <div className="px-xxs pb-xxxs">
           <SectionLabel>Add Field</SectionLabel>
         </div>
         {fields.map(d => (

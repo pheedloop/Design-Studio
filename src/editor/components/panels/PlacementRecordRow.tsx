@@ -23,7 +23,9 @@ export function PlacementRecordRow({
       <span className="flex-1 text-text-body truncate">
         {category.getPrimaryLabel(record)}
         {secondary && (
-          <span className="text-text-subtle ml-1 text-xs">· {secondary}</span>
+          <span className="text-text-subtle ml-xxxs text-xs">
+            · {secondary}
+          </span>
         )}
       </span>
       {isPlaced ? (

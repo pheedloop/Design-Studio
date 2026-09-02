@@ -69,7 +69,7 @@ export function OptionsBar({
     <Row
       gap="s"
       align="center"
-      className="px-3 py-2 bg-white border-b border-border-neutral-light h-[43px]"
+      className="px-xs py-xxs bg-white border-b border-border-neutral-light h-[43px]"
     >
       {fields.has("fill") && (
         <ColorSwatch
@@ -163,7 +163,7 @@ export function OptionsBar({
             />
             {onArrangeAsGrid && (
               <>
-                <div className="w-px h-3.5 bg-surface-muted shrink-0 mx-0.5" />
+                <div className="w-px h-3.5 bg-surface-muted shrink-0 mx-hair" />
                 <Button
                   variant="outline"
                   color="neutral"

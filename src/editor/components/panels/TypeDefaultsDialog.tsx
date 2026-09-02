@@ -29,7 +29,7 @@ export function TypeDefaultsDialog({
       width="400px"
       maxHeight="80vh"
     >
-      <Stack gap="xs" className="overflow-y-auto flex-1 p-4">
+      <Stack gap="xs" className="overflow-y-auto flex-1 p-s">
         <p className="text-xs text-text-caption leading-snug">
           {t("editor.dialog.elementDefaultsHint")}
         </p>

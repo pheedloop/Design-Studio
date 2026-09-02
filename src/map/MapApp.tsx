@@ -95,7 +95,7 @@ export function MapApp() {
   const modeTab = (m: Mode, label: string) => (
     <a
       href={`#${m}`}
-      className={`px-3 py-1 rounded transition-colors ${
+      className={`px-xs py-xxxs rounded transition-colors ${
         mode === m ? "bg-white/15 text-white" : "text-gray-400 hover:text-white"
       }`}
     >
@@ -105,14 +105,14 @@ export function MapApp() {
 
   return (
     <div className="h-screen flex flex-col">
-      <nav className="flex items-center gap-xxxs px-3 py-1.5 bg-gray-900 text-xs shrink-0">
+      <nav className="flex items-center gap-xxxs px-xs py-tight bg-gray-900 text-xs shrink-0">
         <ProductSwitcher current="maps" mode={mode} />
-        <div className="w-px h-4 bg-gray-700 mx-1" />
+        <div className="w-px h-4 bg-gray-700 mx-xxxs" />
         {modeTab("editor", "Editor")}
         {modeTab("viewer", "Viewer")}
 
-        <div className="w-px h-4 bg-gray-700 mx-1" />
-        <span className="text-gray-500 mr-0.5">Tier:</span>
+        <div className="w-px h-4 bg-gray-700 mx-xxxs" />
+        <span className="text-gray-500 mr-hair">Tier:</span>
         {(["basic", "advanced", "premium"] as Tier[]).map(t => (
           <ChromeToggle
             key={t}
@@ -129,10 +129,10 @@ export function MapApp() {
 
         {mode === "viewer" && (
           <>
-            <div className="w-px h-4 bg-gray-700 mx-1" />
+            <div className="w-px h-4 bg-gray-700 mx-xxxs" />
             <button
               onClick={() => setViewport("desktop")}
-              className={`p-1 rounded cursor-pointer transition-colors ${
+              className={`p-xxxs rounded cursor-pointer transition-colors ${
                 viewport === "desktop"
                   ? "text-white"
                   : "text-gray-500 hover:text-gray-300"
@@ -143,7 +143,7 @@ export function MapApp() {
             </button>
             <button
               onClick={() => setViewport("mobile")}
-              className={`p-1 rounded cursor-pointer transition-colors ${
+              className={`p-xxxs rounded cursor-pointer transition-colors ${
                 viewport === "mobile"
                   ? "text-white"
                   : "text-gray-500 hover:text-gray-300"
@@ -152,7 +152,7 @@ export function MapApp() {
             >
               <PiDeviceMobile size={16} />
             </button>
-            <div className="w-px h-4 bg-gray-700 mx-1" />
+            <div className="w-px h-4 bg-gray-700 mx-xxxs" />
             <ChromeToggle
               active={viewerMode === "attendee"}
               onClick={() => setViewerMode("attendee")}

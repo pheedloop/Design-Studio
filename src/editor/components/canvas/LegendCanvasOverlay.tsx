@@ -17,7 +17,7 @@ export function LegendCanvasOverlay({ legend }: LegendCanvasOverlayProps) {
     <div className="absolute bottom-4 right-4 z-10 pointer-events-none select-none">
       <Stack
         gap="tight"
-        className="bg-white border border-border-neutral-light rounded shadow-sm px-3 py-2"
+        className="bg-white border border-border-neutral-light rounded shadow-sm px-xs py-xxs"
       >
         {visibleEntries.map(entry => (
           <Row key={entry.id} gap="xxs" align="center">

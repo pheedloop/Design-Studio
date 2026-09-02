@@ -131,7 +131,7 @@ export function BadgeSetupDialog({
         </>
       }
     >
-      <Stack gap="s" className="p-4">
+      <Stack gap="s" className="p-s">
         <Stack gap="tight">
           <SectionLabel>Fold</SectionLabel>
           <Row gap="xxs">
@@ -215,7 +215,7 @@ export function BadgeSetupDialog({
                 <Stack
                   key={i}
                   gap="tight"
-                  className="px-2.5 py-2 rounded border border-border-neutral-light"
+                  className="px-snug py-xxs rounded border border-border-neutral-light"
                 >
                   <Text size="xs" weight="medium" color="body" as="span">
                     {pageRoleLabel(pageRoleForIndex(count, i))}

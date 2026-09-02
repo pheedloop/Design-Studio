@@ -24,7 +24,7 @@ export function ViewerLegend({ legend }: ViewerLegendProps) {
         {!collapsed && (
           <Stack
             gap="tight"
-            className="px-3 py-2 border-b border-border-neutral-faint"
+            className="px-xs py-xxs border-b border-border-neutral-faint"
           >
             {visibleEntries.map(entry => (
               <Row key={entry.id} gap="xxs" align="center">
@@ -44,7 +44,7 @@ export function ViewerLegend({ legend }: ViewerLegendProps) {
           </Stack>
         )}
         <button
-          className="flex items-center justify-between gap-s px-3 py-1.5 w-full cursor-pointer hover:bg-surface-neutral transition-colors"
+          className="flex items-center justify-between gap-s px-xs py-tight w-full cursor-pointer hover:bg-surface-neutral transition-colors"
           onClick={() => setCollapsed(c => !c)}
         >
           <Text size="xs" weight="medium" color="body" as="span">

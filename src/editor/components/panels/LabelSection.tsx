@@ -27,7 +27,7 @@ export function LabelSection({ properties, onChange }: LabelSectionProps) {
       <div className="flex items-center justify-between">
         <SectionLabel>{t("editor.field.label")}</SectionLabel>
         <button
-          className={`p-1 rounded transition-colors cursor-pointer ${
+          className={`p-xxxs rounded transition-colors cursor-pointer ${
             visible
               ? "text-text-caption hover:text-text-body"
               : "text-red-400 hover:text-red-600"
@@ -115,7 +115,7 @@ export function LabelSection({ properties, onChange }: LabelSectionProps) {
           />
         </Row>
         {hasBg && properties.labelBackground && (
-          <Stack gap="xxs" className="pl-1">
+          <Stack gap="xxs" className="pl-xxxs">
             <ColorSwatch
               label=""
               value={properties.labelBackground.color}

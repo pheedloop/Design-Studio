@@ -53,7 +53,7 @@ export function LayerPanel({
           <Row
             gap="tight"
             align="center"
-            className="px-2 py-1 bg-white border border-border-neutral-light rounded-lg shadow-md text-xs text-text-body"
+            className="px-xxs py-xxxs bg-white border border-border-neutral-light rounded-lg shadow-md text-xs text-text-body"
           >
             <span
               className="w-2 h-2 rounded-full"
@@ -73,7 +73,7 @@ export function LayerPanel({
       </Row>
 
       {open && (
-        <div className="absolute top-full right-0 mt-1 bg-white border border-border-neutral-light rounded-md shadow-lg py-1 min-w-[180px]">
+        <div className="absolute top-full right-0 mt-xxxs bg-white border border-border-neutral-light rounded-md shadow-lg py-xxxs min-w-[180px]">
           {layers.map(layer => {
             // Wayfinding gates the pathing layer: hide it entirely, or lock it.
             const locked =
@@ -86,7 +86,7 @@ export function LayerPanel({
               <div
                 key={layer.id}
                 title={locked ? t("editor.premiumFeature") : undefined}
-                className={`flex items-center gap-xxs px-3 py-1.5 text-xs transition-colors ${
+                className={`flex items-center gap-xxs px-xs py-tight text-xs transition-colors ${
                   locked
                     ? "text-text-disabled cursor-not-allowed"
                     : isActive

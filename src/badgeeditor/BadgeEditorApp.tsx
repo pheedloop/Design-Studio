@@ -13,10 +13,12 @@ export function BadgeEditorApp() {
 
   return (
     <div className="h-screen flex flex-col">
-      <nav className="flex items-center gap-xxxs px-3 py-1.5 bg-gray-900 text-xs shrink-0">
+      <nav className="flex items-center gap-xxxs px-xs py-tight bg-gray-900 text-xs shrink-0">
         <ProductSwitcher current="badges" mode="editor" />
-        <div className="w-px h-4 bg-gray-700 mx-1" />
-        <span className="px-3 py-1 rounded bg-white/15 text-white">Editor</span>
+        <div className="w-px h-4 bg-gray-700 mx-xxxs" />
+        <span className="px-xs py-xxxs rounded bg-white/15 text-white">
+          Editor
+        </span>
         <LocaleSwitcher locale={locale} setLocale={setLocale} />
       </nav>
       <div className="flex-1 overflow-hidden">

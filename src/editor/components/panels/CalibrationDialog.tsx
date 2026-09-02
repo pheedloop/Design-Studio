@@ -73,7 +73,7 @@ export function CalibrationDialog({
         </>
       }
     >
-      <Stack gap="s" className="p-4">
+      <Stack gap="s" className="p-s">
         <p className="text-xs text-text-caption">
           {t("editor.calibration.prompt", {
             distance: t("common.measurement", {

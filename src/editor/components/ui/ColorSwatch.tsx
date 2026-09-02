@@ -21,7 +21,7 @@ export function ColorSwatch({ label, value, onChange }: ColorSwatchProps) {
         type="text"
         value={value}
         onChange={e => onChange(e.target.value)}
-        className="w-[72px] px-1.5 py-0.5 text-[11px] font-mono border border-border-neutral-light rounded bg-white"
+        className="w-[72px] px-tight py-hair text-[11px] font-mono border border-border-neutral-light rounded bg-white"
       />
     </Row>
   );

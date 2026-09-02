@@ -263,7 +263,7 @@ export function HelpDialog({ onClose }: HelpDialogProps) {
       width="520px"
       maxHeight="80vh"
     >
-      <div className="px-4 pt-3 border-b border-border-neutral-light">
+      <div className="px-s pt-xs border-b border-border-neutral-light">
         <TabBar
           tabs={[
             { id: "start", label: t("editor.help.tab.gettingStarted") },
@@ -272,15 +272,18 @@ export function HelpDialog({ onClose }: HelpDialogProps) {
           ]}
           value={tab}
           onChange={id => setTab(id as HelpTab)}
-          itemClassName="px-3 py-1.5 text-xs"
+          itemClassName="px-xs py-tight text-xs"
         />
       </div>
 
-      <div className="flex-1 overflow-y-auto p-4">
+      <div className="flex-1 overflow-y-auto p-s">
         {tab === "start" &&
           GETTING_STARTED.map((section, index) => (
             <div key={section.headingKey}>
-              <Heading level={3} className={`mb-2 ${index > 0 ? "mt-4" : ""}`}>
+              <Heading
+                level={3}
+                className={`mb-xxs ${index > 0 ? "mt-s" : ""}`}
+              >
                 {t(section.headingKey)}
               </Heading>
               <ul className="text-xs text-text-body space-y-1.5">
@@ -293,20 +296,20 @@ export function HelpDialog({ onClose }: HelpDialogProps) {
 
         {tab === "shortcuts" &&
           shortcuts.map(section => (
-            <div key={section.categoryKey} className="mb-4">
-              <div className="text-[10px] font-medium text-text-subtle uppercase tracking-wide mb-1.5">
+            <div key={section.categoryKey} className="mb-s">
+              <div className="text-[10px] font-medium text-text-subtle uppercase tracking-wide mb-tight">
                 {t(section.categoryKey)}
               </div>
               <div className="space-y-1">
                 {section.items.map(item => (
                   <div
                     key={item.descriptionKey}
-                    className="flex items-center justify-between py-0.5"
+                    className="flex items-center justify-between py-hair"
                   >
                     <span className="text-xs text-text-body">
                       {t(item.descriptionKey)}
                     </span>
-                    <kbd className="text-[10px] font-mono text-text-caption bg-surface-neutral border border-border-neutral-light rounded px-1.5 py-0.5">
+                    <kbd className="text-[10px] font-mono text-text-caption bg-surface-neutral border border-border-neutral-light rounded px-tight py-hair">
                       {item.keysKey ? t(item.keysKey) : item.keys}
                     </kbd>
                   </div>
@@ -317,19 +320,19 @@ export function HelpDialog({ onClose }: HelpDialogProps) {
 
         {tab === "menus" && (
           <>
-            <p className="text-xs text-text-caption mb-4">
+            <p className="text-xs text-text-caption mb-s">
               {t("editor.help.menusIntro")}
             </p>
             {menus.map(menu => (
-              <div key={menu.nameKey} className="mb-4">
-                <div className="text-[10px] font-medium text-text-subtle uppercase tracking-wide mb-1.5">
+              <div key={menu.nameKey} className="mb-s">
+                <div className="text-[10px] font-medium text-text-subtle uppercase tracking-wide mb-tight">
                   {t(menu.nameKey)}
                 </div>
                 <div className="space-y-1">
                   {menu.itemKeys.map(itemKey => (
                     <div
                       key={itemKey}
-                      className="text-xs text-text-body py-0.5 pl-2"
+                      className="text-xs text-text-body py-hair pl-xxs"
                     >
                       {t(itemKey)}
                     </div>

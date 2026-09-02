@@ -19,7 +19,7 @@ const shapes = {
 
 const sizes = {
   filled: { sm: "w-7 h-7", md: "w-9 h-9", lg: "w-10 h-10" },
-  bare: { sm: "p-0.5", md: "p-1", lg: "p-1.5" },
+  bare: { sm: "p-hair", md: "p-xxxs", lg: "p-tight" },
 };
 
 const states = {

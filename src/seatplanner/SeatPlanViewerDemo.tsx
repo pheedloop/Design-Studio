@@ -132,7 +132,7 @@ export function SeatPlanViewerDemo({ translate }: { translate?: Translate }) {
     <button
       type="button"
       onClick={() => setViewerMode(m)}
-      className={`px-3 py-1 rounded text-xs font-medium transition-colors ${
+      className={`px-xs py-xxxs rounded text-xs font-medium transition-colors ${
         viewerMode === m
           ? "bg-white text-text-heading shadow-sm"
           : "text-text-caption hover:text-text-heading"
@@ -147,12 +147,12 @@ export function SeatPlanViewerDemo({ translate }: { translate?: Translate }) {
       <Row
         gap="xs"
         align="center"
-        className="px-3 py-1.5 bg-surface-neutral border-b border-border-neutral-light text-xs shrink-0"
+        className="px-xs py-tight bg-surface-neutral border-b border-border-neutral-light text-xs shrink-0"
       >
         <Row
           gap="xxxs"
           align="center"
-          className="bg-surface-muted rounded p-0.5"
+          className="bg-surface-muted rounded p-hair"
         >
           {tab("admin", "Admin")}
           {tab("attendee", "Attendee")}

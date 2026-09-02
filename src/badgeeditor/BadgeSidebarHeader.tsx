@@ -15,7 +15,7 @@ export function BadgeSidebarHeader({
     <Row
       gap="xxs"
       align="center"
-      className="px-3 h-[43px] shrink-0 border-b border-border-neutral-light min-w-0"
+      className="px-xs h-[43px] shrink-0 border-b border-border-neutral-light min-w-0"
     >
       <InlineRenameField
         value={name}

@@ -57,7 +57,7 @@ export function TypeSection({ typeKey, defaults, onChange }: TypeSectionProps) {
   return (
     <div className="border border-border-neutral-light rounded">
       <button
-        className="w-full flex items-center justify-between px-3 py-2 text-left hover:bg-surface-neutral transition-colors cursor-pointer"
+        className="w-full flex items-center justify-between px-xs py-xxs text-left hover:bg-surface-neutral transition-colors cursor-pointer"
         onClick={() => setOpen(o => !o)}
       >
         <Row gap="xxs" align="center">
@@ -79,7 +79,7 @@ export function TypeSection({ typeKey, defaults, onChange }: TypeSectionProps) {
       {open && (
         <Stack
           gap="xs"
-          className="px-3 pb-3 border-t border-border-neutral-faint pt-3"
+          className="px-xs pb-xs border-t border-border-neutral-faint pt-xs"
         >
           <ColorSwatch
             label={t("editor.field.fill")}
@@ -133,7 +133,7 @@ export function TypeSection({ typeKey, defaults, onChange }: TypeSectionProps) {
               className="w-full"
             />
           </Stack>
-          <div className="border-t border-border-neutral-faint pt-3">
+          <div className="border-t border-border-neutral-faint pt-xs">
             <LabelSection
               properties={toElementProperties(defaults)}
               onChange={updates =>
