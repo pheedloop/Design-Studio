@@ -80,6 +80,19 @@
 
   --spacing: 4px;
 
+  --sp-hair: 2px;
+  --sp-xxxs: 4px;
+  --sp-tight: 6px;
+  --sp-xxs: 8px;
+  --sp-snug: 10px;
+  --sp-xs: 12px;
+  --sp-s: 16px;
+  --sp-m: 24px;
+  --sp-l: 32px;
+  --sp-xl: 40px;
+  --sp-xxl: 56px;
+  --sp-xxxl: 64px;
+
   --z-header: 9000;
   --z-dropdown: 9001;
   --z-dialog: 9999;
@@ -160,6 +173,19 @@
   --radius-2xl: 24px;
   --radius-3xl: 48px;
   --radius-full: 9999px;
+
+  --spacing-hair: var(--sp-hair);
+  --spacing-xxxs: var(--sp-xxxs);
+  --spacing-tight: var(--sp-tight);
+  --spacing-xxs: var(--sp-xxs);
+  --spacing-snug: var(--sp-snug);
+  --spacing-xs: var(--sp-xs);
+  --spacing-s: var(--sp-s);
+  --spacing-m: var(--sp-m);
+  --spacing-l: var(--sp-l);
+  --spacing-xl: var(--sp-xl);
+  --spacing-xxl: var(--sp-xxl);
+  --spacing-xxxl: var(--sp-xxxl);
 
   --breakpoint-xs: 480px;
 }
