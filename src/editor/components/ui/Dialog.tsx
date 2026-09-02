@@ -32,7 +32,7 @@ export function Dialog({
       >
         <div className="flex items-center justify-between px-4 py-3 border-b border-border-neutral-light shrink-0">
           <h2 className="text-sm font-semibold text-text-heading">{title}</h2>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-xxs">
             {headerActions}
             <button
               onClick={onClose}
@@ -45,7 +45,7 @@ export function Dialog({
         </div>
         <div className="flex-1 min-h-0 overflow-y-auto">{children}</div>
         {footer && (
-          <div className="flex items-center justify-end gap-2 px-4 py-3 border-t border-border-neutral-light shrink-0">
+          <div className="flex items-center justify-end gap-xxs px-4 py-3 border-t border-border-neutral-light shrink-0">
             {footer}
           </div>
         )}

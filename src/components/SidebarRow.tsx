@@ -26,7 +26,7 @@ export function SidebarRow({
       disabled={disabled}
       title={title}
       className={[
-        "w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded-md text-sm transition-colors",
+        "w-full flex items-center gap-xxs.5 px-2.5 py-1.5 rounded-md text-sm transition-colors",
         disabled
           ? "text-text-disabled cursor-not-allowed"
           : isActive

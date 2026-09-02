@@ -44,7 +44,7 @@ export function PlacementRow({
       draggable={!isPlaced}
       onDragStart={handleDragStart}
       className={[
-        "flex items-center gap-3 px-3 py-2.5 border-b border-border-neutral-faint text-sm transition-colors last:border-0",
+        "flex items-center gap-xs px-3 py-2.5 border-b border-border-neutral-faint text-sm transition-colors last:border-0",
         isPlaced
           ? "opacity-40 cursor-default"
           : "cursor-grab hover:bg-surface-neutral active:cursor-grabbing",

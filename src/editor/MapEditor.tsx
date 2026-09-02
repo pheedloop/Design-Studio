@@ -1671,7 +1671,7 @@ function MapEditorInner({
         ]}
       />
       {dxfHydrationError && (
-        <div className="flex items-center justify-between gap-3 bg-red-50 border-b border-red-200 px-4 py-2 text-xs text-red-700">
+        <div className="flex items-center justify-between gap-xs bg-red-50 border-b border-red-200 px-4 py-2 text-xs text-red-700">
           <span>{dxfHydrationError}</span>
           <button
             type="button"
@@ -2011,7 +2011,7 @@ function MapEditorInner({
         />
       )}
       {isCropping && (
-        <div className="fixed top-4 left-1/2 -translate-x-1/2 z-[60] flex items-center gap-2 bg-white border border-border-neutral-light shadow-lg rounded-lg px-3 py-2">
+        <div className="fixed top-4 left-1/2 -translate-x-1/2 z-[60] flex items-center gap-xxs bg-white border border-border-neutral-light shadow-lg rounded-lg px-3 py-2">
           <span className="text-xs text-text-body">
             {t("editor.crop.hint")}
           </span>

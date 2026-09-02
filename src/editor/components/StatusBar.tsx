@@ -24,7 +24,7 @@ export function StatusBar({
 
   return (
     <div className="relative z-20 flex items-center justify-between px-3 py-1.5 bg-white border-t border-border-neutral-light text-xs text-text-caption">
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-xxs">
         {isCalibrated && showUnit && (
           <select
             value={unit}

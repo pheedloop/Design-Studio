@@ -71,7 +71,7 @@ export function CalibrationDialog({
         </>
       }
     >
-      <div className="flex flex-col gap-4 p-4">
+      <div className="flex flex-col gap-s p-4">
         <p className="text-xs text-text-caption">
           {t("editor.calibration.prompt", {
             distance: t("common.measurement", {
@@ -81,8 +81,8 @@ export function CalibrationDialog({
           })}
         </p>
 
-        <div className="flex gap-3 items-end">
-          <div className="flex flex-col gap-1.5 flex-1">
+        <div className="flex gap-xs items-end">
+          <div className="flex flex-col gap-xxxs.5 flex-1">
             <SectionLabel>{t("editor.field.distance")}</SectionLabel>
             <NumberInput
               value={distance}
@@ -90,7 +90,7 @@ export function CalibrationDialog({
               step={1}
             />
           </div>
-          <div className="flex flex-col gap-1.5">
+          <div className="flex flex-col gap-xxxs.5">
             <SectionLabel>{t("editor.field.unit")}</SectionLabel>
             <Select
               value={displayUnit}

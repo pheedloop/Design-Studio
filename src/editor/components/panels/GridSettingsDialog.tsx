@@ -53,8 +53,8 @@ export function GridSettingsDialog({
         </>
       }
     >
-      <div className="flex flex-col gap-4 p-4">
-        <div className="flex flex-col gap-1.5">
+      <div className="flex flex-col gap-s p-4">
+        <div className="flex flex-col gap-xxxs.5">
           <SectionLabel>{t("editor.field.spacingPx")}</SectionLabel>
           <NumberInput
             value={local.gridSpacing}
@@ -64,7 +64,7 @@ export function GridSettingsDialog({
           />
         </div>
 
-        <div className="flex flex-col gap-1.5">
+        <div className="flex flex-col gap-xxxs.5">
           <SectionLabel>{t("editor.field.color")}</SectionLabel>
           <ColorSwatch
             label=""
@@ -73,9 +73,9 @@ export function GridSettingsDialog({
           />
         </div>
 
-        <div className="flex flex-col gap-1.5">
+        <div className="flex flex-col gap-xxxs.5">
           <SectionLabel>{t("editor.field.opacity")}</SectionLabel>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-xxs">
             <Slider
               min={5}
               max={100}

@@ -143,13 +143,13 @@ export function SeatPlanViewerDemo({ translate }: { translate?: Translate }) {
 
   return (
     <div className="flex flex-col h-full">
-      <div className="flex items-center gap-3 px-3 py-1.5 bg-surface-neutral border-b border-border-neutral-light text-xs shrink-0">
-        <div className="flex items-center gap-1 bg-surface-muted rounded p-0.5">
+      <div className="flex items-center gap-xs px-3 py-1.5 bg-surface-neutral border-b border-border-neutral-light text-xs shrink-0">
+        <div className="flex items-center gap-xxxs bg-surface-muted rounded p-0.5">
           {tab("admin", "Admin")}
           {tab("attendee", "Attendee")}
         </div>
         {viewerMode === "attendee" && (
-          <div className="flex items-center gap-4 text-text-body">
+          <div className="flex items-center gap-s text-text-body">
             <Checkbox
               label="Lock selection"
               checked={lockSelection}

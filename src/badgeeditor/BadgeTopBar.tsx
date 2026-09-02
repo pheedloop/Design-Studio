@@ -56,7 +56,7 @@ export function BadgeTopBar({
       {menu("view", "View", viewMenuItems)}
       <div className="flex-1" />
       {rightActions && (
-        <div className="flex items-center gap-3 px-3">{rightActions}</div>
+        <div className="flex items-center gap-xs px-3">{rightActions}</div>
       )}
       {debug && (
         <MenuButton

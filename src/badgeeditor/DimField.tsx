@@ -36,7 +36,7 @@ export function DimField({
     setText(fmtUnit(value, unit, 3));
   }
   return (
-    <label className="flex-1 flex flex-col gap-1.5">
+    <label className="flex-1 flex flex-col gap-xxxs.5">
       <SectionLabel>
         {label} ({unitLabel[unit]})
       </SectionLabel>

@@ -21,7 +21,7 @@ export function LabelSection({ properties, onChange }: LabelSectionProps) {
   const hasBg = !!properties.labelBackground;
 
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col gap-xs">
       <div className="flex items-center justify-between">
         <SectionLabel>{t("editor.field.label")}</SectionLabel>
         <button
@@ -49,7 +49,7 @@ export function LabelSection({ properties, onChange }: LabelSectionProps) {
         onChange={c => onChange({ labelColor: c })}
       />
 
-      <div className="flex flex-col gap-1.5">
+      <div className="flex flex-col gap-xxxs.5">
         <SectionLabel>{t("editor.field.fontSize")}</SectionLabel>
         <div className="w-20">
           <NumberInput
@@ -59,9 +59,9 @@ export function LabelSection({ properties, onChange }: LabelSectionProps) {
         </div>
       </div>
 
-      <div className="flex flex-col gap-1.5">
+      <div className="flex flex-col gap-xxxs.5">
         <SectionLabel>{t("editor.field.style")}</SectionLabel>
-        <div className="flex gap-1">
+        <div className="flex gap-xxxs">
           <Button
             variant="outline"
             color="neutral"
@@ -94,8 +94,8 @@ export function LabelSection({ properties, onChange }: LabelSectionProps) {
         </div>
       </div>
 
-      <div className="flex flex-col gap-1.5">
-        <div className="flex items-center gap-2">
+      <div className="flex flex-col gap-xxxs.5">
+        <div className="flex items-center gap-xxs">
           <SectionLabel>{t("editor.field.background")}</SectionLabel>
           <input
             type="checkbox"
@@ -113,7 +113,7 @@ export function LabelSection({ properties, onChange }: LabelSectionProps) {
           />
         </div>
         {hasBg && properties.labelBackground && (
-          <div className="flex flex-col gap-2 pl-1">
+          <div className="flex flex-col gap-xxs pl-1">
             <ColorSwatch
               label=""
               value={properties.labelBackground.color}
@@ -123,7 +123,7 @@ export function LabelSection({ properties, onChange }: LabelSectionProps) {
                 })
               }
             />
-            <div className="flex items-center gap-1.5">
+            <div className="flex items-center gap-xxxs.5">
               <span className="text-[11px] text-text-caption">
                 {t("editor.field.opacity")}
               </span>

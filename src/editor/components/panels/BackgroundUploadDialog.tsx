@@ -322,7 +322,7 @@ export function BackgroundUploadDialog({
         </>
       }
     >
-      <div className="p-4 flex flex-col gap-4">
+      <div className="p-4 flex flex-col gap-s">
         {!file ? (
           <div
             onClick={() => fileRef.current?.click()}
@@ -370,15 +370,15 @@ export function BackgroundUploadDialog({
                 className="w-full bg-surface-neutral rounded-lg border border-border-neutral-light"
               />
 
-              <div className="flex flex-col gap-1">
+              <div className="flex flex-col gap-xxxs">
                 <span className="text-xs font-medium text-text-body">
                   {t("editor.background.layersToImport")}
                 </span>
-                <div className="max-h-40 overflow-y-auto flex flex-col gap-1 border border-border-neutral-light rounded-md p-2">
+                <div className="max-h-40 overflow-y-auto flex flex-col gap-xxxs border border-border-neutral-light rounded-md p-2">
                   {parsed.layers.map(layer => (
                     <label
                       key={layer}
-                      className="flex items-center gap-2 cursor-pointer text-xs"
+                      className="flex items-center gap-xxs cursor-pointer text-xs"
                     >
                       <input
                         type="checkbox"
@@ -397,7 +397,7 @@ export function BackgroundUploadDialog({
                 </div>
               </div>
 
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-xxs">
                 <span className="text-xs font-medium text-text-body w-16">
                   {t("editor.field.opacity")}
                 </span>
@@ -417,7 +417,7 @@ export function BackgroundUploadDialog({
 
               <FitModeRadios mode={mode} onChange={setMode} t={t} />
 
-              <div className="text-xs text-text-caption flex flex-col gap-1">
+              <div className="text-xs text-text-caption flex flex-col gap-xxxs">
                 {parsed.unsupportedCount > 0 && (
                   <span>
                     {t("editor.background.skipped", {
@@ -490,7 +490,7 @@ export function BackgroundUploadDialog({
                   })}
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-xxs">
               <span className="text-xs font-medium text-text-body w-16">
                 {t("editor.field.opacity")}
               </span>

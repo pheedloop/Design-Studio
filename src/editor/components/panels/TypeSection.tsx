@@ -57,7 +57,7 @@ export function TypeSection({ typeKey, defaults, onChange }: TypeSectionProps) {
         className="w-full flex items-center justify-between px-3 py-2 text-left hover:bg-surface-neutral transition-colors cursor-pointer"
         onClick={() => setOpen(o => !o)}
       >
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-xxs">
           <span
             className="w-3 h-3 rounded-sm shrink-0 border border-border-neutral"
             style={{ background: defaults.color ?? "#94a3b8" }}
@@ -74,7 +74,7 @@ export function TypeSection({ typeKey, defaults, onChange }: TypeSectionProps) {
       </button>
 
       {open && (
-        <div className="flex flex-col gap-3 px-3 pb-3 border-t border-border-neutral-faint pt-3">
+        <div className="flex flex-col gap-xs px-3 pb-3 border-t border-border-neutral-faint pt-3">
           <ColorSwatch
             label={t("editor.field.fill")}
             value={defaults.color ?? "#94a3b8"}
@@ -85,7 +85,7 @@ export function TypeSection({ typeKey, defaults, onChange }: TypeSectionProps) {
             value={defaults.strokeColor ?? "#888888"}
             onChange={c => onChange({ strokeColor: c })}
           />
-          <div className="flex flex-col gap-1.5">
+          <div className="flex flex-col gap-xxxs.5">
             <SectionLabel>{t("editor.field.strokeWidth")}</SectionLabel>
             <div className="w-20">
               <NumberInput
@@ -94,15 +94,15 @@ export function TypeSection({ typeKey, defaults, onChange }: TypeSectionProps) {
               />
             </div>
           </div>
-          <div className="flex gap-3">
-            <div className="flex flex-col gap-1.5 flex-1">
+          <div className="flex gap-xs">
+            <div className="flex flex-col gap-xxxs.5 flex-1">
               <SectionLabel>{t("editor.field.defaultWidth")}</SectionLabel>
               <NumberInput
                 value={defaults.defaultWidth ?? 120}
                 onChange={v => onChange({ defaultWidth: Math.max(1, v) })}
               />
             </div>
-            <div className="flex flex-col gap-1.5 flex-1">
+            <div className="flex flex-col gap-xxxs.5 flex-1">
               <SectionLabel>{t("editor.field.defaultHeight")}</SectionLabel>
               <NumberInput
                 value={defaults.defaultHeight ?? 80}
@@ -110,7 +110,7 @@ export function TypeSection({ typeKey, defaults, onChange }: TypeSectionProps) {
               />
             </div>
           </div>
-          <div className="flex flex-col gap-1.5">
+          <div className="flex flex-col gap-xxxs.5">
             <div className="flex items-center justify-between">
               <SectionLabel>{t("editor.field.opacity")}</SectionLabel>
               <span className="text-[11px] text-text-subtle">

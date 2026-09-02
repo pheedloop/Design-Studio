@@ -26,8 +26,8 @@ export function PathingOptionsBar({
 }: PathingOptionsBarProps) {
   const t = useT();
   return (
-    <div className="flex items-center gap-4 px-3 py-2 bg-white border-b border-border-neutral-light">
-      <div className="flex items-center gap-1.5">
+    <div className="flex items-center gap-s px-3 py-2 bg-white border-b border-border-neutral-light">
+      <div className="flex items-center gap-xxxs.5">
         <span className="text-[11px] text-text-caption">
           {t("editor.field.cellSize")}
         </span>
@@ -43,7 +43,7 @@ export function PathingOptionsBar({
         </Select>
       </div>
 
-      <div className="flex items-center gap-1.5">
+      <div className="flex items-center gap-xxxs.5">
         <span className="text-[11px] text-text-caption">
           {t("editor.field.opacity")}
         </span>
@@ -65,7 +65,7 @@ export function PathingOptionsBar({
       <Button
         variant="ghost"
         color="positive"
-        className="gap-1"
+        className="gap-xxxs"
         onClick={onAutoMarkWalkable}
         title={t("editor.pathing.autoAislesHint")}
       >
@@ -75,7 +75,7 @@ export function PathingOptionsBar({
 
       <button
         onClick={onAutoMarkObstacles}
-        className="flex items-center gap-1 px-2 py-1 text-xs text-text-body hover:bg-amber-50 hover:text-amber-700 rounded transition-colors cursor-pointer"
+        className="flex items-center gap-xxxs px-2 py-1 text-xs text-text-body hover:bg-amber-50 hover:text-amber-700 rounded transition-colors cursor-pointer"
         title={t("editor.pathing.autoObstaclesHint")}
       >
         <PiMagicWand size={14} />

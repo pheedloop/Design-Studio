@@ -49,7 +49,7 @@ export function PlacementFilterBar({
   return (
     <div className="border-b border-border-neutral-faint bg-white">
       {/* Toolbar row */}
-      <div className="flex items-center gap-1.5 px-3 py-1.5">
+      <div className="flex items-center gap-xxxs.5 px-3 py-1.5">
         {/* Shape picker */}
         <div className="relative">
           <button
@@ -58,7 +58,7 @@ export function PlacementFilterBar({
               setShapeOpen(v => !v);
               setFilterOpen(false);
             }}
-            className="flex items-center gap-1 text-xs text-text-body border border-border-neutral-light rounded px-1.5 py-0.5 hover:bg-surface-neutral transition-colors"
+            className="flex items-center gap-xxxs text-xs text-text-body border border-border-neutral-light rounded px-1.5 py-0.5 hover:bg-surface-neutral transition-colors"
           >
             <span
               className="inline-block w-2.5 h-2.5 bg-surface-muted-hover shrink-0"
@@ -78,7 +78,7 @@ export function PlacementFilterBar({
                     setShapeOpen(false);
                   }}
                   className={[
-                    "w-full text-left flex items-center gap-1.5 px-2 py-1.5 text-xs hover:bg-surface-neutral transition-colors",
+                    "w-full text-left flex items-center gap-xxxs.5 px-2 py-1.5 text-xs hover:bg-surface-neutral transition-colors",
                     shape === s
                       ? "text-primary-600 font-medium"
                       : "text-text-body",
@@ -130,7 +130,7 @@ export function PlacementFilterBar({
               {(["all", "unplaced", "placed"] as const).map(f => (
                 <label
                   key={f}
-                  className="flex items-center gap-2 px-2.5 py-1.5 text-xs cursor-pointer hover:bg-surface-neutral transition-colors"
+                  className="flex items-center gap-xxs px-2.5 py-1.5 text-xs cursor-pointer hover:bg-surface-neutral transition-colors"
                 >
                   <input
                     type="radio"

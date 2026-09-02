@@ -537,7 +537,7 @@ function BadgeEditorInner({
             if (!previewMode && doc.pages.length <= 1 && !showAlign)
               return null;
             return (
-              <div className="relative z-20 flex items-center gap-3 px-3 h-[43px] bg-white border-b border-border-neutral-light shrink-0">
+              <div className="relative z-20 flex items-center gap-xs px-3 h-[43px] bg-white border-b border-border-neutral-light shrink-0">
                 {!previewMode && doc.pages.length > 1 && (
                   <TabBar
                     tabs={pageTabs}
@@ -553,7 +553,7 @@ function BadgeEditorInner({
                 )}
                 <div className="flex-1" />
                 {showAlign && (
-                  <div className="flex items-center gap-0.5">
+                  <div className="flex items-center gap-hair">
                     <AlignmentControls
                       onAlignLeft={() => runAlign(alignLeft)}
                       onAlignCenterH={() => runAlign(alignCenterH)}
@@ -638,7 +638,7 @@ function BadgeEditorInner({
               )}
               {/* Footer — page + overall badge size, and zoom (mirrors StatusBar) */}
               <div className="relative z-20 flex items-center justify-between px-3 py-1.5 bg-white border-t border-border-neutral-light text-xs text-text-caption">
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-xxs">
                   <span>
                     Page {fmtUnit(doc.panelSize.width, unit)} ×{" "}
                     {fmtUnit(doc.panelSize.height, unit)} {unitLabel[unit]}

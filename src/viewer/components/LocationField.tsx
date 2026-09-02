@@ -36,7 +36,7 @@ export function LocationField({
 
   if (value) {
     return (
-      <div className="flex items-center gap-2 px-3 py-2 bg-surface-neutral rounded-lg border border-border-neutral-light">
+      <div className="flex items-center gap-xxs px-3 py-2 bg-surface-neutral rounded-lg border border-border-neutral-light">
         <span className="text-[10px] font-semibold text-text-subtle uppercase w-8 shrink-0">
           {label}
         </span>
@@ -60,7 +60,7 @@ export function LocationField({
 
   return (
     <div className="relative">
-      <div className="flex items-center gap-2 px-3 py-2 bg-white rounded-lg border border-border-neutral-light focus-within:border-blue-400">
+      <div className="flex items-center gap-xxs px-3 py-2 bg-white rounded-lg border border-border-neutral-light focus-within:border-blue-400">
         <span className="text-[10px] font-semibold text-text-subtle uppercase w-8 shrink-0">
           {label}
         </span>
@@ -96,7 +96,7 @@ export function LocationField({
                   }}
                   className="w-full text-left px-3 py-1.5 hover:bg-surface-neutral cursor-pointer transition-colors"
                 >
-                  <div className="flex items-center justify-between gap-2">
+                  <div className="flex items-center justify-between gap-xxs">
                     <span className="text-xs font-medium text-text-heading truncate">
                       {result.exhibitorName || displayName(result, t)}
                     </span>

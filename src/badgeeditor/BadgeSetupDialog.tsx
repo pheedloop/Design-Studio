@@ -128,10 +128,10 @@ export function BadgeSetupDialog({
         </>
       }
     >
-      <div className="flex flex-col gap-4 p-4">
-        <div className="flex flex-col gap-1.5">
+      <div className="flex flex-col gap-s p-4">
+        <div className="flex flex-col gap-xxxs.5">
           <SectionLabel>Fold</SectionLabel>
-          <div className="flex gap-2">
+          <div className="flex gap-xxs">
             {FOLD_OPTIONS.map(o => (
               <Button
                 key={o.value}
@@ -150,9 +150,9 @@ export function BadgeSetupDialog({
           </span>
         </div>
 
-        <div className="flex flex-col gap-1.5">
+        <div className="flex flex-col gap-xxxs.5">
           <SectionLabel>Units</SectionLabel>
-          <div className="flex gap-2">
+          <div className="flex gap-xxs">
             {(["in", "cm"] as Unit[]).map(u => (
               <Button
                 key={u}
@@ -168,7 +168,7 @@ export function BadgeSetupDialog({
           </div>
         </div>
 
-        <div className="flex gap-3">
+        <div className="flex gap-xs">
           <DimField label="Panel width" value={w} unit={unit} onChange={setW} />
           <DimField
             label="Panel height"
@@ -186,9 +186,9 @@ export function BadgeSetupDialog({
           {count > 1 && " (unfolded)"}
         </div>
 
-        <div className="flex flex-col gap-1.5">
+        <div className="flex flex-col gap-xxxs.5">
           <SectionLabel>Lanyard slots</SectionLabel>
-          <div className="flex gap-2">
+          <div className="flex gap-xxs">
             {SLOT_OPTIONS.map(o => (
               <Button
                 key={o.value}
@@ -205,13 +205,13 @@ export function BadgeSetupDialog({
         </div>
 
         {count > 1 && (
-          <div className="flex flex-col gap-1.5">
+          <div className="flex flex-col gap-xxxs.5">
             <SectionLabel>Panels</SectionLabel>
-            <div className="flex flex-col gap-1.5">
+            <div className="flex flex-col gap-xxxs.5">
               {panels.map((cfg, i) => (
                 <div
                   key={i}
-                  className="flex flex-col gap-1.5 px-2.5 py-2 rounded border border-border-neutral-light"
+                  className="flex flex-col gap-xxxs.5 px-2.5 py-2 rounded border border-border-neutral-light"
                 >
                   <span className="text-xs font-medium text-text-body">
                     {pageRoleLabel(pageRoleForIndex(count, i))}
@@ -227,7 +227,7 @@ export function BadgeSetupDialog({
                     onChange={v => setPanel(i, { tearaway: v })}
                   />
                   {cfg.tearaway && (
-                    <div className="flex items-center gap-2 text-xs text-text-caption pl-5">
+                    <div className="flex items-center gap-xxs text-xs text-text-caption pl-5">
                       <span>Stubs</span>
                       <div className="w-20">
                         <NumberInput

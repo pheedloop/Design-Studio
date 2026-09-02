@@ -27,7 +27,7 @@ export function SearchBar({
 
   return (
     <div className="relative">
-      <div className="flex items-center gap-2 px-3 py-2 bg-white border-b border-border-neutral-light">
+      <div className="flex items-center gap-xxs px-3 py-2 bg-white border-b border-border-neutral-light">
         <PiMagnifyingGlass size={16} className="text-text-subtle shrink-0" />
         <input
           ref={inputRef}
@@ -75,7 +75,7 @@ export function SearchBar({
                   }}
                   className="w-full text-left px-3 py-2 hover:bg-surface-neutral cursor-pointer transition-colors"
                 >
-                  <div className="flex items-center justify-between gap-2">
+                  <div className="flex items-center justify-between gap-xxs">
                     <span className="text-xs font-medium text-text-heading truncate">
                       {result.exhibitorName || displayName(result, t)}
                     </span>

@@ -52,7 +52,7 @@ export function PlacementSection({
         type="button"
         onClick={onToggle}
         className={[
-          "w-full flex items-center gap-2.5 py-2.5 text-left transition-colors border-l-2",
+          "w-full flex items-center gap-xxs.5 py-2.5 text-left transition-colors border-l-2",
           isOpen
             ? "bg-primary-100 border-primary-500 px-[10px]"
             : "border-transparent px-3 hover:bg-surface-neutral",

@@ -83,9 +83,9 @@ export function PropertiesPanel({
         </IconButton>
       </div>
 
-      <div className="flex flex-col gap-4 p-3 overflow-y-auto flex-1">
+      <div className="flex flex-col gap-s p-3 overflow-y-auto flex-1">
         {isLiteralTextField(field.field) && (
-          <div className="flex flex-col gap-1.5">
+          <div className="flex flex-col gap-xxxs.5">
             <SectionLabel>Text</SectionLabel>
             <TextInput
               value={field.text ?? ""}
@@ -95,7 +95,7 @@ export function PropertiesPanel({
         )}
 
         {isText && (
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-xxs">
             <FieldRow label="Size">
               <Select
                 className="w-full"
@@ -110,7 +110,7 @@ export function PropertiesPanel({
               </Select>
             </FieldRow>
             <FieldRow label="Align">
-              <div className="flex gap-1">
+              <div className="flex gap-xxxs">
                 {ALIGNMENTS.map(a => (
                   <IconButton
                     key={a.value}
@@ -144,7 +144,7 @@ export function PropertiesPanel({
         )}
 
         {(isText || field.kind === "tickets") && (
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-xxs">
             <Checkbox
               label="Invert (180°)"
               checked={Boolean(field.inverted)}
@@ -161,9 +161,9 @@ export function PropertiesPanel({
         )}
 
         {isLiteralTextField(field.field) && (
-          <div className="flex flex-col gap-1.5">
+          <div className="flex flex-col gap-xxxs.5">
             <SectionLabel>Insert token</SectionLabel>
-            <div className="flex flex-wrap gap-1">
+            <div className="flex flex-wrap gap-xxxs">
               {TOKENS.map(t => (
                 <button
                   key={t}

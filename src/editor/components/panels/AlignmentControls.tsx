@@ -63,7 +63,7 @@ const GROUPS: {
 /**
  * The align + distribute icon cluster shared by the map editor's OptionsBar and
  * the badge editor. Renders a fragment (no wrapper) so it drops into an existing
- * `flex items-center gap-0.5` row; each button appears only when its handler is
+ * `flex items-center gap-hair` row; each button appears only when its handler is
  * provided. Distribute handlers are typically passed only with ≥3 units.
  */
 export function AlignmentControls(props: AlignmentControlsProps) {

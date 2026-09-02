@@ -137,7 +137,7 @@ export function MapSidebar({
                   isSelected ? "bg-primary-100" : "hover:bg-surface-neutral"
                 }`}
               >
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-xxs">
                   {exhibitor.logo && (
                     <img
                       src={exhibitor.logo}

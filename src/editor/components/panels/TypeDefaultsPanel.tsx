@@ -21,7 +21,7 @@ export function TypeDefaultsPanel({
   const keys = typeKeys ?? Object.keys(merged);
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-xxs">
       {keys.map(key => (
         <TypeSection
           key={key}

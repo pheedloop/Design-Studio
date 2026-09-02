@@ -133,8 +133,8 @@ export function CanvasResizeDialog({
         </>
       }
     >
-      <div className="flex flex-col gap-4 p-4">
-        <div className="flex flex-col gap-1.5">
+      <div className="flex flex-col gap-s p-4">
+        <div className="flex flex-col gap-xxxs.5">
           <SectionLabel>{t("editor.field.widthPx")}</SectionLabel>
           <NumberInput value={newWidth} onChange={setW} />
           {dimensions.unit !== "px" && (
@@ -144,7 +144,7 @@ export function CanvasResizeDialog({
           )}
         </div>
 
-        <div className="flex flex-col gap-1.5">
+        <div className="flex flex-col gap-xxxs.5">
           <SectionLabel>{t("editor.field.heightPx")}</SectionLabel>
           <NumberInput
             value={newHeight}
@@ -158,9 +158,9 @@ export function CanvasResizeDialog({
           )}
         </div>
 
-        <div className="flex flex-col gap-1.5">
+        <div className="flex flex-col gap-xxxs.5">
           <SectionLabel>{t("editor.field.content")}</SectionLabel>
-          <div className="flex gap-2">
+          <div className="flex gap-xxs">
             <Button
               variant="outline"
               color="neutral"
@@ -188,9 +188,9 @@ export function CanvasResizeDialog({
         </div>
 
         {mode === "preserve" && (
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-xxs">
             <SectionLabel>{t("editor.resize.anchor")}</SectionLabel>
-            <div className="grid grid-cols-3 gap-1 w-max">
+            <div className="grid grid-cols-3 gap-xxxs w-max">
               {ANCHOR_GRID.map(a => {
                 const selected = anchor === a;
                 return (
@@ -220,7 +220,7 @@ export function CanvasResizeDialog({
         )}
 
         {onStartCrop && (
-          <div className="flex flex-col gap-1.5 border-t border-border-neutral-faint pt-4">
+          <div className="flex flex-col gap-xxxs.5 border-t border-border-neutral-faint pt-4">
             <SectionLabel>{t("editor.resize.cropSection")}</SectionLabel>
             <Button
               variant="outline"

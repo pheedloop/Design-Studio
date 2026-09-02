@@ -72,7 +72,7 @@ export function IconPicker({
       className="bg-white border border-border-neutral-light rounded-lg shadow-lg z-[9999] w-[280px] max-h-[400px] flex flex-col"
       style={{ position: "fixed", left: anchorRect.right + 8, top }}
     >
-      <div className="flex items-center gap-2 px-3 py-2 border-b border-border-neutral-light">
+      <div className="flex items-center gap-xxs px-3 py-2 border-b border-border-neutral-light">
         <PiMagnifyingGlass size={14} className="text-text-subtle shrink-0" />
         <input
           ref={inputRef}
@@ -91,7 +91,7 @@ export function IconPicker({
               {t("editor.icon.noResults")}
             </p>
           ) : (
-            <div className="flex flex-wrap gap-0.5">
+            <div className="flex flex-wrap gap-hair">
               {filtered.map(renderIcon)}
             </div>
           )
@@ -101,7 +101,7 @@ export function IconPicker({
               <div className="text-[10px] font-medium text-text-subtle uppercase tracking-wide px-1 mb-1">
                 {t(ICON_CATEGORY_LABEL[category])}
               </div>
-              <div className="flex flex-wrap gap-0.5">
+              <div className="flex flex-wrap gap-hair">
                 {iconRegistry
                   .filter(e => e.category === category)
                   .map(renderIcon)}

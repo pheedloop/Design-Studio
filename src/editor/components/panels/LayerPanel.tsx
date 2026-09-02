@@ -47,9 +47,9 @@ export function LayerPanel({
       className="absolute right-2 z-[9001]"
       style={{ top: topOffset }}
     >
-      <div className="flex items-center gap-1.5">
+      <div className="flex items-center gap-xxxs.5">
         {activeLayer && (
-          <div className="flex items-center gap-1.5 px-2 py-1 bg-white border border-border-neutral-light rounded-lg shadow-md text-xs text-text-body">
+          <div className="flex items-center gap-xxxs.5 px-2 py-1 bg-white border border-border-neutral-light rounded-lg shadow-md text-xs text-text-body">
             <span
               className="w-2 h-2 rounded-full"
               style={{ backgroundColor: LAYER_COLORS[activeLayer.id] }}
@@ -81,7 +81,7 @@ export function LayerPanel({
               <div
                 key={layer.id}
                 title={locked ? t("editor.premiumFeature") : undefined}
-                className={`flex items-center gap-2 px-3 py-1.5 text-xs transition-colors ${
+                className={`flex items-center gap-xxs px-3 py-1.5 text-xs transition-colors ${
                   locked
                     ? "text-text-disabled cursor-not-allowed"
                     : isActive

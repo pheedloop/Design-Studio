@@ -65,7 +65,7 @@ export function OptionsBar({
   ].filter(Boolean);
 
   return (
-    <div className="flex items-center gap-4 px-3 py-2 bg-white border-b border-border-neutral-light h-[43px]">
+    <div className="flex items-center gap-s px-3 py-2 bg-white border-b border-border-neutral-light h-[43px]">
       {fields.has("fill") && (
         <ColorSwatch
           label={t("editor.field.fill")}
@@ -81,7 +81,7 @@ export function OptionsBar({
         />
       )}
       {fields.has("strokeWidth") && (
-        <div className="flex items-center gap-1.5">
+        <div className="flex items-center gap-xxxs.5">
           <span className="text-[11px] text-text-caption">
             {t("editor.field.stroke")}
           </span>
@@ -98,7 +98,7 @@ export function OptionsBar({
       {groupActions.length > 0 && (
         <>
           <div className="w-px h-4 bg-surface-muted shrink-0" />
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-xxxs">
             {onExitGroup && (
               <Button
                 variant="outline"
@@ -145,7 +145,7 @@ export function OptionsBar({
       {alignActions.length > 0 && (
         <>
           <div className="w-px h-4 bg-surface-muted shrink-0" />
-          <div className="flex items-center gap-0.5">
+          <div className="flex items-center gap-hair">
             <AlignmentControls
               onAlignLeft={onAlignLeft}
               onAlignCenterH={onAlignCenterH}

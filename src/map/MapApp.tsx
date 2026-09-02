@@ -105,7 +105,7 @@ export function MapApp() {
 
   return (
     <div className="h-screen flex flex-col">
-      <nav className="flex items-center gap-1 px-3 py-1.5 bg-gray-900 text-xs shrink-0">
+      <nav className="flex items-center gap-xxxs px-3 py-1.5 bg-gray-900 text-xs shrink-0">
         <ProductSwitcher current="maps" mode={mode} />
         <div className="w-px h-4 bg-gray-700 mx-1" />
         {modeTab("editor", "Editor")}
@@ -156,7 +156,7 @@ export function MapApp() {
             <ChromeToggle
               active={viewerMode === "attendee"}
               onClick={() => setViewerMode("attendee")}
-              className="flex items-center gap-1"
+              className="flex items-center gap-xxxs"
               title="Attendee view"
             >
               <PiUser size={14} />
@@ -165,7 +165,7 @@ export function MapApp() {
             <ChromeToggle
               active={viewerMode === "exhibitor"}
               onClick={() => setViewerMode("exhibitor")}
-              className="flex items-center gap-1"
+              className="flex items-center gap-xxxs"
               title="Exhibitor view"
             >
               <PiStorefront size={14} />

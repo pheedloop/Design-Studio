@@ -11,8 +11,8 @@ export function FitModeRadios({
   t: T;
 }) {
   return (
-    <div className="flex flex-col gap-2">
-      <label className="flex items-center gap-2 cursor-pointer">
+    <div className="flex flex-col gap-xxs">
+      <label className="flex items-center gap-xxs cursor-pointer">
         <input
           type="radio"
           name="bgSizeMode"
@@ -29,7 +29,7 @@ export function FitModeRadios({
           </p>
         </div>
       </label>
-      <label className="flex items-center gap-2 cursor-pointer">
+      <label className="flex items-center gap-xxs cursor-pointer">
         <input
           type="radio"
           name="bgSizeMode"

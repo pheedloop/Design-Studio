@@ -65,7 +65,7 @@ export function TableDetailPopover({
       aria-label={t("seatviewer.table.details", { name: tableName })}
       className="absolute z-[9999] w-72 max-w-[calc(100%-24px)] left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-surface-contrast border border-border-neutral rounded-xl shadow-[0_16px_48px_rgba(38,59,90,0.28)] overflow-hidden"
     >
-      <div className="flex items-start gap-2 p-3 border-b border-border-neutral-light">
+      <div className="flex items-start gap-xxs p-3 border-b border-border-neutral-light">
         <div className="flex-1 min-w-0">
           <h3 className="m-0 text-base font-medium text-text-body">
             {tableName}
@@ -105,7 +105,10 @@ export function TableDetailPopover({
             )}
           </div>
           {occupants.map(o => (
-            <div key={o.code} className="flex items-center gap-2.5 px-3 py-1.5">
+            <div
+              key={o.code}
+              className="flex items-center gap-xxs.5 px-3 py-1.5"
+            >
               <span className="size-6 shrink-0 grid place-items-center rounded-full text-[10px] font-semibold bg-primary-100 text-primary-600">
                 {initials(o)}
               </span>

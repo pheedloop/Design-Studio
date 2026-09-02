@@ -84,7 +84,7 @@ export function LegendDialog({ legend, onSave, onClose }: LegendDialogProps) {
         </Button>
       }
     >
-      <div className="flex flex-col gap-4 p-4 overflow-y-auto flex-1">
+      <div className="flex flex-col gap-s p-4 overflow-y-auto flex-1">
         {/* Global visibility toggle */}
         <Checkbox
           label={t("editor.legend.showOnMap")}
@@ -94,9 +94,9 @@ export function LegendDialog({ legend, onSave, onClose }: LegendDialogProps) {
 
         {/* Entry list */}
         {local.entries.length > 0 && (
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-xxs">
             {local.entries.map((entry, idx) => (
-              <div key={entry.id} className="flex items-center gap-2">
+              <div key={entry.id} className="flex items-center gap-xxs">
                 <ColorSwatch
                   label=""
                   value={entry.color}
@@ -166,7 +166,7 @@ export function LegendDialog({ legend, onSave, onClose }: LegendDialogProps) {
 
         {/* Add entry */}
         <button
-          className="flex items-center gap-1.5 text-xs text-blue-600 hover:text-blue-700 transition-colors cursor-pointer self-start"
+          className="flex items-center gap-xxxs.5 text-xs text-blue-600 hover:text-blue-700 transition-colors cursor-pointer self-start"
           onClick={addEntry}
         >
           <PiPlus size={13} />
