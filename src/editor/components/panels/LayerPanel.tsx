@@ -7,6 +7,8 @@ import { IconButton } from "@/components/IconButton";
 import { TrophyIcon } from "@/editor/components/ui";
 import { useT } from "@/editor/i18n";
 import { useDismiss } from "@/hooks/useDismiss";
+import { Row } from "@/components/Row";
+import { BRAND, GRAY_400 } from "@/canvasColors";
 
 interface LayerPanelProps {
   layers: LayerDefinition[];
@@ -19,8 +21,8 @@ interface LayerPanelProps {
 }
 
 const LAYER_COLORS: Record<LayerId, string> = {
-  background: "#9ca3af",
-  content: "#007bff",
+  background: GRAY_400,
+  content: BRAND,
   pathing: "#f59e0b",
   markup: "#10b981",
 };
@@ -44,31 +46,35 @@ export function LayerPanel({
   return (
     <div
       ref={panelRef}
-      className="absolute right-2 z-[9001]"
+      className="absolute right-2 z-dropdown"
       style={{ top: topOffset }}
     >
-      <div className="flex items-center gap-1.5">
+      <Row gap="tight" align="center">
         {activeLayer && (
-          <div className="flex items-center gap-1.5 px-2 py-1 bg-white border border-gray-200 rounded-lg shadow-md text-xs text-gray-600">
+          <Row
+            gap="tight"
+            align="center"
+            className="px-xxs py-xxxs bg-white border border-border-neutral-light rounded-lg shadow-md text-xs text-text-body"
+          >
             <span
               className="w-2 h-2 rounded-full"
               style={{ backgroundColor: LAYER_COLORS[activeLayer.id] }}
             />
             {activeLayer.name}
-          </div>
+          </Row>
         )}
         <IconButton
           active={open}
           onClick={() => setOpen(prev => !prev)}
-          className={`shadow-md border ${open ? "border-primary-600" : "border-gray-200 bg-white hover:bg-gray-50"}`}
+          className={`shadow-md border ${open ? "border-primary-600" : "border-border-neutral-light bg-white hover:bg-surface-neutral"}`}
           title={t("editor.field.layers")}
         >
           <PiStack size={18} />
         </IconButton>
-      </div>
+      </Row>
 
       {open && (
-        <div className="absolute top-full right-0 mt-1 bg-white border border-gray-200 rounded-md shadow-lg py-1 min-w-[180px]">
+        <div className="absolute top-full right-0 mt-xxxs bg-white border border-border-neutral-light rounded-md shadow-lg py-xxxs min-w-[180px]">
           {layers.map(layer => {
             // Wayfinding gates the pathing layer: hide it entirely, or lock it.
             const locked =
@@ -81,12 +87,12 @@ export function LayerPanel({
               <div
                 key={layer.id}
                 title={locked ? t("editor.premiumFeature") : undefined}
-                className={`flex items-center gap-2 px-3 py-1.5 text-xs transition-colors ${
+                className={`flex items-center gap-xxs px-xs py-tight text-xs transition-colors ${
                   locked
-                    ? "text-gray-300 cursor-not-allowed"
+                    ? "text-text-disabled cursor-not-allowed"
                     : isActive
-                      ? "bg-gray-100 font-semibold text-gray-800 cursor-pointer"
-                      : "text-gray-600 hover:bg-gray-50 cursor-pointer"
+                      ? "bg-surface-neutral font-semibold text-text-heading cursor-pointer"
+                      : "text-text-body hover:bg-surface-neutral cursor-pointer"
                 }`}
                 onClick={locked ? undefined : () => onSetActiveLayer(layer.id)}
               >

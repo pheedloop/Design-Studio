@@ -4,6 +4,8 @@ import { IconButton } from "@/components/IconButton";
 import type { SearchResult } from "@/viewer/hooks/useSearch";
 import { TYPE_BADGE, displayName } from "@/viewer/utils/elementTypes";
 import { useT } from "@/viewer/i18n";
+import { Row } from "@/components/Row";
+import { Text } from "@/components/Text";
 
 interface SearchBarProps {
   query: string;
@@ -27,8 +29,12 @@ export function SearchBar({
 
   return (
     <div className="relative">
-      <div className="flex items-center gap-2 px-3 py-2 bg-white border-b border-gray-200">
-        <PiMagnifyingGlass size={16} className="text-gray-400 shrink-0" />
+      <Row
+        gap="xxs"
+        align="center"
+        className="px-xs py-xxs bg-white border-b border-border-neutral-light"
+      >
+        <PiMagnifyingGlass size={16} className="text-text-subtle shrink-0" />
         <input
           ref={inputRef}
           type="text"
@@ -40,7 +46,7 @@ export function SearchBar({
             setTimeout(() => setFocused(false), 150);
           }}
           placeholder={placeholder}
-          className="flex-1 text-sm text-gray-800 placeholder:text-gray-400 outline-none bg-transparent"
+          className="flex-1 text-sm text-text-heading placeholder:text-text-subtle outline-none bg-transparent"
         />
         {query && (
           <IconButton
@@ -54,12 +60,12 @@ export function SearchBar({
             <PiX size={14} />
           </IconButton>
         )}
-      </div>
+      </Row>
 
       {showDropdown && (
-        <div className="absolute top-full left-0 right-0 bg-white border border-gray-200 border-t-0 rounded-b-lg shadow-lg z-50 max-h-60 overflow-y-auto">
+        <div className="absolute top-full left-0 right-0 bg-white border border-border-neutral-light border-t-0 rounded-b-lg shadow-lg z-50 max-h-60 overflow-y-auto">
           {results.length === 0 ? (
-            <div className="px-3 py-3 text-xs text-gray-400">
+            <div className="px-xs py-xs text-xs text-text-subtle">
               {t("viewer.search.noResults")}
             </div>
           ) : (
@@ -73,20 +79,26 @@ export function SearchBar({
                     onQueryChange("");
                     inputRef.current?.blur();
                   }}
-                  className="w-full text-left px-3 py-2 hover:bg-gray-50 cursor-pointer transition-colors"
+                  className="w-full text-left px-xs py-xxs hover:bg-surface-neutral cursor-pointer transition-colors"
                 >
-                  <div className="flex items-center justify-between gap-2">
-                    <span className="text-xs font-medium text-gray-800 truncate">
+                  <Row gap="xxs" align="center" justify="between">
+                    <Text
+                      size="xs"
+                      weight="medium"
+                      color="heading"
+                      as="span"
+                      truncate
+                    >
                       {result.exhibitorName || displayName(result, t)}
-                    </span>
+                    </Text>
                     <span
-                      className={`text-[10px] font-medium px-1.5 py-0.5 rounded shrink-0 ${badge.className}`}
+                      className={`text-xs font-medium px-tight py-hair rounded shrink-0 ${badge.className}`}
                     >
                       {t(badge.labelKey)}
                     </span>
-                  </div>
+                  </Row>
                   {result.exhibitorName && (
-                    <div className="text-[11px] text-gray-400">
+                    <div className="text-xs text-text-subtle">
                       {displayName(result, t)}
                     </div>
                   )}

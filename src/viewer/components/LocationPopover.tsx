@@ -23,14 +23,16 @@ export function LocationPopover({
 
   return (
     <Popover x={x} y={y} onClose={onClose}>
-      <div className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
+      <div className="text-xs font-semibold text-text-caption uppercase tracking-wide">
         {t(TYPE_NAME[type])}
       </div>
-      <div className="mt-1 text-sm font-medium text-gray-900">{name}</div>
+      <div className="mt-xxxs text-sm font-medium text-text-heading">
+        {name}
+      </div>
       {onGetDirections && (
         <button
           onClick={onGetDirections}
-          className="mt-2 w-full text-xs font-medium text-blue-600 hover:bg-blue-50 rounded px-2 py-1.5 cursor-pointer transition-colors text-left"
+          className="mt-xxs w-full text-xs font-medium text-blue-600 hover:bg-blue-50 rounded px-xxs py-tight cursor-pointer transition-colors text-left"
         >
           {t("viewer.getDirections")}
         </button>

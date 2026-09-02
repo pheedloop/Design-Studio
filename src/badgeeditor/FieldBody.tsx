@@ -1,4 +1,5 @@
 import { Rect, Text, Group, Image as KonvaImage } from "react-konva";
+import { GRAY_200, GRAY_400, GRAY_900, WHITE } from "@/canvasColors";
 import type { BadgeField } from "./model";
 import { fieldQrUrl, type BadgeData } from "./badgeData";
 import { PPI, QR_BASE_PX } from "./canvasMetrics";
@@ -26,19 +27,19 @@ export function FieldBody({
     const img = getImg(qrUrl);
     return img ? (
       <>
-        <Rect width={size} height={size} fill="#ffffff" />
+        <Rect width={size} height={size} fill={WHITE} />
         <KonvaImage image={img} width={size} height={size} listening={false} />
       </>
     ) : (
       <>
-        <Rect width={size} height={size} fill="#0f172a" cornerRadius={2} />
+        <Rect width={size} height={size} fill={GRAY_900} cornerRadius={2} />
         <Text
           text="QR"
           width={size}
           height={size}
           align="center"
           verticalAlign="middle"
-          fill="#ffffff"
+          fill={WHITE}
           fontSize={Math.max(10, size * 0.25)}
           listening={false}
         />
@@ -57,8 +58,8 @@ export function FieldBody({
         <Rect
           width={w}
           height={h}
-          fill="#e2e8f0"
-          stroke="#94a3b8"
+          fill={GRAY_200}
+          stroke={GRAY_400}
           strokeWidth={1}
         />
       ) : field.kind === "tickets" ? (
@@ -66,7 +67,7 @@ export function FieldBody({
           width={w}
           height={h}
           fill="transparent"
-          stroke="#0f172a"
+          stroke={GRAY_900}
           strokeWidth={1}
         />
       ) : (
@@ -74,7 +75,7 @@ export function FieldBody({
           width={w}
           height={h}
           fill="transparent"
-          stroke="#94a3b8"
+          stroke={GRAY_400}
           strokeWidth={1}
           dash={[4, 4]}
         />

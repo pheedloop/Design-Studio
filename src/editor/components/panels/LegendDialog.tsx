@@ -13,6 +13,8 @@ import {
   PiPlus,
 } from "react-icons/pi";
 import { useT } from "@/editor/i18n";
+import { Row } from "@/components/Row";
+import { Stack } from "@/components/Stack";
 
 interface LegendDialogProps {
   legend: Legend;
@@ -84,7 +86,7 @@ export function LegendDialog({ legend, onSave, onClose }: LegendDialogProps) {
         </Button>
       }
     >
-      <div className="flex flex-col gap-4 p-4 overflow-y-auto flex-1">
+      <Stack gap="s" className="p-s overflow-y-auto flex-1">
         {/* Global visibility toggle */}
         <Checkbox
           label={t("editor.legend.showOnMap")}
@@ -94,9 +96,9 @@ export function LegendDialog({ legend, onSave, onClose }: LegendDialogProps) {
 
         {/* Entry list */}
         {local.entries.length > 0 && (
-          <div className="flex flex-col gap-2">
+          <Stack gap="xxs">
             {local.entries.map((entry, idx) => (
-              <div key={entry.id} className="flex items-center gap-2">
+              <Row key={entry.id} gap="xxs" align="center">
                 <ColorSwatch
                   label=""
                   value={entry.color}
@@ -147,32 +149,32 @@ export function LegendDialog({ legend, onSave, onClose }: LegendDialogProps) {
                 {/* Raw: the red hover marks the destructive action, and a tone
                     prop for one site fails the ≥2-consumer bar. */}
                 <button
-                  className="p-1 rounded text-gray-400 hover:text-red-500 transition-colors cursor-pointer"
+                  className="p-xxxs rounded text-text-subtle hover:text-red-500 transition-colors cursor-pointer"
                   onClick={() => removeEntry(entry.id)}
                   title={t("editor.legend.removeEntry")}
                 >
                   <PiTrash size={14} />
                 </button>
-              </div>
+              </Row>
             ))}
-          </div>
+          </Stack>
         )}
 
         {local.entries.length === 0 && (
-          <p className="text-xs text-gray-400 text-center py-2">
+          <p className="text-xs text-text-subtle text-center py-xxs">
             {t("editor.legend.empty")}
           </p>
         )}
 
         {/* Add entry */}
         <button
-          className="flex items-center gap-1.5 text-xs text-blue-600 hover:text-blue-700 transition-colors cursor-pointer self-start"
+          className="flex items-center gap-tight text-xs text-blue-600 hover:text-blue-700 transition-colors cursor-pointer self-start"
           onClick={addEntry}
         >
           <PiPlus size={13} />
           {t("editor.legend.addEntry")}
         </button>
-      </div>
+      </Stack>
     </Dialog>
   );
 }

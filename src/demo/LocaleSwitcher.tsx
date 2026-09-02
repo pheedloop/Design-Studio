@@ -1,6 +1,7 @@
 // Demo chrome stays untranslated on purpose — it is the visual boundary
 // between library strings and host strings.
 
+import { ChromeDivider } from "./ChromeDivider";
 import { ChromeToggle } from "./ChromeToggle";
 import { DEMO_LOCALES, type DemoLocale } from "./useDemoLocale";
 
@@ -13,8 +14,8 @@ export function LocaleSwitcher({
 }) {
   return (
     <>
-      <div className="w-px h-4 bg-gray-700 mx-1" />
-      <span className="text-gray-500 mr-0.5">Lang:</span>
+      <ChromeDivider />
+      <span className="text-gray-500 mr-hair">Lang:</span>
       {DEMO_LOCALES.map(l => (
         <ChromeToggle
           key={l.id}

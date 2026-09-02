@@ -1,8 +1,9 @@
 import { Arrow } from "react-konva";
 import type { LinePreviewState } from "@/editor/tools/hooks/useLineInteraction";
+import { GRAY_600 } from "@/canvasColors";
 
 const previewStyle = {
-  stroke: "#475569",
+  stroke: GRAY_600,
   strokeWidth: 2,
   dash: [4, 4] as number[],
   listening: false,
@@ -22,7 +23,7 @@ export function ArrowPreview({ state }: ArrowPreviewProps) {
       points={[state.x1, state.y1, state.x2, state.y2]}
       pointerLength={12}
       pointerWidth={10}
-      fill="#475569"
+      fill={GRAY_600}
       {...previewStyle}
     />
   );

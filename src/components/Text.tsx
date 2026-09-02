@@ -2,7 +2,7 @@ import type { ElementType, HTMLAttributes, ReactNode } from "react";
 import { cn } from "@/utils/cn";
 
 export type TextVariant = "body" | "subtitle" | "caption" | "small";
-export type TextSize = "xxs" | "xs" | "sm" | "base" | "lg" | "xl" | "2xl";
+export type TextSize = "xs" | "sm" | "base" | "lg" | "xl" | "2xl";
 export type TextColor =
   | "heading"
   | "body"
@@ -30,7 +30,6 @@ const variantColorClasses: Record<TextVariant, string> = {
 };
 
 const sizeClasses: Record<TextSize, string> = {
-  xxs: "text-xxs",
   xs: "text-xs",
   sm: "text-sm",
   base: "text-base",

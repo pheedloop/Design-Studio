@@ -1,4 +1,5 @@
 import { Group, Line, Rect, Text } from "react-konva";
+import { WHITE } from "@/canvasColors";
 import { CalibrationPointMarker } from "./CalibrationPointMarker";
 
 const LINE_COLOR = "#2563eb";
@@ -50,7 +51,7 @@ export function CalibrationLine({
             y={midY - 10 * inverseScale}
             width={label.length * 8 * inverseScale}
             height={18 * inverseScale}
-            fill="#fff"
+            fill={WHITE}
             cornerRadius={3 * inverseScale}
             opacity={0.9}
             listening={false}

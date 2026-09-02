@@ -1,4 +1,5 @@
 import { Circle } from "react-konva";
+import { WHITE } from "@/canvasColors";
 
 const POINT_RADIUS = 5;
 const POINT_COLOR = "#2563eb";
@@ -19,7 +20,7 @@ export function CalibrationPointMarker({
       radius={POINT_RADIUS * inverseScale}
       fill={POINT_COLOR}
       opacity={dimmed ? 0.4 : 0.8}
-      stroke="#fff"
+      stroke={WHITE}
       strokeWidth={1.5 * inverseScale}
       listening={false}
     />

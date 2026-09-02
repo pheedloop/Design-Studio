@@ -1,6 +1,7 @@
 import { Rect } from "react-konva";
 import type { FloorPlanElement } from "@/types";
 import { getElementBounds } from "@/editor/utils/bounds";
+import { BRAND } from "@/canvasColors";
 
 interface MultiSelectBoundsProps {
   elements: FloorPlanElement[];
@@ -37,7 +38,7 @@ export function MultiSelectBounds({
       y={minY - padding}
       width={maxX - minX + padding * 2}
       height={maxY - minY + padding * 2}
-      stroke="#007bff"
+      stroke={BRAND}
       strokeWidth={1}
       dash={[6, 3]}
       listening={false}

@@ -45,11 +45,11 @@ export function AttendeePicker({
   return (
     <div ref={rootRef} className="relative">
       <div
-        className={`flex items-center gap-1.5 h-7 pl-2 pr-1 rounded border text-xs ${
-          open ? "border-primary-400" : "border-gray-200"
+        className={`flex items-center gap-tight h-7 pl-xxs pr-xxxs rounded border text-xs ${
+          open ? "border-primary-400" : "border-border-neutral-light"
         } bg-white`}
       >
-        <PiMagnifyingGlass size={13} className="text-gray-400 shrink-0" />
+        <PiMagnifyingGlass size={13} className="text-text-subtle shrink-0" />
         <button
           type="button"
           onClick={() =>
@@ -59,12 +59,12 @@ export function AttendeePicker({
               return next;
             })
           }
-          className="min-w-[9rem] max-w-[14rem] truncate text-left text-gray-700"
+          className="min-w-[9rem] max-w-[14rem] truncate text-left text-text-body"
         >
           {value ? (
             value.name
           ) : (
-            <span className="text-gray-400">Preview data…</span>
+            <span className="text-text-subtle">Preview data…</span>
           )}
         </button>
         {value ? (
@@ -78,13 +78,13 @@ export function AttendeePicker({
             <PiX size={13} />
           </IconButton>
         ) : (
-          <PiCaretDown size={12} className="text-gray-400 shrink-0" />
+          <PiCaretDown size={12} className="text-text-subtle shrink-0" />
         )}
       </div>
 
       {open && (
-        <div className="absolute right-0 top-full mt-1 w-72 bg-white border border-gray-200 rounded-md shadow-lg z-[9999] overflow-hidden">
-          <div className="p-2 border-b border-gray-100">
+        <div className="absolute right-0 top-full mt-xxxs w-72 bg-white border border-border-neutral-light rounded-md shadow-lg z-dialog overflow-hidden">
+          <div className="p-xxs border-b border-border-neutral-faint">
             <input
               autoFocus
               value={query}
@@ -93,14 +93,16 @@ export function AttendeePicker({
                 setLoading(true);
               }}
               placeholder="Search attendee…"
-              className="w-full px-2 py-1 text-xs border border-gray-200 rounded outline-none focus:border-primary-400"
+              className="w-full px-xxs py-xxxs text-xs border border-border-neutral-light rounded outline-none focus:border-primary-400"
             />
           </div>
-          <div className="max-h-64 overflow-y-auto py-1">
+          <div className="max-h-64 overflow-y-auto py-xxxs">
             {loading ? (
-              <div className="px-3 py-2 text-xs text-gray-400">Searching…</div>
+              <div className="px-xs py-xxs text-xs text-text-subtle">
+                Searching…
+              </div>
             ) : results.length === 0 ? (
-              <div className="px-3 py-2 text-xs text-gray-400">
+              <div className="px-xs py-xxs text-xs text-text-subtle">
                 No attendees found
               </div>
             ) : (
@@ -112,11 +114,13 @@ export function AttendeePicker({
                     onChange(o);
                     setOpen(false);
                   }}
-                  className="w-full text-left px-3 py-1.5 hover:bg-gray-100"
+                  className="w-full text-left px-xs py-tight hover:bg-surface-neutral"
                 >
-                  <div className="text-xs text-gray-800 truncate">{o.name}</div>
+                  <div className="text-xs text-text-heading truncate">
+                    {o.name}
+                  </div>
                   {o.subtitle && (
-                    <div className="text-[11px] text-gray-400 truncate">
+                    <div className="text-xs text-text-subtle truncate">
                       {o.subtitle}
                     </div>
                   )}

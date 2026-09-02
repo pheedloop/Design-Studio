@@ -19,18 +19,18 @@ const shapes = {
 
 const sizes = {
   filled: { sm: "w-7 h-7", md: "w-9 h-9", lg: "w-10 h-10" },
-  bare: { sm: "p-0.5", md: "p-1", lg: "p-1.5" },
+  bare: { sm: "p-hair", md: "p-xxxs", lg: "p-tight" },
 };
 
 const states = {
   filled: {
     active: "bg-primary-600 text-white hover:bg-primary-700",
     inactive:
-      "text-gray-500 hover:bg-gray-100 hover:text-gray-700 disabled:text-gray-300 disabled:hover:bg-transparent",
+      "text-text-caption hover:bg-surface-neutral hover:text-text-body disabled:text-text-disabled disabled:hover:bg-transparent",
   },
   bare: {
-    active: "text-primary-600 bg-primary-50",
-    inactive: "text-gray-400 hover:text-gray-600",
+    active: "text-primary-600 bg-primary-100",
+    inactive: "text-text-subtle hover:text-text-body",
   },
 };
 

@@ -17,7 +17,7 @@ export function Popover({ x, y, onClose, children }: PopoverProps) {
   return (
     <div
       ref={ref}
-      className="fixed bg-white border border-gray-200 rounded-lg shadow-lg p-3 z-[9999] min-w-[180px]"
+      className="fixed bg-white border border-border-neutral-light rounded-lg shadow-lg p-xs z-dialog min-w-[180px]"
       style={{ left: pos.left, top: pos.top }}
     >
       {children}

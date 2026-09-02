@@ -12,7 +12,7 @@ import { SectionLabel } from "@/editor/components/ui";
 import { FIELD_DEFS, type FieldDef } from "./fields";
 import { BadgeSidebarHeader } from "./BadgeSidebarHeader";
 
-const iconProps = { size: 16, className: "text-gray-400" };
+const iconProps = { size: 16, className: "text-text-subtle" };
 
 function iconFor(def: FieldDef) {
   if (def.kind === "qrCode") return <PiQrCode {...iconProps} />;
@@ -44,10 +44,10 @@ export function BadgeSidebar({
   const fields = FIELD_DEFS.filter(d => d.inPalette !== false);
 
   return (
-    <div className="flex flex-col w-48 shrink-0 bg-white border-r border-gray-200 overflow-hidden">
+    <div className="flex flex-col w-48 shrink-0 bg-white border-r border-border-neutral-light overflow-hidden">
       <BadgeSidebarHeader name={name} onNameChange={onNameChange} />
-      <div className="flex-1 overflow-y-auto py-2 px-1">
-        <div className="px-2 pb-1">
+      <div className="flex-1 overflow-y-auto py-xxs px-xxxs">
+        <div className="px-xxs pb-xxxs">
           <SectionLabel>Add Field</SectionLabel>
         </div>
         {fields.map(d => (

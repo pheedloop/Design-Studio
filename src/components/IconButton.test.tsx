@@ -9,7 +9,7 @@ const cls = () => screen.getByRole("button").className;
 const FILLED_SHAPE =
   "flex items-center justify-center rounded-lg cursor-pointer transition-colors disabled:cursor-not-allowed";
 const FILLED_IDLE =
-  "text-gray-500 hover:bg-gray-100 hover:text-gray-700 disabled:text-gray-300 disabled:hover:bg-transparent";
+  "text-text-caption hover:bg-surface-neutral hover:text-text-body disabled:text-text-disabled disabled:hover:bg-transparent";
 const FILLED_ACTIVE = "bg-primary-600 text-white hover:bg-primary-700";
 
 describe("IconButton filled variant", () => {
@@ -43,9 +43,9 @@ describe("IconButton filled variant", () => {
 
 describe("IconButton bare variant", () => {
   it.each([
-    ["sm", "p-0.5"],
-    ["md", "p-1"],
-    ["lg", "p-1.5"],
+    ["sm", "p-hair"],
+    ["md", "p-xxxs"],
+    ["lg", "p-tight"],
   ] as const)("sizes by padding at %s, not a fixed box", (size, pad) => {
     render(
       <IconButton variant="bare" size={size}>
@@ -63,7 +63,7 @@ describe("IconButton bare variant", () => {
         x
       </IconButton>,
     );
-    expect(cls()).toContain("text-primary-600 bg-primary-50");
+    expect(cls()).toContain("text-primary-600 bg-primary-100");
     expect(cls()).not.toContain("bg-primary-600");
   });
 

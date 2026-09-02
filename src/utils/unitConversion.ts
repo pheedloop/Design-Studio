@@ -27,11 +27,6 @@ export function pxToReal(px: number, pixelsPerUnit: number): number {
   return px / pixelsPerUnit;
 }
 
-/** Convert a real-world measurement to pixels. */
-export function realToPx(real: number, pixelsPerUnit: number): number {
-  return real * pixelsPerUnit;
-}
-
 // ---------------------------------------------------------------------------
 // Formatting
 // ---------------------------------------------------------------------------

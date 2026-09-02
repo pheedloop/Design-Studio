@@ -1,4 +1,5 @@
 import { Rect } from "react-konva";
+import { BRAND } from "@/canvasColors";
 
 interface SelectionRectProps {
   rect: { x: number; y: number; width: number; height: number } | null;
@@ -14,7 +15,7 @@ export function SelectionRect({ rect }: SelectionRectProps) {
       width={rect.width}
       height={rect.height}
       fill="rgba(0, 123, 255, 0.08)"
-      stroke="#007bff"
+      stroke={BRAND}
       strokeWidth={1}
       dash={[4, 4]}
       listening={false}

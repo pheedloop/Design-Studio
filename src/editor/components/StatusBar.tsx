@@ -1,6 +1,7 @@
 import { IconButton } from "@/components/IconButton";
 import { useT } from "@/editor/i18n";
 import type { Unit } from "@/types";
+import { Row } from "@/components/Row";
 
 interface StatusBarProps {
   scale: number;
@@ -23,28 +24,34 @@ export function StatusBar({
   const t = useT();
 
   return (
-    <div className="relative z-20 flex items-center justify-between px-3 py-1.5 bg-white border-t border-gray-200 text-xs text-gray-500">
-      <div className="flex items-center gap-2">
+    <Row
+      align="center"
+      justify="between"
+      px="xs"
+      py="tight"
+      className="relative z-20 bg-white border-t border-border-neutral-light text-xs text-text-caption"
+    >
+      <Row gap="xxs" align="center">
         {isCalibrated && showUnit && (
           <select
             value={unit}
             onChange={e => onUnitChange(e.target.value as Unit)}
-            className="px-1.5 py-0.5 text-xs border border-gray-200 rounded bg-white cursor-pointer hover:border-gray-300"
+            className="px-tight py-hair text-xs border border-border-neutral-light rounded bg-white cursor-pointer hover:border-border-neutral"
             title={t("editor.statusBar.displayUnit")}
           >
             <option value="ft">{t("editor.unit.feet")}</option>
             <option value="m">{t("editor.unit.meters")}</option>
           </select>
         )}
-      </div>
+      </Row>
       <IconButton
         size="sm"
         onClick={onZoomReset}
-        className="px-2 w-auto text-xs text-gray-500"
+        className="px-xxs w-auto text-xs text-text-caption"
         title={t("editor.statusBar.resetZoom")}
       >
         {Math.round(scale * 100)}%
       </IconButton>
-    </div>
+    </Row>
   );
 }

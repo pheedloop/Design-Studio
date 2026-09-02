@@ -12,6 +12,9 @@ import {
   FieldRow,
   TextInput,
 } from "@/editor/components/ui";
+import { Row } from "@/components/Row";
+import { Stack } from "@/components/Stack";
+import { Text } from "@/components/Text";
 import { inchToPx, type BadgeField, type TextAlign } from "./model";
 import { getFieldDef, isLiteralTextField, isUserFieldEditable } from "./fields";
 import { Checkbox } from "@/components/Checkbox";
@@ -51,12 +54,12 @@ export function PropertiesPanel({
 }: PropertiesPanelProps) {
   if (!field) {
     return (
-      <div className="w-48 shrink-0 border-l border-gray-200 bg-white flex flex-col">
-        <div className="flex-1 flex items-center justify-center p-6 text-center">
-          <span className="text-xs text-gray-400">
+      <div className="w-48 shrink-0 border-l border-border-neutral-light bg-white flex flex-col">
+        <Row align="center" justify="center" className="flex-1 p-m text-center">
+          <span className="text-xs text-text-subtle">
             Select a field to edit its properties.
           </span>
-        </div>
+        </Row>
       </div>
     );
   }
@@ -73,29 +76,35 @@ export function PropertiesPanel({
   };
 
   return (
-    <div className="w-52 shrink-0 border-l border-gray-200 bg-white flex flex-col">
-      <div className="px-3 py-2 border-b border-gray-200 flex items-center justify-between">
-        <span className="text-xs font-medium text-gray-600 truncate">
+    <div className="w-52 shrink-0 border-l border-border-neutral-light bg-white flex flex-col">
+      <Row
+        px="xs"
+        py="xxs"
+        align="center"
+        justify="between"
+        className="border-b border-border-neutral-light"
+      >
+        <Text size="xs" weight="medium" color="body" as="span" truncate>
           {label}
-        </span>
+        </Text>
         <IconButton size="sm" onClick={onDelete} title="Delete field">
           <PiTrash size={15} />
         </IconButton>
-      </div>
+      </Row>
 
-      <div className="flex flex-col gap-4 p-3 overflow-y-auto flex-1">
+      <Stack gap="s" className="p-xs overflow-y-auto flex-1">
         {isLiteralTextField(field.field) && (
-          <div className="flex flex-col gap-1.5">
+          <Stack gap="tight">
             <SectionLabel>Text</SectionLabel>
             <TextInput
               value={field.text ?? ""}
               onChange={e => onChange({ text: e.target.value })}
             />
-          </div>
+          </Stack>
         )}
 
         {isText && (
-          <div className="flex flex-col gap-2">
+          <Stack gap="xxs">
             <FieldRow label="Size">
               <Select
                 className="w-full"
@@ -110,7 +119,7 @@ export function PropertiesPanel({
               </Select>
             </FieldRow>
             <FieldRow label="Align">
-              <div className="flex gap-1">
+              <Row gap="xxxs">
                 {ALIGNMENTS.map(a => (
                   <IconButton
                     key={a.value}
@@ -122,9 +131,9 @@ export function PropertiesPanel({
                     {a.icon}
                   </IconButton>
                 ))}
-              </div>
+              </Row>
             </FieldRow>
-          </div>
+          </Stack>
         )}
 
         {field.kind === "tickets" && (
@@ -144,7 +153,7 @@ export function PropertiesPanel({
         )}
 
         {(isText || field.kind === "tickets") && (
-          <div className="flex flex-col gap-2">
+          <Stack gap="xxs">
             <Checkbox
               label="Invert (180°)"
               checked={Boolean(field.inverted)}
@@ -157,13 +166,13 @@ export function PropertiesPanel({
                 onChange={v => onChange({ userEditable: v })}
               />
             )}
-          </div>
+          </Stack>
         )}
 
         {isLiteralTextField(field.field) && (
-          <div className="flex flex-col gap-1.5">
+          <Stack gap="tight">
             <SectionLabel>Insert token</SectionLabel>
-            <div className="flex flex-wrap gap-1">
+            <Row gap="xxxs" className="flex-wrap">
               {TOKENS.map(t => (
                 <button
                   key={t}
@@ -171,21 +180,21 @@ export function PropertiesPanel({
                   onClick={() =>
                     onChange({ text: field.text ? `${field.text} ${t}` : t })
                   }
-                  className="text-[11px] px-1.5 py-0.5 rounded bg-gray-100 hover:bg-gray-200 text-gray-600 font-mono"
+                  className="text-xs px-tight py-hair rounded bg-surface-neutral hover:bg-surface-muted text-text-body font-mono"
                 >
                   {t.replace(/[{}]/g, "").trim()}
                 </button>
               ))}
-            </div>
-          </div>
+            </Row>
+          </Stack>
         )}
 
         {(field.kind === "qrCode" || field.kind === "image") && (
-          <p className="text-xs text-gray-400">
+          <p className="text-xs text-text-subtle">
             Drag to move; drag a corner to resize.
           </p>
         )}
-      </div>
+      </Stack>
     </div>
   );
 }

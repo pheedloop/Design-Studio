@@ -46,16 +46,16 @@ export function PlacementSection({
   const total = placed + unplaced;
 
   return (
-    <div className="border-b border-gray-100 last:border-0">
+    <div className="border-b border-border-neutral-faint last:border-0">
       {/* Header */}
       <button
         type="button"
         onClick={onToggle}
         className={[
-          "w-full flex items-center gap-2.5 py-2.5 text-left transition-colors border-l-2",
+          "w-full flex items-center gap-snug py-snug text-left transition-colors border-l-2",
           isOpen
             ? "bg-primary-100 border-primary-500 px-[10px]"
-            : "border-transparent px-3 hover:bg-gray-100",
+            : "border-transparent px-xs hover:bg-surface-neutral",
         ].join(" ")}
       >
         <span
@@ -67,10 +67,10 @@ export function PlacementSection({
           }}
         />
         <span className="flex-1 min-w-0">
-          <span className="block text-sm font-semibold text-gray-800 truncate">
+          <span className="block text-sm font-semibold text-text-heading truncate">
             {title}
           </span>
-          <span className="block text-xs text-gray-400 tabular-nums">
+          <span className="block text-xs text-text-subtle tabular-nums">
             {t("editor.placement.counts", { placed, unplaced })}
           </span>
         </span>
@@ -79,7 +79,7 @@ export function PlacementSection({
             "shrink-0 transition-colors",
             totalUnplaced > 0 && onAutoArrange
               ? "text-amber-400 hover:text-amber-500 cursor-pointer"
-              : "text-gray-200 cursor-default",
+              : "text-text-disabled cursor-default",
           ].join(" ")}
           title={
             totalUnplaced > 0
@@ -93,7 +93,7 @@ export function PlacementSection({
         >
           <PiSparkle size={14} />
         </span>
-        <span className="shrink-0 text-gray-400">
+        <span className="shrink-0 text-text-subtle">
           {isOpen ? <PiCaretUp size={12} /> : <PiCaretDown size={12} />}
         </span>
       </button>
@@ -102,7 +102,7 @@ export function PlacementSection({
       {isOpen && (
         <SectionShapeContext.Provider value={defaultShape}>
           {total === 0 ? (
-            <p className="px-3 py-2.5 text-xs text-gray-400 italic">
+            <p className="px-xs py-snug text-xs text-text-subtle italic">
               {t("editor.placement.noRecords")}
             </p>
           ) : (

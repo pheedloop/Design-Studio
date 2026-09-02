@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Dialog, TabBar } from "@/editor/components/ui";
 import { useT, type StringKey, type T } from "@/editor/i18n";
+import { Heading } from "@/components/Heading";
+import { Row } from "@/components/Row";
 
 const isMac = navigator.platform.toUpperCase().includes("MAC");
 const mod = isMac ? "⌘" : "Ctrl";
@@ -262,7 +264,7 @@ export function HelpDialog({ onClose }: HelpDialogProps) {
       width="520px"
       maxHeight="80vh"
     >
-      <div className="px-4 pt-3 border-b border-gray-200">
+      <div className="px-s pt-xs border-b border-border-neutral-light">
         <TabBar
           tabs={[
             { id: "start", label: t("editor.help.tab.gettingStarted") },
@@ -271,20 +273,21 @@ export function HelpDialog({ onClose }: HelpDialogProps) {
           ]}
           value={tab}
           onChange={id => setTab(id as HelpTab)}
-          itemClassName="px-3 py-1.5 text-xs"
+          itemClassName="px-xs py-tight text-xs"
         />
       </div>
 
-      <div className="flex-1 overflow-y-auto p-4">
+      <div className="flex-1 overflow-y-auto p-s">
         {tab === "start" &&
           GETTING_STARTED.map((section, index) => (
             <div key={section.headingKey}>
-              <h3
-                className={`text-xs font-semibold text-gray-800 mb-2 ${index > 0 ? "mt-4" : ""}`}
+              <Heading
+                level={3}
+                className={`mb-xxs ${index > 0 ? "mt-s" : ""}`}
               >
                 {t(section.headingKey)}
-              </h3>
-              <ul className="text-xs text-gray-600 space-y-1.5">
+              </Heading>
+              <ul className="text-xs text-text-body space-y-1.5">
                 {section.bulletKeys.map(bulletKey => (
                   <li key={bulletKey}>{t(bulletKey, { mod })}</li>
                 ))}
@@ -294,23 +297,25 @@ export function HelpDialog({ onClose }: HelpDialogProps) {
 
         {tab === "shortcuts" &&
           shortcuts.map(section => (
-            <div key={section.categoryKey} className="mb-4">
-              <div className="text-[10px] font-medium text-gray-400 uppercase tracking-wide mb-1.5">
+            <div key={section.categoryKey} className="mb-s">
+              <div className="text-xs font-medium text-text-subtle uppercase tracking-wide mb-tight">
                 {t(section.categoryKey)}
               </div>
               <div className="space-y-1">
                 {section.items.map(item => (
-                  <div
+                  <Row
                     key={item.descriptionKey}
-                    className="flex items-center justify-between py-0.5"
+                    align="center"
+                    justify="between"
+                    py="hair"
                   >
-                    <span className="text-xs text-gray-600">
+                    <span className="text-xs text-text-body">
                       {t(item.descriptionKey)}
                     </span>
-                    <kbd className="text-[10px] font-mono text-gray-500 bg-gray-100 border border-gray-200 rounded px-1.5 py-0.5">
+                    <kbd className="text-xs font-mono text-text-caption bg-surface-neutral border border-border-neutral-light rounded px-tight py-hair">
                       {item.keysKey ? t(item.keysKey) : item.keys}
                     </kbd>
-                  </div>
+                  </Row>
                 ))}
               </div>
             </div>
@@ -318,19 +323,19 @@ export function HelpDialog({ onClose }: HelpDialogProps) {
 
         {tab === "menus" && (
           <>
-            <p className="text-xs text-gray-500 mb-4">
+            <p className="text-xs text-text-caption mb-s">
               {t("editor.help.menusIntro")}
             </p>
             {menus.map(menu => (
-              <div key={menu.nameKey} className="mb-4">
-                <div className="text-[10px] font-medium text-gray-400 uppercase tracking-wide mb-1.5">
+              <div key={menu.nameKey} className="mb-s">
+                <div className="text-xs font-medium text-text-subtle uppercase tracking-wide mb-tight">
                   {t(menu.nameKey)}
                 </div>
                 <div className="space-y-1">
                   {menu.itemKeys.map(itemKey => (
                     <div
                       key={itemKey}
-                      className="text-xs text-gray-600 py-0.5 pl-2"
+                      className="text-xs text-text-body py-hair pl-xxs"
                     >
                       {t(itemKey)}
                     </div>

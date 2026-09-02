@@ -8,6 +8,10 @@ import {
   SectionLabel,
   Slider,
 } from "@/editor/components/ui";
+import { Row } from "@/components/Row";
+import { Stack } from "@/components/Stack";
+import { Text } from "@/components/Text";
+import { GRAY_400 } from "@/canvasColors";
 import { LabelSection } from "./LabelSection";
 
 const TYPE_DISPLAY_NAMES: Record<string, string> = {
@@ -26,7 +30,7 @@ function formatTypeDisplayName(key: string): string {
 
 function toElementProperties(defaults: ElementTypeDefaults): ElementProperties {
   return {
-    color: defaults.color ?? "#94a3b8",
+    color: defaults.color ?? GRAY_400,
     zIndex: 1,
     labelColor: defaults.labelColor,
     labelFontSize: defaults.labelFontSize,
@@ -52,40 +56,43 @@ export function TypeSection({ typeKey, defaults, onChange }: TypeSectionProps) {
   const opacity = defaults.opacity ?? 1;
 
   return (
-    <div className="border border-gray-200 rounded">
+    <div className="border border-border-neutral-light rounded">
       <button
-        className="w-full flex items-center justify-between px-3 py-2 text-left hover:bg-gray-50 transition-colors cursor-pointer"
+        className="w-full flex items-center justify-between px-xs py-xxs text-left hover:bg-surface-neutral transition-colors cursor-pointer"
         onClick={() => setOpen(o => !o)}
       >
-        <div className="flex items-center gap-2">
+        <Row gap="xxs" align="center">
           <span
-            className="w-3 h-3 rounded-sm shrink-0 border border-gray-300"
-            style={{ background: defaults.color ?? "#94a3b8" }}
+            className="w-3 h-3 rounded-sm shrink-0 border border-border-neutral"
+            style={{ background: defaults.color ?? GRAY_400 }}
           />
-          <span className="text-xs font-medium text-gray-700">
+          <Text size="xs" weight="medium" color="body" as="span">
             {formatTypeDisplayName(typeKey)}
-          </span>
-        </div>
+          </Text>
+        </Row>
         {open ? (
-          <PiCaretDown size={12} className="text-gray-400" />
+          <PiCaretDown size={12} className="text-text-subtle" />
         ) : (
-          <PiCaretRight size={12} className="text-gray-400" />
+          <PiCaretRight size={12} className="text-text-subtle" />
         )}
       </button>
 
       {open && (
-        <div className="flex flex-col gap-3 px-3 pb-3 border-t border-gray-100 pt-3">
+        <Stack
+          gap="xs"
+          className="px-xs pb-xs border-t border-border-neutral-faint pt-xs"
+        >
           <ColorSwatch
             label={t("editor.field.fill")}
-            value={defaults.color ?? "#94a3b8"}
+            value={defaults.color ?? GRAY_400}
             onChange={c => onChange({ color: c })}
           />
           <ColorSwatch
             label={t("editor.field.stroke")}
-            value={defaults.strokeColor ?? "#888888"}
+            value={defaults.strokeColor ?? GRAY_400}
             onChange={c => onChange({ strokeColor: c })}
           />
-          <div className="flex flex-col gap-1.5">
+          <Stack gap="tight">
             <SectionLabel>{t("editor.field.strokeWidth")}</SectionLabel>
             <div className="w-20">
               <NumberInput
@@ -93,30 +100,30 @@ export function TypeSection({ typeKey, defaults, onChange }: TypeSectionProps) {
                 onChange={v => onChange({ strokeWidth: Math.max(0, v) })}
               />
             </div>
-          </div>
-          <div className="flex gap-3">
-            <div className="flex flex-col gap-1.5 flex-1">
+          </Stack>
+          <Row gap="xs">
+            <Stack gap="tight" className="flex-1">
               <SectionLabel>{t("editor.field.defaultWidth")}</SectionLabel>
               <NumberInput
                 value={defaults.defaultWidth ?? 120}
                 onChange={v => onChange({ defaultWidth: Math.max(1, v) })}
               />
-            </div>
-            <div className="flex flex-col gap-1.5 flex-1">
+            </Stack>
+            <Stack gap="tight" className="flex-1">
               <SectionLabel>{t("editor.field.defaultHeight")}</SectionLabel>
               <NumberInput
                 value={defaults.defaultHeight ?? 80}
                 onChange={v => onChange({ defaultHeight: Math.max(1, v) })}
               />
-            </div>
-          </div>
-          <div className="flex flex-col gap-1.5">
-            <div className="flex items-center justify-between">
+            </Stack>
+          </Row>
+          <Stack gap="tight">
+            <Row align="center" justify="between">
               <SectionLabel>{t("editor.field.opacity")}</SectionLabel>
-              <span className="text-[11px] text-gray-400">
+              <span className="text-xs text-text-subtle">
                 {Math.round(opacity * 100)}%
               </span>
-            </div>
+            </Row>
             <Slider
               min={0}
               max={100}
@@ -126,8 +133,8 @@ export function TypeSection({ typeKey, defaults, onChange }: TypeSectionProps) {
               }
               className="w-full"
             />
-          </div>
-          <div className="border-t border-gray-100 pt-3">
+          </Stack>
+          <div className="border-t border-border-neutral-faint pt-xs">
             <LabelSection
               properties={toElementProperties(defaults)}
               onChange={updates =>
@@ -135,7 +142,7 @@ export function TypeSection({ typeKey, defaults, onChange }: TypeSectionProps) {
               }
             />
           </div>
-        </div>
+        </Stack>
       )}
     </div>
   );

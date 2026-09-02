@@ -26,12 +26,12 @@ export function SidebarRow({
       disabled={disabled}
       title={title}
       className={[
-        "w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded-md text-sm transition-colors",
+        "w-full flex items-center gap-snug px-snug py-tight rounded-md text-sm transition-colors",
         disabled
-          ? "text-gray-300 cursor-not-allowed"
+          ? "text-text-disabled cursor-not-allowed"
           : isActive
             ? "bg-primary-600 text-white"
-            : "text-gray-600 hover:bg-gray-100 hover:text-gray-800",
+            : "text-text-body hover:bg-surface-neutral hover:text-text-heading",
       ].join(" ")}
     >
       <span className="shrink-0 flex items-center w-4">{icon}</span>
@@ -41,7 +41,7 @@ export function SidebarRow({
           <span
             className={[
               "text-xs font-mono",
-              isActive ? "text-primary-200" : "text-gray-400",
+              isActive ? "text-primary-200" : "text-text-subtle",
             ].join(" ")}
           >
             {shortcut}

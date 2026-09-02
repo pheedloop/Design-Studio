@@ -1,8 +1,9 @@
 import { Line, Shape, Circle } from "react-konva";
 import type { ArcToolState } from "@/editor/tools/hooks/useArcInteraction";
+import { BRAND, GRAY_600 } from "@/canvasColors";
 
 const linePreviewStyle = {
-  stroke: "#475569",
+  stroke: GRAY_600,
   strokeWidth: 2,
   dash: [4, 4] as number[],
   listening: false,
@@ -31,7 +32,7 @@ export function ArcPreview({ state }: ArcPreviewProps) {
           x={pointA.x}
           y={pointA.y}
           radius={VERTEX_RADIUS}
-          fill="#475569"
+          fill={GRAY_600}
           listening={false}
         />
       </>
@@ -59,21 +60,21 @@ export function ArcPreview({ state }: ArcPreviewProps) {
           x={pointA.x}
           y={pointA.y}
           radius={VERTEX_RADIUS}
-          fill="#475569"
+          fill={GRAY_600}
           listening={false}
         />
         <Circle
           x={pointB.x}
           y={pointB.y}
           radius={VERTEX_RADIUS}
-          fill="#475569"
+          fill={GRAY_600}
           listening={false}
         />
         <Circle
           x={controlPoint.x}
           y={controlPoint.y}
           radius={3}
-          fill="#007bff"
+          fill={BRAND}
           listening={false}
         />
       </>

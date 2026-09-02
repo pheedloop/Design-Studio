@@ -1,5 +1,7 @@
 import type { FitMode } from "@/editor/utils/dxf/bakeDrawing";
 import type { T } from "@/editor/i18n";
+import { Stack } from "@/components/Stack";
+import { Text } from "@/components/Text";
 
 export function FitModeRadios({
   mode,
@@ -11,8 +13,8 @@ export function FitModeRadios({
   t: T;
 }) {
   return (
-    <div className="flex flex-col gap-2">
-      <label className="flex items-center gap-2 cursor-pointer">
+    <Stack gap="xxs">
+      <label className="flex items-center gap-xxs cursor-pointer">
         <input
           type="radio"
           name="bgSizeMode"
@@ -21,15 +23,15 @@ export function FitModeRadios({
           className="accent-primary-600"
         />
         <div>
-          <span className="text-xs font-medium text-gray-700">
+          <Text size="xs" weight="medium" color="body" as="span">
             {t("editor.background.fitToCanvas")}
-          </span>
-          <p className="text-[11px] text-gray-400">
+          </Text>
+          <p className="text-xs text-text-subtle">
             {t("editor.background.fitToCanvasHint")}
           </p>
         </div>
       </label>
-      <label className="flex items-center gap-2 cursor-pointer">
+      <label className="flex items-center gap-xxs cursor-pointer">
         <input
           type="radio"
           name="bgSizeMode"
@@ -38,14 +40,14 @@ export function FitModeRadios({
           className="accent-primary-600"
         />
         <div>
-          <span className="text-xs font-medium text-gray-700">
+          <Text size="xs" weight="medium" color="body" as="span">
             {t("editor.background.resizeToFile")}
-          </span>
-          <p className="text-[11px] text-gray-400">
+          </Text>
+          <p className="text-xs text-text-subtle">
             {t("editor.background.resizeToFileHint")}
           </p>
         </div>
       </label>
-    </div>
+    </Stack>
   );
 }

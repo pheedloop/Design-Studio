@@ -5,6 +5,7 @@ import type { FeatureMap } from "@/tiers";
 import { useT } from "@/editor/i18n";
 import { IconButton } from "@/components/IconButton";
 import { TrophyIcon } from "@/editor/components/ui";
+import { Row } from "@/components/Row";
 
 /**
  * Header row: map name (click to rename) + Design / Placement mode icon buttons.
@@ -34,7 +35,11 @@ export function ToolSidebarHeader({
   const t = useT();
 
   return (
-    <div className="px-3 py-3 border-b border-gray-100 flex items-center gap-2 min-w-0">
+    <Row
+      gap="xxs"
+      align="center"
+      className="px-xs py-xs border-b border-border-neutral-faint min-w-0"
+    >
       {isDirty && (
         <span
           className="shrink-0 text-red-500 font-bold text-sm leading-none"
@@ -44,7 +49,7 @@ export function ToolSidebarHeader({
         </span>
       )}
       {!nameEditable ? (
-        <span className="flex-1 text-base font-semibold text-gray-800 truncate">
+        <span className="flex-1 text-base font-semibold text-text-heading truncate">
           {mapName}
         </span>
       ) : (
@@ -86,6 +91,6 @@ export function ToolSidebarHeader({
             {placementIcon}
           </IconButton>
         ))}
-    </div>
+    </Row>
   );
 }

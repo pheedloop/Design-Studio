@@ -1,10 +1,11 @@
 import { Ellipse } from "react-konva";
 import type { DrawingRect } from "@/editor/tools/hooks/useClickDragInteraction";
+import { GRAY_400, GRAY_600 } from "@/canvasColors";
 
 const previewStyle = {
-  fill: "#94a3b8",
+  fill: GRAY_400,
   opacity: 0.5,
-  stroke: "#475569",
+  stroke: GRAY_600,
   strokeWidth: 1,
   dash: [4, 4] as number[],
   listening: false,

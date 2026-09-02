@@ -3,6 +3,8 @@ import { PiCaretUp, PiCaretDown } from "react-icons/pi";
 import type { FloorPlanElement } from "@/types";
 import type { Exhibitor, HoveredItem } from "@/viewer/types";
 import { useT } from "@/viewer/i18n";
+import { Row } from "@/components/Row";
+import { Text } from "@/components/Text";
 
 interface MapSheetProps {
   elements: FloorPlanElement[];
@@ -101,9 +103,15 @@ export function MapSheet({
           }
           className="absolute inset-0 w-full cursor-pointer"
         />
-        <div className="relative flex items-center justify-between w-full px-4 py-3 pointer-events-none">
+        <Row
+          align="center"
+          justify="between"
+          px="s"
+          py="xs"
+          className="relative w-full pointer-events-none"
+        >
           {hasTabs ? (
-            <div className="flex gap-3 pointer-events-auto">
+            <Row gap="xs" className="pointer-events-auto">
               {visibleTabs.map(tab => (
                 <button
                   key={tab.id}
@@ -112,30 +120,30 @@ export function MapSheet({
                     setActiveTab(tab.id);
                     setExpanded(true);
                   }}
-                  className={`text-xs font-medium pb-0.5 cursor-pointer transition-colors ${
+                  className={`text-xs font-medium pb-hair cursor-pointer transition-colors ${
                     currentTab === tab.id
                       ? "text-primary-600 border-b-2 border-primary-500"
-                      : "text-gray-400 hover:text-gray-600"
+                      : "text-text-subtle hover:text-text-body"
                   }`}
                 >
                   {tab.label}
                 </button>
               ))}
-            </div>
+            </Row>
           ) : (
-            <span className="text-xs font-medium text-gray-600">
+            <Text size="xs" weight="medium" color="body" as="span">
               {t("viewer.labelWithCount", {
                 label: visibleTabs[0]?.label ?? "",
                 count: visibleTabs[0]?.count ?? 0,
               })}
-            </span>
+            </Text>
           )}
           {expanded ? (
-            <PiCaretDown size={14} className="text-gray-400" />
+            <PiCaretDown size={14} className="text-text-subtle" />
           ) : (
-            <PiCaretUp size={14} className="text-gray-400" />
+            <PiCaretUp size={14} className="text-text-subtle" />
           )}
-        </div>
+        </Row>
       </div>
 
       {expanded && (
@@ -160,23 +168,23 @@ export function MapSheet({
                       boothSlug: exhibitor.boothSlug,
                     });
                   }}
-                  className={`w-full text-left px-4 py-2.5 border-t border-gray-100 cursor-pointer transition-colors ${
-                    isSelected ? "bg-primary-100" : "hover:bg-gray-50"
+                  className={`w-full text-left px-s py-snug border-t border-border-neutral-faint cursor-pointer transition-colors ${
+                    isSelected ? "bg-primary-100" : "hover:bg-surface-neutral"
                   }`}
                 >
-                  <div className="flex items-center gap-2">
+                  <Row gap="xxs" align="center">
                     {exhibitor.logo && (
                       <img
                         src={exhibitor.logo}
                         alt=""
-                        className="w-7 h-7 shrink-0 rounded-md border border-gray-200 bg-white object-contain p-0.5"
+                        className="w-7 h-7 shrink-0 rounded-md border border-border-neutral-light bg-white object-contain p-hair"
                       />
                     )}
                     <div>
-                      <div className="text-xs font-medium text-gray-800">
+                      <div className="text-xs font-medium text-text-heading">
                         {exhibitor.name}
                       </div>
-                      <div className="text-[11px] text-gray-400">
+                      <div className="text-xs text-text-subtle">
                         {boothEl?.properties.name
                           ? t("viewer.boothLabel", {
                               code: boothEl.properties.name,
@@ -184,7 +192,7 @@ export function MapSheet({
                           : ""}
                       </div>
                     </div>
-                  </div>
+                  </Row>
                 </button>
               );
             })}
@@ -202,11 +210,11 @@ export function MapSheet({
                       sessionId: el.properties.sessionId ?? null,
                     })
                   }
-                  className={`w-full text-left px-4 py-2.5 border-t border-gray-100 cursor-pointer transition-colors ${
-                    isSelected ? "bg-primary-100" : "hover:bg-gray-50"
+                  className={`w-full text-left px-s py-snug border-t border-border-neutral-faint cursor-pointer transition-colors ${
+                    isSelected ? "bg-primary-100" : "hover:bg-surface-neutral"
                   }`}
                 >
-                  <div className="text-xs font-medium text-gray-800">
+                  <div className="text-xs font-medium text-text-heading">
                     {el.properties.name || t("viewer.unnamedSession")}
                   </div>
                 </button>
@@ -226,11 +234,11 @@ export function MapSheet({
                       meetingRoomId: el.properties.meetingRoomId ?? null,
                     })
                   }
-                  className={`w-full text-left px-4 py-2.5 border-t border-gray-100 cursor-pointer transition-colors ${
-                    isSelected ? "bg-primary-100" : "hover:bg-gray-50"
+                  className={`w-full text-left px-s py-snug border-t border-border-neutral-faint cursor-pointer transition-colors ${
+                    isSelected ? "bg-primary-100" : "hover:bg-surface-neutral"
                   }`}
                 >
-                  <div className="text-xs font-medium text-gray-800">
+                  <div className="text-xs font-medium text-text-heading">
                     {el.properties.name || t("viewer.unnamedRoom")}
                   </div>
                 </button>

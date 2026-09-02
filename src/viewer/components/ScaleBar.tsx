@@ -2,6 +2,8 @@ import type { Dimensions } from "@/types";
 import { unitLabel } from "@/utils/unitConversion";
 import { formatNumber } from "@/i18n/format";
 import { useLocale, useT } from "@/viewer/i18n";
+import { Stack } from "@/components/Stack";
+import { Row } from "@/components/Row";
 
 interface ScaleBarProps {
   dimensions: Dimensions;
@@ -31,8 +33,12 @@ export function ScaleBar({ dimensions, scale }: ScaleBarProps) {
   const barWidthPx = niceUnits * pxPerUnit;
 
   return (
-    <div className="absolute bottom-4 left-4 z-10 flex flex-col items-start gap-0.5 pointer-events-none select-none">
-      <span className="text-[10px] font-medium text-gray-600 bg-white/80 px-1 rounded">
+    <Stack
+      gap="hair"
+      align="start"
+      className="absolute bottom-4 left-4 z-10 pointer-events-none select-none"
+    >
+      <span className="text-xs font-medium text-text-body bg-white/80 px-xxxs rounded">
         {t("common.measurement", {
           value: formatNumber(
             niceUnits,
@@ -47,11 +53,11 @@ export function ScaleBar({ dimensions, scale }: ScaleBarProps) {
         style={{ width: barWidthPx }}
       >
         {/* End caps */}
-        <div className="flex justify-between h-full">
+        <Row justify="between" className="h-full">
           <div className="w-px h-full bg-gray-700/70" />
           <div className="w-px h-full bg-gray-700/70" />
-        </div>
+        </Row>
       </div>
-    </div>
+    </Stack>
   );
 }

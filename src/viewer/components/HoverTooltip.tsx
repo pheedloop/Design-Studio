@@ -1,5 +1,6 @@
 import type { Exhibitor, HoveredItem } from "@/viewer/types";
 import { usePopoverPosition } from "@/viewer/hooks/usePopoverPosition";
+import { Stack } from "@/components/Stack";
 import { ExhibitorLogo } from "./ExhibitorLogo";
 import { TYPE_NAME } from "@/viewer/utils/elementTypes";
 import { useT } from "@/viewer/i18n";
@@ -37,36 +38,36 @@ export function HoverTooltip({
   return (
     <div
       ref={ref}
-      className="fixed pointer-events-none bg-white border border-gray-200 rounded-lg shadow-lg px-3 py-2 z-[9998] min-w-[140px] max-w-[240px]"
+      className="fixed pointer-events-none bg-white border border-border-neutral-light rounded-lg shadow-lg px-xs py-xxs z-[calc(var(--z-dialog)-1)] min-w-[140px] max-w-[240px]"
       style={{ left: pos.left, top: pos.top }}
     >
       {item.type === "booth" && exhibitor ? (
-        <div className="flex flex-col items-center gap-1.5 text-center">
+        <Stack gap="tight" align="center" className="text-center">
           <ExhibitorLogo exhibitor={exhibitor} size="sm" />
-          <span className="text-sm font-medium text-gray-800 line-clamp-2">
+          <span className="text-sm font-medium text-text-heading line-clamp-2">
             {exhibitor.name}
           </span>
-          {name && <span className="text-[11px] text-gray-400">{name}</span>}
-        </div>
+          {name && <span className="text-xs text-text-subtle">{name}</span>}
+        </Stack>
       ) : (
         <>
           {name && (
-            <div className="text-xs font-semibold text-gray-800 truncate">
+            <div className="text-xs font-semibold text-text-heading truncate">
               {name}
             </div>
           )}
           {item.type === "booth" ? (
             reserved ? (
-              <div className="mt-0.5 text-[11px] font-medium text-amber-600">
+              <div className="mt-hair text-xs font-medium text-amber-600">
                 {t("viewer.booth.reserved")}
               </div>
             ) : (
-              <div className="mt-0.5 text-[11px] text-gray-400">
+              <div className="mt-hair text-xs text-text-subtle">
                 {t("viewer.booth.unoccupied")}
               </div>
             )
           ) : (
-            <div className="mt-0.5 text-[11px] font-medium text-gray-400 uppercase tracking-wide">
+            <div className="mt-hair text-xs font-medium text-text-subtle uppercase tracking-wide">
               {t(
                 TYPE_NAME[
                   item.type === "session_area" ? "session_area" : "meeting_room"

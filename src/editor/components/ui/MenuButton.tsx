@@ -6,9 +6,9 @@ export interface MenuButtonProps extends ButtonHTMLAttributes<HTMLButtonElement>
 }
 
 const base =
-  "flex items-center gap-1 px-3 h-10 text-sm cursor-pointer transition-colors";
-const openStyle = "text-gray-800 bg-gray-100";
-const closedStyle = "text-gray-400 hover:text-gray-600";
+  "flex items-center gap-xxxs px-xs h-10 text-sm cursor-pointer transition-colors";
+const openStyle = "text-text-heading bg-surface-neutral";
+const closedStyle = "text-text-subtle hover:text-text-body";
 
 export function MenuButton({
   open,

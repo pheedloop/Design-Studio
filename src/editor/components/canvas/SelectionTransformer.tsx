@@ -2,6 +2,7 @@ import { useRef, useEffect, useCallback, useState } from "react";
 import { Transformer } from "react-konva";
 import type Konva from "konva";
 import type { FloorPlanElement } from "@/types";
+import { BRAND, WHITE } from "@/canvasColors";
 
 interface SelectionTransformerProps {
   selectedIds: Set<string>;
@@ -170,10 +171,10 @@ export function SelectionTransformer({
         shiftHeld ? Array.from({ length: 24 }, (_, i) => i * 15) : []
       }
       rotationSnapTolerance={shiftHeld ? 10 : 0}
-      borderStroke="#007bff"
+      borderStroke={BRAND}
       borderStrokeWidth={1.5}
-      anchorFill="#fff"
-      anchorStroke="#007bff"
+      anchorFill={WHITE}
+      anchorStroke={BRAND}
       anchorSize={8}
       anchorCornerRadius={2}
       boundBoxFunc={(_oldBox, newBox) => {

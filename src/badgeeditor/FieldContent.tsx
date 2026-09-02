@@ -1,4 +1,5 @@
 import { Rect, Text, Group, Line, Image as KonvaImage } from "react-konva";
+import { GRAY_300, GRAY_400, GRAY_500, GRAY_900 } from "@/canvasColors";
 import type { BadgeField } from "./model";
 import { fieldValueText, type BadgeData } from "./badgeData";
 import { fieldDisplayText } from "./factory";
@@ -48,7 +49,7 @@ export function FieldContent({
           <Line
             key={`perf-${i}`}
             points={[0, rowH * (i + 1), w, rowH * (i + 1)]}
-            stroke="#cbd5e1"
+            stroke={GRAY_300}
             strokeWidth={1}
             listening={false}
           />
@@ -75,7 +76,7 @@ export function FieldContent({
                   y={top + pad}
                   width={qrSize}
                   height={qrSize}
-                  fill="#0f172a"
+                  fill={GRAY_900}
                   cornerRadius={2}
                 />
               )}
@@ -88,7 +89,7 @@ export function FieldContent({
                 verticalAlign="middle"
                 fontSize={nameFont}
                 fontStyle="bold"
-                fill="#0f172a"
+                fill={GRAY_900}
               />
             </Group>
           );
@@ -110,7 +111,7 @@ export function FieldContent({
           align="center"
           verticalAlign="middle"
           fontSize={lineFont}
-          fill="#94a3b8"
+          fill={GRAY_400}
         />
       );
     }
@@ -124,7 +125,7 @@ export function FieldContent({
             width={w - 4}
             text={`${s.date}  ${s.time}  ${s.speaker}`.trim()}
             fontSize={lineFont}
-            fill="#0f172a"
+            fill={GRAY_900}
             wrap="none"
             ellipsis
           />
@@ -142,7 +143,7 @@ export function FieldContent({
         align="center"
         verticalAlign="middle"
         fontSize={14}
-        fill="#64748b"
+        fill={GRAY_500}
       />
     );
   }
@@ -158,7 +159,7 @@ export function FieldContent({
       }
       verticalAlign="middle"
       fontSize={fontSize}
-      fill="#0f172a"
+      fill={GRAY_900}
     />
   );
 }

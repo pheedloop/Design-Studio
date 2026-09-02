@@ -147,16 +147,16 @@ export function ToolSidebar({
   // Pathing mode overrides the normal sidebar
   if (isPathingMode && onPathingToolChange && activePathingTool) {
     return (
-      <div className="flex flex-col w-64 shrink-0 bg-white border-r border-gray-200 overflow-hidden">
-        <div className="px-3 py-3 border-b border-gray-100">
-          <div className="text-[10px] uppercase tracking-wider text-gray-400 leading-none mb-1">
+      <div className="flex flex-col w-64 shrink-0 bg-white border-r border-border-neutral-light overflow-hidden">
+        <div className="px-xs py-xs border-b border-border-neutral-faint">
+          <div className="text-xs uppercase tracking-wider text-text-subtle leading-none mb-xxxs">
             {t("editor.pathing.layerTitle")}
           </div>
-          <div className="text-base font-semibold text-gray-800 truncate">
+          <div className="text-base font-semibold text-text-heading truncate">
             {mapName}
           </div>
         </div>
-        <div className="flex-1 overflow-y-auto py-1 px-1">
+        <div className="flex-1 overflow-y-auto py-xxxs px-xxxs">
           {pathingToolDefs.map(tool => (
             <ToolRow
               key={tool.id}
@@ -174,16 +174,16 @@ export function ToolSidebar({
   // properties panel), so the drawing tools don't apply here.
   if (isBackgroundLayer) {
     return (
-      <div className="flex flex-col w-64 shrink-0 bg-white border-r border-gray-200 overflow-hidden">
-        <div className="px-3 py-3 border-b border-gray-100">
-          <div className="text-[10px] uppercase tracking-wider text-gray-400 leading-none mb-1">
+      <div className="flex flex-col w-64 shrink-0 bg-white border-r border-border-neutral-light overflow-hidden">
+        <div className="px-xs py-xs border-b border-border-neutral-faint">
+          <div className="text-xs uppercase tracking-wider text-text-subtle leading-none mb-xxxs">
             {t("editor.background.layerTitle")}
           </div>
-          <div className="text-base font-semibold text-gray-800 truncate">
+          <div className="text-base font-semibold text-text-heading truncate">
             {mapName}
           </div>
         </div>
-        <div className="flex-1 overflow-y-auto py-1 px-1">
+        <div className="flex-1 overflow-y-auto py-xxxs px-xxxs">
           <ToolRow
             tool={handDef}
             isActive={activeTool === "hand"}
@@ -194,7 +194,7 @@ export function ToolSidebar({
             isActive={activeTool === "select"}
             onClick={() => onToolChange("select")}
           />
-          <p className="px-2 py-3 text-xs text-gray-400 leading-relaxed">
+          <p className="px-xxs py-xs text-xs text-text-subtle leading-relaxed">
             {t("editor.background.layerHint")}
           </p>
         </div>
@@ -204,7 +204,7 @@ export function ToolSidebar({
 
   return (
     <>
-      <div className="flex flex-col w-64 shrink-0 bg-white border-r border-gray-200 overflow-hidden">
+      <div className="flex flex-col w-64 shrink-0 bg-white border-r border-border-neutral-light overflow-hidden">
         {/* Map name + mode switcher */}
         <ToolSidebarHeader
           mapName={mapName}
@@ -219,7 +219,7 @@ export function ToolSidebar({
 
         {/* Tab content */}
         {editorMode === "design" ? (
-          <div className="flex-1 overflow-y-auto py-1 px-1">
+          <div className="flex-1 overflow-y-auto py-xxxs px-xxxs">
             <ToolRow
               tool={handDef}
               isActive={activeTool === "hand"}

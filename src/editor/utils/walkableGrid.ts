@@ -14,26 +14,6 @@ export function createWalkableGrid(
   return { enabled: true, cellSize, cols, rows, cells };
 }
 
-/** Resize an existing grid to fit new canvas dimensions. Expands with 0s or truncates. */
-export function resizeWalkableGrid(
-  grid: WalkableGrid,
-  canvasWidth: number,
-  canvasHeight: number,
-): WalkableGrid {
-  const newCols = Math.ceil(canvasWidth / grid.cellSize);
-  const newRows = Math.ceil(canvasHeight / grid.cellSize);
-
-  if (newCols === grid.cols && newRows === grid.rows) return grid;
-
-  const cells = Array.from({ length: newRows }, (_, row) =>
-    Array.from({ length: newCols }, (_, col) =>
-      row < grid.rows && col < grid.cols ? grid.cells[row][col] : 0,
-    ),
-  );
-
-  return { ...grid, cols: newCols, rows: newRows, cells };
-}
-
 /** Convert canvas pixel coordinates to grid cell coordinates. */
 export function canvasToCellCoord(
   x: number,
@@ -43,18 +23,6 @@ export function canvasToCellCoord(
   return {
     col: Math.floor(x / cellSize),
     row: Math.floor(y / cellSize),
-  };
-}
-
-/** Convert grid cell coordinates to canvas pixel coordinates (top-left of cell). */
-export function cellToCanvasCoord(
-  col: number,
-  row: number,
-  cellSize: number,
-): { x: number; y: number } {
-  return {
-    x: col * cellSize,
-    y: row * cellSize,
   };
 }
 

@@ -22,7 +22,7 @@ export function MapDebugDialog({ data, onClose }: MapDebugDialogProps) {
       ]}
       value={tab}
       onChange={id => setTab(id as typeof tab)}
-      itemClassName="px-2 py-1"
+      itemClassName="px-xxs py-xxxs"
     />
   );
 
@@ -46,11 +46,11 @@ export function MapDebugDialog({ data, onClose }: MapDebugDialogProps) {
         </Button>
       }
     >
-      <div className="flex-1 overflow-auto p-4">
+      <div className="flex-1 overflow-auto p-s">
         {tab === "tree" ? (
           <JsonDebugView data={data} label="FloorPlanData" />
         ) : (
-          <pre className="text-xs text-gray-700 whitespace-pre-wrap font-mono">
+          <pre className="text-xs text-text-body whitespace-pre-wrap font-mono">
             {JSON.stringify(data, null, 2)}
           </pre>
         )}

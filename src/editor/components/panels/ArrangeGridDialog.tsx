@@ -2,6 +2,8 @@ import { useState } from "react";
 import { Button } from "@/components/Button";
 import { Dialog, NumberInput, SectionLabel } from "@/editor/components/ui";
 import { useT } from "@/editor/i18n";
+import { Row } from "@/components/Row";
+import { Stack } from "@/components/Stack";
 
 interface ArrangeGridDialogProps {
   elementCount: number;
@@ -44,13 +46,13 @@ export function ArrangeGridDialog({
         </>
       }
     >
-      <div className="flex flex-col gap-4 p-4">
-        <p className="text-xs text-gray-500">
+      <Stack gap="s" className="p-s">
+        <p className="text-xs text-text-caption">
           {t("editor.selection.count", { count: elementCount })}
         </p>
 
-        <div className="flex gap-4">
-          <div className="flex flex-col gap-1.5 flex-1">
+        <Row gap="s">
+          <Stack gap="tight" className="flex-1">
             <SectionLabel>{t("editor.field.columns")}</SectionLabel>
             <NumberInput
               value={cols}
@@ -58,26 +60,30 @@ export function ArrangeGridDialog({
                 setCols(Math.max(1, Math.min(elementCount, Math.round(v))))
               }
             />
-          </div>
-          <div className="flex flex-col gap-1.5 flex-1">
+          </Stack>
+          <Stack gap="tight" className="flex-1">
             <SectionLabel>{t("editor.field.rowsComputed")}</SectionLabel>
-            <div className="flex items-center h-[30px] px-2 text-xs text-gray-400 bg-gray-50 border border-gray-200 rounded">
+            <Row
+              align="center"
+              px="xxs"
+              className="h-[30px] text-xs text-text-subtle bg-surface-neutral border border-border-neutral-light rounded"
+            >
               {rows}
-            </div>
-          </div>
-        </div>
+            </Row>
+          </Stack>
+        </Row>
 
-        <div className="flex gap-4">
-          <div className="flex flex-col gap-1.5 flex-1">
+        <Row gap="s">
+          <Stack gap="tight" className="flex-1">
             <SectionLabel>{t("editor.field.horizontalGapPx")}</SectionLabel>
             <NumberInput value={gapX} onChange={v => setGapX(Math.max(0, v))} />
-          </div>
-          <div className="flex flex-col gap-1.5 flex-1">
+          </Stack>
+          <Stack gap="tight" className="flex-1">
             <SectionLabel>{t("editor.field.verticalGapPx")}</SectionLabel>
             <NumberInput value={gapY} onChange={v => setGapY(Math.max(0, v))} />
-          </div>
-        </div>
-      </div>
+          </Stack>
+        </Row>
+      </Stack>
     </Dialog>
   );
 }

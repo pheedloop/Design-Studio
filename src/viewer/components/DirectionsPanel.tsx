@@ -14,6 +14,9 @@ import {
   formatWalkingTime,
 } from "@/utils/unitConversion";
 import { useLocale, useT } from "@/viewer/i18n";
+import { Row } from "@/components/Row";
+import { Stack } from "@/components/Stack";
+import { Text } from "@/components/Text";
 import { LocationField } from "./LocationField";
 
 interface DirectionsPanelProps {
@@ -45,18 +48,18 @@ export function DirectionsPanel({
   const locale = useLocale();
 
   return (
-    <div className="flex flex-col gap-2 p-3">
-      <div className="flex items-center justify-between">
-        <span className="text-xs font-semibold text-gray-700">
+    <Stack gap="xxs" className="p-xs">
+      <Row align="center" justify="between">
+        <Text size="xs" weight="semibold" color="body" as="span">
           {t("viewer.directions.title")}
-        </span>
+        </Text>
         <IconButton variant="bare" size="sm" onClick={onClose}>
           <PiX size={16} />
         </IconButton>
-      </div>
+      </Row>
 
-      <div className="flex gap-2">
-        <div className="flex flex-col gap-2 flex-1 min-w-0">
+      <Row gap="xxs">
+        <Stack gap="xxs" className="flex-1 min-w-0">
           <LocationField
             label={t("viewer.directions.from")}
             placeholder={t("viewer.directions.fromPlaceholder")}
@@ -75,7 +78,7 @@ export function DirectionsPanel({
             onSelect={onSelectEnd}
             onClear={() => onSelectEnd(null)}
           />
-        </div>
+        </Stack>
 
         <IconButton
           size="sm"
@@ -85,34 +88,38 @@ export function DirectionsPanel({
         >
           <PiArrowsDownUp size={16} />
         </IconButton>
-      </div>
+      </Row>
 
       {routeStatus === "no-route" && (
-        <div className="text-xs text-red-500 bg-red-50 rounded-lg px-3 py-2">
+        <div className="text-xs text-red-500 bg-red-50 rounded-lg px-xs py-xxs">
           {t("viewer.directions.noRoute")}
         </div>
       )}
       {routeStatus === "same-location" && (
-        <div className="text-xs text-amber-600 bg-amber-50 rounded-lg px-3 py-2">
+        <div className="text-xs text-amber-600 bg-amber-50 rounded-lg px-xs py-xxs">
           {t("viewer.directions.sameLocation")}
         </div>
       )}
       {routeStatus === "ready" && routePath && routePath.length > 1 && (
-        <div className="flex items-center gap-2 text-xs text-gray-600 bg-gray-50 rounded-lg px-3 py-2">
-          <PiFootprints size={14} className="text-gray-400 shrink-0" />
+        <Row
+          gap="xxs"
+          align="center"
+          className="text-xs text-text-body bg-surface-neutral rounded-lg px-xs py-xxs"
+        >
+          <PiFootprints size={14} className="text-text-subtle shrink-0" />
           <span>{formatRouteDistance(routePath, dimensions, t, locale)}</span>
           {(() => {
             const pxDist = pathDistance(routePath);
             const realDist = pxToReal(pxDist, dimensions.pixelsPerUnit);
             const est = estimateWalkingTime(realDist, dimensions.unit);
             return est ? (
-              <span className="text-gray-400">
+              <span className="text-text-subtle">
                 &middot; {formatWalkingTime(est, t)}
               </span>
             ) : null;
           })()}
-        </div>
+        </Row>
       )}
-    </div>
+    </Stack>
   );
 }

@@ -9,6 +9,7 @@ import type {
   ArcGeometry,
   PolygonGeometry,
 } from "@/types";
+import { BRAND, GRAY_400, WHITE } from "@/canvasColors";
 import { ViewerIcon } from "./ViewerIcon";
 
 function getLabel(element: FloorPlanElement): string {
@@ -68,8 +69,8 @@ export function ViewerElement({
   const color = overrideColor || element.properties.color;
   const active = isHighlighted || isHovered;
   const strokeColor = active
-    ? "#007bff"
-    : element.properties.strokeColor || "#888888";
+    ? BRAND
+    : element.properties.strokeColor || GRAY_400;
   const strokeWidth = active
     ? Math.max((element.properties.strokeWidth ?? 1) * 2, 3)
     : (element.properties.strokeWidth ?? (geo.shape === "line" ? 2 : 1));
@@ -125,7 +126,7 @@ export function ViewerElement({
                 verticalAlign={element.properties.labelPositionV ?? "middle"}
                 padding={4}
                 fontSize={element.properties.labelFontSize ?? 12}
-                fill={element.properties.labelColor ?? "#fff"}
+                fill={element.properties.labelColor ?? WHITE}
                 fontStyle={
                   `${element.properties.labelBold !== false ? "bold" : ""}${element.properties.labelItalic ? " italic" : ""}`.trim() ||
                   "normal"
@@ -159,7 +160,7 @@ export function ViewerElement({
               padding={4}
               text={label}
               fontSize={element.properties.labelFontSize ?? 12}
-              fill={element.properties.labelColor ?? "#fff"}
+              fill={element.properties.labelColor ?? WHITE}
               fontStyle={
                 `${element.properties.labelBold !== false ? "bold" : ""}${element.properties.labelItalic ? " italic" : ""}`.trim() ||
                 "normal"
@@ -298,7 +299,7 @@ export function ViewerElement({
                   padding={4}
                   text={label}
                   fontSize={element.properties.labelFontSize ?? 12}
-                  fill={element.properties.labelColor ?? "#fff"}
+                  fill={element.properties.labelColor ?? WHITE}
                   fontStyle={
                     `${element.properties.labelBold !== false ? "bold" : ""}${element.properties.labelItalic ? " italic" : ""}`.trim() ||
                     "normal"

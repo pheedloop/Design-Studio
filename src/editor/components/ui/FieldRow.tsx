@@ -1,3 +1,4 @@
+import { Row } from "@/components/Row";
 export function FieldRow({
   label,
   children,
@@ -6,9 +7,9 @@ export function FieldRow({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex items-center gap-2">
-      <span className="text-xs text-gray-500 w-10 shrink-0">{label}</span>
+    <Row gap="xxs" align="center">
+      <span className="text-xs text-text-caption w-10 shrink-0">{label}</span>
       <div className="flex-1">{children}</div>
-    </div>
+    </Row>
   );
 }

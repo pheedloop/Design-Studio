@@ -36,7 +36,7 @@ export function DimField({
     setText(fmtUnit(value, unit, 3));
   }
   return (
-    <label className="flex-1 flex flex-col gap-1.5">
+    <label className="flex-1 flex flex-col gap-tight">
       <SectionLabel>
         {label} ({unitLabel[unit]})
       </SectionLabel>
@@ -50,7 +50,7 @@ export function DimField({
           const n = Number(e.target.value);
           if (!Number.isNaN(n) && n > 0) onChange(fromUnit(n, unit));
         }}
-        className="w-full px-2 py-1 text-xs border border-gray-200 rounded bg-white [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+        className="w-full px-xxs py-xxxs text-xs border border-border-neutral-light rounded bg-white [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
       />
     </label>
   );

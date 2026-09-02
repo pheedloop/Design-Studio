@@ -24,10 +24,10 @@ export function ProductSwitcher({
         <a
           key={p.id}
           href={productHref(p.id, mode)}
-          className={`px-3 py-1 rounded transition-colors ${
+          className={`px-xs py-xxxs rounded transition-colors ${
             current === p.id
               ? "bg-white/15 text-white"
-              : "text-gray-400 hover:text-white"
+              : "text-text-subtle hover:text-white"
           }`}
         >
           {p.label}

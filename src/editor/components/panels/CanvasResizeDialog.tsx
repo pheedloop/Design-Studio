@@ -10,6 +10,8 @@ import {
   type ResizeMode,
   type ResizeAnchor,
 } from "@/editor/hooks/useEditorState";
+import { Row } from "@/components/Row";
+import { Stack } from "@/components/Stack";
 
 interface CanvasResizeDialogProps {
   width: number;
@@ -133,18 +135,18 @@ export function CanvasResizeDialog({
         </>
       }
     >
-      <div className="flex flex-col gap-4 p-4">
-        <div className="flex flex-col gap-1.5">
+      <Stack gap="s" className="p-s">
+        <Stack gap="tight">
           <SectionLabel>{t("editor.field.widthPx")}</SectionLabel>
           <NumberInput value={newWidth} onChange={setW} />
           {dimensions.unit !== "px" && (
-            <span className="text-[11px] text-gray-400">
+            <span className="text-xs text-text-subtle">
               {formatMeasurement(newWidth, dimensions, t, locale)}
             </span>
           )}
-        </div>
+        </Stack>
 
-        <div className="flex flex-col gap-1.5">
+        <Stack gap="tight">
           <SectionLabel>{t("editor.field.heightPx")}</SectionLabel>
           <NumberInput
             value={newHeight}
@@ -152,15 +154,15 @@ export function CanvasResizeDialog({
             disabled={mode === "scale"}
           />
           {dimensions.unit !== "px" && (
-            <span className="text-[11px] text-gray-400">
+            <span className="text-xs text-text-subtle">
               {formatMeasurement(newHeight, dimensions, t, locale)}
             </span>
           )}
-        </div>
+        </Stack>
 
-        <div className="flex flex-col gap-1.5">
+        <Stack gap="tight">
           <SectionLabel>{t("editor.field.content")}</SectionLabel>
-          <div className="flex gap-2">
+          <Row gap="xxs">
             <Button
               variant="outline"
               color="neutral"
@@ -179,18 +181,18 @@ export function CanvasResizeDialog({
             >
               {t("editor.resize.scaleToFit")}
             </Button>
-          </div>
-          <span className="text-[11px] text-gray-400">
+          </Row>
+          <span className="text-xs text-text-subtle">
             {mode === "scale"
               ? t("editor.resize.scaleHint")
               : t("editor.resize.preserveHint")}
           </span>
-        </div>
+        </Stack>
 
         {mode === "preserve" && (
-          <div className="flex flex-col gap-2">
+          <Stack gap="xxs">
             <SectionLabel>{t("editor.resize.anchor")}</SectionLabel>
-            <div className="grid grid-cols-3 gap-1 w-max">
+            <div className="grid grid-cols-3 gap-xxxs w-max">
               {ANCHOR_GRID.map(a => {
                 const selected = anchor === a;
                 return (
@@ -203,24 +205,27 @@ export function CanvasResizeDialog({
                     className={`flex h-8 w-8 items-center justify-center rounded border transition-colors ${
                       selected
                         ? "border-blue-500 bg-blue-50"
-                        : "border-gray-200 bg-gray-50 hover:border-gray-300 hover:bg-gray-100"
+                        : "border-border-neutral-light bg-surface-neutral hover:border-border-neutral hover:bg-surface-neutral"
                     }`}
                   >
                     <span
-                      className={`h-2 w-2 rounded-full ${selected ? "bg-blue-500" : "bg-gray-300"}`}
+                      className={`h-2 w-2 rounded-full ${selected ? "bg-blue-500" : "bg-surface-muted-hover"}`}
                     />
                   </button>
                 );
               })}
             </div>
-            <span className="text-[11px] text-gray-400 leading-relaxed">
+            <span className="text-xs text-text-subtle leading-relaxed">
               {t("editor.resize.anchorHint")}
             </span>
-          </div>
+          </Stack>
         )}
 
         {onStartCrop && (
-          <div className="flex flex-col gap-1.5 border-t border-gray-100 pt-4">
+          <Stack
+            gap="tight"
+            className="border-t border-border-neutral-faint pt-s"
+          >
             <SectionLabel>{t("editor.resize.cropSection")}</SectionLabel>
             <Button
               variant="outline"
@@ -232,18 +237,18 @@ export function CanvasResizeDialog({
             >
               {t("editor.resize.cropCta")}
             </Button>
-            <span className="text-[11px] text-gray-400">
+            <span className="text-xs text-text-subtle">
               {t("editor.resize.cropHint")}
             </span>
-          </div>
+          </Stack>
         )}
 
         {clippedCount > 0 && (
-          <p className="text-xs text-amber-600 bg-amber-50 border border-amber-200 rounded px-2 py-1.5">
+          <p className="text-xs text-amber-600 bg-amber-50 border border-amber-200 rounded px-xxs py-tight">
             {t("editor.resize.clipped", { count: clippedCount })}
           </p>
         )}
-      </div>
+      </Stack>
     </Dialog>
   );
 }

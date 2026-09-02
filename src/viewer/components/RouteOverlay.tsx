@@ -1,4 +1,5 @@
 import { Layer, Line, Circle, Text } from "react-konva";
+import { WHITE } from "@/canvasColors";
 
 interface RouteOverlayProps {
   /** Canvas-space polyline points from smoothPath */
@@ -36,7 +37,7 @@ export function RouteOverlay({ path }: RouteOverlayProps) {
         y={start.y}
         radius={MARKER_RADIUS}
         fill="#16a34a"
-        stroke="#ffffff"
+        stroke={WHITE}
         strokeWidth={2}
       />
       <Text
@@ -47,7 +48,7 @@ export function RouteOverlay({ path }: RouteOverlayProps) {
         // Route endpoint markers, not words — deliberately untranslated.
         text="A"
         fontSize={MARKER_FONT_SIZE}
-        fill="#ffffff"
+        fill={WHITE}
         fontStyle="bold"
         align="center"
         verticalAlign="middle"
@@ -60,7 +61,7 @@ export function RouteOverlay({ path }: RouteOverlayProps) {
         y={end.y}
         radius={MARKER_RADIUS}
         fill="#dc2626"
-        stroke="#ffffff"
+        stroke={WHITE}
         strokeWidth={2}
       />
       <Text
@@ -70,7 +71,7 @@ export function RouteOverlay({ path }: RouteOverlayProps) {
         height={MARKER_FONT_SIZE}
         text="B"
         fontSize={MARKER_FONT_SIZE}
-        fill="#ffffff"
+        fill={WHITE}
         fontStyle="bold"
         align="center"
         verticalAlign="middle"

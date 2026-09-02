@@ -1,14 +1,4 @@
 :root {
-  --pheedloop-blue-100: 229 242 255;
-  --pheedloop-blue-200: 204 229 255;
-  --pheedloop-blue-300: 153 202 255;
-  --pheedloop-blue-400: 102 176 255;
-  --pheedloop-blue-500: 51 150 255;
-  --pheedloop-blue: 0 123 255;
-  --pheedloop-blue-700: 0 99 204;
-  --pheedloop-blue-800: 0 74 153;
-  --pheedloop-blue-900: 0 49 102;
-
   --black: 0 0 0;
   --white: 255 255 255;
   --red: 235 87 87;
@@ -36,25 +26,9 @@
   --gray-800: 21 40 65;
   --gray-900: 9 32 58;
 
-  --rounded-none: 0px;
-  --rounded-sm: 2px;
-  --rounded: 4px;
-  --rounded-md: 6px;
-  --rounded-lg: 8px;
-  --rounded-xl: 12px;
-  --rounded-2xl: 24px;
-  --rounded-3xl: 48px;
-  --rounded-full: 9999px;
-
-  --font-normal: 400;
-  --font-medium: 500;
-  --font-semibold: 600;
-
   /* Type scale aligned to the Ditto dashboard (globals.css --font-size-*), so a
      given text-* utility is the same size in the editor, the host and the
      standalone dev app. */
-  --text-xxs: 10px;
-  --line-height-xxs: 12px;
   --text-xs: 10px;
   --line-height-xs: 12px;
   --text-sm: 12px;
@@ -105,7 +79,6 @@
   --contrast-text-color: var(--white);
   --link-text-color: var(--primary-600);
   --primary-text-color: var(--primary-600);
-  --card-background-color: var(--white);
 
   --border-neutral: var(--gray-300);
   --border-neutral-light: var(--gray-200);
@@ -119,24 +92,9 @@
   --surface-contrast: var(--white);
   --surface-primary: var(--primary-600);
   --surface-primary-accent: var(--primary-100);
-  --border-radius-small: var(--rounded);
-  --border-radius: var(--rounded-lg);
-
-  --overlay-background-color: rgba(45, 47, 49, 0.8);
-  --safe-area-inset-bottom: calc(60px + env(safe-area-inset-bottom));
 }
 
 @theme {
-  --color-pheedloop-blue-100: rgb(229 242 255);
-  --color-pheedloop-blue-200: rgb(204 229 255);
-  --color-pheedloop-blue-300: rgb(153 202 255);
-  --color-pheedloop-blue-400: rgb(102 176 255);
-  --color-pheedloop-blue-500: rgb(51 150 255);
-  --color-pheedloop-blue: rgb(0 123 255);
-  --color-pheedloop-blue-700: rgb(0 99 204);
-  --color-pheedloop-blue-800: rgb(0 74 153);
-  --color-pheedloop-blue-900: rgb(0 49 102);
-
   --color-text-heading: rgb(var(--heading-text-color));
   --color-text-body: rgb(var(--body-text-color));
   --color-text-caption: rgb(var(--caption-text-color));
@@ -145,8 +103,6 @@
   --color-text-invert: rgb(var(--contrast-text-color));
   --color-text-link: rgb(var(--link-text-color));
   --color-text-primary: rgb(var(--primary-text-color));
-
-  --color-card: rgb(var(--card-background-color));
 
   --color-border-neutral: rgb(var(--border-neutral));
   --color-border-neutral-light: rgb(var(--border-neutral-light));
@@ -187,9 +143,6 @@
   --font-family-sans: "Poppins", sans-serif;
   --font-family-poppins: "Poppins", sans-serif;
 
-  --text-xxs: 10px;
-  --text-xxs--line-height: 12px;
-
   --radius-none: 0px;
   --radius-sm: 2px;
   --radius-DEFAULT: 4px;
@@ -212,6 +165,10 @@
   --spacing-xl: var(--sp-xl);
   --spacing-xxl: var(--sp-xxl);
   --spacing-xxxl: var(--sp-xxxl);
+
+  --z-index-header: var(--z-header);
+  --z-index-dropdown: var(--z-dropdown);
+  --z-index-dialog: var(--z-dialog);
 
   --breakpoint-xs: 480px;
 }

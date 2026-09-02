@@ -2,6 +2,7 @@ import { Circle } from "react-konva";
 import type Konva from "konva";
 import type { FloorPlanElement, Geometry, LineGeometry } from "@/types";
 import { snapToAngle } from "@/editor/utils/canvas";
+import { BRAND, WHITE } from "@/canvasColors";
 
 interface LineEndpointHandlesProps {
   element: FloorPlanElement;
@@ -52,8 +53,8 @@ export function LineEndpointHandles({
         x={abs1.x}
         y={abs1.y}
         radius={HANDLE_RADIUS}
-        fill="#fff"
-        stroke="#007bff"
+        fill={WHITE}
+        stroke={BRAND}
         strokeWidth={1.5}
         draggable
         onDragMove={e => handleDrag(0, e)}
@@ -62,8 +63,8 @@ export function LineEndpointHandles({
         x={abs2.x}
         y={abs2.y}
         radius={HANDLE_RADIUS}
-        fill="#fff"
-        stroke="#007bff"
+        fill={WHITE}
+        stroke={BRAND}
         strokeWidth={1.5}
         draggable
         onDragMove={e => handleDrag(1, e)}

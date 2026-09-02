@@ -1,6 +1,7 @@
 import { useLayoutEffect, useRef } from "react";
 import { Stage, Layer, Rect, Group, Line } from "react-konva";
 import { useCanvasControls } from "@/editor/hooks/useCanvasControls";
+import { BLACK, GRAY_300, GRAY_400, WHITE } from "@/canvasColors";
 import { Slots } from "./Slots";
 import { StaticField } from "./StaticField";
 import { PANEL_CORNER_IN, PPI } from "./canvasMetrics";
@@ -63,7 +64,7 @@ export function BadgePreview({
   return (
     <div
       ref={containerRef}
-      className="relative w-full h-full overflow-hidden bg-gray-100"
+      className="relative w-full h-full overflow-hidden bg-surface-neutral"
     >
       <Stage
         ref={stageRef}
@@ -85,10 +86,10 @@ export function BadgePreview({
             width={panelW}
             height={totalH}
             cornerRadius={PANEL_CORNER_IN * PPI}
-            fill="#ffffff"
-            stroke="#cbd5e1"
+            fill={WHITE}
+            stroke={GRAY_300}
             strokeWidth={1}
-            shadowColor="#000000"
+            shadowColor={BLACK}
             shadowOpacity={0.12}
             shadowBlur={12}
             shadowOffsetY={2}
@@ -123,7 +124,7 @@ export function BadgePreview({
                         <Line
                           key={k}
                           points={[0, y, panelW, y]}
-                          stroke="#94a3b8"
+                          stroke={GRAY_400}
                           strokeWidth={1}
                           dash={[2, 3]}
                           listening={false}
@@ -142,7 +143,7 @@ export function BadgePreview({
               <Line
                 key={`crease-${i}`}
                 points={[0, y, panelW, y]}
-                stroke="#cbd5e1"
+                stroke={GRAY_300}
                 strokeWidth={1}
                 dash={[8, 4]}
                 listening={false}

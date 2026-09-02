@@ -2,6 +2,9 @@ import { useState } from "react";
 import { Checkbox } from "@/components/Checkbox";
 import { Button } from "@/components/Button";
 import { Dialog, NumberInput, SectionLabel } from "@/editor/components/ui";
+import { Row } from "@/components/Row";
+import { Stack } from "@/components/Stack";
+import { Text } from "@/components/Text";
 import { fmtUnit, unitLabel, unitName, type Unit } from "./units";
 import {
   PAGE_COUNT,
@@ -128,10 +131,10 @@ export function BadgeSetupDialog({
         </>
       }
     >
-      <div className="flex flex-col gap-4 p-4">
-        <div className="flex flex-col gap-1.5">
+      <Stack gap="s" className="p-s">
+        <Stack gap="tight">
           <SectionLabel>Fold</SectionLabel>
-          <div className="flex gap-2">
+          <Row gap="xxs">
             {FOLD_OPTIONS.map(o => (
               <Button
                 key={o.value}
@@ -144,15 +147,15 @@ export function BadgeSetupDialog({
                 {o.label}
               </Button>
             ))}
-          </div>
-          <span className="text-[11px] text-gray-400">
+          </Row>
+          <span className="text-xs text-text-subtle">
             {count} panel{count > 1 ? "s" : ""}, stacked top-to-bottom
           </span>
-        </div>
+        </Stack>
 
-        <div className="flex flex-col gap-1.5">
+        <Stack gap="tight">
           <SectionLabel>Units</SectionLabel>
-          <div className="flex gap-2">
+          <Row gap="xxs">
             {(["in", "cm"] as Unit[]).map(u => (
               <Button
                 key={u}
@@ -165,10 +168,10 @@ export function BadgeSetupDialog({
                 {unitName[u]}
               </Button>
             ))}
-          </div>
-        </div>
+          </Row>
+        </Stack>
 
-        <div className="flex gap-3">
+        <Row gap="xs">
           <DimField label="Panel width" value={w} unit={unit} onChange={setW} />
           <DimField
             label="Panel height"
@@ -176,46 +179,47 @@ export function BadgeSetupDialog({
             unit={unit}
             onChange={setH}
           />
-        </div>
+        </Row>
 
-        <div className="text-xs text-gray-500">
+        <div className="text-xs text-text-caption">
           Prints as{" "}
-          <span className="font-medium text-gray-700">
+          <span className="font-medium text-text-body">
             {fmtUnit(w, unit)} × {fmtUnit(h * count, unit)} {unitLabel[unit]}
           </span>
           {count > 1 && " (unfolded)"}
         </div>
 
-        <div className="flex flex-col gap-1.5">
+        <Stack gap="tight">
           <SectionLabel>Lanyard slots</SectionLabel>
-          <div className="flex gap-2">
+          <Row gap="xxs">
             {SLOT_OPTIONS.map(o => (
               <Button
                 key={o.value}
                 variant="outline"
                 color={localSlots === o.value ? "primary" : "neutral"}
                 active={localSlots === o.value}
-                className="flex-1 text-[11px]"
+                className="flex-1 text-xs"
                 onClick={() => setLocalSlots(o.value)}
               >
                 {o.label}
               </Button>
             ))}
-          </div>
-        </div>
+          </Row>
+        </Stack>
 
         {count > 1 && (
-          <div className="flex flex-col gap-1.5">
+          <Stack gap="tight">
             <SectionLabel>Panels</SectionLabel>
-            <div className="flex flex-col gap-1.5">
+            <Stack gap="tight">
               {panels.map((cfg, i) => (
-                <div
+                <Stack
                   key={i}
-                  className="flex flex-col gap-1.5 px-2.5 py-2 rounded border border-gray-200"
+                  gap="tight"
+                  className="px-snug py-xxs rounded border border-border-neutral-light"
                 >
-                  <span className="text-xs font-medium text-gray-700">
+                  <Text size="xs" weight="medium" color="body" as="span">
                     {pageRoleLabel(pageRoleForIndex(count, i))}
-                  </span>
+                  </Text>
                   <Checkbox
                     label="Prints upside-down"
                     checked={cfg.inverted}
@@ -227,7 +231,11 @@ export function BadgeSetupDialog({
                     onChange={v => setPanel(i, { tearaway: v })}
                   />
                   {cfg.tearaway && (
-                    <div className="flex items-center gap-2 text-xs text-gray-500 pl-5">
+                    <Row
+                      gap="xxs"
+                      align="center"
+                      className="text-xs text-text-caption pl-5"
+                    >
                       <span>Stubs</span>
                       <div className="w-20">
                         <NumberInput
@@ -237,14 +245,14 @@ export function BadgeSetupDialog({
                           }
                         />
                       </div>
-                    </div>
+                    </Row>
                   )}
-                </div>
+                </Stack>
               ))}
-            </div>
-          </div>
+            </Stack>
+          </Stack>
         )}
-      </div>
+      </Stack>
     </Dialog>
   );
 }

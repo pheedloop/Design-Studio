@@ -1,4 +1,5 @@
 import type { Exhibitor } from "@/viewer/types";
+import { Stack } from "@/components/Stack";
 import { Popover } from "./Popover";
 import { ExhibitorLogo } from "./ExhibitorLogo";
 import { useT } from "@/viewer/i18n";
@@ -28,7 +29,7 @@ export function BoothPopover({
 
   return (
     <Popover x={x} y={y} onClose={onClose}>
-      <div className="text-center text-[11px] font-medium text-gray-400">
+      <div className="text-center text-xs font-medium text-text-subtle">
         {boothCode}
       </div>
       {exhibitor ? (
@@ -36,30 +37,30 @@ export function BoothPopover({
           <button
             type="button"
             onClick={() => onExhibitorClick(exhibitor)}
-            className="mt-1 flex w-full flex-col items-center gap-2 rounded-md px-2 py-2 text-center hover:bg-gray-50 cursor-pointer transition-colors"
+            className="mt-xxxs flex w-full flex-col items-center gap-xxs rounded-md px-xxs py-xxs text-center hover:bg-surface-neutral cursor-pointer transition-colors"
           >
             <ExhibitorLogo exhibitor={exhibitor} />
-            <div className="text-sm font-medium text-gray-900 line-clamp-2">
+            <div className="text-sm font-medium text-text-heading line-clamp-2">
               {exhibitor.name}
             </div>
           </button>
         ) : (
-          <div className="mt-1 flex flex-col items-center gap-2 text-center">
+          <Stack gap="xxs" align="center" className="mt-xxxs text-center">
             <ExhibitorLogo exhibitor={exhibitor} />
-            <div className="text-sm font-medium text-gray-900 line-clamp-2">
+            <div className="text-sm font-medium text-text-heading line-clamp-2">
               {exhibitor.name}
             </div>
-          </div>
+          </Stack>
         )
       ) : (
-        <div className="mt-1 text-center text-[11px] text-gray-400">
+        <div className="mt-xxxs text-center text-xs text-text-subtle">
           {t("viewer.booth.noExhibitor")}
         </div>
       )}
       {onGetDirections && (
         <button
           onClick={() => onGetDirections()}
-          className="mt-2 w-full text-xs font-medium text-blue-600 hover:bg-blue-50 rounded px-2 py-1.5 cursor-pointer transition-colors text-left"
+          className="mt-xxs w-full text-xs font-medium text-blue-600 hover:bg-blue-50 rounded px-xxs py-tight cursor-pointer transition-colors text-left"
         >
           {t("viewer.getDirections")}
         </button>

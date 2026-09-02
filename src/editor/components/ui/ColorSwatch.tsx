@@ -1,3 +1,4 @@
+import { Row } from "@/components/Row";
 interface ColorSwatchProps {
   label: string;
   value: string;
@@ -6,22 +7,22 @@ interface ColorSwatchProps {
 
 export function ColorSwatch({ label, value, onChange }: ColorSwatchProps) {
   return (
-    <div className="flex items-center gap-1.5">
-      <span className="text-[11px] text-gray-500">{label}</span>
+    <Row gap="tight" align="center">
+      <span className="text-xs text-text-caption">{label}</span>
       <div className="relative">
         <input
           type="color"
           value={value}
           onChange={e => onChange(e.target.value)}
-          className="w-6 h-6 border border-gray-300 rounded cursor-pointer p-0"
+          className="w-6 h-6 border border-border-neutral rounded cursor-pointer p-0"
         />
       </div>
       <input
         type="text"
         value={value}
         onChange={e => onChange(e.target.value)}
-        className="w-[72px] px-1.5 py-0.5 text-[11px] font-mono border border-gray-200 rounded bg-white"
+        className="w-[72px] px-tight py-hair text-xs font-mono border border-border-neutral-light rounded bg-white"
       />
-    </div>
+    </Row>
   );
 }

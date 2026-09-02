@@ -50,7 +50,7 @@ export function InlineRenameField({
           setEditing(false);
         }
       }}
-      className="flex-1 text-base font-semibold text-gray-800 bg-white border border-primary-400 rounded px-1.5 py-0.5 outline-none focus:ring-1 focus:ring-primary-400"
+      className="flex-1 text-base font-semibold text-text-heading bg-white border border-primary-400 rounded px-tight py-hair outline-none focus:ring-1 focus:ring-primary-400"
     />
   ) : (
     <button
@@ -59,7 +59,7 @@ export function InlineRenameField({
         setDraft(value);
         setEditing(true);
       }}
-      className="flex-1 text-left text-base font-semibold text-gray-800 truncate hover:text-primary-600 transition-colors"
+      className="flex-1 text-left text-base font-semibold text-text-heading truncate hover:text-primary-600 transition-colors"
       title={title}
     >
       {value}

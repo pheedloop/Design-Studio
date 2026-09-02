@@ -7,7 +7,7 @@ export function TextInput({ className, ...props }: TextInputProps) {
     <input
       type="text"
       className={[
-        "w-full px-2 py-1 text-xs border border-gray-200 rounded bg-white disabled:bg-gray-50 disabled:text-gray-400",
+        "w-full px-xxs py-xxxs text-xs border border-border-neutral-light rounded bg-white disabled:bg-surface-neutral disabled:text-text-subtle",
         className,
       ]
         .filter(Boolean)

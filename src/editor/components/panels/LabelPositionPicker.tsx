@@ -1,5 +1,6 @@
 import { SectionLabel } from "@/editor/components/ui";
 import { useT } from "@/editor/i18n";
+import { Stack } from "@/components/Stack";
 
 type VPos = "top" | "middle" | "bottom";
 type HPos = "left" | "center" | "right";
@@ -20,9 +21,9 @@ export function LabelPositionPicker({
 }: LabelPositionPickerProps) {
   const t = useT();
   return (
-    <div className="flex flex-col gap-1.5">
+    <Stack gap="tight">
       <SectionLabel>{t("editor.field.labelPosition")}</SectionLabel>
-      <div className="inline-grid grid-cols-3 gap-1 p-1.5 bg-gray-50 rounded border border-gray-200 w-fit">
+      <div className="inline-grid grid-cols-3 gap-xxxs p-tight bg-surface-neutral rounded border border-border-neutral-light w-fit">
         {vValues.map(vv =>
           hValues.map(hh => {
             const active = vv === v && hh === h;
@@ -30,7 +31,9 @@ export function LabelPositionPicker({
               <button
                 key={`${vv}-${hh}`}
                 className={`w-5 h-5 rounded-sm flex items-center justify-center cursor-pointer transition-colors ${
-                  active ? "bg-blue-500" : "bg-gray-200 hover:bg-gray-300"
+                  active
+                    ? "bg-blue-500"
+                    : "bg-surface-muted hover:bg-surface-muted-hover"
                 }`}
                 onClick={() => onChange(vv, hh)}
                 title={`${vv}-${hh}`}
@@ -45,6 +48,6 @@ export function LabelPositionPicker({
           }),
         )}
       </div>
-    </div>
+    </Stack>
   );
 }

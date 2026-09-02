@@ -25,6 +25,10 @@ import {
   ColorSwatch,
 } from "@/editor/components/ui";
 import { JsonDebugView } from "@/editor/components/debug";
+import { Row } from "@/components/Row";
+import { Stack } from "@/components/Stack";
+import { Text } from "@/components/Text";
+import { WHITE } from "@/canvasColors";
 import { LabelSection } from "./LabelSection";
 
 const TEXT_ALIGN_LABEL: Record<"left" | "center" | "right", StringKey> = {
@@ -202,7 +206,7 @@ export function PropertiesPanel({
           ) as ElementProperties["labelPositionH"],
           labelColor: getCommonValue(
             labelableElements,
-            el => el.properties.labelColor ?? "#ffffff",
+            el => el.properties.labelColor ?? WHITE,
           ),
           labelFontSize: getCommonValue(
             labelableElements,
@@ -236,22 +240,22 @@ export function PropertiesPanel({
     );
 
     return (
-      <div className="w-60 shrink-0 border-l border-gray-200 bg-white flex flex-col">
-        <div className="px-3 py-2 border-b border-gray-200">
-          <span className="text-xs font-medium text-gray-600">
+      <div className="w-60 shrink-0 border-l border-border-neutral-light bg-white flex flex-col">
+        <div className="px-xs py-xxs border-b border-border-neutral-light">
+          <Text size="xs" weight="medium" color="body" as="span">
             {t("editor.selection.count", { count: selectedCount })}
-          </span>
+          </Text>
         </div>
-        <div className="flex flex-col gap-4 p-3 overflow-y-auto flex-1">
-          <div className="flex flex-col gap-1.5">
-            <div className="flex items-center justify-between">
+        <Stack gap="s" className="p-xs overflow-y-auto flex-1">
+          <Stack gap="tight">
+            <Row align="center" justify="between">
               <SectionLabel>{t("editor.field.opacity")}</SectionLabel>
-              <span className="text-[11px] text-gray-400">
+              <span className="text-xs text-text-subtle">
                 {commonOpacity !== undefined
                   ? `${Math.round(commonOpacity * 100)}%`
                   : t("editor.field.mixed")}
               </span>
-            </div>
+            </Row>
             <Slider
               min={0}
               max={100}
@@ -267,7 +271,7 @@ export function PropertiesPanel({
               }
               className="w-full"
             />
-          </div>
+          </Stack>
 
           {hasLabelable && (
             <>
@@ -275,7 +279,7 @@ export function PropertiesPanel({
                 properties={mixedProps as ElementProperties}
                 onChange={updates => onBatchUpdateProperties(updates)}
               />
-              <div className="flex gap-2">
+              <Row gap="xxs">
                 <Button
                   variant="outline"
                   color="neutral"
@@ -296,11 +300,11 @@ export function PropertiesPanel({
                 >
                   {t("editor.label.showAll")}
                 </Button>
-              </div>
+              </Row>
             </>
           )}
-        </div>
-        <div className="p-3 border-t border-gray-200">
+        </Stack>
+        <div className="p-xs border-t border-border-neutral-light">
           <Button
             variant="outline"
             color="negative"
@@ -317,29 +321,29 @@ export function PropertiesPanel({
   if (!element) {
     if (activeLayerId === "background") {
       return (
-        <div className="w-60 shrink-0 border-l border-gray-200 bg-white flex flex-col">
-          <div className="px-3 py-2 border-b border-gray-200">
-            <span className="text-xs font-medium text-gray-600">
+        <div className="w-60 shrink-0 border-l border-border-neutral-light bg-white flex flex-col">
+          <div className="px-xs py-xxs border-b border-border-neutral-light">
+            <Text size="xs" weight="medium" color="body" as="span">
               {t("editor.field.background")}
-            </span>
+            </Text>
           </div>
-          <div className="flex flex-col gap-4 p-3 overflow-y-auto flex-1">
-            <div className="flex flex-col gap-1.5">
+          <Stack gap="s" className="p-xs overflow-y-auto flex-1">
+            <Stack gap="tight">
               <SectionLabel>{t("editor.field.backgroundColor")}</SectionLabel>
               <ColorSwatch
                 label=""
-                value={backgroundColor ?? "#ffffff"}
+                value={backgroundColor ?? WHITE}
                 onChange={c => onBackgroundColorChange?.(c)}
               />
-            </div>
+            </Stack>
 
-            <div className="flex flex-col gap-1.5">
+            <Stack gap="tight">
               <SectionLabel>{t("editor.field.backgroundFile")}</SectionLabel>
               {background ? (
-                <div className="flex flex-col gap-2">
+                <Stack gap="xxs">
                   {background.kind === "image" ? (
                     <div
-                      className="w-full h-20 rounded border border-gray-200 bg-gray-50"
+                      className="w-full h-20 rounded border border-border-neutral-light bg-surface-neutral"
                       style={{
                         backgroundImage: `url(${background.url})`,
                         backgroundSize: "contain",
@@ -348,19 +352,19 @@ export function PropertiesPanel({
                       }}
                     />
                   ) : (
-                    <div className="text-[11px] text-gray-500 truncate">
+                    <div className="text-xs text-text-caption truncate">
                       {background.sourceFileName}
                     </div>
                   )}
-                  <div className="flex flex-col gap-1.5">
-                    <div className="flex items-center justify-between">
-                      <span className="text-[11px] text-gray-500">
+                  <Stack gap="tight">
+                    <Row align="center" justify="between">
+                      <span className="text-xs text-text-caption">
                         {t("editor.field.opacity")}
                       </span>
-                      <span className="text-[11px] text-gray-400">
+                      <span className="text-xs text-text-subtle">
                         {Math.round(background.opacity * 100)}%
                       </span>
-                    </div>
+                    </Row>
                     <Slider
                       min={0}
                       max={100}
@@ -372,18 +376,21 @@ export function PropertiesPanel({
                       }
                       className="w-full"
                     />
-                  </div>
+                  </Stack>
 
                   {background.kind === "dxf" && (
-                    <div className="flex flex-col gap-1">
-                      <span className="text-[11px] text-gray-500">
+                    <Stack gap="xxxs">
+                      <span className="text-xs text-text-caption">
                         {t("editor.field.layers")}
                       </span>
-                      <div className="max-h-32 overflow-y-auto flex flex-col gap-1 border border-gray-200 rounded-md p-2">
+                      <Stack
+                        gap="xxxs"
+                        className="max-h-32 overflow-y-auto border border-border-neutral-light rounded-md p-xxs"
+                      >
                         {background.layers.map(layer => (
                           <label
                             key={layer}
-                            className="flex items-center gap-2 cursor-pointer text-[11px]"
+                            className="flex items-center gap-xxs cursor-pointer text-xs"
                           >
                             <input
                               type="checkbox"
@@ -393,16 +400,16 @@ export function PropertiesPanel({
                               onChange={() => onToggleDxfLayer?.(layer)}
                               className="accent-primary-600"
                             />
-                            <span className="flex-1 text-gray-700 truncate">
+                            <span className="flex-1 text-text-body truncate">
                               {layer}
                             </span>
                           </label>
                         ))}
-                      </div>
-                    </div>
+                      </Stack>
+                    </Stack>
                   )}
 
-                  <div className="flex gap-2">
+                  <Row gap="xxs">
                     <Button
                       variant="outline"
                       color="neutral"
@@ -419,25 +426,25 @@ export function PropertiesPanel({
                     >
                       {t("editor.background.remove")}
                     </Button>
-                  </div>
-                </div>
+                  </Row>
+                </Stack>
               ) : (
                 <button
                   onClick={onUploadBackground}
-                  className="w-full text-xs text-gray-600 border border-gray-200 border-dashed rounded px-2 py-3 hover:bg-gray-50 cursor-pointer transition-colors"
+                  className="w-full text-xs text-text-body border border-border-neutral-light border-dashed rounded px-xxs py-xs hover:bg-surface-neutral cursor-pointer transition-colors"
                 >
                   {t("editor.background.uploadCta")}
                 </button>
               )}
-            </div>
-          </div>
+            </Stack>
+          </Stack>
         </div>
       );
     }
 
     return (
-      <div className="w-60 shrink-0 border-l border-gray-200 bg-white p-4">
-        <p className="text-xs text-gray-400">
+      <div className="w-60 shrink-0 border-l border-border-neutral-light bg-white p-s">
+        <p className="text-xs text-text-subtle">
           {t("editor.properties.noSelection")}
         </p>
       </div>
@@ -468,8 +475,14 @@ export function PropertiesPanel({
   };
 
   return (
-    <div className="w-60 shrink-0 border-l border-gray-200 bg-white flex flex-col">
-      <div className="flex items-center justify-between px-3 py-2 border-b border-gray-200">
+    <div className="w-60 shrink-0 border-l border-border-neutral-light bg-white flex flex-col">
+      <Row
+        align="center"
+        justify="between"
+        px="xs"
+        py="xxs"
+        className="border-b border-border-neutral-light"
+      >
         {debug && (
           <TabBar
             tabs={[
@@ -478,34 +491,44 @@ export function PropertiesPanel({
             ]}
             value={tab}
             onChange={id => setTab(id as typeof tab)}
-            itemClassName="px-1.5 py-0.5 text-[10px]"
+            itemClassName="px-tight py-hair text-xs"
           />
         )}
-      </div>
-      <div className="flex items-center justify-between px-3 py-2 border-b border-gray-200">
-        <span className="text-xs font-medium text-gray-600">
+      </Row>
+      <Row
+        align="center"
+        justify="between"
+        px="xs"
+        py="xxs"
+        className="border-b border-border-neutral-light"
+      >
+        <Text size="xs" weight="medium" color="body" as="span">
           {elementTypeLabel(element, t)}
-        </span>
-      </div>
+        </Text>
+      </Row>
 
       {tab === "debug" && debug ? (
-        <div className="flex-1 overflow-auto p-2">
+        <div className="flex-1 overflow-auto p-xxs">
           <JsonDebugView data={element} />
         </div>
       ) : (
-        <div className="flex flex-col gap-4 p-3 overflow-y-auto flex-1">
+        <Stack gap="s" className="p-xs overflow-y-auto flex-1">
           {isSelectedUnlinked && (
-            <div className="flex items-start gap-1.5 px-2 py-1.5 rounded bg-red-50 border border-red-200">
-              <span className="text-red-500 text-[10px] font-medium leading-4">
+            <Row
+              gap="tight"
+              align="start"
+              className="px-xxs py-tight rounded bg-red-50 border border-red-200"
+            >
+              <span className="text-red-500 text-xs font-medium leading-4">
                 {t("editor.properties.unlinked")}
               </span>
-              <span className="text-red-400 text-[10px] leading-4">
+              <span className="text-red-400 text-xs leading-4">
                 {t("editor.properties.unlinkedHint")}
               </span>
-            </div>
+            </Row>
           )}
           {fields.has("name") && (
-            <div className="flex flex-col gap-1.5">
+            <Stack gap="tight">
               <SectionLabel>{t("editor.field.name")}</SectionLabel>
               <TextInput
                 value={element.properties.name || ""}
@@ -513,15 +536,15 @@ export function PropertiesPanel({
                   onUpdateProperties(element.id, { name: e.target.value })
                 }
               />
-            </div>
+            </Stack>
           )}
-          <div className="flex flex-col gap-1.5">
-            <div className="flex items-center justify-between">
+          <Stack gap="tight">
+            <Row align="center" justify="between">
               <SectionLabel>{t("editor.field.opacity")}</SectionLabel>
-              <span className="text-[11px] text-gray-400">
+              <span className="text-xs text-text-subtle">
                 {Math.round((element.properties.opacity ?? 1) * 100)}%
               </span>
-            </div>
+            </Row>
             <Slider
               min={0}
               max={100}
@@ -540,7 +563,7 @@ export function PropertiesPanel({
               }}
               className="w-full"
             />
-          </div>
+          </Stack>
 
           {(geo.shape === "rect" ||
             geo.shape === "ellipse" ||
@@ -559,7 +582,7 @@ export function PropertiesPanel({
             )}
 
           {fields.has("text") && (
-            <div className="flex flex-col gap-1.5">
+            <Stack gap="tight">
               <SectionLabel>{t("editor.field.text")}</SectionLabel>
               <TextArea
                 value={element.properties.text || ""}
@@ -568,11 +591,11 @@ export function PropertiesPanel({
                   onUpdateProperties(element.id, { text: e.target.value })
                 }
               />
-            </div>
+            </Stack>
           )}
 
           {fields.has("fontSize") && (
-            <div className="flex flex-col gap-1.5">
+            <Stack gap="tight">
               <SectionLabel>{t("editor.field.fontSize")}</SectionLabel>
               <NumberInput
                 value={element.properties.fontSize ?? 16}
@@ -580,15 +603,15 @@ export function PropertiesPanel({
                   onUpdateProperties(element.id, { fontSize: Math.max(1, v) })
                 }
               />
-            </div>
+            </Stack>
           )}
 
           {(fields.has("fontWeight") ||
             fields.has("fontStyle") ||
             fields.has("textDecoration")) && (
-            <div className="flex flex-col gap-1.5">
+            <Stack gap="tight">
               <SectionLabel>{t("editor.field.style")}</SectionLabel>
-              <div className="flex gap-1">
+              <Row gap="xxxs">
                 {fields.has("fontWeight") && (
                   <Button
                     variant="outline"
@@ -643,12 +666,12 @@ export function PropertiesPanel({
                     U
                   </Button>
                 )}
-              </div>
-            </div>
+              </Row>
+            </Stack>
           )}
 
           {fields.has("textAlign") && (
-            <div className="flex flex-col gap-1.5">
+            <Stack gap="tight">
               <SectionLabel>{t("editor.field.alignment")}</SectionLabel>
               <div className="flex">
                 {(["left", "center", "right"] as const).map(align => (
@@ -657,7 +680,7 @@ export function PropertiesPanel({
                     variant="outline"
                     color="neutral"
                     active={(element.properties.textAlign ?? "left") === align}
-                    className={`flex-1 py-1 ${
+                    className={`flex-1 py-xxxs ${
                       align === "left"
                         ? "rounded-r-none"
                         : align === "right"
@@ -672,12 +695,12 @@ export function PropertiesPanel({
                   </Button>
                 ))}
               </div>
-            </div>
+            </Stack>
           )}
 
           {(fields.has("width") || fields.has("height")) &&
             (geo.shape === "rect" || geo.shape === "ellipse") && (
-              <div className="flex flex-col gap-1.5">
+              <Stack gap="tight">
                 <SectionLabel>{t("editor.field.size")}</SectionLabel>
                 {fields.has("width") && (
                   <FieldRow label={t("editor.field.widthShort")}>
@@ -695,11 +718,11 @@ export function PropertiesPanel({
                     />
                   </FieldRow>
                 )}
-              </div>
+              </Stack>
             )}
 
           {fields.has("rotation") && (
-            <div className="flex flex-col gap-1.5">
+            <Stack gap="tight">
               <SectionLabel>{t("editor.field.rotation")}</SectionLabel>
               <FieldRow label="°">
                 <NumberInput
@@ -707,29 +730,29 @@ export function PropertiesPanel({
                   onChange={r => onUpdateGeometry(element.id, { rotation: r })}
                 />
               </FieldRow>
-            </div>
+            </Stack>
           )}
 
           {fields.has("area") && (
-            <div className="flex flex-col gap-1.5">
+            <Stack gap="tight">
               <SectionLabel>{t("editor.field.area")}</SectionLabel>
-              <div className="px-2 py-1 text-xs text-gray-600 bg-gray-50 rounded border border-gray-200">
+              <div className="px-xxs py-xxxs text-xs text-text-body bg-surface-neutral rounded border border-border-neutral-light">
                 {formatArea(dims.width, dims.height, dimensions, t, locale)}
               </div>
-            </div>
+            </Stack>
           )}
 
           {fields.has("length") && (
-            <div className="flex flex-col gap-1.5">
+            <Stack gap="tight">
               <SectionLabel>{t("editor.field.length")}</SectionLabel>
-              <div className="px-2 py-1 text-xs text-gray-600 bg-gray-50 rounded border border-gray-200">
+              <div className="px-xxs py-xxxs text-xs text-text-body bg-surface-neutral rounded border border-border-neutral-light">
                 {formatMeasurement(dims.length, dimensions, t, locale)}
               </div>
-            </div>
+            </Stack>
           )}
 
           {fields.has("arrowHeadStyle") && element.properties.arrowHead && (
-            <div className="flex flex-col gap-1.5">
+            <Stack gap="tight">
               <SectionLabel>{t("editor.field.arrowStyle")}</SectionLabel>
               <div className="flex">
                 {(["triangle", "chevron"] as const).map(style => (
@@ -738,7 +761,7 @@ export function PropertiesPanel({
                     variant="outline"
                     color="neutral"
                     active={element.properties.arrowHead?.style === style}
-                    className={`flex-1 py-1 ${
+                    className={`flex-1 py-xxxs ${
                       style === "triangle" ? "rounded-r-none" : "rounded-l-none"
                     }`}
                     onClick={() =>
@@ -751,11 +774,11 @@ export function PropertiesPanel({
                   </Button>
                 ))}
               </div>
-            </div>
+            </Stack>
           )}
 
           {fields.has("arrowHeadSize") && element.properties.arrowHead && (
-            <div className="flex flex-col gap-1.5">
+            <Stack gap="tight">
               <SectionLabel>{t("editor.field.arrowSize")}</SectionLabel>
               <FieldRow label={t("common.unit.px")}>
                 <NumberInput
@@ -770,12 +793,12 @@ export function PropertiesPanel({
                   }
                 />
               </FieldRow>
-            </div>
+            </Stack>
           )}
-        </div>
+        </Stack>
       )}
 
-      <div className="flex flex-col gap-2 p-3 border-t border-gray-200">
+      <Stack gap="xxs" className="p-xs border-t border-border-neutral-light">
         {(element.type === "booth" ||
           element.type === "session_area" ||
           element.type === "meeting_room") && (
@@ -801,7 +824,7 @@ export function PropertiesPanel({
         >
           {t("editor.action.delete")}
         </Button>
-      </div>
+      </Stack>
     </div>
   );
 }

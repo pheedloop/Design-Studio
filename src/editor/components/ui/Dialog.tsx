@@ -1,5 +1,7 @@
 import type { ReactNode } from "react";
 import { useT } from "@/editor/i18n";
+import { Row } from "@/components/Row";
+import { Heading } from "@/components/Heading";
 
 interface DialogProps {
   title: string;
@@ -24,32 +26,43 @@ export function Dialog({
 }: DialogProps) {
   const t = useT();
   return (
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
+    <Row align="center" justify="center" className="fixed inset-0 z-dialog p-s">
       <div className="absolute inset-0 bg-black/50" onClick={onClose} />
       <div
         className="relative bg-white rounded-lg shadow-xl flex flex-col max-w-full"
         style={{ width, maxHeight }}
       >
-        <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200 shrink-0">
-          <h2 className="text-sm font-semibold text-gray-800">{title}</h2>
-          <div className="flex items-center gap-2">
+        <Row
+          align="center"
+          justify="between"
+          px="s"
+          py="xs"
+          className="border-b border-border-neutral-light shrink-0"
+        >
+          <Heading level={2}>{title}</Heading>
+          <Row gap="xxs" align="center">
             {headerActions}
             <button
               onClick={onClose}
               aria-label={t("editor.action.close")}
-              className="text-gray-400 hover:text-gray-600 text-lg leading-none cursor-pointer"
+              className="text-text-subtle hover:text-text-body text-lg leading-none cursor-pointer"
             >
               &times;
             </button>
-          </div>
-        </div>
+          </Row>
+        </Row>
         <div className="flex-1 min-h-0 overflow-y-auto">{children}</div>
         {footer && (
-          <div className="flex items-center justify-end gap-2 px-4 py-3 border-t border-gray-200 shrink-0">
+          <Row
+            gap="xxs"
+            align="center"
+            justify="end"
+            className="px-s py-xs border-t border-border-neutral-light shrink-0"
+          >
             {footer}
-          </div>
+          </Row>
         )}
       </div>
-    </div>
+    </Row>
   );
 }

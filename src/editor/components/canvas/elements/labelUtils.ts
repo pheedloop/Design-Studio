@@ -1,4 +1,5 @@
 import type { ElementProperties } from "@/types";
+import { WHITE } from "@/canvasColors";
 
 type VPos = "top" | "middle" | "bottom";
 type HPos = "left" | "center" | "right";
@@ -24,23 +25,6 @@ export function getLabelXY(
     verticalAlign: v as string,
     padding,
   };
-}
-
-/**
- * Get x/y position for a Konva Label (point-positioned, used with Tag background).
- */
-export function getLabelTagPosition(
-  v: VPos,
-  h: HPos,
-  elWidth: number,
-  elHeight: number,
-  padding: number = 4,
-) {
-  const x =
-    h === "left" ? padding : h === "right" ? elWidth - padding : elWidth / 2;
-  const y =
-    v === "top" ? padding : v === "bottom" ? elHeight - padding : elHeight / 2;
-  return { x, y };
 }
 
 /** Build Konva fontStyle string from bold + italic flags. */
@@ -71,7 +55,7 @@ export function getLabelRenderProps(
   return {
     labelPositionV: props.labelPositionV ?? "middle",
     labelPositionH: props.labelPositionH ?? "center",
-    labelColor: props.labelColor ?? "#ffffff",
+    labelColor: props.labelColor ?? WHITE,
     labelFontSize: props.labelFontSize ?? 12,
     labelBold: props.labelBold ?? true,
     labelItalic: props.labelItalic ?? false,

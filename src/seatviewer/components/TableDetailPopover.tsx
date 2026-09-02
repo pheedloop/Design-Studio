@@ -5,6 +5,8 @@ import type { SeatOccupant, SeatTableState } from "@/seatviewer/types";
 import { occupancyLevel, type OccupancyLevel } from "@/seatviewer/logic";
 import { useT } from "@/seatviewer/i18n";
 import { occupantHeading } from "@/seatviewer/labels";
+import { Row } from "@/components/Row";
+import { Heading } from "@/components/Heading";
 
 interface TableDetailPopoverProps {
   table: SeatTableState;
@@ -28,7 +30,7 @@ const OCC_BADGE: Record<OccupancyLevel, string> = {
   available: "text-[#14653a] bg-[rgba(0,168,99,0.12)]",
   half: "text-[#8a5a00] bg-[rgba(255,168,0,0.16)]",
   low: "text-[#b42318] bg-[rgba(235,87,87,0.16)]",
-  full: "text-gray-600 bg-gray-200",
+  full: "text-text-body bg-surface-muted",
 };
 
 function initials(o: SeatOccupant): string {
@@ -63,14 +65,18 @@ export function TableDetailPopover({
       role="dialog"
       aria-modal="false"
       aria-label={t("seatviewer.table.details", { name: tableName })}
-      className="absolute z-[9999] w-72 max-w-[calc(100%-24px)] left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-card border border-gray-300 rounded-xl shadow-[0_16px_48px_rgba(38,59,90,0.28)] overflow-hidden"
+      className="absolute z-dialog w-72 max-w-[calc(100%-24px)] left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-surface-contrast border border-border-neutral rounded-xl shadow-[0_16px_48px_rgba(38,59,90,0.28)] overflow-hidden"
     >
-      <div className="flex items-start gap-2 p-3 border-b border-gray-200">
+      <Row
+        gap="xxs"
+        align="start"
+        className="p-xs border-b border-border-neutral-light"
+      >
         <div className="flex-1 min-w-0">
-          <h3 className="m-0 text-base font-medium text-gray-700">
+          <Heading level={3} className="m-0">
             {tableName}
-          </h3>
-          <span className="text-xs text-gray-400 tabular-nums">
+          </Heading>
+          <span className="text-xs text-text-subtle tabular-nums">
             {t("seatviewer.table.seatsFree", {
               count: seatsFree,
               total: table.seatCount,
@@ -78,7 +84,7 @@ export function TableDetailPopover({
           </span>
         </div>
         <span
-          className={`text-xs font-medium tabular-nums px-2 py-0.5 rounded-full whitespace-nowrap ${OCC_BADGE[level]}`}
+          className={`text-xs font-medium tabular-nums px-xxs py-hair rounded-full whitespace-nowrap ${OCC_BADGE[level]}`}
         >
           {table.occupancy}/{table.seatCount}
         </span>
@@ -90,11 +96,11 @@ export function TableDetailPopover({
         >
           <PiX size={16} />
         </IconButton>
-      </div>
+      </Row>
 
       {!hideAttendeeDetails && (
         <div className="max-h-44 overflow-y-auto scrollbar">
-          <div className="px-3 pt-2.5 pb-1 text-[10px] tracking-wider uppercase text-gray-400 font-semibold">
+          <div className="px-xs pt-snug pb-xxxs text-xs tracking-wider uppercase text-text-subtle font-semibold">
             {occupantHeading(
               {
                 loading: !!occupantsLoading,
@@ -105,15 +111,20 @@ export function TableDetailPopover({
             )}
           </div>
           {occupants.map(o => (
-            <div key={o.code} className="flex items-center gap-2.5 px-3 py-1.5">
-              <span className="size-6 shrink-0 grid place-items-center rounded-full text-[10px] font-semibold bg-primary-100 text-primary-600">
+            <Row
+              key={o.code}
+              gap="snug"
+              align="center"
+              className="px-xs py-tight"
+            >
+              <span className="size-6 shrink-0 grid place-items-center rounded-full text-xs font-semibold bg-primary-100 text-primary-600">
                 {initials(o)}
               </span>
               <span className="flex-1 min-w-0">
-                <span className="block text-sm font-medium text-gray-700 truncate">
+                <span className="block text-sm font-medium text-text-body truncate">
                   {o.firstName} {o.lastName}
                 </span>
-                <span className="block text-xs text-gray-500 truncate">
+                <span className="block text-xs text-text-caption truncate">
                   {o.organization || o.email}
                 </span>
               </span>
@@ -121,17 +132,17 @@ export function TableDetailPopover({
                 <button
                   type="button"
                   onClick={() => onUnassign(o.seatSelectionCode as number)}
-                  className="shrink-0 text-xs text-gray-400 hover:text-[#b42318] hover:bg-[rgba(235,87,87,0.12)] px-1.5 py-1 rounded cursor-pointer"
+                  className="shrink-0 text-xs text-text-subtle hover:text-[#b42318] hover:bg-[rgba(235,87,87,0.12)] px-tight py-xxxs rounded cursor-pointer"
                 >
                   {t("seatviewer.table.remove")}
                 </button>
               )}
-            </div>
+            </Row>
           ))}
         </div>
       )}
 
-      <div className="p-3 border-t border-gray-200 bg-gray-100">
+      <div className="p-xs border-t border-border-neutral-light bg-surface-neutral">
         <Button
           variant="solid"
           color="primary"
@@ -143,7 +154,7 @@ export function TableDetailPopover({
           {assigning ? t("seatviewer.table.assigning") : assignLabel}
         </Button>
         {assignHint && (
-          <p className="text-xs text-gray-500 text-center mt-2 m-0">
+          <p className="text-xs text-text-caption text-center mt-xxs m-0">
             {assignHint}
           </p>
         )}

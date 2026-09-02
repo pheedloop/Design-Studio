@@ -9,6 +9,9 @@ import {
   type DrawContext,
 } from "@/editor/utils/dxf/drawPrimitives";
 import { useT, type StringKey } from "@/editor/i18n";
+import { Row } from "@/components/Row";
+import { Stack } from "@/components/Stack";
+import { Text } from "@/components/Text";
 import { FitModeRadios } from "./FitModeRadios";
 
 /** Serialized-size budget for the imported DXF primitives. pikachu caps the
@@ -322,16 +325,19 @@ export function BackgroundUploadDialog({
         </>
       }
     >
-      <div className="p-4 flex flex-col gap-4">
+      <Stack gap="s" className="p-s">
         {!file ? (
-          <div
+          <Stack
+            gap="none"
             onClick={() => fileRef.current?.click()}
-            className="flex flex-col items-center justify-center h-40 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-primary-400 hover:bg-gray-50 transition-colors"
+            align="center"
+            justify="center"
+            className="h-40 border-2 border-dashed border-border-neutral rounded-lg cursor-pointer hover:border-primary-400 hover:bg-surface-neutral transition-colors"
           >
-            <span className="text-sm text-gray-500">
+            <span className="text-sm text-text-caption">
               {t("editor.background.chooseFile")}
             </span>
-            <span className="text-xs text-gray-400 mt-1">
+            <span className="text-xs text-text-subtle mt-xxxs">
               {t("editor.background.fileTypes")}
             </span>
             <input
@@ -341,16 +347,20 @@ export function BackgroundUploadDialog({
               onChange={handleFileChange}
               className="hidden"
             />
-            {error && <p className="text-xs text-red-600 mt-3">{t(error)}</p>}
-          </div>
+            {error && <p className="text-xs text-red-600 mt-xs">{t(error)}</p>}
+          </Stack>
         ) : kind === "dxf" ? (
           !parsed ? (
             <>
-              <div className="flex items-center justify-center h-40 bg-gray-100 rounded-lg">
-                <span className="text-xs text-gray-500 px-4 text-center truncate">
+              <Row
+                align="center"
+                justify="center"
+                className="h-40 bg-surface-neutral rounded-lg"
+              >
+                <span className="text-xs text-text-caption px-s text-center truncate">
                   {file.name}
                 </span>
-              </div>
+              </Row>
               {error && <p className="text-xs text-red-600">{t(error)}</p>}
               <Button
                 variant="ghost"
@@ -367,18 +377,21 @@ export function BackgroundUploadDialog({
                 ref={previewRef}
                 width={PREVIEW_W}
                 height={PREVIEW_H}
-                className="w-full bg-gray-100 rounded-lg border border-gray-200"
+                className="w-full bg-surface-neutral rounded-lg border border-border-neutral-light"
               />
 
-              <div className="flex flex-col gap-1">
-                <span className="text-xs font-medium text-gray-700">
+              <Stack gap="xxxs">
+                <Text size="xs" weight="medium" color="body" as="span">
                   {t("editor.background.layersToImport")}
-                </span>
-                <div className="max-h-40 overflow-y-auto flex flex-col gap-1 border border-gray-200 rounded-md p-2">
+                </Text>
+                <Stack
+                  gap="xxxs"
+                  className="max-h-40 overflow-y-auto border border-border-neutral-light rounded-md p-xxs"
+                >
                   {parsed.layers.map(layer => (
                     <label
                       key={layer}
-                      className="flex items-center gap-2 cursor-pointer text-xs"
+                      className="flex items-center gap-xxs cursor-pointer text-xs"
                     >
                       <input
                         type="checkbox"
@@ -386,19 +399,19 @@ export function BackgroundUploadDialog({
                         onChange={() => toggleLayer(layer)}
                         className="accent-primary-600"
                       />
-                      <span className="flex-1 text-gray-700 truncate">
+                      <span className="flex-1 text-text-body truncate">
                         {layer}
                       </span>
-                      <span className="text-gray-400">
+                      <span className="text-text-subtle">
                         {layerCounts.get(layer) ?? 0}
                       </span>
                     </label>
                   ))}
-                </div>
-              </div>
+                </Stack>
+              </Stack>
 
-              <div className="flex items-center gap-2">
-                <span className="text-xs font-medium text-gray-700 w-16">
+              <Row gap="xxs" align="center">
+                <span className="text-xs font-medium text-text-body w-16">
                   {t("editor.field.opacity")}
                 </span>
                 <input
@@ -410,14 +423,14 @@ export function BackgroundUploadDialog({
                   onChange={e => setOpacity(Number(e.target.value))}
                   className="accent-primary-600 cursor-pointer flex-1"
                 />
-                <span className="text-xs text-gray-500 w-8 text-right">
+                <span className="text-xs text-text-caption w-8 text-right">
                   {Math.round(opacity * 100)}%
                 </span>
-              </div>
+              </Row>
 
               <FitModeRadios mode={mode} onChange={setMode} t={t} />
 
-              <div className="text-xs text-gray-500 flex flex-col gap-1">
+              <Stack gap="xxxs" className="text-xs text-text-caption">
                 {parsed.unsupportedCount > 0 && (
                   <span>
                     {t("editor.background.skipped", {
@@ -445,7 +458,7 @@ export function BackgroundUploadDialog({
                     })}
                   </span>
                 ) : null}
-              </div>
+              </Stack>
 
               {error && <p className="text-xs text-red-600">{t(error)}</p>}
 
@@ -462,7 +475,11 @@ export function BackgroundUploadDialog({
           )
         ) : (
           <>
-            <div className="flex items-center justify-center h-40 bg-gray-100 rounded-lg overflow-hidden">
+            <Row
+              align="center"
+              justify="center"
+              className="h-40 bg-surface-neutral rounded-lg overflow-hidden"
+            >
               {imagePreview ? (
                 <img
                   src={imagePreview}
@@ -470,13 +487,13 @@ export function BackgroundUploadDialog({
                   className="max-h-full max-w-full object-contain"
                 />
               ) : (
-                <span className="text-xs text-gray-500 px-4 text-center truncate">
+                <span className="text-xs text-text-caption px-s text-center truncate">
                   {file.name}
                 </span>
               )}
-            </div>
+            </Row>
 
-            <div className="text-xs text-gray-500">
+            <div className="text-xs text-text-caption">
               {imageSize
                 ? t("editor.background.dimensions", {
                     imageWidth: imageSize.width,
@@ -490,8 +507,8 @@ export function BackgroundUploadDialog({
                   })}
             </div>
 
-            <div className="flex items-center gap-2">
-              <span className="text-xs font-medium text-gray-700 w-16">
+            <Row gap="xxs" align="center">
+              <span className="text-xs font-medium text-text-body w-16">
                 {t("editor.field.opacity")}
               </span>
               <input
@@ -503,10 +520,10 @@ export function BackgroundUploadDialog({
                 onChange={e => setOpacity(Number(e.target.value))}
                 className="accent-primary-600 cursor-pointer flex-1"
               />
-              <span className="text-xs text-gray-500 w-8 text-right">
+              <span className="text-xs text-text-caption w-8 text-right">
                 {Math.round(opacity * 100)}%
               </span>
-            </div>
+            </Row>
 
             <FitModeRadios mode={mode} onChange={setMode} t={t} />
 
@@ -523,7 +540,7 @@ export function BackgroundUploadDialog({
             </Button>
           </>
         )}
-      </div>
+      </Stack>
     </Dialog>
   );
 }

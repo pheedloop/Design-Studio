@@ -13,6 +13,7 @@ import {
   buildSeatPlanRoster,
   MY_TICKET_CODES,
 } from "@/sample-data/seatplan-roster";
+import { Row } from "@/components/Row";
 
 const MINE = new Set<string>(MY_TICKET_CODES);
 
@@ -131,10 +132,10 @@ export function SeatPlanViewerDemo({ translate }: { translate?: Translate }) {
     <button
       type="button"
       onClick={() => setViewerMode(m)}
-      className={`px-3 py-1 rounded text-xs font-medium transition-colors ${
+      className={`px-xs py-xxxs rounded text-xs font-medium transition-colors ${
         viewerMode === m
-          ? "bg-white text-gray-900 shadow-sm"
-          : "text-gray-500 hover:text-gray-800"
+          ? "bg-white text-text-heading shadow-sm"
+          : "text-text-caption hover:text-text-heading"
       }`}
     >
       {label}
@@ -143,13 +144,21 @@ export function SeatPlanViewerDemo({ translate }: { translate?: Translate }) {
 
   return (
     <div className="flex flex-col h-full">
-      <div className="flex items-center gap-3 px-3 py-1.5 bg-gray-100 border-b border-gray-200 text-xs shrink-0">
-        <div className="flex items-center gap-1 bg-gray-200 rounded p-0.5">
+      <Row
+        gap="xs"
+        align="center"
+        className="px-xs py-tight bg-surface-neutral border-b border-border-neutral-light text-xs shrink-0"
+      >
+        <Row
+          gap="xxxs"
+          align="center"
+          className="bg-surface-muted rounded p-hair"
+        >
           {tab("admin", "Admin")}
           {tab("attendee", "Attendee")}
-        </div>
+        </Row>
         {viewerMode === "attendee" && (
-          <div className="flex items-center gap-4 text-gray-600">
+          <Row gap="s" align="center" className="text-text-body">
             <Checkbox
               label="Lock selection"
               checked={lockSelection}
@@ -160,9 +169,9 @@ export function SeatPlanViewerDemo({ translate }: { translate?: Translate }) {
               checked={hideDetails}
               onChange={setHideDetails}
             />
-          </div>
+          </Row>
         )}
-      </div>
+      </Row>
 
       <div className="flex-1 min-h-0">
         <SeatPlanViewer

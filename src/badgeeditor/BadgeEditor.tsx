@@ -12,6 +12,8 @@ import { useHistory } from "@/editor/hooks/useHistory";
 import { Button } from "@/components/Button";
 import { IconButton } from "@/components/IconButton";
 import { TabBar, type MenuEntry } from "@/editor/components/ui";
+import { Row } from "@/components/Row";
+import { Text } from "@/components/Text";
 import { BadgeTopBar } from "./BadgeTopBar";
 import { modKey } from "@/editor/utils/platform";
 import { I18nProvider } from "@/i18n/I18nProvider";
@@ -537,23 +539,27 @@ function BadgeEditorInner({
             if (!previewMode && doc.pages.length <= 1 && !showAlign)
               return null;
             return (
-              <div className="relative z-20 flex items-center gap-3 px-3 h-[43px] bg-white border-b border-gray-200 shrink-0">
+              <Row
+                gap="xs"
+                align="center"
+                className="relative z-20 px-xs h-[43px] bg-white border-b border-border-neutral-light shrink-0"
+              >
                 {!previewMode && doc.pages.length > 1 && (
                   <TabBar
                     tabs={pageTabs}
                     value={String(pageIndex)}
                     onChange={id => selectPage(Number(id))}
-                    itemClassName="px-3 py-1.5 text-xs"
+                    itemClassName="px-xs py-tight text-xs"
                   />
                 )}
                 {previewMode && (
-                  <span className="text-xs text-gray-500">
+                  <span className="text-xs text-text-caption">
                     Full preview · as printed (read-only)
                   </span>
                 )}
                 <div className="flex-1" />
                 {showAlign && (
-                  <div className="flex items-center gap-0.5">
+                  <Row gap="hair" align="center">
                     <AlignmentControls
                       onAlignLeft={() => runAlign(alignLeft)}
                       onAlignCenterH={() => runAlign(alignCenterH)}
@@ -572,9 +578,9 @@ function BadgeEditorInner({
                           : undefined
                       }
                     />
-                  </div>
+                  </Row>
                 )}
-              </div>
+              </Row>
             );
           })()}
 
@@ -583,7 +589,7 @@ function BadgeEditorInner({
             <div className="flex flex-col flex-1 min-w-0 min-h-0">
               {/* Invert ribbon — contextual to the active folded-back panel. */}
               {!previewMode && pageInverts[pageIndex] && (
-                <div className="shrink-0 bg-amber-50 border-b border-amber-200 px-3 py-1.5 text-xs text-amber-700">
+                <div className="shrink-0 bg-amber-50 border-b border-amber-200 px-xs py-tight text-xs text-amber-700">
                   ⤓ This panel prints upside-down automatically.
                 </div>
               )}
@@ -600,7 +606,7 @@ function BadgeEditorInner({
               ) : (
                 <div
                   ref={containerRef}
-                  className="relative flex-1 min-h-0 overflow-hidden bg-gray-100"
+                  className="relative flex-1 min-h-0 overflow-hidden bg-surface-neutral"
                 >
                   <BadgeCanvas
                     page={activePage}
@@ -637,45 +643,57 @@ function BadgeEditorInner({
                 </div>
               )}
               {/* Footer — page + overall badge size, and zoom (mirrors StatusBar) */}
-              <div className="relative z-20 flex items-center justify-between px-3 py-1.5 bg-white border-t border-gray-200 text-xs text-gray-500">
-                <div className="flex items-center gap-2">
+              <Row
+                align="center"
+                justify="between"
+                px="xs"
+                py="tight"
+                className="relative z-20 bg-white border-t border-border-neutral-light text-xs text-text-caption"
+              >
+                <Row gap="xxs" align="center">
                   <span>
                     Page {fmtUnit(doc.panelSize.width, unit)} ×{" "}
                     {fmtUnit(doc.panelSize.height, unit)} {unitLabel[unit]}
                   </span>
-                  <span className="text-gray-300">·</span>
+                  <span className="text-text-disabled">·</span>
                   <span>
                     Badge {fmtUnit(doc.panelSize.width, unit)} ×{" "}
                     {fmtUnit(doc.panelSize.height * doc.pages.length, unit)}{" "}
                     {unitLabel[unit]}
                   </span>
-                </div>
+                </Row>
                 <IconButton
                   size="sm"
                   onClick={fitBadge}
-                  className="px-2 w-auto text-xs text-gray-500"
+                  className="px-xxs w-auto text-xs text-text-caption"
                   title="Click to fit badge in view"
                 >
                   {Math.round(controls.scale * 100)}%
                 </IconButton>
-              </div>
+              </Row>
             </div>
 
             {showLayout ? (
-              <aside className="w-72 shrink-0 border-l border-gray-200 bg-white flex flex-col">
-                <div className="px-3 py-2 border-b border-gray-200 text-xs font-medium text-gray-600">
+              <aside className="w-72 shrink-0 border-l border-border-neutral-light bg-white flex flex-col">
+                <div className="px-xs py-xxs border-b border-border-neutral-light text-xs font-medium text-text-body">
                   badge_layout · {flattened.width}" × {flattened.height}"
                 </div>
-                <pre className="flex-1 overflow-auto text-[11px] leading-tight p-3 text-gray-600">
+                <pre className="flex-1 overflow-auto text-xs leading-tight p-xs text-text-body">
                   {JSON.stringify(flattened.layout, null, 2)}
                 </pre>
               </aside>
             ) : previewMode ? null : selectedIds.size > 1 ? (
-              <aside className="w-52 shrink-0 border-l border-gray-200 bg-white flex flex-col">
-                <div className="px-3 py-2 border-b border-gray-200 flex items-center justify-between">
-                  <span className="text-xs font-medium text-gray-600">
+              <aside className="w-52 shrink-0 border-l border-border-neutral-light bg-white flex flex-col">
+                <Row
+                  px="xs"
+                  py="xxs"
+                  align="center"
+                  justify="between"
+                  className="border-b border-border-neutral-light"
+                >
+                  <Text size="xs" weight="medium" color="body" as="span">
                     {selectedIds.size} fields selected
-                  </span>
+                  </Text>
                   <Button
                     variant="ghost"
                     color="negative"
@@ -684,8 +702,8 @@ function BadgeEditorInner({
                   >
                     Delete
                   </Button>
-                </div>
-                <p className="p-3 text-xs text-gray-400">
+                </Row>
+                <p className="p-xs text-xs text-text-subtle">
                   Drag to move them together, or select a single field to edit
                   its properties.
                 </p>
