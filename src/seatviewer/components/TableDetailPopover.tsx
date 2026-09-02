@@ -73,13 +73,7 @@ export function TableDetailPopover({
         className="p-3 border-b border-border-neutral-light"
       >
         <div className="flex-1 min-w-0">
-          <Heading
-            level={3}
-            size="base"
-            weight="medium"
-            color="body"
-            className="m-0"
-          >
+          <Heading level={3} className="m-0">
             {tableName}
           </Heading>
           <span className="text-xs text-text-subtle tabular-nums">

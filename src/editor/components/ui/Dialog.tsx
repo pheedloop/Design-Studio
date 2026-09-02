@@ -33,9 +33,7 @@ export function Dialog({
         style={{ width, maxHeight }}
       >
         <div className="flex items-center justify-between px-4 py-3 border-b border-border-neutral-light shrink-0">
-          <Heading level={2} size="sm" weight="semibold">
-            {title}
-          </Heading>
+          <Heading level={2}>{title}</Heading>
           <Row gap="xxs" align="center">
             {headerActions}
             <button

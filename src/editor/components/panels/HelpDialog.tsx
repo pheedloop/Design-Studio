@@ -280,12 +280,7 @@ export function HelpDialog({ onClose }: HelpDialogProps) {
         {tab === "start" &&
           GETTING_STARTED.map((section, index) => (
             <div key={section.headingKey}>
-              <Heading
-                level={3}
-                size="xs"
-                weight="semibold"
-                className={`mb-2 ${index > 0 ? "mt-4" : ""}`}
-              >
+              <Heading level={3} className={`mb-2 ${index > 0 ? "mt-4" : ""}`}>
                 {t(section.headingKey)}
               </Heading>
               <ul className="text-xs text-text-body space-y-1.5">

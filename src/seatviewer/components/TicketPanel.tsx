@@ -249,13 +249,7 @@ export function TicketPanel({
           onClick={() => setExpanded(prev => !prev)}
           className="w-full flex items-center gap-xxs px-4 py-3 text-left cursor-pointer hover:bg-surface-neutral"
         >
-          <Heading
-            level={2}
-            size="base"
-            weight="medium"
-            color="body"
-            className="m-0"
-          >
+          <Heading level={2} className="m-0">
             {t("seatviewer.tickets.yours")}
           </Heading>
           <span className="text-sm text-text-subtle tabular-nums">
@@ -296,13 +290,7 @@ export function TicketPanel({
     <aside className="w-80 shrink-0 bg-surface-contrast border-r border-border-neutral-light flex flex-col min-h-0">
       <Stack gap="xs" className="p-4 border-b border-border-neutral-light">
         <Row gap="xxs" align="baseline">
-          <Heading
-            level={2}
-            size="base"
-            weight="medium"
-            color="body"
-            className="m-0"
-          >
+          <Heading level={2} className="m-0">
             {t("seatviewer.tickets.holders")}
           </Heading>
           <span className="text-sm text-text-subtle tabular-nums">
