@@ -9,7 +9,7 @@ import {
 } from "react-icons/pi";
 import type { ActiveTool, EditorMode, PathingTool } from "@/editor/types";
 import { TOOL_REGISTRY } from "@/editor/tools/registry";
-import type { FeatureMap } from "@/tiers";
+import type { FeatureKey, FeatureMap } from "@/tiers";
 import { showTrophy } from "@/tiers";
 import { IconPicker } from "./IconPicker";
 import { getIconEntry } from "@/editor/utils/iconRegistry";
@@ -230,43 +230,43 @@ export function ToolSidebar({
               isActive={activeTool === "select"}
               onClick={() => onToolChange("select")}
             />
-            {features.drawingTools !== "hidden" &&
-              toolDefs
-                // The measure tool is meaningless without real-world scale, so it
-                // follows the scaleCalibration feature.
-                .filter(
-                  tool =>
-                    !(
-                      tool.id === "measure" &&
-                      features.scaleCalibration === "hidden"
-                    ),
-                )
-                .map(tool => {
-                  const displayTool =
-                    tool.id === "icon" && activeIconName
-                      ? (() => {
-                          const entry = getIconEntry(activeIconName);
-                          if (!entry) return tool;
-                          const ActiveIcon = entry.component;
-                          return { ...tool, icon: <ActiveIcon size={16} /> };
-                        })()
-                      : tool;
+            {toolDefs
+              .filter(tool => {
+                if (tool.id === "image") return features.images !== "hidden";
+                if (features.drawingTools === "hidden") return false;
+                return !(
+                  tool.id === "measure" &&
+                  features.scaleCalibration === "hidden"
+                );
+              })
+              .map(tool => {
+                const displayTool =
+                  tool.id === "icon" && activeIconName
+                    ? (() => {
+                        const entry = getIconEntry(activeIconName);
+                        if (!entry) return tool;
+                        const ActiveIcon = entry.component;
+                        return { ...tool, icon: <ActiveIcon size={16} /> };
+                      })()
+                    : tool;
+                const feature: FeatureKey =
+                  tool.id === "image" ? "images" : "drawingTools";
 
-                  return (
-                    <div
-                      key={tool.id}
-                      ref={tool.id === "icon" ? iconRowRef : null}
-                    >
-                      <ToolRow
-                        tool={displayTool}
-                        isActive={activeTool === tool.id}
-                        onClick={() => onToolChange(tool.id)}
-                        disabled={features.drawingTools === "locked"}
-                        locked={showTrophy("drawingTools", features)}
-                      />
-                    </div>
-                  );
-                })}
+                return (
+                  <div
+                    key={tool.id}
+                    ref={tool.id === "icon" ? iconRowRef : null}
+                  >
+                    <ToolRow
+                      tool={displayTool}
+                      isActive={activeTool === tool.id}
+                      onClick={() => onToolChange(tool.id)}
+                      disabled={features[feature] === "locked"}
+                      locked={showTrophy(feature, features)}
+                    />
+                  </div>
+                );
+              })}
           </div>
         ) : (
           <div className="flex-1 overflow-hidden flex flex-col">

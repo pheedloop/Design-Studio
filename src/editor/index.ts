@@ -17,6 +17,7 @@ export type {
   MeetingRoom,
 } from "@/viewer/types";
 export type { Tier, FeatureKey, FeatureOverride } from "@/tiers";
+export type { EditorImage } from "./types";
 
 export {
   designStudioStrings,

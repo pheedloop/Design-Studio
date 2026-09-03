@@ -20,17 +20,19 @@ export type Tier = "basic" | "advanced" | "premium";
 export type FeatureKey =
   | "backgroundImage"
   | "drawingTools"
+  | "images"
   | "objects"
   | "wayfinding"
   | "scaleCalibration";
 
 /** Cumulative — each tier includes everything in the tiers before it. */
 export const TIER_FEATURES: Record<Tier, FeatureKey[]> = {
-  basic: ["backgroundImage", "drawingTools"],
-  advanced: ["backgroundImage", "drawingTools", "objects"],
+  basic: ["backgroundImage", "drawingTools", "images"],
+  advanced: ["backgroundImage", "drawingTools", "images", "objects"],
   premium: [
     "backgroundImage",
     "drawingTools",
+    "images",
     "objects",
     "wayfinding",
     "scaleCalibration",
@@ -41,6 +43,7 @@ export const TIER_FEATURES: Record<Tier, FeatureKey[]> = {
 export const FEATURE_MIN_TIER: Record<FeatureKey, Tier> = {
   backgroundImage: "basic",
   drawingTools: "basic",
+  images: "basic",
   objects: "advanced",
   wayfinding: "premium",
   scaleCalibration: "premium",
@@ -56,6 +59,7 @@ export type FeatureOverride = boolean | "hidden";
 const ALL_FEATURES: FeatureKey[] = [
   "backgroundImage",
   "drawingTools",
+  "images",
   "objects",
   "wayfinding",
   "scaleCalibration",

@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import { MapEditor, definePlacementCategory } from "@/editor";
+import { useDemoImageLibrary } from "@/demo/useDemoImageLibrary";
 import { seatPlanMap } from "@/sample-data/seatplan-map";
 import {
   seatPlanTables,
@@ -12,6 +13,8 @@ import {
  * and scale calibration are not part of this product.
  */
 export function SeatPlanEditor() {
+  const { images, onUploadImage, onDeleteImage } = useDemoImageLibrary();
+
   const placementCategories = useMemo(
     () => [
       definePlacementCategory<TableRecord>({
@@ -38,6 +41,9 @@ export function SeatPlanEditor() {
       persist
       persistKey="seatplanner:floorplan"
       placementCategories={placementCategories}
+      images={images}
+      onUploadImage={onUploadImage}
+      onDeleteImage={onDeleteImage}
       features={{ wayfinding: "hidden", scaleCalibration: "hidden" }}
       debug
     />

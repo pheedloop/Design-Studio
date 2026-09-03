@@ -39,6 +39,7 @@ export type ElementType =
   | "wall"
   | "label"
   | "icon"
+  | "image"
   | "shape";
 
 /** Default layer assignment per element type. Elements can be moved to other non-special layers. */
@@ -52,6 +53,7 @@ export const ELEMENT_TYPE_TO_LAYER: Record<ElementType, LayerId> = {
   wall: "pathing",
   label: "markup",
   icon: "markup",
+  image: "markup",
   shape: "markup",
 };
 
@@ -155,6 +157,8 @@ export interface ElementProperties {
   textAlign?: "left" | "center" | "right";
   // Icon-specific
   iconName?: string;
+  // Image-specific
+  imageUrl?: string;
   // Element opacity
   opacity?: number; // 0.0–1.0, default 1.0
   // Arrow-specific
