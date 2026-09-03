@@ -12,6 +12,7 @@ import { arcTool } from "./arc";
 import { polygonTool } from "./polygon";
 import { textTool } from "./text";
 import { iconTool } from "./icon";
+import { imageTool } from "./image";
 import { measureTool } from "./measure";
 import { boothTool } from "./booth";
 import { sessionAreaTool } from "./sessionArea";
@@ -29,6 +30,7 @@ export const TOOL_REGISTRY: ToolDefinition<any>[] = [
   polygonTool,
   textTool,
   iconTool,
+  imageTool,
   measureTool,
 ];
 

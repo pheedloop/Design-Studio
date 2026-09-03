@@ -11,6 +11,7 @@ import type {
 } from "@/types";
 import { BRAND, GRAY_400, WHITE } from "@/canvasColors";
 import { ViewerIcon } from "./ViewerIcon";
+import { ImageShape } from "@/editor/components/canvas/elements/ImageShape";
 
 function getLabel(element: FloorPlanElement): string {
   return element.properties.name || "";
@@ -106,6 +107,7 @@ export function ViewerElement({
     >
       {geo.shape === "rect" &&
         element.type !== "icon" &&
+        element.type !== "image" &&
         element.type !== "label" && (
           <>
             <Rect
@@ -347,6 +349,14 @@ export function ViewerElement({
             color={color}
             width={geo.width}
             height={(geo as RectGeometry).height}
+          />
+        )}
+      {element.type === "image" &&
+        geo.shape === "rect" &&
+        element.properties.imageUrl && (
+          <ImageShape
+            geo={geo as RectGeometry}
+            url={element.properties.imageUrl}
           />
         )}
     </Group>

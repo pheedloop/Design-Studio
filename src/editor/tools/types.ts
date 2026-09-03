@@ -8,6 +8,7 @@ import type {
   Point,
 } from "@/types";
 import type { DrawingDefaults } from "@/editor/components/panels/OptionsBar";
+import type { EditorImage } from "@/editor/types";
 import type {
   OptionsBarField,
   PropertiesPanelField,
@@ -46,6 +47,7 @@ export interface ToolContext {
   onComplete: (result: ToolResult) => void;
   /** Currently selected icon name (used by icon tool) */
   activeIconName?: string | null;
+  activeImage?: EditorImage | null;
 }
 
 // ---------------------------------------------------------------------------

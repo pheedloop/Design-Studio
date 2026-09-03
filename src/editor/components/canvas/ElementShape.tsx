@@ -15,6 +15,7 @@ import { MeetingRoomShape } from "./elements/MeetingRoomShape";
 import { TableShape } from "./elements/TableShape";
 import { TextShape } from "./elements/TextShape";
 import { IconShape } from "./elements/IconShape";
+import { ImageShape } from "./elements/ImageShape";
 
 interface ElementShapeProps {
   element: FloorPlanElement;
@@ -189,12 +190,18 @@ function ElementShapeImpl({
             color={color}
           />
         )}
+      {element.type === "image" &&
+        geo.shape === "rect" &&
+        element.properties.imageUrl && (
+          <ImageShape geo={geo} url={element.properties.imageUrl} />
+        )}
       {element.type !== "booth" &&
         element.type !== "session_area" &&
         element.type !== "meeting_room" &&
         element.type !== "table" &&
         element.type !== "label" &&
         element.type !== "icon" &&
+        element.type !== "image" &&
         geo.shape === "rect" && (
           <RectShape
             geo={geo}

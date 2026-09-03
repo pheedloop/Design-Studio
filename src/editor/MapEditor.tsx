@@ -9,7 +9,7 @@ import {
 import { MdOutlineTableBar } from "react-icons/md";
 import { Row } from "@/components/Row";
 import { GRAY_300, GRAY_400 } from "@/canvasColors";
-import type { ActiveTool, EditorMode, PathingTool } from "./types";
+import type { ActiveTool, EditorImage, EditorMode, PathingTool } from "./types";
 import { usePlacementRecords } from "./hooks/usePlacementRecords";
 import {
   PLACEMENT_DRAG_TYPE,
@@ -67,6 +67,7 @@ import {
 } from "./components/panels/BackgroundUploadDialog";
 import { GridSettingsDialog } from "./components/panels/GridSettingsDialog";
 import { HelpDialog } from "./components/panels/HelpDialog";
+import { ImageGallery } from "./components/panels/ImageGallery";
 import { CanvasResizeDialog } from "./components/panels/CanvasResizeDialog";
 import { CalibrationDialog } from "./components/panels/CalibrationDialog";
 import { TypeDefaultsDialog } from "./components/panels/TypeDefaultsDialog";
@@ -121,6 +122,11 @@ interface MapEditorProps {
     height: number | null;
   }>;
   onRemoveBackground?: () => Promise<void>;
+  /** Host-owned image library for the gallery. The editor never fetches it. */
+  images?: EditorImage[];
+  /** Uploads one file and refreshes `images`; omit to hide upload. */
+  onUploadImage?: (file: File) => Promise<void>;
+  onDeleteImage?: (id: string) => Promise<void>;
   onEditProperties?: () => void;
   name?: string;
   onNameChange?: (name: string) => void;
@@ -154,6 +160,9 @@ function MapEditorInner({
   onDirtyChange,
   onUploadBackground,
   onRemoveBackground,
+  images = [],
+  onUploadImage,
+  onDeleteImage,
   onEditProperties,
   name: controlledName,
   onNameChange,
@@ -268,6 +277,8 @@ function MapEditorInner({
   const [showBackgroundDialog, setShowBackgroundDialog] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
   const [activeIconName, setActiveIconName] = useState<string | null>(null);
+  const [activeImage, setActiveImage] = useState<EditorImage | null>(null);
+  const [showImageGallery, setShowImageGallery] = useState(false);
   const [dxfHydrationError, setDxfHydrationError] = useState<string | null>(
     null,
   );
@@ -791,6 +802,7 @@ function MapEditorInner({
       defaults,
       onComplete: handleToolComplete,
       activeIconName,
+      activeImage,
     }),
     [
       stageRef,
@@ -800,6 +812,7 @@ function MapEditorInner({
       defaults,
       handleToolComplete,
       activeIconName,
+      activeImage,
     ],
   );
 
@@ -988,14 +1001,18 @@ function MapEditorInner({
 
   const handleToolChange = useCallback(
     (tool: ActiveTool) => {
-      // select is always available; all other registry tools are drawing tools.
-      if (tool !== "select" && featureMap.drawingTools !== "enabled") return;
+      if (tool === "image") {
+        if (featureMap.images !== "enabled") return;
+        setShowImageGallery(true);
+      } else if (tool !== "select" && featureMap.drawingTools !== "enabled") {
+        return;
+      }
       setActiveTool(tool);
       if (tool !== "select") {
         selectNone();
       }
     },
-    [selectNone, featureMap.drawingTools],
+    [selectNone, featureMap.drawingTools, featureMap.images],
   );
 
   // Canvas selection handler: supports shift+click and group-aware routing
@@ -2043,6 +2060,23 @@ function MapEditorInner({
           onConfirm={handleCanvasResize}
           onStartCrop={handleStartCrop}
           onClose={() => setShowResizeDialog(false)}
+        />
+      )}
+      {showImageGallery && (
+        <ImageGallery
+          images={images}
+          onUpload={onUploadImage}
+          onDelete={onDeleteImage}
+          onConfirm={image => {
+            setActiveImage(image);
+            setShowImageGallery(false);
+          }}
+          onClose={() => {
+            setShowImageGallery(false);
+            // Nothing is armed to place, so leaving the tool active would give
+            // the user a crosshair that does nothing.
+            if (!activeImage) setActiveTool("select");
+          }}
         />
       )}
       {showHelp && <HelpDialog onClose={() => setShowHelp(false)} />}

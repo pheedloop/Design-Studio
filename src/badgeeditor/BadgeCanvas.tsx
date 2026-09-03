@@ -136,9 +136,10 @@ export function BadgeCanvas({
   const panelW = panelSize.width * PPI;
   const panelH = panelSize.height * PPI;
 
-  const isQr =
-    page.fields.find(f => f.id === singleSelectedId)?.kind === "qrCode";
-  const enabledAnchors = isQr
+  const selectedKind = page.fields.find(f => f.id === singleSelectedId)?.kind;
+  const isQr = selectedKind === "qrCode";
+  const keepsAspect = isQr || selectedKind === "image";
+  const enabledAnchors = keepsAspect
     ? ["top-left", "top-right", "bottom-left", "bottom-right"]
     : ["middle-left", "middle-right", "top-center", "bottom-center"];
 
@@ -470,7 +471,7 @@ export function BadgeCanvas({
         <Transformer
           ref={transformerRef}
           rotateEnabled={false}
-          keepRatio={isQr}
+          keepRatio={keepsAspect}
           enabledAnchors={enabledAnchors}
           ignoreStroke
           boundBoxFunc={(oldBox, newBox) =>

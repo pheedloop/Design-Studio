@@ -7,3 +7,4 @@ export { PolygonShape } from "./PolygonShape";
 export { BoothShape } from "./BoothShape";
 export { TextShape } from "./TextShape";
 export { IconShape } from "./IconShape";
+export { ImageShape } from "./ImageShape";
