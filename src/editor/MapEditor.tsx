@@ -19,6 +19,7 @@ import { Button } from "@/components/Button";
 import type { PlacementRecordRef } from "@/editor/components/panels/placementDrag";
 import type { AutoArrangeRecord } from "./components/panels/PlacementPanel";
 import { getElementBounds } from "./utils/bounds";
+import { findOverlappingElementIds } from "./utils/overlappingElements";
 import {
   alignLeft,
   alignRight,
@@ -325,28 +326,10 @@ function MapEditorInner({
   const [showTransformControls, setShowTransformControls] = useState(true);
   // Derived from the elements, so it is computed rather than stored — an effect
   // here would render once with a stale set before correcting itself.
-  const overlappingElementIds = useMemo(() => {
-    const contentEls = data.elements.filter(
-      el => (el.layer ?? ELEMENT_TYPE_TO_LAYER[el.type]) === "content",
-    );
-    const ids = new Set<string>();
-    for (let i = 0; i < contentEls.length; i++) {
-      for (let j = i + 1; j < contentEls.length; j++) {
-        const a = getElementBounds(contentEls[i]);
-        const b = getElementBounds(contentEls[j]);
-        if (
-          a.left < b.right &&
-          a.right > b.left &&
-          a.top < b.bottom &&
-          a.bottom > b.top
-        ) {
-          ids.add(contentEls[i].id);
-          ids.add(contentEls[j].id);
-        }
-      }
-    }
-    return ids;
-  }, [data.elements]);
+  const overlappingElementIds = useMemo(
+    () => findOverlappingElementIds(data.elements),
+    [data.elements],
+  );
   const [walkableGridOpacity, setWalkableGridOpacity] = useState(0.3);
   const [showRulers, setShowRulers] = useState(false);
   const [showGridDialog, setShowGridDialog] = useState(false);
