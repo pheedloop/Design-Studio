@@ -74,6 +74,13 @@ export interface ToolDefinition<TState = unknown> {
   /** Tier feature gating this tool. Defaults to "drawingTools". */
   feature?: FeatureKey;
 
+  /**
+   * Toolbar treatment when `feature` is locked. The default shows the tool
+   * disabled, as an upsell; "hide" drops it, for a tool that would mislead
+   * more than it sells.
+   */
+  whenLocked?: "disable" | "hide";
+
   /** Hook that drives canvas interaction while this tool is active */
   useInteraction: (ctx: ToolContext) => ToolInteraction<TState>;
 

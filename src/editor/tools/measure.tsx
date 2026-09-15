@@ -10,6 +10,8 @@ export const measureTool: ToolDefinition<MeasureState> = {
   shortcut: "M",
   icon: <PiRuler size={20} />,
   cursor: "crosshair",
+  feature: "scaleCalibration",
+  whenLocked: "hide",
 
   useInteraction: ctx => useMeasureInteraction(ctx),
 

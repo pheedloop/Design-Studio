@@ -9,7 +9,7 @@ import {
 } from "react-icons/pi";
 import type { ActiveTool, EditorMode, PathingTool } from "@/editor/types";
 import { TOOL_REGISTRY } from "@/editor/tools/registry";
-import { toolFeature } from "@/editor/tools/toolAvailability";
+import { isToolVisible, toolFeature } from "@/editor/tools/toolAvailability";
 import type { FeatureKey, FeatureMap } from "@/tiers";
 import { showTrophy } from "@/tiers";
 import { IconPicker } from "./IconPicker";
@@ -232,14 +232,7 @@ export function ToolSidebar({
               onClick={() => onToolChange("select")}
             />
             {toolDefs
-              .filter(tool => {
-                const feature = toolFeature(tool.id);
-                if (feature && features[feature] === "hidden") return false;
-                return !(
-                  tool.id === "measure" &&
-                  features.scaleCalibration === "hidden"
-                );
-              })
+              .filter(tool => isToolVisible(tool.id, features))
               .map(tool => {
                 const displayTool =
                   tool.id === "icon" && activeIconName
