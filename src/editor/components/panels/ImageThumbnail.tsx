@@ -54,7 +54,9 @@ export function ImageThumbnail({
           type="button"
           onClick={onDelete}
           aria-label={t("editor.gallery.deleteImage")}
-          className="absolute right-xxxs top-xxxs rounded bg-white/90 p-xxxs text-text-subtle cursor-pointer opacity-0 pointer-events-none hover:text-red-600 focus-visible:opacity-100 focus-visible:pointer-events-auto group-hover:opacity-100 group-hover:pointer-events-auto"
+          className={`absolute right-xxxs top-xxxs rounded bg-white/90 p-xxxs text-text-subtle cursor-pointer hover:text-red-600 focus-visible:opacity-100 focus-visible:pointer-events-auto group-hover:opacity-100 group-hover:pointer-events-auto ${
+            isSelected ? "opacity-100" : "opacity-0 pointer-events-none"
+          }`}
         >
           <PiTrash size={14} />
         </button>
