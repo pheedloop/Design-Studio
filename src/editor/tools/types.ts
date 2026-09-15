@@ -9,6 +9,7 @@ import type {
 } from "@/types";
 import type { DrawingDefaults } from "@/editor/components/panels/OptionsBar";
 import type { EditorImage } from "@/editor/types";
+import type { FeatureKey } from "@/tiers";
 import type {
   OptionsBarField,
   PropertiesPanelField,
@@ -69,6 +70,9 @@ export interface ToolDefinition<TState = unknown> {
   shortcut?: string;
   icon: React.ReactNode;
   cursor: string;
+
+  /** Tier feature gating this tool. Defaults to "drawingTools". */
+  feature?: FeatureKey;
 
   /** Hook that drives canvas interaction while this tool is active */
   useInteraction: (ctx: ToolContext) => ToolInteraction<TState>;

@@ -11,6 +11,7 @@ for (const tool of TOOL_REGISTRY) {
 }
 
 interface KeyboardShortcutActions {
+  /** The gated handler, not the raw setter: it owns tier checks and side effects. */
   setActiveTool: (tool: ActiveTool) => void;
   onDeselect: () => void;
   onDelete: () => void;
@@ -22,8 +23,6 @@ interface KeyboardShortcutActions {
   onRedo: () => void;
   isPathingMode?: boolean;
   setPathingTool?: (tool: PathingTool) => void;
-  /** Returns false for tools disabled/hidden by the usage tier. Defaults to allow-all. */
-  isToolEnabled?: (toolId: string) => boolean;
 }
 
 export function useKeyboardShortcuts({
@@ -38,7 +37,6 @@ export function useKeyboardShortcuts({
   onRedo,
   isPathingMode,
   setPathingTool,
-  isToolEnabled,
 }: KeyboardShortcutActions) {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -127,7 +125,7 @@ export function useKeyboardShortcuts({
 
       // Registry-derived shortcuts
       const toolId = toolShortcuts.get(key);
-      if (toolId && (!isToolEnabled || isToolEnabled(toolId))) {
+      if (toolId) {
         setActiveTool(toolId as ActiveTool);
       }
     };
@@ -146,6 +144,5 @@ export function useKeyboardShortcuts({
     onRedo,
     isPathingMode,
     setPathingTool,
-    isToolEnabled,
   ]);
 }

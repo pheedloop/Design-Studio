@@ -34,6 +34,7 @@ import {
 import type { DrawingDefaults } from "./components/panels/OptionsBar";
 import type { ToolContext } from "./tools/types";
 import { TOOL_MAP } from "./tools/registry";
+import { isNavigationTool, isToolAvailable } from "./tools/toolAvailability";
 import { useCanvasControls } from "./hooks/useCanvasControls";
 import {
   useEditorState,
@@ -627,8 +628,19 @@ function MapEditorInner({
     }
   }, [hasSelection, selectedIds, deleteElements, selectNone]);
 
+  const handleToolChange = useCallback(
+    (tool: ActiveTool) => {
+      if (!isToolAvailable(tool, featureMap)) return;
+      if (tool === "image") setShowImageGallery(true);
+      setActiveTool(tool);
+      // Navigation leaves the selection alone; anything else replaces it.
+      if (!isNavigationTool(tool)) selectNone();
+    },
+    [selectNone, featureMap],
+  );
+
   useKeyboardShortcuts({
-    setActiveTool,
+    setActiveTool: handleToolChange,
     onDeselect: handleDeselect,
     onDelete: handleDelete,
     onCopy: handleCopy,
@@ -639,8 +651,6 @@ function MapEditorInner({
     onRedo: redo,
     isPathingMode,
     setPathingTool: setActivePathingTool,
-    // All registry tools are drawing tools, gated by the drawingTools feature.
-    isToolEnabled: () => featureMap.drawingTools === "enabled",
   });
 
   // Options bar: show selected element's colors or drawing defaults
@@ -981,22 +991,6 @@ function MapEditorInner({
     }
     return items;
   })();
-
-  const handleToolChange = useCallback(
-    (tool: ActiveTool) => {
-      if (tool === "image") {
-        if (featureMap.images !== "enabled") return;
-        setShowImageGallery(true);
-      } else if (tool !== "select" && featureMap.drawingTools !== "enabled") {
-        return;
-      }
-      setActiveTool(tool);
-      if (tool !== "select") {
-        selectNone();
-      }
-    },
-    [selectNone, featureMap.drawingTools, featureMap.images],
-  );
 
   // Canvas selection handler: supports shift+click and group-aware routing
   const handleSelect = useCallback(

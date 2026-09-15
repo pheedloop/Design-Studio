@@ -9,6 +9,7 @@ export const imageTool: ToolDefinition<null> = {
   shortcut: "G",
   icon: <PiImage size={20} />,
   cursor: "crosshair",
+  feature: "images",
 
   useInteraction: ctx =>
     useClickPlaceInteraction(ctx, (point, toolCtx) => {

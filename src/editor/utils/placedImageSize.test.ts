@@ -1,9 +1,23 @@
 import { describe, it, expect } from "vitest";
 import {
   placedImageSize,
+  withMeasuredSize,
   PLACED_IMAGE_FALLBACK_EDGE,
   PLACED_IMAGE_MAX_EDGE,
 } from "./placedImageSize";
+import type { EditorImage } from "@/editor/types";
+
+function galleryImage(overrides: Partial<EditorImage> = {}): EditorImage {
+  return {
+    id: "img-1",
+    url: "https://example.test/a.png",
+    name: "a.png",
+    width: null,
+    height: null,
+    createdAt: "2026-01-01T00:00:00Z",
+    ...overrides,
+  };
+}
 
 describe("placedImageSize", () => {
   it("keeps an image already within the max edge at its intrinsic size", () => {
@@ -55,6 +69,46 @@ describe("placedImageSize", () => {
     expect(placedImageSize({ width: 400, height: 200 }, 100)).toEqual({
       width: 100,
       height: 50,
+    });
+  });
+});
+
+describe("withMeasuredSize", () => {
+  it("fills in dimensions the host could not supply", () => {
+    const result = withMeasuredSize(galleryImage(), {
+      "img-1": { width: 800, height: 200 },
+    });
+    expect(result.width).toBe(800);
+    expect(result.height).toBe(200);
+  });
+
+  it("keeps the host's dimensions when it supplied them", () => {
+    const result = withMeasuredSize(galleryImage({ width: 100, height: 50 }), {
+      "img-1": { width: 800, height: 200 },
+    });
+    expect(result.width).toBe(100);
+    expect(result.height).toBe(50);
+  });
+
+  it("returns the image untouched when nothing has been measured yet", () => {
+    const image = galleryImage();
+    expect(withMeasuredSize(image, {})).toBe(image);
+  });
+
+  it("ignores a measurement recorded for a different image", () => {
+    const result = withMeasuredSize(galleryImage(), {
+      "img-2": { width: 800, height: 200 },
+    });
+    expect(result.width).toBeNull();
+  });
+
+  it("places a measured wide image at its real aspect ratio", () => {
+    const measured = withMeasuredSize(galleryImage(), {
+      "img-1": { width: 1200, height: 300 },
+    });
+    expect(placedImageSize(measured)).toEqual({
+      width: PLACED_IMAGE_MAX_EDGE,
+      height: PLACED_IMAGE_MAX_EDGE / 4,
     });
   });
 });

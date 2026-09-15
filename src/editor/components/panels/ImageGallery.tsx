@@ -7,6 +7,7 @@ import { Text } from "@/components/Text";
 import { Dialog, TabBar, TextInput } from "@/editor/components/ui";
 import { useLocale, useT, type StringKey } from "@/editor/i18n";
 import type { EditorImage } from "@/editor/types";
+import { withMeasuredSize } from "@/editor/utils/placedImageSize";
 import { filterAndSortImages, type GallerySort } from "./galleryFilter";
 import { ImageThumbnail } from "./ImageThumbnail";
 
@@ -40,6 +41,9 @@ export function ImageGallery({
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
+  const [measured, setMeasured] = useState<
+    Record<string, { width: number; height: number }>
+  >({});
   const [error, setError] = useState<StringKey | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
 
@@ -48,6 +52,9 @@ export function ImageGallery({
     [images, query, sort, locale],
   );
   const selected = visible.find(image => image.id === selectedId) ?? null;
+
+  const insert = (image: EditorImage) =>
+    onConfirm(withMeasuredSize(image, measured));
 
   const upload = async (file: File | undefined) => {
     if (!file || !onUpload) return;
@@ -107,7 +114,7 @@ export function ImageGallery({
             <Button
               variant="solid"
               color="primary"
-              onClick={() => onConfirm(selected)}
+              onClick={() => insert(selected)}
             >
               {t("editor.gallery.insert")}
             </Button>
@@ -208,7 +215,13 @@ export function ImageGallery({
                 image={image}
                 isSelected={image.id === selectedId}
                 onSelect={() => setSelectedId(image.id)}
-                onInsert={() => onConfirm(image)}
+                onInsert={() => insert(image)}
+                onMeasure={(width, height) =>
+                  setMeasured(current => ({
+                    ...current,
+                    [image.id]: { width, height },
+                  }))
+                }
                 onDelete={onDelete ? () => void remove(image.id) : undefined}
               />
             ))}

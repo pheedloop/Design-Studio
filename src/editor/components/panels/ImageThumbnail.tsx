@@ -10,6 +10,8 @@ interface ImageThumbnailProps {
   onSelect: () => void;
   onInsert: () => void;
   onDelete?: () => void;
+  /** Reports the browser-measured size when the host supplied none. */
+  onMeasure?: (width: number, height: number) => void;
 }
 
 export function ImageThumbnail({
@@ -18,6 +20,7 @@ export function ImageThumbnail({
   onSelect,
   onInsert,
   onDelete,
+  onMeasure,
 }: ImageThumbnailProps) {
   const t = useT();
   return (
@@ -36,6 +39,13 @@ export function ImageThumbnail({
         <img
           src={image.url}
           alt={image.name}
+          onLoad={e => {
+            if (image.width && image.height) return;
+            const { naturalWidth, naturalHeight } = e.currentTarget;
+            if (naturalWidth && naturalHeight) {
+              onMeasure?.(naturalWidth, naturalHeight);
+            }
+          }}
           className="h-full w-full object-contain"
         />
       </button>
@@ -44,7 +54,7 @@ export function ImageThumbnail({
           type="button"
           onClick={onDelete}
           aria-label={t("editor.gallery.deleteImage")}
-          className="absolute right-xxxs top-xxxs rounded bg-white/90 p-xxxs text-text-subtle opacity-0 cursor-pointer hover:text-red-600 focus:opacity-100 group-hover:opacity-100"
+          className="absolute right-xxxs top-xxxs rounded bg-white/90 p-xxxs text-text-subtle cursor-pointer opacity-0 pointer-events-none hover:text-red-600 focus-visible:opacity-100 focus-visible:pointer-events-auto group-hover:opacity-100 group-hover:pointer-events-auto"
         >
           <PiTrash size={14} />
         </button>
