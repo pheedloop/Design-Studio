@@ -39,12 +39,17 @@ import { BadgeSetupDialog, type PanelConfig } from "./BadgeSetupDialog";
 import { AttendeePicker } from "./AttendeePicker";
 import { PropertiesPanel } from "./PropertiesPanel";
 import { createField } from "./factory";
+import { BadgeImageProvider } from "./BadgeImageProvider";
+import { ImageGallery } from "@/editor/components/panels/ImageGallery";
+import type { EditorImage } from "@/editor";
+import { placedImageSize } from "@/editor/utils/placedImageSize";
 import { flatten, foldInvertForPage } from "./serialize";
 import { createSampleDocument } from "./sample";
 import type { AttendeeOption, AttendeeProvider, BadgeData } from "./badgeData";
 import {
   DPI,
   PAGE_COUNT,
+  pxToInch,
   pageRoleForIndex,
   pageRoleLabel,
   type BadgeDocument,
@@ -69,6 +74,9 @@ export interface BadgeEditorProps {
   translate?: Translate;
   /** BCP-47 tag for number and list formatting. */
   locale?: string;
+  images?: EditorImage[];
+  onUploadImage?: (file: File) => Promise<void>;
+  onDeleteImage?: (id: string) => Promise<void>;
 }
 
 /** Reference-grid spacing, in inches. */
@@ -98,7 +106,9 @@ function isEditableTarget(t: EventTarget | null): boolean {
 export function BadgeEditor({ translate, locale, ...rest }: BadgeEditorProps) {
   return (
     <I18nProvider translate={translate} locale={locale}>
-      <BadgeEditorInner {...rest} />
+      <BadgeImageProvider images={rest.images ?? []}>
+        <BadgeEditorInner {...rest} />
+      </BadgeImageProvider>
     </I18nProvider>
   );
 }
@@ -108,6 +118,9 @@ function BadgeEditorInner({
   initialDocument,
   onSave,
   debug,
+  images = [],
+  onUploadImage,
+  onDeleteImage,
   attendeeProvider,
 }: Omit<BadgeEditorProps, "translate" | "locale">) {
   const [initial] = useState<BadgeDocument>(
@@ -136,6 +149,7 @@ function BadgeEditorInner({
   const [unit, setUnit] = useState<Unit>("in");
   const [showLayout, setShowLayout] = useState(false);
   const [showSetup, setShowSetup] = useState(false);
+  const [showImageGallery, setShowImageGallery] = useState(false);
   const [previewMode, setPreviewMode] = useState(false);
   const [previewAttendee, setPreviewAttendee] = useState<AttendeeOption | null>(
     null,
@@ -251,6 +265,21 @@ function BadgeEditorInner({
   const addField = useCallback(
     (fieldKey: string) => {
       const field = createField(fieldKey);
+      mutateActivePage(fields => [...fields, field]);
+      setSelectedIds(new Set([field.id]));
+    },
+    [mutateActivePage],
+  );
+
+  const addImageField = useCallback(
+    (image: EditorImage) => {
+      const { width, height } = placedImageSize(image);
+      const field: BadgeField = {
+        ...createField("image"),
+        code: image.id,
+        width: pxToInch(width),
+        height: pxToInch(height),
+      };
       mutateActivePage(fields => [...fields, field]);
       setSelectedIds(new Set([field.id]));
     },
@@ -527,6 +556,7 @@ function BadgeEditorInner({
           name={doc.name ?? "Untitled Badge"}
           onNameChange={setName}
           onAddField={addField}
+          onOpenImageGallery={() => setShowImageGallery(true)}
         />
 
         {/* Main column — OptionsBar on top, [canvas | properties] below, so the
@@ -720,6 +750,19 @@ function BadgeEditorInner({
           </div>
         </div>
       </div>
+
+      {showImageGallery && (
+        <ImageGallery
+          images={images}
+          onUpload={onUploadImage}
+          onDelete={onDeleteImage}
+          onConfirm={image => {
+            addImageField(image);
+            setShowImageGallery(false);
+          }}
+          onClose={() => setShowImageGallery(false)}
+        />
+      )}
 
       {showSetup && (
         <BadgeSetupDialog

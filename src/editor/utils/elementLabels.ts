@@ -5,6 +5,7 @@ import type { StringKey, T } from "@/editor/i18n";
 const ELEMENT_TYPE_LABEL: Record<Exclude<ElementType, "shape">, StringKey> = {
   booth: "common.type.booth",
   icon: "editor.type.icon",
+  image: "editor.type.image",
   label: "editor.type.label",
   meeting_room: "common.type.meetingRoom",
   session_area: "editor.type.sessionLocation",

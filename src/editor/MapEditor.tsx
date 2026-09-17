@@ -9,7 +9,7 @@ import {
 import { MdOutlineTableBar } from "react-icons/md";
 import { Row } from "@/components/Row";
 import { GRAY_300, GRAY_400 } from "@/canvasColors";
-import type { ActiveTool, EditorMode, PathingTool } from "./types";
+import type { ActiveTool, EditorImage, EditorMode, PathingTool } from "./types";
 import { usePlacementRecords } from "./hooks/usePlacementRecords";
 import {
   PLACEMENT_DRAG_TYPE,
@@ -19,6 +19,7 @@ import { Button } from "@/components/Button";
 import type { PlacementRecordRef } from "@/editor/components/panels/placementDrag";
 import type { AutoArrangeRecord } from "./components/panels/PlacementPanel";
 import { getElementBounds } from "./utils/bounds";
+import { findOverlappingElementIds } from "./utils/overlappingElements";
 import {
   alignLeft,
   alignRight,
@@ -33,6 +34,7 @@ import {
 import type { DrawingDefaults } from "./components/panels/OptionsBar";
 import type { ToolContext } from "./tools/types";
 import { TOOL_MAP } from "./tools/registry";
+import { isNavigationTool, isToolAvailable } from "./tools/toolAvailability";
 import { useCanvasControls } from "./hooks/useCanvasControls";
 import {
   useEditorState,
@@ -67,6 +69,7 @@ import {
 } from "./components/panels/BackgroundUploadDialog";
 import { GridSettingsDialog } from "./components/panels/GridSettingsDialog";
 import { HelpDialog } from "./components/panels/HelpDialog";
+import { ImageGallery } from "./components/panels/ImageGallery";
 import { CanvasResizeDialog } from "./components/panels/CanvasResizeDialog";
 import { CalibrationDialog } from "./components/panels/CalibrationDialog";
 import { TypeDefaultsDialog } from "./components/panels/TypeDefaultsDialog";
@@ -121,6 +124,11 @@ interface MapEditorProps {
     height: number | null;
   }>;
   onRemoveBackground?: () => Promise<void>;
+  /** Host-owned image library for the gallery. The editor never fetches it. */
+  images?: EditorImage[];
+  /** Uploads one file and refreshes `images`; omit to hide upload. */
+  onUploadImage?: (file: File) => Promise<void>;
+  onDeleteImage?: (id: string) => Promise<void>;
   onEditProperties?: () => void;
   name?: string;
   onNameChange?: (name: string) => void;
@@ -154,6 +162,9 @@ function MapEditorInner({
   onDirtyChange,
   onUploadBackground,
   onRemoveBackground,
+  images = [],
+  onUploadImage,
+  onDeleteImage,
   onEditProperties,
   name: controlledName,
   onNameChange,
@@ -268,6 +279,8 @@ function MapEditorInner({
   const [showBackgroundDialog, setShowBackgroundDialog] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
   const [activeIconName, setActiveIconName] = useState<string | null>(null);
+  const [activeImage, setActiveImage] = useState<EditorImage | null>(null);
+  const [showImageGallery, setShowImageGallery] = useState(false);
   const [dxfHydrationError, setDxfHydrationError] = useState<string | null>(
     null,
   );
@@ -314,28 +327,10 @@ function MapEditorInner({
   const [showTransformControls, setShowTransformControls] = useState(true);
   // Derived from the elements, so it is computed rather than stored — an effect
   // here would render once with a stale set before correcting itself.
-  const overlappingElementIds = useMemo(() => {
-    const contentEls = data.elements.filter(
-      el => (el.layer ?? ELEMENT_TYPE_TO_LAYER[el.type]) === "content",
-    );
-    const ids = new Set<string>();
-    for (let i = 0; i < contentEls.length; i++) {
-      for (let j = i + 1; j < contentEls.length; j++) {
-        const a = getElementBounds(contentEls[i]);
-        const b = getElementBounds(contentEls[j]);
-        if (
-          a.left < b.right &&
-          a.right > b.left &&
-          a.top < b.bottom &&
-          a.bottom > b.top
-        ) {
-          ids.add(contentEls[i].id);
-          ids.add(contentEls[j].id);
-        }
-      }
-    }
-    return ids;
-  }, [data.elements]);
+  const overlappingElementIds = useMemo(
+    () => findOverlappingElementIds(data.elements),
+    [data.elements],
+  );
   const [walkableGridOpacity, setWalkableGridOpacity] = useState(0.3);
   const [showRulers, setShowRulers] = useState(false);
   const [showGridDialog, setShowGridDialog] = useState(false);
@@ -633,8 +628,19 @@ function MapEditorInner({
     }
   }, [hasSelection, selectedIds, deleteElements, selectNone]);
 
+  const handleToolChange = useCallback(
+    (tool: ActiveTool) => {
+      if (!isToolAvailable(tool, featureMap)) return;
+      if (tool === "image") setShowImageGallery(true);
+      setActiveTool(tool);
+      // Navigation leaves the selection alone; anything else replaces it.
+      if (!isNavigationTool(tool)) selectNone();
+    },
+    [selectNone, featureMap],
+  );
+
   useKeyboardShortcuts({
-    setActiveTool,
+    setActiveTool: handleToolChange,
     onDeselect: handleDeselect,
     onDelete: handleDelete,
     onCopy: handleCopy,
@@ -645,8 +651,6 @@ function MapEditorInner({
     onRedo: redo,
     isPathingMode,
     setPathingTool: setActivePathingTool,
-    // All registry tools are drawing tools, gated by the drawingTools feature.
-    isToolEnabled: () => featureMap.drawingTools === "enabled",
   });
 
   // Options bar: show selected element's colors or drawing defaults
@@ -791,6 +795,7 @@ function MapEditorInner({
       defaults,
       onComplete: handleToolComplete,
       activeIconName,
+      activeImage,
     }),
     [
       stageRef,
@@ -800,6 +805,7 @@ function MapEditorInner({
       defaults,
       handleToolComplete,
       activeIconName,
+      activeImage,
     ],
   );
 
@@ -985,18 +991,6 @@ function MapEditorInner({
     }
     return items;
   })();
-
-  const handleToolChange = useCallback(
-    (tool: ActiveTool) => {
-      // select is always available; all other registry tools are drawing tools.
-      if (tool !== "select" && featureMap.drawingTools !== "enabled") return;
-      setActiveTool(tool);
-      if (tool !== "select") {
-        selectNone();
-      }
-    },
-    [selectNone, featureMap.drawingTools],
-  );
 
   // Canvas selection handler: supports shift+click and group-aware routing
   const handleSelect = useCallback(
@@ -2043,6 +2037,23 @@ function MapEditorInner({
           onConfirm={handleCanvasResize}
           onStartCrop={handleStartCrop}
           onClose={() => setShowResizeDialog(false)}
+        />
+      )}
+      {showImageGallery && (
+        <ImageGallery
+          images={images}
+          onUpload={onUploadImage}
+          onDelete={onDeleteImage}
+          onConfirm={image => {
+            setActiveImage(image);
+            setShowImageGallery(false);
+          }}
+          onClose={() => {
+            setShowImageGallery(false);
+            // Nothing is armed to place, so leaving the tool active would give
+            // the user a crosshair that does nothing.
+            if (!activeImage) setActiveTool("select");
+          }}
         />
       )}
       {showHelp && <HelpDialog onClose={() => setShowHelp(false)} />}

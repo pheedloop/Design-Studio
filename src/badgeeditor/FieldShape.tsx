@@ -44,6 +44,7 @@ export function FieldShape({
 
   const { w, h } = fieldSizePx(field);
   const isQrField = field.kind === "qrCode";
+  const isImageField = field.kind === "image";
 
   return (
     <Group
@@ -72,7 +73,14 @@ export function FieldShape({
           onChange({
             width: newW / PPI,
             height: newH / PPI,
-            numLines: Math.max(1, Math.floor(newH / (field.fontSize ?? 20))),
+            ...(isImageField
+              ? {}
+              : {
+                  numLines: Math.max(
+                    1,
+                    Math.floor(newH / (field.fontSize ?? 20)),
+                  ),
+                }),
           });
         }
       }}

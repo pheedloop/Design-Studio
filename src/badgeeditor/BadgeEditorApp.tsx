@@ -4,6 +4,7 @@ import { BadgeEditor } from "./BadgeEditor";
 import { sampleAttendeeProvider } from "./sample-attendees";
 import { LocaleSwitcher } from "@/demo/LocaleSwitcher";
 import { useDemoLocale } from "@/demo/useDemoLocale";
+import { useDemoImageLibrary } from "@/demo/useDemoImageLibrary";
 
 /**
  * Badge product shell (demo). Mirrors SeatplannerApp — only an editor mode for
@@ -11,6 +12,7 @@ import { useDemoLocale } from "@/demo/useDemoLocale";
  */
 export function BadgeEditorApp() {
   const { locale, setLocale, translate } = useDemoLocale();
+  const { images, onUploadImage, onDeleteImage } = useDemoImageLibrary();
 
   return (
     <div className="h-screen flex flex-col">
@@ -27,6 +29,9 @@ export function BadgeEditorApp() {
           debug
           translate={translate}
           attendeeProvider={sampleAttendeeProvider}
+          images={images}
+          onUploadImage={onUploadImage}
+          onDeleteImage={onDeleteImage}
           // The demo has no backend. Save stays wired so the File menu keeps
           // its Save entry (it only renders when onSave is passed), and the
           // flattened badge_layout is already inspectable via `debug`.

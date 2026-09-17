@@ -5,6 +5,7 @@ import { fieldQrUrl, type BadgeData } from "./badgeData";
 import { PPI, QR_BASE_PX } from "./canvasMetrics";
 import { useImageLoader } from "./useImageLoader";
 import { FieldContent } from "./FieldContent";
+import { useBadgeImageUrl } from "./badgeImageContext";
 
 /**
  * The visual contents of a field (no interaction), shared by the editor's
@@ -18,6 +19,9 @@ export function FieldBody({
   field: BadgeField;
   data: BadgeData | null;
 }) {
+  const resolveImageUrl = useBadgeImageUrl();
+  const imageUrl =
+    field.kind === "image" ? resolveImageUrl(field.code) : undefined;
   const isQrField = field.kind === "qrCode";
   const qrUrl = isQrField && data ? fieldQrUrl(field, data) : undefined;
   const getImg = useImageLoader(isQrField ? [qrUrl] : []);
@@ -54,7 +58,9 @@ export function FieldBody({
 
   return (
     <>
-      {field.kind === "image" ? (
+      {imageUrl ? (
+        <Rect width={w} height={h} fill="transparent" />
+      ) : field.kind === "image" ? (
         <Rect
           width={w}
           height={h}
@@ -92,6 +98,7 @@ export function FieldBody({
           h={h}
           fontSize={fontSize}
           data={data}
+          imageUrl={imageUrl}
         />
       </Group>
     </>

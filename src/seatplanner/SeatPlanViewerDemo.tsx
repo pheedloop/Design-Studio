@@ -14,16 +14,19 @@ import {
   MY_TICKET_CODES,
 } from "@/sample-data/seatplan-roster";
 import { Row } from "@/components/Row";
+import type { FloorPlanData } from "@/types";
 
 const MINE = new Set<string>(MY_TICKET_CODES);
 
-// Only tables actually placed on the map are interactive; build the demo around those.
-const MAPPED_CODES = new Set(
-  seatPlanMap.elements
-    .filter(el => el.type === "table" && el.properties.tableCode)
-    .map(el => el.properties.tableCode as string),
-);
-const BASE_TABLES = seatPlanState.filter(t => MAPPED_CODES.has(t.tableCode));
+function loadSeatPlanData(): FloorPlanData | null {
+  try {
+    const raw = localStorage.getItem("seatplanner:floorplan");
+    if (!raw) return null;
+    return JSON.parse(raw) as FloorPlanData;
+  } catch {
+    return null;
+  }
+}
 
 /**
  * Demo host for the seat plan viewer. Stands in for Charmander: holds one roster
@@ -31,12 +34,23 @@ const BASE_TABLES = seatPlanState.filter(t => MAPPED_CODES.has(t.tableCode));
  * list are both derived from that roster, so the list and the floor always agree.
  */
 export function SeatPlanViewerDemo({ translate }: { translate?: Translate }) {
+  const data = useMemo(() => loadSeatPlanData() ?? seatPlanMap, []);
+
+  const baseTables = useMemo(() => {
+    const mapped = new Set(
+      data.elements
+        .filter(el => el.type === "table" && el.properties.tableCode)
+        .map(el => el.properties.tableCode as string),
+    );
+    return seatPlanState.filter(t => mapped.has(t.tableCode));
+  }, [data]);
+
   const [viewerMode, setViewerMode] = useState<SeatPlanMode>("admin");
   const [lockSelection, setLockSelection] = useState(false);
   const [hideDetails, setHideDetails] = useState(false);
 
   const [tickets, setTickets] = useState<SeatTicket[]>(() =>
-    buildSeatPlanRoster(BASE_TABLES),
+    buildSeatPlanRoster(baseTables),
   );
   const [search, setSearch] = useState("");
   const [seatFilter, setSeatFilter] = useState<"all" | "seated" | "unseated">(
@@ -57,11 +71,11 @@ export function SeatPlanViewerDemo({ translate }: { translate?: Translate }) {
     for (const t of tickets)
       if (t.tableCode)
         counts.set(t.tableCode, (counts.get(t.tableCode) ?? 0) + 1);
-    return BASE_TABLES.map(t => ({
+    return baseTables.map(t => ({
       ...t,
       occupancy: counts.get(t.tableCode) ?? 0,
     }));
-  }, [tickets]);
+  }, [tickets, baseTables]);
 
   const visibleTickets = useMemo(() => {
     if (viewerMode === "attendee") return tickets.filter(t => MINE.has(t.code));
@@ -177,7 +191,7 @@ export function SeatPlanViewerDemo({ translate }: { translate?: Translate }) {
         <SeatPlanViewer
           key={viewerMode}
           mode={viewerMode}
-          data={seatPlanMap}
+          data={data}
           tables={tables}
           tickets={visibleTickets}
           totalTickets={visibleTickets.length}

@@ -15,13 +15,17 @@ export function FieldContent({
   h,
   fontSize,
   data,
+  imageUrl,
 }: {
   field: BadgeField;
   w: number;
   h: number;
   fontSize: number;
   data: BadgeData | null;
+  imageUrl?: string;
 }) {
+  const getImage = useImageLoader(imageUrl ? [imageUrl] : []);
+
   const isTickets = field.kind === "tickets";
   const rows = field.numRows ?? 1;
   // Ticket QR urls (real per-ticket, or stand-in placeholders) — one hook call.
@@ -135,6 +139,10 @@ export function FieldContent({
   }
 
   if (field.kind === "image") {
+    const img = imageUrl ? getImage(imageUrl) : null;
+    if (img) {
+      return <KonvaImage image={img} width={w} height={h} />;
+    }
     return (
       <Text
         text="Image"

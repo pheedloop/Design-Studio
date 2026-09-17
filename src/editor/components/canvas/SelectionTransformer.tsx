@@ -104,8 +104,9 @@ export function SelectionTransformer({
 
     const rect = group.findOne("Rect");
     const ellipse = group.findOne("Ellipse");
+    const image = group.findOne("Image");
     const text = group.findOne("Text");
-    const shape = rect || ellipse || text;
+    const shape = rect || ellipse || image || text;
     if (!shape) return;
 
     let newWidth: number;
@@ -124,6 +125,11 @@ export function SelectionTransformer({
       newHeight = (rect as Konva.Rect).height() * scaleY;
       (rect as Konva.Rect).width(newWidth);
       (rect as Konva.Rect).height(newHeight);
+    } else if (image) {
+      newWidth = (image as Konva.Image).width() * scaleX;
+      newHeight = (image as Konva.Image).height() * scaleY;
+      (image as Konva.Image).width(newWidth);
+      (image as Konva.Image).height(newHeight);
     } else {
       // Text-only element (label/icon) — scale width/height directly
       newWidth = (shape as Konva.Text).width() * scaleX;

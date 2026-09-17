@@ -29,6 +29,7 @@ interface BadgeSidebarProps {
   name: string;
   onNameChange: (name: string) => void;
   onAddField: (fieldKey: string) => void;
+  onOpenImageGallery: () => void;
 }
 
 /**
@@ -40,6 +41,7 @@ export function BadgeSidebar({
   name,
   onNameChange,
   onAddField,
+  onOpenImageGallery,
 }: BadgeSidebarProps) {
   const fields = FIELD_DEFS.filter(d => d.inPalette !== false);
 
@@ -58,6 +60,15 @@ export function BadgeSidebar({
             onClick={() => onAddField(d.field)}
           />
         ))}
+
+        <div className="px-xxs pb-xxxs pt-xs">
+          <SectionLabel>Add Image</SectionLabel>
+        </div>
+        <SidebarRow
+          label="Image"
+          icon={<PiImage {...iconProps} />}
+          onClick={onOpenImageGallery}
+        />
       </div>
     </div>
   );

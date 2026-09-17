@@ -8,6 +8,7 @@ import {
 import { MapEditor, definePlacementCategory, type Tier } from "@/editor";
 import { LocaleSwitcher } from "@/demo/LocaleSwitcher";
 import { useDemoLocale } from "@/demo/useDemoLocale";
+import { useDemoImageLibrary } from "@/demo/useDemoImageLibrary";
 import { ChromeDivider } from "@/demo/ChromeDivider";
 import { ViewerRoute, type Viewport } from "./ViewerRoute";
 import { ChromeToggle } from "@/demo/ChromeToggle";
@@ -38,6 +39,7 @@ export function MapApp() {
   // One toggle drives both the editor and the viewer, so a locale check covers
   // both modes without re-selecting it after switching tabs.
   const { locale, setLocale, translate } = useDemoLocale();
+  const { images, onUploadImage, onDeleteImage } = useDemoImageLibrary();
 
   useEffect(() => {
     const onHashChange = () => setMode(getMode());
@@ -182,6 +184,9 @@ export function MapApp() {
             placementCategories={placementCategories}
             tier={tier}
             translate={translate}
+            images={images}
+            onUploadImage={onUploadImage}
+            onDeleteImage={onDeleteImage}
             persist
             debug
           />
