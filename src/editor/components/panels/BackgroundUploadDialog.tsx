@@ -292,7 +292,7 @@ export function BackgroundUploadDialog({
         onConfirm(result);
       }
     } catch {
-      setError("editor.error.uploadFailed");
+      setError("common.error.uploadFailed");
       setPending(false);
     }
   };
@@ -310,7 +310,7 @@ export function BackgroundUploadDialog({
             onClick={onClose}
             disabled={pending}
           >
-            {t("editor.action.cancel")}
+            {t("common.action.cancel")}
           </Button>
           <Button
             variant="solid"

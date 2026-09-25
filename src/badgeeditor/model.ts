@@ -15,6 +15,8 @@
 //      that the pikachu ZPL pipeline consumes. We flatten BadgeDocument down to
 //      this on save (see serialize.ts) so the print backend is unchanged.
 
+import type { StringKey, T } from "./i18n";
+
 /** Inches → pixels. The legacy designer renders at 96 DPI. */
 export const DPI = 96;
 /**
@@ -81,13 +83,28 @@ export interface BadgeField {
   inverted?: boolean;
 }
 
+export interface BadgeCustomField {
+  name: string;
+  label: string;
+}
+
 // --- Pages / fold ---
 
 export type FoldType = "none" | "single" | "double";
 export type PageRole = "front" | "back" | "inner";
 
-/** Lanyard hole-punch style at the top of the badge. */
-export type SlotType = "none" | "two-circle" | "three-rect";
+export type HolePunchShape = "circle" | "rect";
+
+export interface HolePunch {
+  shape: HolePunchShape;
+  count: number;
+  widthMm: number;
+  heightMm: number;
+  /** Centre to centre. */
+  pitchMm: number;
+  /** Badge top edge to the top of the punch. */
+  topOffsetMm: number;
+}
 
 export interface BadgePage {
   id: string;
@@ -128,8 +145,8 @@ export interface BadgeDocument {
   /** "none" = 1 page, "single" = 2 pages (one fold), "double" = 3 pages. */
   fold: FoldType;
   pages: BadgePage[];
-  /** Lanyard hole-punch style. Editor-only (physical media); defaults to none. */
-  slots?: SlotType;
+  holePunch?: HolePunch | null;
+  cornerRadiusMm?: number;
   background?: BadgeBackground;
 }
 
@@ -167,6 +184,20 @@ export interface FlattenResult {
   height: number;
 }
 
+export interface BadgePreset {
+  key: string;
+  label: string;
+  /** Full UNFOLDED size in INCHES. */
+  width: number;
+  height: number;
+  /** Informational; the page count follows `fold`. */
+  panels: number;
+  fold: FoldType;
+  cornerRadiusMm: number;
+  holePunch: HolePunch | null;
+  defaultLayout: LegacyLayoutEntry[];
+}
+
 export const BADGE_DOCUMENT_VERSION = "1.0";
 
 /** Number of panels implied by a fold type. */
@@ -183,7 +214,12 @@ export function pageRoleForIndex(count: number, index: number): PageRole {
   return (["front", "inner", "back"] as const)[index] ?? "front";
 }
 
-/** Human label for a page role (Inside is the legacy term for the inner panel). */
-export function pageRoleLabel(role: PageRole): string {
-  return role === "inner" ? "Inside" : role === "back" ? "Back" : "Front";
+const PAGE_ROLE_LABEL_KEYS: Record<PageRole, StringKey> = {
+  front: "badgeeditor.page.front",
+  back: "badgeeditor.page.back",
+  inner: "badgeeditor.page.inside",
+};
+
+export function pageRoleLabel(role: PageRole, t: T): string {
+  return t(PAGE_ROLE_LABEL_KEYS[role]);
 }

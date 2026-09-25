@@ -4,4 +4,7 @@ import { DPI } from "./model";
 // useCanvasControls' `scale`.
 export const PPI = DPI;
 export const QR_BASE_PX = 75;
-export const PANEL_CORNER_IN = 0.25; // corner fillet
+
+const MM_PER_INCH = 25.4;
+
+export const mmToPx = (mm: number): number => (mm / MM_PER_INCH) * PPI;

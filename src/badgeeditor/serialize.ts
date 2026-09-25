@@ -9,7 +9,7 @@
 // editor_document yet.
 //
 // COMPATIBILITY IS LOAD-BEARING. The per-field math here must match
-// raichu .../BadgeDesigner/editorClasses.jsx field-for-field. See verify.ts.
+// raichu .../BadgeDesigner/editorClasses.jsx field-for-field.
 
 import { v4 as uuid } from "uuid";
 import {
@@ -17,8 +17,10 @@ import {
   BADGE_DOCUMENT_VERSION,
   PAGE_COUNT,
   inchToPx,
+  pageRoleForIndex,
   type BadgeDocument,
   type BadgeField,
+  type BadgePage,
   type FlattenResult,
   type FoldType,
   type LegacyLayoutEntry,
@@ -162,14 +164,12 @@ export function flatten(doc: BadgeDocument): FlattenResult {
 }
 
 // ---------------------------------------------------------------------------
-// Flat layout -> document (legacy load, single page)
+// Flat layout -> document
 // ---------------------------------------------------------------------------
 
 /**
  * Recover a BadgeField from a legacy entry. Stored top/left is the footprint
- * top-left (no shift — matches the backend's rotate-about-center). Every field
- * lands on a single front page; legacy templates edit as one page and the first
- * save writes a rich document. (Optional later: heuristic page-region splitting.)
+ * top-left (no shift — matches the backend's rotate-about-center).
  */
 export function entryToField(entry: LegacyLayoutEntry): BadgeField {
   const kind = kindForField(entry.field);
@@ -233,16 +233,38 @@ export function inflate(
 ): BadgeDocument {
   const fold = opts.fold ?? "none";
   const pageCount = PAGE_COUNT[fold];
+  const panelHeight = opts.height / pageCount;
+  const pages: BadgePage[] = Array.from({ length: pageCount }, (_, i) => ({
+    id: uuid(),
+    role: pageRoleForIndex(pageCount, i),
+    fields: [],
+  }));
+
+  for (const entry of layout) {
+    const pageIndex =
+      panelHeight > 0
+        ? Math.min(
+            pageCount - 1,
+            Math.max(
+              0,
+              Math.floor((entry.top + (entry.height ?? 0) / 2) / panelHeight),
+            ),
+          )
+        : 0;
+    const field = entryToField(
+      pageIndex
+        ? { ...entry, top: entry.top - pageIndex * panelHeight }
+        : entry,
+    );
+    field.inverted =
+      Boolean(entry.inverted) !== foldInvertForPage(fold, pageIndex);
+    pages[pageIndex].fields.push(field);
+  }
+
   return {
     version: BADGE_DOCUMENT_VERSION,
-    panelSize: { width: opts.width, height: opts.height / pageCount },
+    panelSize: { width: opts.width, height: panelHeight },
     fold,
-    pages: [
-      {
-        id: uuid(),
-        role: "front",
-        fields: layout.map(entryToField),
-      },
-    ],
+    pages,
   };
 }

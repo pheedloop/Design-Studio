@@ -21,41 +21,41 @@ const GROUPS: {
   labelKey: StringKey;
 }[][] = [
   [
-    { prop: "onAlignLeft", glyph: "alignLeft", labelKey: "editor.align.left" },
+    { prop: "onAlignLeft", glyph: "alignLeft", labelKey: "common.align.left" },
     {
       prop: "onAlignCenterH",
       glyph: "alignCenterH",
-      labelKey: "editor.align.centerH",
+      labelKey: "common.align.centerH",
     },
     {
       prop: "onAlignRight",
       glyph: "alignRight",
-      labelKey: "editor.align.right",
+      labelKey: "common.align.right",
     },
   ],
   [
-    { prop: "onAlignTop", glyph: "alignTop", labelKey: "editor.align.top" },
+    { prop: "onAlignTop", glyph: "alignTop", labelKey: "common.align.top" },
     {
       prop: "onAlignCenterV",
       glyph: "alignCenterV",
-      labelKey: "editor.align.centerV",
+      labelKey: "common.align.centerV",
     },
     {
       prop: "onAlignBottom",
       glyph: "alignBottom",
-      labelKey: "editor.align.bottom",
+      labelKey: "common.align.bottom",
     },
   ],
   [
     {
       prop: "onDistributeH",
       glyph: "distributeH",
-      labelKey: "editor.distribute.horizontal",
+      labelKey: "common.distribute.horizontal",
     },
     {
       prop: "onDistributeV",
       glyph: "distributeV",
-      labelKey: "editor.distribute.vertical",
+      labelKey: "common.distribute.vertical",
     },
   ],
 ];

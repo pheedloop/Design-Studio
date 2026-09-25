@@ -120,7 +120,7 @@ export function CanvasResizeDialog({
       footer={
         <>
           <Button variant="outline" color="neutral" onClick={onClose}>
-            {t("editor.action.cancel")}
+            {t("common.action.cancel")}
           </Button>
           <Button
             variant="solid"

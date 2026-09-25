@@ -16,7 +16,7 @@ export function MenuItem({
     <button
       onClick={onClick}
       disabled={disabled}
-      title={disabled && premium ? t("editor.premiumFeature") : undefined}
+      title={disabled && premium ? t("common.premiumFeature") : undefined}
       className={`flex items-center justify-between w-full px-xs py-tight text-xs transition-colors ${
         disabled
           ? "text-text-disabled cursor-default"

@@ -4,18 +4,22 @@
 // a display/input concern: convert by a per-inch factor at the UI boundary and
 // keep storing inches everywhere else.
 
+import { canonicalLocale } from "@/i18n/format";
+import type { StringKey } from "./i18n";
+
 export type Unit = "in" | "cm";
 
 /** Display units per inch. */
 const PER_INCH: Record<Unit, number> = { in: 1, cm: 2.54 };
 
-/** Short label shown next to values. */
-export const unitLabel: Record<Unit, string> = { in: "in", cm: "cm" };
+export const UNIT_LABEL_KEYS: Record<Unit, StringKey> = {
+  in: "badgeeditor.unit.in",
+  cm: "badgeeditor.unit.cm",
+};
 
-/** Full label for menus. */
-export const unitName: Record<Unit, string> = {
-  in: "Inches",
-  cm: "Centimeters",
+export const UNIT_NAME_KEYS: Record<Unit, StringKey> = {
+  in: "badgeeditor.unit.inches",
+  cm: "badgeeditor.unit.centimeters",
 };
 
 /** Sensible numeric-input step per unit. */
@@ -29,6 +33,16 @@ export const toUnit = (inches: number, u: Unit) => inches * PER_INCH[u];
 
 /** Value in the given unit → inches. */
 export const fromUnit = (value: number, u: Unit) => value / PER_INCH[u];
+
+export const formatDim = (
+  inches: number,
+  u: Unit,
+  locale: string | undefined,
+  dp = 2,
+) =>
+  new Intl.NumberFormat(canonicalLocale(locale), {
+    maximumFractionDigits: dp,
+  }).format(inches * PER_INCH[u]);
 
 /** Inches → compact display string in the given unit (trims trailing zeros). */
 export const fmtUnit = (inches: number, u: Unit, dp = 2) =>

@@ -18,14 +18,35 @@ import { Text } from "@/components/Text";
 import { inchToPx, type BadgeField, type TextAlign } from "./model";
 import { getFieldDef, isLiteralTextField, isUserFieldEditable } from "./fields";
 import { Checkbox } from "@/components/Checkbox";
+import { useT, type StringKey } from "./i18n";
 
 const FONT_SIZES = [10, 12, 16, 18, 20, 24, 30, 36, 42];
 const ROW_COUNTS = [1, 2, 3, 4, 5, 6];
-const ALIGNMENTS: { value: TextAlign; icon: React.ReactNode }[] = [
-  { value: "left", icon: <PiTextAlignLeft size={15} /> },
-  { value: "center", icon: <PiTextAlignCenter size={15} /> },
-  { value: "right", icon: <PiTextAlignRight size={15} /> },
-  { value: "justify", icon: <PiTextAlignJustify size={15} /> },
+const ALIGNMENTS: {
+  value: TextAlign;
+  labelKey: StringKey;
+  icon: React.ReactNode;
+}[] = [
+  {
+    value: "left",
+    labelKey: "badgeeditor.properties.alignLeft",
+    icon: <PiTextAlignLeft size={15} />,
+  },
+  {
+    value: "center",
+    labelKey: "badgeeditor.properties.alignCenter",
+    icon: <PiTextAlignCenter size={15} />,
+  },
+  {
+    value: "right",
+    labelKey: "badgeeditor.properties.alignRight",
+    icon: <PiTextAlignRight size={15} />,
+  },
+  {
+    value: "justify",
+    labelKey: "badgeeditor.properties.alignJustify",
+    icon: <PiTextAlignJustify size={15} />,
+  },
 ];
 
 const TOKENS = [
@@ -52,19 +73,21 @@ export function PropertiesPanel({
   onChange,
   onDelete,
 }: PropertiesPanelProps) {
+  const t = useT();
   if (!field) {
     return (
       <div className="w-48 shrink-0 border-l border-border-neutral-light bg-white flex flex-col">
         <Row align="center" justify="center" className="flex-1 p-m text-center">
           <span className="text-xs text-text-subtle">
-            Select a field to edit its properties.
+            {t("badgeeditor.properties.empty")}
           </span>
         </Row>
       </div>
     );
   }
 
-  const label = getFieldDef(field.field)?.label ?? field.field;
+  const def = getFieldDef(field.field);
+  const label = def ? t(def.labelKey) : field.field;
   const isText = field.kind === "text" || field.kind === "sessionSchedule";
 
   const setFontSize = (fontSize: number) => {
@@ -87,7 +110,11 @@ export function PropertiesPanel({
         <Text size="xs" weight="medium" color="body" as="span" truncate>
           {label}
         </Text>
-        <IconButton size="sm" onClick={onDelete} title="Delete field">
+        <IconButton
+          size="sm"
+          onClick={onDelete}
+          title={t("badgeeditor.properties.deleteField")}
+        >
           <PiTrash size={15} />
         </IconButton>
       </Row>
@@ -95,7 +122,7 @@ export function PropertiesPanel({
       <Stack gap="s" className="p-xs overflow-y-auto flex-1">
         {isLiteralTextField(field.field) && (
           <Stack gap="tight">
-            <SectionLabel>Text</SectionLabel>
+            <SectionLabel>{t("badgeeditor.properties.text")}</SectionLabel>
             <TextInput
               value={field.text ?? ""}
               onChange={e => onChange({ text: e.target.value })}
@@ -105,7 +132,7 @@ export function PropertiesPanel({
 
         {isText && (
           <Stack gap="xxs">
-            <FieldRow label="Size">
+            <FieldRow label={t("badgeeditor.properties.size")}>
               <Select
                 className="w-full"
                 value={field.fontSize ?? 20}
@@ -118,7 +145,7 @@ export function PropertiesPanel({
                 ))}
               </Select>
             </FieldRow>
-            <FieldRow label="Align">
+            <FieldRow label={t("badgeeditor.properties.align")}>
               <Row gap="xxxs">
                 {ALIGNMENTS.map(a => (
                   <IconButton
@@ -126,7 +153,7 @@ export function PropertiesPanel({
                     size="sm"
                     active={(field.textAlign ?? "center") === a.value}
                     onClick={() => onChange({ textAlign: a.value })}
-                    title={a.value}
+                    title={t(a.labelKey)}
                   >
                     {a.icon}
                   </IconButton>
@@ -137,7 +164,7 @@ export function PropertiesPanel({
         )}
 
         {field.kind === "tickets" && (
-          <FieldRow label="Rows">
+          <FieldRow label={t("badgeeditor.properties.rows")}>
             <Select
               className="w-full"
               value={field.numRows ?? 3}
@@ -155,13 +182,13 @@ export function PropertiesPanel({
         {(isText || field.kind === "tickets") && (
           <Stack gap="xxs">
             <Checkbox
-              label="Invert (180°)"
+              label={t("badgeeditor.properties.invert")}
               checked={Boolean(field.inverted)}
               onChange={v => onChange({ inverted: v })}
             />
             {isText && isUserFieldEditable(field.field) && (
               <Checkbox
-                label="Attendee editable"
+                label={t("badgeeditor.properties.attendeeEditable")}
                 checked={field.userEditable ?? true}
                 onChange={v => onChange({ userEditable: v })}
               />
@@ -171,18 +198,22 @@ export function PropertiesPanel({
 
         {isLiteralTextField(field.field) && (
           <Stack gap="tight">
-            <SectionLabel>Insert token</SectionLabel>
+            <SectionLabel>
+              {t("badgeeditor.properties.insertToken")}
+            </SectionLabel>
             <Row gap="xxxs" className="flex-wrap">
-              {TOKENS.map(t => (
+              {TOKENS.map(token => (
                 <button
-                  key={t}
+                  key={token}
                   type="button"
                   onClick={() =>
-                    onChange({ text: field.text ? `${field.text} ${t}` : t })
+                    onChange({
+                      text: field.text ? `${field.text} ${token}` : token,
+                    })
                   }
                   className="text-xs px-tight py-hair rounded bg-surface-neutral hover:bg-surface-muted text-text-body font-mono"
                 >
-                  {t.replace(/[{}]/g, "").trim()}
+                  {token.replace(/[{}]/g, "").trim()}
                 </button>
               ))}
             </Row>
@@ -191,7 +222,7 @@ export function PropertiesPanel({
 
         {(field.kind === "qrCode" || field.kind === "image") && (
           <p className="text-xs text-text-subtle">
-            Drag to move; drag a corner to resize.
+            {t("badgeeditor.properties.resizeHint")}
           </p>
         )}
       </Stack>

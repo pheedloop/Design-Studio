@@ -34,7 +34,7 @@ export function ToolRow<T extends string>({
       badge={locked ? <TrophyIcon size={14} /> : undefined}
       isActive={isActive}
       disabled={disabled}
-      title={disabled ? t("editor.premiumFeature") : undefined}
+      title={disabled ? t("common.premiumFeature") : undefined}
       onClick={onClick}
     />
   );

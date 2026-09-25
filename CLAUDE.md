@@ -18,7 +18,7 @@ Design-Studio ships three products, each with an authoring side and/or a display
 
 `src/App.tsx` + `src/routes/productRouter.ts` are the **demo app only** — they exist so this repo can run all three products standalone for local development and the GitHub Pages preview. They are not part of the published package.
 
-**Publish surface:** `package.json#exports` and `vite.lib.config.ts` currently publish four entry points — `editor`, `viewer`, `seatviewer` (consumed by raichu for editors, Charmander + the mobile apps for viewers) and `i18n` (the merged string manifest, for host build steps that seed a translation catalog). `badgeeditor/`, `map/`, and `seatplanner/` are demo-only; they are not built into `dist/` and cannot be imported by a host app. If you're changing one of the published folders, treat its public API (what `index.ts` re-exports) as a real contract — raichu/Charmander/mobile pull from `dist/`, not from source. **String keys are part of that contract too**: a host that has translated `seatviewer.assign.cta` is broken by a rename exactly as much as by a renamed export.
+**Publish surface:** `package.json#exports` and `vite.lib.config.ts` currently publish five entry points — `editor`, `viewer`, `seatviewer` (consumed by raichu for editors, Charmander + the mobile apps for viewers), `badgeeditor` (consumed by ditto) and `i18n` (the merged string manifest, for host build steps that seed a translation catalog). `map/` and `seatplanner/` are demo-only; they are not built into `dist/` and cannot be imported by a host app. `badgeeditor/BadgeEditorApp.tsx` is the badge demo wrapper and is not re-exported. If you're changing one of the published folders, treat its public API (what `index.ts` re-exports) as a real contract — raichu/Charmander/mobile pull from `dist/`, not from source. **String keys are part of that contract too**: a host that has translated `seatviewer.assign.cta` is broken by a rename exactly as much as by a renamed export.
 
 ### Konva / react-konva conventions
 
@@ -44,7 +44,8 @@ Design-Studio ships three products, each with an authoring side and/or a display
 
 ```
 src/
-  <product>/                badgeeditor/, map/, seatplanner/ — demo apps, one per product
+  badgeeditor/               badge authoring (published) + its demo wrapper
+  <product>/                 map/, seatplanner/ — demo apps, one per product
   editor/                    maps authoring (published)
     components/
       canvas/elements/       one file per shape geometry
@@ -91,7 +92,7 @@ Anything else gets its own file. If the helper has state, hooks, or a typed prop
 
 ### Repetitive siblings → config-driven loop
 
-If you're writing near-identical shape/handling logic for N variants that differ only by data, that's one component (or one `switch`) plus a config/lookup keyed by the variant — not N copies. `Slots.tsx`'s `SLOT_SPECS` map is a reasonable existing example of this pattern; follow its shape rather than writing out each slot layout by hand.
+If you're writing near-identical shape/handling logic for N variants that differ only by data, that's one component (or one `switch`) plus a config/lookup keyed by the variant — not N copies. `badgeeditor/HolePunchShapes.tsx` is a reasonable existing example of this pattern: one loop over `holePunchBoxes`, driven by the supplied `HolePunch` config, rather than a copy per punch layout.
 
 ### Naming
 
@@ -156,7 +157,7 @@ This satisfies both consumers: ditto gets structured keys, Charmander keeps Engl
 
 **Pure functions take `t` as a parameter.** `assignCta(input, t)` and `occupantHeading(state, t)` in `seatviewer/labels.ts` — that keeps them testable without mounting anything, which is the same reason the Tests section wants them extracted.
 
-**Entry components own the provider.** Every entry component (`MapViewer`, `MapEditor`, `SeatPlanViewer`, `SeatPlanCanvas`, and demo-only `BadgeEditor`) accepts optional `translate` + `locale` and wraps its tree in `I18nProvider`. The provider **inherits** rather than overrides, so a nested entry component doesn't reset its subtree to English. Both props must be **referentially stable** — memoized UI keys off the translator's identity, so an inline arrow re-renders the tree every frame.
+**Entry components own the provider.** Every entry component (`MapViewer`, `MapEditor`, `SeatPlanViewer`, `SeatPlanCanvas`, and `BadgeEditor`) accepts optional `translate` + `locale` and wraps its tree in `I18nProvider`. The provider **inherits** rather than overrides, so a nested entry component doesn't reset its subtree to English. Both props must be **referentially stable** — memoized UI keys off the translator's identity, so an inline arrow re-renders the tree every frame.
 
 **Content translation is applied to the data, once — not per render site.** `translateFloorPlan` / `translateExhibitors` in `src/i18n/content.ts` map over the data before it reaches the tree. This is load-bearing: search has to match against the same text it displays, or a user gets hits they cannot see.
 

@@ -2024,7 +2024,7 @@ function MapEditorInner({
             {t("editor.crop.apply")}
           </Button>
           <Button variant="outline" color="neutral" onClick={handleCancelCrop}>
-            {t("editor.action.cancel")}
+            {t("common.action.cancel")}
           </Button>
         </Row>
       )}

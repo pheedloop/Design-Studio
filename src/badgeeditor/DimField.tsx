@@ -1,13 +1,6 @@
 import { useState } from "react";
 import { SectionLabel } from "@/editor/components/ui";
-import {
-  fmtUnit,
-  fromUnit,
-  unitLabel,
-  unitMin,
-  unitStep,
-  type Unit,
-} from "./units";
+import { fmtUnit, fromUnit, unitMin, unitStep, type Unit } from "./units";
 
 /**
  * Fractional dimension input (NumberInput rounds to integers, so not usable
@@ -37,9 +30,7 @@ export function DimField({
   }
   return (
     <label className="flex-1 flex flex-col gap-tight">
-      <SectionLabel>
-        {label} ({unitLabel[unit]})
-      </SectionLabel>
+      <SectionLabel>{label}</SectionLabel>
       <input
         type="number"
         step={unitStep[unit]}

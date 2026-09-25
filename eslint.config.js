@@ -27,11 +27,6 @@ export default defineConfig([
     },
   },
   {
-    // A CLI compatibility gate, run by hand — its console output is the point.
-    files: ["src/badgeeditor/verify.ts"],
-    rules: { "no-console": "off" },
-  },
-  {
     // Sorted within each namespace: predictable merges, findable keys.
     files: ["src/i18n/strings.ts"],
     rules: {

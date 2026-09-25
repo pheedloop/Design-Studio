@@ -3,7 +3,8 @@
 // defaults (px @ 96 DPI), converted to inches.
 
 import { v4 as uuid } from "uuid";
-import { pxToInch, type BadgeField } from "./model";
+import { pxToInch, type BadgeCustomField, type BadgeField } from "./model";
+import type { T } from "./i18n";
 import {
   getFieldDef,
   isLiteralTextField,
@@ -11,13 +12,18 @@ import {
   kindForField,
 } from "./fields";
 
-/** Display string shown on the canvas for a field (label or literal text). */
-export function fieldDisplayText(field: BadgeField): string {
-  if (isLiteralTextField(field.field)) return field.text ?? "Custom Text";
-  return getFieldDef(field.field)?.label ?? field.field;
+export function fieldDisplayText(field: BadgeField, t: T): string {
+  if (isLiteralTextField(field.field)) {
+    return field.text ?? t("badgeeditor.field.customTextDefault");
+  }
+  const def = getFieldDef(field.field);
+  return def ? t(def.labelKey) : field.field;
 }
 
-export function createField(fieldKey: string): BadgeField {
+export function createField(
+  fieldKey: string,
+  literalText?: string,
+): BadgeField {
   const kind = kindForField(fieldKey);
   const base: BadgeField = {
     id: uuid(),
@@ -59,6 +65,13 @@ export function createField(fieldKey: string): BadgeField {
     textAlign: "center",
     inverted: false,
     userEditable: isUserFieldEditable(fieldKey) ? true : undefined,
-    text: isLiteralTextField(fieldKey) ? "Custom Text" : undefined,
+    text: isLiteralTextField(fieldKey) ? literalText : undefined,
+  };
+}
+
+export function createCustomField(custom: BadgeCustomField): BadgeField {
+  return {
+    ...createField("extra_fields", custom.label),
+    customAttendeeField: custom.name,
   };
 }

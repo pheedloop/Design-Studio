@@ -14,12 +14,12 @@
 // already handle "extra_fields").
 
 import type { FieldKind } from "./model";
+import type { StringKey } from "./i18n";
 
 export interface FieldDef {
   /** Backend field identifier (also the key in TextFieldNames). */
   field: string;
-  /** Human label shown in the palette. */
-  label: string;
+  labelKey: StringKey;
   kind: FieldKind;
   /** Whether this field appears in the field menu. Defaults to true; `image`
    *  sets false (added via the image gallery instead). */
@@ -52,36 +52,85 @@ export const isUserFieldEditable = (field: string | undefined): boolean => {
  * menu, but lives in the same registry for kind lookup (see inPalette=false).
  */
 export const FIELD_DEFS: FieldDef[] = [
-  { field: "name", label: "Full Name", kind: "text" },
-  { field: "first_name", label: "First Name", kind: "text" },
-  { field: "last_name", label: "Last Name", kind: "text" },
-  { field: "tags", label: "Tags", kind: "text" },
-  { field: "qrCode", label: "QR Code", kind: "qrCode" },
-  { field: "externalQRCodeUrl", label: "External QR Code", kind: "qrCode" },
-  { field: "organization", label: "Organization", kind: "text" },
-  { field: "title", label: "Job Title", kind: "text" },
-  { field: "designations", label: "Designations", kind: "text" },
-  { field: "pronouns", label: "Pronouns", kind: "text" },
-  { field: "address_city", label: "City", kind: "text" },
-  { field: "address_country", label: "Country", kind: "text" },
-  { field: "address_state", label: "State/Province", kind: "text" },
-  { field: "city_state", label: "City+State/Provinces", kind: "text" },
+  { field: "name", labelKey: "badgeeditor.field.fullName", kind: "text" },
+  {
+    field: "first_name",
+    labelKey: "badgeeditor.field.firstName",
+    kind: "text",
+  },
+  { field: "last_name", labelKey: "badgeeditor.field.lastName", kind: "text" },
+  { field: "tags", labelKey: "badgeeditor.field.tags", kind: "text" },
+  { field: "qrCode", labelKey: "badgeeditor.field.qrCode", kind: "qrCode" },
+  {
+    field: "externalQRCodeUrl",
+    labelKey: "badgeeditor.field.externalQrCode",
+    kind: "qrCode",
+  },
+  {
+    field: "organization",
+    labelKey: "badgeeditor.field.organization",
+    kind: "text",
+  },
+  { field: "title", labelKey: "badgeeditor.field.jobTitle", kind: "text" },
+  {
+    field: "designations",
+    labelKey: "badgeeditor.field.designations",
+    kind: "text",
+  },
+  { field: "pronouns", labelKey: "badgeeditor.field.pronouns", kind: "text" },
+  {
+    field: "address_city",
+    labelKey: "badgeeditor.field.addressCity",
+    kind: "text",
+  },
+  {
+    field: "address_country",
+    labelKey: "badgeeditor.field.addressCountry",
+    kind: "text",
+  },
+  {
+    field: "address_state",
+    labelKey: "badgeeditor.field.addressState",
+    kind: "text",
+  },
+  {
+    field: "city_state",
+    labelKey: "badgeeditor.field.cityState",
+    kind: "text",
+  },
   {
     field: "session_schedule",
-    label: "Session Schedule",
+    labelKey: "badgeeditor.field.sessionSchedule",
     kind: "sessionSchedule",
   },
-  { field: "custom_text", label: "Custom Text Field", kind: "text" },
-  { field: "tickets", label: "Tickets", kind: "tickets" },
-  { field: "code_internal", label: "Internal Code", kind: "text" },
-  { field: "table_number", label: "Table Number", kind: "text" },
+  {
+    field: "custom_text",
+    labelKey: "badgeeditor.field.customText",
+    kind: "text",
+  },
+  { field: "tickets", labelKey: "badgeeditor.field.tickets", kind: "tickets" },
+  {
+    field: "code_internal",
+    labelKey: "badgeeditor.field.codeInternal",
+    kind: "text",
+  },
+  {
+    field: "table_number",
+    labelKey: "badgeeditor.field.tableNumber",
+    kind: "text",
+  },
   {
     field: "dietary_restrictions",
-    label: "Dietary Restrictions",
+    labelKey: "badgeeditor.field.dietaryRestrictions",
     kind: "text",
   },
   // Placed via the image gallery, not the field menu.
-  { field: "image", label: "Image", kind: "image", inPalette: false },
+  {
+    field: "image",
+    labelKey: "badgeeditor.field.image",
+    kind: "image",
+    inPalette: false,
+  },
 ];
 
 const FIELD_DEF_BY_KEY: Record<string, FieldDef> = Object.fromEntries(

@@ -6,6 +6,7 @@ import { PPI, QR_BASE_PX } from "./canvasMetrics";
 import { useImageLoader } from "./useImageLoader";
 import { FieldContent } from "./FieldContent";
 import { useBadgeImageUrl } from "./badgeImageContext";
+import { useT } from "./i18n";
 
 /**
  * The visual contents of a field (no interaction), shared by the editor's
@@ -19,6 +20,7 @@ export function FieldBody({
   field: BadgeField;
   data: BadgeData | null;
 }) {
+  const t = useT();
   const resolveImageUrl = useBadgeImageUrl();
   const imageUrl =
     field.kind === "image" ? resolveImageUrl(field.code) : undefined;
@@ -38,7 +40,7 @@ export function FieldBody({
       <>
         <Rect width={size} height={size} fill={GRAY_900} cornerRadius={2} />
         <Text
-          text="QR"
+          text={t("badgeeditor.canvas.qr")}
           width={size}
           height={size}
           align="center"
