@@ -184,18 +184,21 @@ export interface FlattenResult {
   height: number;
 }
 
-export interface BadgePreset {
-  key: string;
-  label: string;
+export interface BadgeSpec {
   /** Full UNFOLDED size in INCHES. */
   width: number;
   height: number;
+  fold: FoldType;
+  holePunch: HolePunch | null;
+  cornerRadiusMm: number;
+}
+
+export interface BadgePreset extends BadgeSpec {
+  key: string;
+  label: string;
   /** Informational; the page count follows `fold`. */
   panels: number;
-  fold: FoldType;
-  cornerRadiusMm: number;
-  holePunch: HolePunch | null;
-  defaultLayout: LegacyLayoutEntry[];
+  sampleLayout: LegacyLayoutEntry[];
 }
 
 export const BADGE_DOCUMENT_VERSION = "1.0";

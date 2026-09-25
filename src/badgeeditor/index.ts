@@ -3,7 +3,7 @@ export { BadgeEditor } from "./BadgeEditor";
 export type { BadgeEditorProps } from "./BadgeEditor";
 export { flatten, inflate } from "./serialize";
 export type { InflateOptions } from "./serialize";
-export { createDocumentFromPreset } from "./presets";
+export { createBadgeDocument, createDocumentFromPreset } from "./presets";
 export { FIELD_DEFS } from "./fields";
 export type {
   BadgeDocument,
@@ -11,6 +11,7 @@ export type {
   BadgeField,
   BadgeCustomField,
   BadgePreset,
+  BadgeSpec,
   FoldType,
   HolePunch,
   HolePunchShape,

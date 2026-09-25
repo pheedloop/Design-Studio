@@ -2,6 +2,7 @@ import {
   PAGE_COUNT,
   type BadgeDocument,
   type BadgePreset,
+  type BadgeSpec,
   type FoldType,
   type HolePunch,
   type LegacyLayoutEntry,
@@ -27,17 +28,24 @@ export function presetSetup(preset: BadgePreset): PresetSetup {
   };
 }
 
+export function createBadgeDocument(
+  spec: BadgeSpec,
+  layout: LegacyLayoutEntry[] = [],
+): BadgeDocument {
+  return {
+    ...inflate(layout, {
+      width: spec.width,
+      height: spec.height,
+      fold: spec.fold,
+    }),
+    holePunch: spec.holePunch,
+    cornerRadiusMm: spec.cornerRadiusMm,
+  };
+}
+
 export function createDocumentFromPreset(
   preset: BadgePreset,
   layout?: LegacyLayoutEntry[],
 ): BadgeDocument {
-  return {
-    ...inflate(layout ?? preset.defaultLayout, {
-      width: preset.width,
-      height: preset.height,
-      fold: preset.fold,
-    }),
-    holePunch: preset.holePunch,
-    cornerRadiusMm: preset.cornerRadiusMm,
-  };
+  return createBadgeDocument(preset, layout ?? preset.sampleLayout);
 }
