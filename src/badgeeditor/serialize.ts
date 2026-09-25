@@ -25,6 +25,7 @@ import {
   type FoldType,
   type LegacyLayoutEntry,
 } from "./model";
+import { PPI, fieldSizePx } from "./canvasMetrics";
 import {
   isLiteralTextField,
   isUserFieldEditable,
@@ -220,6 +221,10 @@ export function entryToField(entry: LegacyLayoutEntry): BadgeField {
   };
 }
 
+function renderedHeight(entry: LegacyLayoutEntry): number {
+  return fieldSizePx({ ...entry, kind: kindForField(entry.field) }).h / PPI;
+}
+
 export interface InflateOptions {
   /** Full template size in INCHES (BadgeTemplate.width/height). */
   width: number;
@@ -247,7 +252,7 @@ export function inflate(
             pageCount - 1,
             Math.max(
               0,
-              Math.floor((entry.top + (entry.height ?? 0) / 2) / panelHeight),
+              Math.floor((entry.top + renderedHeight(entry) / 2) / panelHeight),
             ),
           )
         : 0;

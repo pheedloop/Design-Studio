@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useReducer } from "react";
 import { Checkbox } from "@/components/Checkbox";
 import { Button } from "@/components/Button";
 import {
@@ -20,13 +20,9 @@ import {
   type FoldType,
   type HolePunch,
 } from "./model";
-import { foldInvertForPage } from "./serialize";
 import { presetSetup } from "./presets";
-import {
-  DEFAULT_TEARAWAYS,
-  type BadgeSetup,
-  type PanelConfig,
-} from "./badgeSetup";
+import type { BadgeSetup, PanelConfig } from "./badgeSetup";
+import { draftToSetup, initSetupDraft, setupDraftReducer } from "./setupDraft";
 import { DimField } from "./DimField";
 import { useLocale, useT, type StringKey } from "./i18n";
 
@@ -51,18 +47,6 @@ interface BadgeSetupDialogProps {
   onClose: () => void;
 }
 
-function panelConfigFor(
-  pages: BadgePage[],
-  fold: FoldType,
-  i: number,
-): PanelConfig {
-  return {
-    inverted: pages[i]?.inverted ?? foldInvertForPage(fold, i),
-    tearaway: pages[i]?.tearaway ?? false,
-    tearawayCount: pages[i]?.tearawayCount ?? DEFAULT_TEARAWAYS,
-  };
-}
-
 export function BadgeSetupDialog({
   fold,
   panelSize,
@@ -77,52 +61,19 @@ export function BadgeSetupDialog({
 }: BadgeSetupDialogProps) {
   const t = useT();
   const locale = useLocale();
-  const [localFold, setLocalFold] = useState<FoldType>(fold);
-  const [w, setW] = useState(panelSize.width);
-  const [h, setH] = useState(panelSize.height);
-  const [localHolePunch, setLocalHolePunch] = useState(holePunch);
-  const [localRadius, setLocalRadius] = useState(cornerRadiusMm);
-  const [presetKey, setPresetKey] = useState("");
-  const [panels, setPanels] = useState<PanelConfig[]>(() =>
-    Array.from({ length: PAGE_COUNT[fold] }, (_, i) =>
-      panelConfigFor(pages, fold, i),
-    ),
+  const [draft, dispatch] = useReducer(
+    setupDraftReducer,
+    { fold, panelSize, pages, holePunch, cornerRadiusMm },
+    initSetupDraft,
   );
-
+  const { presetKey, panels } = draft;
+  const localFold = draft.fold;
+  const { width: w, height: h } = draft.panelSize;
   const count = PAGE_COUNT[localFold];
-
-  const changeFold = (f: FoldType) => {
-    setLocalFold(f);
-    setPanels(prev =>
-      Array.from({ length: PAGE_COUNT[f] }, (_, i) =>
-        i < prev.length
-          ? prev[i]
-          : {
-              inverted: foldInvertForPage(f, i),
-              tearaway: false,
-              tearawayCount: DEFAULT_TEARAWAYS,
-            },
-      ),
-    );
-  };
 
   const applyPreset = (key: string) => {
     const preset = presets.find(p => p.key === key);
-    if (!preset) return;
-    const setup = presetSetup(preset);
-    setPresetKey(key);
-    changeFold(setup.fold);
-    setW(setup.panelSize.width);
-    setH(setup.panelSize.height);
-    setLocalHolePunch(setup.holePunch);
-    setLocalRadius(setup.cornerRadiusMm);
-  };
-
-  const leavePreset = () => {
-    if (!presetKey) return;
-    setPresetKey("");
-    setLocalHolePunch(holePunch);
-    setLocalRadius(cornerRadiusMm);
+    if (preset) dispatch({ type: "preset", key, setup: presetSetup(preset) });
   };
 
   const unitLabel = t(UNIT_LABEL_KEYS[unit]);
@@ -132,8 +83,8 @@ export function BadgeSetupDialog({
     unit: unitLabel,
   };
 
-  const setPanel = (i: number, patch: Partial<PanelConfig>) =>
-    setPanels(prev => prev.map((p, j) => (j === i ? { ...p, ...patch } : p)));
+  const setPanel = (index: number, patch: Partial<PanelConfig>) =>
+    dispatch({ type: "panel", index, patch });
 
   return (
     <Dialog
@@ -143,19 +94,13 @@ export function BadgeSetupDialog({
       footer={
         <>
           <Button variant="outline" color="neutral" onClick={onClose}>
-            {t("badgeeditor.setup.cancel")}
+            {t("common.action.cancel")}
           </Button>
           <Button
             variant="solid"
             color="primary"
             onClick={() => {
-              onApply({
-                fold: localFold,
-                panelSize: { width: w, height: h },
-                panels,
-                holePunch: localHolePunch,
-                cornerRadiusMm: localRadius,
-              });
+              onApply(draftToSetup(draft));
               onClose();
             }}
           >
@@ -194,10 +139,7 @@ export function BadgeSetupDialog({
                 color={localFold === o.value ? "primary" : "neutral"}
                 active={localFold === o.value}
                 className="flex-1"
-                onClick={() => {
-                  leavePreset();
-                  changeFold(o.value);
-                }}
+                onClick={() => dispatch({ type: "fold", fold: o.value })}
               >
                 {t(o.labelKey)}
               </Button>
@@ -231,19 +173,13 @@ export function BadgeSetupDialog({
             label={t("badgeeditor.setup.panelWidth", { unit: unitLabel })}
             value={w}
             unit={unit}
-            onChange={v => {
-              leavePreset();
-              setW(v);
-            }}
+            onChange={width => dispatch({ type: "width", width })}
           />
           <DimField
             label={t("badgeeditor.setup.panelHeight", { unit: unitLabel })}
             value={h}
             unit={unit}
-            onChange={v => {
-              leavePreset();
-              setH(v);
-            }}
+            onChange={height => dispatch({ type: "height", height })}
           />
         </Row>
 

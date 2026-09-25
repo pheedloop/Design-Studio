@@ -16,7 +16,8 @@ import { Row } from "@/components/Row";
 import { Stack } from "@/components/Stack";
 import { Text } from "@/components/Text";
 import { inchToPx, type BadgeField, type TextAlign } from "./model";
-import { getFieldDef, isLiteralTextField, isUserFieldEditable } from "./fields";
+import { isLiteralTextField, isUserFieldEditable } from "./fields";
+import { fieldHeading } from "./factory";
 import { Checkbox } from "@/components/Checkbox";
 import { useT, type StringKey } from "./i18n";
 
@@ -86,8 +87,7 @@ export function PropertiesPanel({
     );
   }
 
-  const def = getFieldDef(field.field);
-  const label = def ? t(def.labelKey) : field.field;
+  const label = fieldHeading(field, t);
   const isText = field.kind === "text" || field.kind === "sessionSchedule";
 
   const setFontSize = (fontSize: number) => {
@@ -196,7 +196,7 @@ export function PropertiesPanel({
           </Stack>
         )}
 
-        {isLiteralTextField(field.field) && (
+        {field.field === "custom_text" && (
           <Stack gap="tight">
             <SectionLabel>
               {t("badgeeditor.properties.insertToken")}

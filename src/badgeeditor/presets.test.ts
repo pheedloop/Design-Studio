@@ -83,7 +83,7 @@ describe("createDocumentFromPreset", () => {
         height: preset.height,
       });
       expect(flat.layout.map(e => e.top)).toEqual(
-        preset.sampleLayout.map(e => e.top),
+        (preset.sampleLayout ?? []).map(e => e.top),
       );
     },
   );
@@ -91,6 +91,20 @@ describe("createDocumentFromPreset", () => {
   it("places a supplied layout instead of the preset default", () => {
     const doc = createDocumentFromPreset(PRESETS[1], [entry(7), entry(8)]);
     expect(doc.pages.map(p => p.fields.length)).toEqual([0, 2]);
+  });
+
+  it("builds an empty document from a preset without a sample layout", () => {
+    const doc = createDocumentFromPreset({
+      key: "avery",
+      label: "Avery 2 × 3",
+      width: 2,
+      height: 3,
+      panels: 1,
+      fold: "none",
+      cornerRadiusMm: 0,
+      holePunch: null,
+    });
+    expect(doc.pages.map(p => p.fields.length)).toEqual([0]);
   });
 });
 
@@ -196,13 +210,5 @@ describe("createBadgeDocument", () => {
       expect(top).toBeCloseTo(originalTop, 9);
       expect(rest).toEqual(originalRest);
     });
-  });
-});
-
-describe("createDocumentFromPreset", () => {
-  it("builds an empty document from a preset with no sample layout", () => {
-    const doc = createDocumentFromPreset({ ...PRESETS[1], sampleLayout: [] });
-    expect(doc.pages.map(p => p.fields.length)).toEqual([0, 0]);
-    expect(doc.holePunch).toEqual(PRESETS[1].holePunch);
   });
 });

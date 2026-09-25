@@ -198,7 +198,7 @@ export interface BadgePreset extends BadgeSpec {
   label: string;
   /** Informational; the page count follows `fold`. */
   panels: number;
-  sampleLayout: LegacyLayoutEntry[];
+  sampleLayout?: LegacyLayoutEntry[];
 }
 
 export const BADGE_DOCUMENT_VERSION = "1.0";

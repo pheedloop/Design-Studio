@@ -95,12 +95,20 @@ describe("inflate + flatten round trip", () => {
 });
 
 describe("inflate with a fold", () => {
-  it("places each entry on the panel containing its top, panel-local", () => {
+  it("places each entry on the panel containing its vertical centre, panel-local", () => {
     const doc = inflate(SINGLE_FOLD, { width: 4, height: 11, fold: "single" });
     expect(doc.panelSize).toEqual({ width: 4, height: 5.5 });
     expect(doc.pages.map(p => p.role)).toEqual(["front", "back"]);
     expect(doc.pages.map(p => p.fields.length)).toEqual([2, 4]);
     expect(doc.pages[1].fields[0].top).toBeCloseTo(0.5, 9);
+  });
+
+  it("places a QR by its rendered height", () => {
+    const layout = [{ top: 5.2, left: 1.5, field: "qrCode", scale: 1 }];
+    const doc = inflate(layout, { width: 4, height: 11, fold: "single" });
+    expect(doc.pages.map(p => p.fields.length)).toEqual([0, 1]);
+    expect(doc.pages[1].fields[0].top).toBeCloseTo(-0.3, 9);
+    expectSameLayout(flatten(doc).layout, layout);
   });
 
   it("puts the ticketed thermal tickets block on the back panel", () => {

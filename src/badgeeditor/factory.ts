@@ -20,6 +20,14 @@ export function fieldDisplayText(field: BadgeField, t: T): string {
   return def ? t(def.labelKey) : field.field;
 }
 
+export function fieldHeading(field: BadgeField, t: T): string {
+  if (field.field === "extra_fields") {
+    return field.text ?? field.customAttendeeField ?? field.field;
+  }
+  const def = getFieldDef(field.field);
+  return def ? t(def.labelKey) : field.field;
+}
+
 export function createField(
   fieldKey: string,
   literalText?: string,

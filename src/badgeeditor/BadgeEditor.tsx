@@ -18,6 +18,7 @@ import { Text } from "@/components/Text";
 import { BadgeTopBar } from "./BadgeTopBar";
 import { modKey } from "@/editor/utils/platform";
 import { I18nProvider } from "@/i18n/I18nProvider";
+import { formatPercent } from "@/i18n/format";
 import { useLocale, useT, type Translate } from "./i18n";
 import { BadgeCanvas } from "./BadgeCanvas";
 import { BadgeRulers } from "./BadgeRulers";
@@ -96,7 +97,6 @@ const BLANK_BADGE_SIZE = { width: 4, height: 3 };
 /** Reference-grid spacing, in inches. */
 const GRID_SPACING_IN = 0.25;
 
-/** True when a keystroke is going to a form field — don't hijack shortcuts. */
 const checkMark = (on: boolean) => (on ? "✓ " : "   ");
 
 function isEditableTarget(t: EventTarget | null): boolean {
@@ -756,9 +756,7 @@ function BadgeEditorInner({
                   className="px-xxs w-auto text-xs text-text-caption"
                   title={t("badgeeditor.status.fitToView")}
                 >
-                  {t("badgeeditor.status.zoom", {
-                    percent: Math.round(controls.scale * 100),
-                  })}
+                  {formatPercent(controls.scale, locale)}
                 </IconButton>
               </Row>
             </div>

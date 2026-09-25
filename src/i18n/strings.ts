@@ -730,7 +730,6 @@ export const BADGEEDITOR = {
   "selection.hint":
     "Drag to move them together, or select a single field to edit its properties.",
   "setup.apply": "Apply",
-  "setup.cancel": "Cancel",
   "setup.fold": "Fold",
   "setup.foldDouble": "Double fold",
   "setup.foldNone": "No fold",
@@ -758,7 +757,6 @@ export const BADGEEDITOR = {
   "status.badgeSize": "Badge {{width}} × {{height}} {{unit}}",
   "status.fitToView": "Click to fit badge in view",
   "status.pageSize": "Page {{width}} × {{height}} {{unit}}",
-  "status.zoom": "{{percent}}%",
   "unit.centimeters": "Centimeters",
   "unit.cm": "cm",
   "unit.in": "in",
