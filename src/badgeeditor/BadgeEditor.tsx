@@ -6,6 +6,7 @@ import {
   useRef,
   useState,
 } from "react";
+import type Konva from "konva";
 import { v4 as uuid } from "uuid";
 import { useCanvasControls } from "@/editor/hooks/useCanvasControls";
 import { useHistory } from "@/editor/hooks/useHistory";
@@ -17,7 +18,8 @@ import { Text } from "@/components/Text";
 import { BadgeTopBar } from "./BadgeTopBar";
 import { modKey } from "@/editor/utils/platform";
 import { I18nProvider } from "@/i18n/I18nProvider";
-import type { Translate } from "./i18n";
+import { formatPercent } from "@/i18n/format";
+import { useLocale, useT, type Translate } from "./i18n";
 import { BadgeCanvas } from "./BadgeCanvas";
 import { BadgeRulers } from "./BadgeRulers";
 import { AlignmentControls } from "@/editor/components/panels/AlignmentControls";
@@ -32,39 +34,50 @@ import {
   distributeV,
   type FieldMove,
 } from "./badgeAlign";
-import { fmtUnit, unitLabel, type Unit } from "./units";
+import { UNIT_LABEL_KEYS, formatDim, type Unit } from "./units";
 import { BadgeSidebar } from "./BadgeSidebar";
 import { BadgePreview } from "./BadgePreview";
-import { BadgeSetupDialog, type PanelConfig } from "./BadgeSetupDialog";
+import { BadgeSetupDialog } from "./BadgeSetupDialog";
+import { applyBadgeSetup, type BadgeSetup } from "./badgeSetup";
+import { savePayload } from "./savePayload";
 import { AttendeePicker } from "./AttendeePicker";
 import { PropertiesPanel } from "./PropertiesPanel";
-import { createField } from "./factory";
+import { createCustomField, createField } from "./factory";
+import { useBadgeSave } from "./useBadgeSave";
+import { BadgeThumbnailStage } from "./BadgeThumbnailStage";
+import { captureBadgeThumbnail } from "./captureBadgeThumbnail";
 import { BadgeImageProvider } from "./BadgeImageProvider";
 import { ImageGallery } from "@/editor/components/panels/ImageGallery";
 import type { EditorImage } from "@/editor";
 import { placedImageSize } from "@/editor/utils/placedImageSize";
-import { flatten, foldInvertForPage } from "./serialize";
-import { createSampleDocument } from "./sample";
+import { flatten, foldInvertForPage, inflate } from "./serialize";
 import type { AttendeeOption, AttendeeProvider, BadgeData } from "./badgeData";
 import {
   DPI,
-  PAGE_COUNT,
   pxToInch,
-  pageRoleForIndex,
   pageRoleLabel,
+  type BadgeCustomField,
   type BadgeDocument,
   type BadgeField,
+  type BadgePreset,
   type FlattenResult,
-  type FoldType,
-  type SlotType,
 } from "./model";
 
 export interface BadgeEditorProps {
-  /** Initial document. Defaults to a sample card if omitted. */
   initialDocument?: BadgeDocument;
-  /** Persist callback. Receives the rich document + the flattened legacy
-   *  badge_layout and template dimensions the backend stores. */
-  onSave?: (doc: BadgeDocument, flattened: FlattenResult) => void;
+  /** Receives the rich document, the flattened legacy badge_layout with the
+   *  template dimensions the backend stores, and a PNG of the front panel.
+   *  Reject to keep the document dirty; the host reports the error. */
+  onSave?: (
+    doc: BadgeDocument,
+    flattened: FlattenResult,
+    thumbnail: Blob | null,
+  ) => Promise<void>;
+  onDirtyChange?: (dirty: boolean) => void;
+  presets?: BadgePreset[];
+  customFields?: BadgeCustomField[];
+  name?: string;
+  onNameChange?: (name: string) => void;
   /** Show the debug affordance (badge_layout JSON viewer). */
   debug?: boolean;
   /** Supplies attendee search + badge-data resolution for the live preview.
@@ -79,10 +92,13 @@ export interface BadgeEditorProps {
   onDeleteImage?: (id: string) => Promise<void>;
 }
 
+const BLANK_BADGE_SIZE = { width: 4, height: 3 };
+
 /** Reference-grid spacing, in inches. */
 const GRID_SPACING_IN = 0.25;
 
-/** True when a keystroke is going to a form field — don't hijack shortcuts. */
+const checkMark = (on: boolean) => (on ? "✓ " : "   ");
+
 function isEditableTarget(t: EventTarget | null): boolean {
   const el = t as HTMLElement | null;
   if (!el) return false;
@@ -117,14 +133,21 @@ export function BadgeEditor({ translate, locale, ...rest }: BadgeEditorProps) {
 function BadgeEditorInner({
   initialDocument,
   onSave,
+  onDirtyChange,
+  presets = [],
+  customFields = [],
+  name,
+  onNameChange,
   debug,
   images = [],
   onUploadImage,
   onDeleteImage,
   attendeeProvider,
 }: Omit<BadgeEditorProps, "translate" | "locale">) {
+  const t = useT();
+  const locale = useLocale();
   const [initial] = useState<BadgeDocument>(
-    () => initialDocument ?? createSampleDocument(),
+    () => initialDocument ?? inflate([], BLANK_BADGE_SIZE),
   );
   const {
     present: doc,
@@ -264,7 +287,19 @@ function BadgeEditorInner({
 
   const addField = useCallback(
     (fieldKey: string) => {
-      const field = createField(fieldKey);
+      const field = createField(
+        fieldKey,
+        t("badgeeditor.field.customTextDefault"),
+      );
+      mutateActivePage(fields => [...fields, field]);
+      setSelectedIds(new Set([field.id]));
+    },
+    [mutateActivePage, t],
+  );
+
+  const addCustomField = useCallback(
+    (custom: BadgeCustomField) => {
+      const field = createCustomField(custom);
       mutateActivePage(fields => [...fields, field]);
       setSelectedIds(new Set([field.id]));
     },
@@ -349,42 +384,34 @@ function BadgeEditorInner({
     setSelectedIds(new Set(pasted.map(f => f.id)));
   }, [mutateActivePage]);
 
-  // Apply fold/panel-size changes: rebuild the pages array, preserving existing
-  // pages' fields and applying the per-panel invert overrides from the dialog.
   const applySetup = useCallback(
-    (
-      fold: FoldType,
-      panelSize: { width: number; height: number },
-      panelCfgs: PanelConfig[],
-      slots: SlotType,
-    ) => {
-      setDoc(d => {
-        const count = PAGE_COUNT[fold];
-        const pages = Array.from({ length: count }, (_, i) => {
-          const role = pageRoleForIndex(count, i);
-          const cfg = panelCfgs[i];
-          const props = {
-            role,
-            inverted: cfg?.inverted ?? foldInvertForPage(fold, i),
-            tearaway: cfg?.tearaway ?? false,
-            tearawayCount: cfg?.tearawayCount ?? 3,
-          };
-          const existing = d.pages[i];
-          return existing
-            ? { ...existing, ...props }
-            : { id: uuid(), fields: [], ...props };
-        });
-        return { ...d, fold, panelSize, slots, pages };
-      });
-      setActivePageIndex(idx => Math.min(idx, PAGE_COUNT[fold] - 1));
+    (setup: BadgeSetup) => {
+      const next = applyBadgeSetup(doc, setup);
+      if (next === doc) return;
+      setDoc(next);
+      setActivePageIndex(idx => Math.min(idx, next.pages.length - 1));
       setSelectedIds(new Set());
     },
-    [setDoc],
+    [doc, setDoc],
   );
 
-  const handleSave = useCallback(() => {
-    onSave?.(doc, flatten(doc));
-  }, [doc, onSave]);
+  const thumbnailStageRef = useRef<Konva.Stage>(null);
+  const persist = useMemo(
+    () =>
+      onSave &&
+      (async (current: BadgeDocument) => {
+        const thumbnail = await captureBadgeThumbnail(
+          thumbnailStageRef.current,
+        );
+        await onSave(...savePayload(current, name, thumbnail));
+      }),
+    [onSave, name],
+  );
+  const { isSaving, save: handleSave } = useBadgeSave({
+    doc,
+    persist,
+    onDirtyChange,
+  });
 
   // Keyboard: delete, undo/redo, copy/paste (ignored while typing in a form).
   useEffect(() => {
@@ -399,7 +426,7 @@ function BadgeEditorInner({
       } else if (mod && e.key.toLowerCase() === "y") {
         e.preventDefault();
         redo();
-      } else if (mod && e.key.toLowerCase() === "s") {
+      } else if (mod && e.key.toLowerCase() === "s" && onSave) {
         e.preventDefault();
         handleSave();
       } else if (mod && e.key.toLowerCase() === "c") {
@@ -425,6 +452,7 @@ function BadgeEditorInner({
     copySelected,
     pasteClipboard,
     handleSave,
+    onSave,
   ]);
 
   // --- Menus ---
@@ -442,15 +470,25 @@ function BadgeEditorInner({
   };
 
   const fileMenu: MenuEntry[] = [
-    { label: "Badge Setup…", onClick: () => setShowSetup(true) },
+    {
+      label: t("badgeeditor.menu.badgeSetup"),
+      onClick: () => setShowSetup(true),
+    },
     { type: "divider" },
     ...(onSave
       ? [
-          { label: "Save", shortcut: `${modKey}S`, onClick: handleSave },
+          {
+            label: isSaving
+              ? t("badgeeditor.menu.saving")
+              : t("badgeeditor.menu.save"),
+            shortcut: `${modKey}S`,
+            disabled: isSaving,
+            onClick: handleSave,
+          },
           { type: "divider" as const },
         ]
       : []),
-    { label: "Export as JSON", onClick: exportJson },
+    { label: t("badgeeditor.menu.exportJson"), onClick: exportJson },
   ];
 
   // Page tabs (front/back/inside) + per-page invert state.
@@ -459,7 +497,9 @@ function BadgeEditorInner({
   );
   const pageTabs = doc.pages.map((p, i) => ({
     id: String(i),
-    label: `${pageRoleLabel(p.role)}${pageInverts[i] ? " ⤓" : ""}`,
+    label: pageInverts[i]
+      ? t("badgeeditor.page.invertedTab", { page: pageRoleLabel(p.role, t) })
+      : pageRoleLabel(p.role, t),
   }));
 
   // Fold edges in the EDITOR view. On the flat sheet panels stack top→bottom, so
@@ -475,32 +515,36 @@ function BadgeEditorInner({
 
   const editMenu: MenuEntry[] = [
     {
-      label: "Undo",
+      label: t("badgeeditor.menu.undo"),
       shortcut: `${modKey}Z`,
       disabled: !canUndo,
       onClick: undo,
     },
     {
-      label: "Redo",
+      label: t("badgeeditor.menu.redo"),
       shortcut: `${modKey}⇧Z`,
       disabled: !canRedo,
       onClick: redo,
     },
     { type: "divider" },
     {
-      label: selectedIds.size > 1 ? `Copy (${selectedIds.size})` : "Copy",
+      label: t("badgeeditor.menu.copy", {
+        count: Math.max(1, selectedIds.size),
+      }),
       shortcut: `${modKey}C`,
       disabled: selectedIds.size === 0,
       onClick: copySelected,
     },
     {
-      label: "Paste",
+      label: t("badgeeditor.menu.paste"),
       shortcut: `${modKey}V`,
       disabled: !hasClipboard,
       onClick: pasteClipboard,
     },
     {
-      label: selectedIds.size > 1 ? `Delete (${selectedIds.size})` : "Delete",
+      label: t("badgeeditor.menu.delete", {
+        count: Math.max(1, selectedIds.size),
+      }),
       shortcut: "⌫",
       disabled: selectedIds.size === 0,
       onClick: deleteSelected,
@@ -509,15 +553,15 @@ function BadgeEditorInner({
 
   const viewMenu: MenuEntry[] = [
     {
-      label: `${showRulers ? "✓ " : "   "}Show Rulers`,
+      label: `${checkMark(showRulers)}${t("badgeeditor.menu.showRulers")}`,
       onClick: () => setShowRulers(s => !s),
     },
     {
-      label: `${showGrid ? "✓ " : "   "}Show Grid`,
+      label: `${checkMark(showGrid)}${t("badgeeditor.menu.showGrid")}`,
       onClick: () => setShowGrid(s => !s),
     },
     {
-      label: `${snapToGrid ? "✓ " : "   "}Snap to Grid`,
+      label: `${checkMark(snapToGrid)}${t("badgeeditor.menu.snapToGrid")}`,
       onClick: () => setSnapToGrid(s => !s),
     },
   ];
@@ -543,7 +587,9 @@ function BadgeEditorInner({
               size="sm"
               onClick={() => setPreviewMode(p => !p)}
             >
-              {previewMode ? "Exit preview" : "Full preview"}
+              {previewMode
+                ? t("badgeeditor.preview.exit")
+                : t("badgeeditor.preview.enter")}
             </Button>
           </>
         }
@@ -553,9 +599,11 @@ function BadgeEditorInner({
 
       <div className="flex flex-1 overflow-hidden">
         <BadgeSidebar
-          name={doc.name ?? "Untitled Badge"}
-          onNameChange={setName}
+          name={name ?? doc.name ?? t("badgeeditor.name.untitled")}
+          onNameChange={onNameChange ?? setName}
           onAddField={addField}
+          customFields={customFields}
+          onAddCustomField={addCustomField}
           onOpenImageGallery={() => setShowImageGallery(true)}
         />
 
@@ -584,7 +632,7 @@ function BadgeEditorInner({
                 )}
                 {previewMode && (
                   <span className="text-xs text-text-caption">
-                    Full preview · as printed (read-only)
+                    {t("badgeeditor.preview.banner")}
                   </span>
                 )}
                 <div className="flex-1" />
@@ -620,7 +668,7 @@ function BadgeEditorInner({
               {/* Invert ribbon — contextual to the active folded-back panel. */}
               {!previewMode && pageInverts[pageIndex] && (
                 <div className="shrink-0 bg-amber-50 border-b border-amber-200 px-xs py-tight text-xs text-amber-700">
-                  ⤓ This panel prints upside-down automatically.
+                  {t("badgeeditor.notice.invertedPanel")}
                 </div>
               )}
 
@@ -642,7 +690,8 @@ function BadgeEditorInner({
                     page={activePage}
                     panelSize={doc.panelSize}
                     data={previewData}
-                    slots={doc.slots ?? "none"}
+                    holePunch={doc.holePunch ?? null}
+                    cornerRadiusMm={doc.cornerRadiusMm ?? 0}
                     isFrontPage={pageIndex === 0}
                     foldTop={foldTop}
                     foldBottom={foldBottom}
@@ -682,23 +731,32 @@ function BadgeEditorInner({
               >
                 <Row gap="xxs" align="center">
                   <span>
-                    Page {fmtUnit(doc.panelSize.width, unit)} ×{" "}
-                    {fmtUnit(doc.panelSize.height, unit)} {unitLabel[unit]}
+                    {t("badgeeditor.status.pageSize", {
+                      width: formatDim(doc.panelSize.width, unit, locale),
+                      height: formatDim(doc.panelSize.height, unit, locale),
+                      unit: t(UNIT_LABEL_KEYS[unit]),
+                    })}
                   </span>
                   <span className="text-text-disabled">·</span>
                   <span>
-                    Badge {fmtUnit(doc.panelSize.width, unit)} ×{" "}
-                    {fmtUnit(doc.panelSize.height * doc.pages.length, unit)}{" "}
-                    {unitLabel[unit]}
+                    {t("badgeeditor.status.badgeSize", {
+                      width: formatDim(doc.panelSize.width, unit, locale),
+                      height: formatDim(
+                        doc.panelSize.height * doc.pages.length,
+                        unit,
+                        locale,
+                      ),
+                      unit: t(UNIT_LABEL_KEYS[unit]),
+                    })}
                   </span>
                 </Row>
                 <IconButton
                   size="sm"
                   onClick={fitBadge}
                   className="px-xxs w-auto text-xs text-text-caption"
-                  title="Click to fit badge in view"
+                  title={t("badgeeditor.status.fitToView")}
                 >
-                  {Math.round(controls.scale * 100)}%
+                  {formatPercent(controls.scale, locale)}
                 </IconButton>
               </Row>
             </div>
@@ -706,7 +764,10 @@ function BadgeEditorInner({
             {showLayout ? (
               <aside className="w-72 shrink-0 border-l border-border-neutral-light bg-white flex flex-col">
                 <div className="px-xs py-xxs border-b border-border-neutral-light text-xs font-medium text-text-body">
-                  badge_layout · {flattened.width}" × {flattened.height}"
+                  {t("badgeeditor.debug.layoutHeader", {
+                    width: flattened.width,
+                    height: flattened.height,
+                  })}
                 </div>
                 <pre className="flex-1 overflow-auto text-xs leading-tight p-xs text-text-body">
                   {JSON.stringify(flattened.layout, null, 2)}
@@ -722,7 +783,9 @@ function BadgeEditorInner({
                   className="border-b border-border-neutral-light"
                 >
                   <Text size="xs" weight="medium" color="body" as="span">
-                    {selectedIds.size} fields selected
+                    {t("badgeeditor.selection.count", {
+                      count: selectedIds.size,
+                    })}
                   </Text>
                   <Button
                     variant="ghost"
@@ -730,12 +793,11 @@ function BadgeEditorInner({
                     size="sm"
                     onClick={deleteSelected}
                   >
-                    Delete
+                    {t("badgeeditor.selection.delete")}
                   </Button>
                 </Row>
                 <p className="p-xs text-xs text-text-subtle">
-                  Drag to move them together, or select a single field to edit
-                  its properties.
+                  {t("badgeeditor.selection.hint")}
                 </p>
               </aside>
             ) : (
@@ -750,6 +812,8 @@ function BadgeEditorInner({
           </div>
         </div>
       </div>
+
+      {onSave && <BadgeThumbnailStage doc={doc} stageRef={thumbnailStageRef} />}
 
       {showImageGallery && (
         <ImageGallery
@@ -769,7 +833,9 @@ function BadgeEditorInner({
           fold={doc.fold}
           panelSize={doc.panelSize}
           pages={doc.pages}
-          slots={doc.slots ?? "none"}
+          holePunch={doc.holePunch ?? null}
+          cornerRadiusMm={doc.cornerRadiusMm ?? 0}
+          presets={presets}
           unit={unit}
           onUnitChange={setUnit}
           onApply={applySetup}

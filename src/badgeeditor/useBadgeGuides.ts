@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from "react";
 import type { BadgeField } from "./model";
-import { PPI, QR_BASE_PX } from "./canvasMetrics";
+import { PPI, fieldSizePx } from "./canvasMetrics";
 
 // Alignment guides + snapping for the badge canvas. Ported from the editor's
 // useAlignmentGuides, operating on field bounds in canvas pixels, and
@@ -20,15 +20,6 @@ interface Bounds {
   bottom: number;
   centerX: number;
   centerY: number;
-}
-
-/** Display size of a field in canvas px (box vs QR). */
-export function fieldSizePx(field: BadgeField): { w: number; h: number } {
-  if (field.kind === "qrCode") {
-    const s = QR_BASE_PX * (field.scale ?? 1);
-    return { w: s, h: s };
-  }
-  return { w: (field.width ?? 2) * PPI, h: (field.height ?? 0.3) * PPI };
 }
 
 function boundsFrom(left: number, top: number, w: number, h: number): Bounds {

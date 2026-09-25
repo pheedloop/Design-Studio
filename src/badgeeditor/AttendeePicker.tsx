@@ -3,6 +3,7 @@ import { PiMagnifyingGlass, PiX, PiCaretDown } from "react-icons/pi";
 import { IconButton } from "@/components/IconButton";
 import type { AttendeeOption, AttendeeProvider } from "./badgeData";
 import { useDismiss } from "@/hooks/useDismiss";
+import { useT } from "./i18n";
 
 interface AttendeePickerProps {
   provider: AttendeeProvider;
@@ -20,6 +21,7 @@ export function AttendeePicker({
   value,
   onChange,
 }: AttendeePickerProps) {
+  const t = useT();
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<AttendeeOption[]>([]);
@@ -31,13 +33,13 @@ export function AttendeePicker({
   // body should only run the deferred fetch, not set state synchronously.
   useEffect(() => {
     if (!open) return;
-    const t = setTimeout(() => {
+    const timer = setTimeout(() => {
       provider
         .search(query)
         .then(r => setResults(r))
         .finally(() => setLoading(false));
     }, 200);
-    return () => clearTimeout(t);
+    return () => clearTimeout(timer);
   }, [query, open, provider]);
 
   useDismiss(rootRef, () => setOpen(false), open);
@@ -64,14 +66,16 @@ export function AttendeePicker({
           {value ? (
             value.name
           ) : (
-            <span className="text-text-subtle">Preview data…</span>
+            <span className="text-text-subtle">
+              {t("badgeeditor.attendee.placeholder")}
+            </span>
           )}
         </button>
         {value ? (
           <IconButton
             variant="bare"
             size="sm"
-            title="Clear"
+            title={t("badgeeditor.attendee.clear")}
             onClick={() => onChange(null)}
             className="shrink-0"
           >
@@ -92,18 +96,18 @@ export function AttendeePicker({
                 setQuery(e.target.value);
                 setLoading(true);
               }}
-              placeholder="Search attendee…"
+              placeholder={t("badgeeditor.attendee.search")}
               className="w-full px-xxs py-xxxs text-xs border border-border-neutral-light rounded outline-none focus:border-primary-400"
             />
           </div>
           <div className="max-h-64 overflow-y-auto py-xxxs">
             {loading ? (
               <div className="px-xs py-xxs text-xs text-text-subtle">
-                Searching…
+                {t("badgeeditor.attendee.searching")}
               </div>
             ) : results.length === 0 ? (
               <div className="px-xs py-xxs text-xs text-text-subtle">
-                No attendees found
+                {t("badgeeditor.attendee.noResults")}
               </div>
             ) : (
               results.map(o => (

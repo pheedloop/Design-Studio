@@ -1,5 +1,5 @@
 import { DPI, type BadgeField } from "./model";
-import { fieldSizePx } from "./useBadgeGuides";
+import { fieldSizePx } from "./canvasMetrics";
 
 // Alignment + distribution for badge fields. Mirrors the map editor's alignment
 // util, but badge fields are flat (no groups) and positioned by their top-left

@@ -2,13 +2,13 @@ import { useEffect, useRef, useState } from "react";
 import { Stage, Layer, Rect, Line, Transformer } from "react-konva";
 import type Konva from "konva";
 import { BLACK, BRAND, GRAY_300, GRAY_400, WHITE } from "@/canvasColors";
-import type { BadgeField, BadgePage, SlotType } from "./model";
+import type { BadgeField, BadgePage, HolePunch } from "./model";
 import { GridLayer } from "@/editor/components/canvas/GridLayer";
-import { PANEL_CORNER_IN, PPI } from "./canvasMetrics";
-import { fieldSizePx, useBadgeGuides } from "./useBadgeGuides";
+import { PPI, fieldSizePx, mmToPx } from "./canvasMetrics";
+import { useBadgeGuides } from "./useBadgeGuides";
 import type { BadgeData } from "./badgeData";
 import { FieldShape } from "./FieldShape";
-import { Slots } from "./Slots";
+import { HolePunchShapes } from "./HolePunchShapes";
 import { FoldIndicators } from "./FoldIndicators";
 
 interface BadgeCanvasProps {
@@ -16,8 +16,8 @@ interface BadgeCanvasProps {
   panelSize: { width: number; height: number };
   /** Resolved attendee data to render, or null for placeholders. */
   data: BadgeData | null;
-  /** Lanyard slot style, drawn near the top of the front panel only. */
-  slots: SlotType;
+  holePunch: HolePunch | null;
+  cornerRadiusMm: number;
   isFrontPage: boolean;
   /** Fold edges connecting to adjacent panels (multi-page badges). */
   foldTop: boolean;
@@ -50,7 +50,8 @@ export function BadgeCanvas({
   page,
   panelSize,
   data,
-  slots,
+  holePunch,
+  cornerRadiusMm,
   isFrontPage,
   foldTop,
   foldBottom,
@@ -343,7 +344,7 @@ export function BadgeCanvas({
           y={0}
           width={panelW}
           height={panelH}
-          cornerRadius={PANEL_CORNER_IN * PPI}
+          cornerRadius={mmToPx(cornerRadiusMm)}
           fill={WHITE}
           stroke={GRAY_300}
           strokeWidth={1}
@@ -364,9 +365,8 @@ export function BadgeCanvas({
           />
         )}
 
-        {/* Lanyard slots — front panel only (static; editor-only) */}
-        {isFrontPage && slots !== "none" && (
-          <Slots slots={slots} panelW={panelW} />
+        {isFrontPage && holePunch && (
+          <HolePunchShapes holePunch={holePunch} panelW={panelW} />
         )}
 
         {/* Tear-away perforation lines (static; editor-only) */}

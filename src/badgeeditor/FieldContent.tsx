@@ -4,10 +4,7 @@ import type { BadgeField } from "./model";
 import { fieldValueText, type BadgeData } from "./badgeData";
 import { fieldDisplayText } from "./factory";
 import { useImageLoader } from "./useImageLoader";
-
-// Generic placeholder — the real name comes from the attendee's purchase at
-// print time (badge_generator.py _render_tickets).
-const TICKET_NAME_PLACEHOLDER = "Ticket Name";
+import { useT } from "./i18n";
 
 export function FieldContent({
   field,
@@ -24,6 +21,7 @@ export function FieldContent({
   data: BadgeData | null;
   imageUrl?: string;
 }) {
+  const t = useT();
   const getImage = useImageLoader(imageUrl ? [imageUrl] : []);
 
   const isTickets = field.kind === "tickets";
@@ -61,7 +59,9 @@ export function FieldContent({
         {/* Ticket content fills the top sections. */}
         {Array.from({ length: count }).map((_, i) => {
           const top = rowH * i;
-          const name = data ? data.tickets[i].name : TICKET_NAME_PLACEHOLDER;
+          const name = data
+            ? data.tickets[i].name
+            : t("badgeeditor.canvas.ticketName");
           const img = getTicketImg(data ? data.tickets[i].qrUrl : undefined);
           return (
             <Group key={i}>
@@ -109,7 +109,7 @@ export function FieldContent({
     if (data.sessions.length === 0) {
       return (
         <Text
-          text="(no sessions)"
+          text={t("badgeeditor.canvas.noSessions")}
           width={w}
           height={h}
           align="center"
@@ -145,7 +145,7 @@ export function FieldContent({
     }
     return (
       <Text
-        text="Image"
+        text={t("badgeeditor.field.image")}
         width={w}
         height={h}
         align="center"
@@ -156,7 +156,7 @@ export function FieldContent({
     );
   }
 
-  const text = data ? fieldValueText(field, data) : fieldDisplayText(field);
+  const text = data ? fieldValueText(field, data) : fieldDisplayText(field, t);
   return (
     <Text
       text={text}

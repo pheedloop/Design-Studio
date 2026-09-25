@@ -3,7 +3,7 @@ import { SectionLabel } from "@/editor/components/ui";
 import {
   fmtUnit,
   fromUnit,
-  unitLabel,
+  syncDimText,
   unitMin,
   unitStep,
   type Unit,
@@ -27,19 +27,15 @@ export function DimField({
   /** Reports the new value in inches. */
   onChange: (inches: number) => void;
 }) {
-  // Track the raw text so partial edits (e.g. "2.") aren't clobbered, and reset
-  // it whenever the unit or stored value changes.
-  const [text, setText] = useState(fmtUnit(value, unit, 3));
-  const [editingUnit, setEditingUnit] = useState(unit);
-  if (editingUnit !== unit) {
-    setEditingUnit(unit);
-    setText(fmtUnit(value, unit, 3));
+  const [text, setText] = useState(() => fmtUnit(value, unit, 3));
+  const [synced, setSynced] = useState({ value, unit });
+  if (synced.value !== value || synced.unit !== unit) {
+    setSynced({ value, unit });
+    setText(syncDimText(text, value, unit));
   }
   return (
     <label className="flex-1 flex flex-col gap-tight">
-      <SectionLabel>
-        {label} ({unitLabel[unit]})
-      </SectionLabel>
+      <SectionLabel>{label}</SectionLabel>
       <input
         type="number"
         step={unitStep[unit]}

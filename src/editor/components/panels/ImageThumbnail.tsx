@@ -53,7 +53,7 @@ export function ImageThumbnail({
         <button
           type="button"
           onClick={onDelete}
-          aria-label={t("editor.gallery.deleteImage")}
+          aria-label={t("common.gallery.deleteImage")}
           className={`absolute right-xxxs top-xxxs rounded bg-white/90 p-xxxs text-text-subtle cursor-pointer hover:text-red-600 focus-visible:opacity-100 focus-visible:pointer-events-auto group-hover:opacity-100 group-hover:pointer-events-auto ${
             isSelected ? "opacity-100" : "opacity-0 pointer-events-none"
           }`}

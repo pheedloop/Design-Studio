@@ -2,8 +2,7 @@ import { Group } from "react-konva";
 import type Konva from "konva";
 import type { BadgeField } from "./model";
 import type { BadgeData } from "./badgeData";
-import { fieldSizePx } from "./useBadgeGuides";
-import { PPI, QR_BASE_PX } from "./canvasMetrics";
+import { PPI, QR_BASE_PX, fieldSizePx } from "./canvasMetrics";
 import { FieldBody } from "./FieldBody";
 
 interface FieldShapeProps {

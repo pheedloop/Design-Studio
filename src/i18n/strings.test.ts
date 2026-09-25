@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { createSurfaceI18n } from "./context";
 import {
+  BADGEEDITOR,
   COMMON,
   EDITOR,
   SEATVIEWER,
@@ -41,6 +42,7 @@ describe("the manifest", () => {
     viewer: VIEWER,
     seatviewer: SEATVIEWER,
     editor: EDITOR,
+    badgeeditor: BADGEEDITOR,
   });
 
   it("pairs every _one with an _other", () => {
