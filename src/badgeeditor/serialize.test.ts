@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
+import Konva from "konva";
 import { flatten, inflate } from "./serialize";
-import type { BadgeDocument, LegacyLayoutEntry } from "./model";
+import { PPI, fieldSizePx } from "./canvasMetrics";
+import type { BadgeDocument, BadgeField, LegacyLayoutEntry } from "./model";
 
 const FIXTURES: Record<string, LegacyLayoutEntry[]> = {
   label: JSON.parse(
@@ -100,14 +102,17 @@ describe("inflate with a fold", () => {
     expect(doc.panelSize).toEqual({ width: 4, height: 5.5 });
     expect(doc.pages.map(p => p.role)).toEqual(["front", "back"]);
     expect(doc.pages.map(p => p.fields.length)).toEqual([2, 4]);
-    expect(doc.pages[1].fields[0].top).toBeCloseTo(0.5, 9);
+    expect(doc.pages[1].fields[0]).toMatchObject({
+      top: expect.closeTo(4.765, 9),
+      left: expect.closeTo(1.15, 9),
+    });
   });
 
   it("places a QR by its rendered height", () => {
     const layout = [{ top: 5.2, left: 1.5, field: "qrCode", scale: 1 }];
     const doc = inflate(layout, { width: 4, height: 11, fold: "single" });
     expect(doc.pages.map(p => p.fields.length)).toEqual([0, 1]);
-    expect(doc.pages[1].fields[0].top).toBeCloseTo(-0.3, 9);
+    expect(doc.pages[1].fields[0].top).toBeCloseTo(5.01875, 9);
     expectSameLayout(flatten(doc).layout, layout);
   });
 
@@ -128,14 +133,14 @@ describe("inflate with a fold", () => {
       fold: "single",
     });
     expect(doc.pages.map(p => p.fields.length)).toEqual([0, 1]);
-    expect(doc.pages[1].fields[0].top).toBe(0);
+    expect(doc.pages[1].fields[0].top).toBeCloseTo(4.71875, 9);
   });
 
   it("assigns a straddling entry to the panel holding its centre", () => {
     const layout = [text(5, { height: 2 })];
     const doc = inflate(layout, { width: 4, height: 11, fold: "single" });
     expect(doc.pages.map(p => p.fields.length)).toEqual([0, 1]);
-    expect(doc.pages[1].fields[0].top).toBeCloseTo(-0.5, 9);
+    expect(doc.pages[1].fields[0].top).toBeCloseTo(4, 9);
     expectSameLayout(flatten(doc).layout, layout);
   });
 
@@ -166,7 +171,7 @@ describe("inflate with a fold", () => {
 });
 
 describe("flatten", () => {
-  it("offsets and inverts the back panel of a single fold", () => {
+  it("offsets, mirrors and inverts the back panel of a single fold", () => {
     const panel = (field: string) => ({
       id: field,
       field,
@@ -191,7 +196,86 @@ describe("flatten", () => {
     const { layout, width, height } = flatten(doc);
     expect({ width, height }).toEqual({ width: 3.64, height: 11 });
     expect(layout[0]).toMatchObject({ top: 0.3, left: 0.5, inverted: false });
-    expect(layout[1].top).toBeCloseTo(5.8, 9);
-    expect(layout[1]).toMatchObject({ left: 0.5, inverted: true });
+    expect(layout[1]).toMatchObject({
+      top: expect.closeTo(10.4, 9),
+      left: expect.closeTo(0.54, 9),
+      inverted: true,
+    });
+  });
+
+  it("stores a folded-back field where the preview prints it", () => {
+    const fields: BadgeField[] = [
+      { ...fieldAt("title", "text", 0.1, 0.2), width: 2.6, height: 0.3 },
+      { ...fieldAt("qrCode", "qrCode", 1, 1.5), scale: 0.9 },
+      { ...fieldAt("externalQRCodeUrl", "qrCode", 1.5, 0.1), scale: 1.2 },
+      { ...fieldAt("image", "image", 2, 0.3), width: 1.2, height: 0.8 },
+      {
+        ...fieldAt("extra_fields", "text", 3, 0.25),
+        width: 2,
+        height: 0.4,
+        customAttendeeField: "shirt_size",
+        text: "Shirt Size",
+      },
+      {
+        ...fieldAt("session_schedule", "sessionSchedule", 3.5, 0.4),
+        width: 3,
+        height: 0.5,
+      },
+      {
+        ...fieldAt("tickets", "tickets", 4, 0.3),
+        width: 3,
+        height: 1.2,
+        numRows: 2,
+      },
+      { ...fieldAt("last_name", "text", 5, 0.6), inverted: true },
+    ];
+    const doc: BadgeDocument = {
+      version: "1.0",
+      panelSize: { width: 3.64, height: 6 },
+      fold: "single",
+      pages: [
+        { id: "front", role: "front", fields: [] },
+        { id: "back", role: "back", fields },
+      ],
+    };
+    const { layout } = flatten(doc);
+    fields.forEach((field, i) => {
+      const printed = previewBox(doc, 1, field);
+      expect(layout[i]).toMatchObject({
+        top: expect.closeTo(printed.top, 9),
+        left: expect.closeTo(printed.left, 9),
+        inverted: !field.inverted,
+      });
+    });
+    expectSameLayout(
+      flatten(inflate(layout, { width: 3.64, height: 12, fold: "single" }))
+        .layout,
+      layout,
+    );
   });
 });
+
+function fieldAt(
+  field: string,
+  kind: BadgeField["kind"],
+  top: number,
+  left: number,
+): BadgeField {
+  return { id: field, field, kind, top, left };
+}
+
+// The same group chain BadgePreview + StaticField render for an inverted panel.
+function previewBox(doc: BadgeDocument, pageIndex: number, field: BadgeField) {
+  const panelW = doc.panelSize.width * PPI;
+  const panelH = doc.panelSize.height * PPI;
+  const page = new Konva.Group({ x: 0, y: pageIndex * panelH });
+  const flipped = new Konva.Group({ x: panelW, y: panelH, rotation: 180 });
+  const box = new Konva.Group({ x: field.left * PPI, y: field.top * PPI });
+  page.add(flipped);
+  flipped.add(box);
+  const { w, h } = fieldSizePx(field);
+  const transform = box.getAbsoluteTransform();
+  const a = transform.point({ x: 0, y: 0 });
+  const b = transform.point({ x: w, y: h });
+  return { top: Math.min(a.y, b.y) / PPI, left: Math.min(a.x, b.x) / PPI };
+}

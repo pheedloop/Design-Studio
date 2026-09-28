@@ -36,7 +36,7 @@ describe("savePayload", () => {
     const thumbnail = new Blob(["png"]);
     const [, flattened, passed] = savePayload(doc, "x", thumbnail);
     expect(flattened).toMatchObject({ width: 4, height: 11 });
-    expect(flattened.layout.map(e => e.top)).toEqual([1, 6.5]);
+    expect(flattened.layout.map(e => e.top)).toEqual([1, 9.21875]);
     expect(passed).toBe(thumbnail);
   });
 });

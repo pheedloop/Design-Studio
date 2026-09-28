@@ -41,21 +41,56 @@ interface FlattenContext {
   offsetTop: number;
   /** Whether the page this field lives on is printed upside-down (fold). */
   foldInvert: boolean;
+  panelWidth: number;
+  panelHeight: number;
+}
+
+type SizedField = Pick<BadgeField, "kind" | "scale" | "width" | "height">;
+
+function fieldSizeIn(field: SizedField): { w: number; h: number } {
+  const { w, h } = fieldSizePx(field);
+  return { w: w / PPI, h: h / PPI };
+}
+
+/**
+ * Rotate a panel-local box 180° about the panel centre (its own inverse). This
+ * is how a folded-back panel, authored upright, lands on the unfolded sheet.
+ */
+function mirrorInPanel(
+  box: { top: number; left: number },
+  size: { w: number; h: number },
+  panel: { width: number; height: number },
+): { top: number; left: number } {
+  return {
+    top: panel.height - box.top - size.h,
+    left: panel.width - box.left - size.w,
+  };
 }
 
 export function fieldToEntry(
   field: BadgeField,
-  ctx: FlattenContext = { offsetTop: 0, foldInvert: false },
+  ctx: FlattenContext = {
+    offsetTop: 0,
+    foldInvert: false,
+    panelWidth: 0,
+    panelHeight: 0,
+  },
 ): LegacyLayoutEntry {
   const kind = field.kind ?? kindForField(field.field);
 
   // Effective 180° rotation = user-applied inversion XOR page-fold inversion
   // (two 180° rotations cancel). The backend (badge_generator.py) renders
-  // `inverted` as rotate(180deg) about the box CENTER, so top/left stays the
-  // footprint top-left — NO coordinate shift. Only the panel offset is added.
+  // `inverted` as rotate(180deg) about the box CENTER, so a folded-back field
+  // also has its box mirrored within the panel to match the printed sheet.
   const inverted = Boolean(field.inverted) !== ctx.foldInvert;
-  const top = field.top + ctx.offsetTop;
-  const left = field.left;
+  const box = ctx.foldInvert
+    ? mirrorInPanel(field, fieldSizeIn({ ...field, kind }), {
+        width: ctx.panelWidth,
+        height: ctx.panelHeight,
+      })
+    : field;
+  const top = box.top + ctx.offsetTop;
+  const left = box.left;
 
   // qrCode / image: legacy emits only position (+ scale or size); `inverted` is
   // omitted unless actually inverted (keeps single-page output byte-identical to
@@ -151,6 +186,8 @@ export function flatten(doc: BadgeDocument): FlattenResult {
     const ctx: FlattenContext = {
       offsetTop: pageIndex * panelHeight,
       foldInvert: page.inverted ?? foldInvertForPage(doc.fold, pageIndex),
+      panelWidth: doc.panelSize.width,
+      panelHeight,
     };
     for (const field of page.fields) {
       layout.push(fieldToEntry(field, ctx));
@@ -170,7 +207,7 @@ export function flatten(doc: BadgeDocument): FlattenResult {
 
 /**
  * Recover a BadgeField from a legacy entry. Stored top/left is the footprint
- * top-left (no shift — matches the backend's rotate-about-center).
+ * top-left (matches the backend's rotate-about-center).
  */
 export function entryToField(entry: LegacyLayoutEntry): BadgeField {
   const kind = kindForField(entry.field);
@@ -221,8 +258,8 @@ export function entryToField(entry: LegacyLayoutEntry): BadgeField {
   };
 }
 
-function renderedHeight(entry: LegacyLayoutEntry): number {
-  return fieldSizePx({ ...entry, kind: kindForField(entry.field) }).h / PPI;
+function entrySizeIn(entry: LegacyLayoutEntry): { w: number; h: number } {
+  return fieldSizeIn({ ...entry, kind: kindForField(entry.field) });
 }
 
 export interface InflateOptions {
@@ -246,23 +283,24 @@ export function inflate(
   }));
 
   for (const entry of layout) {
+    const size = entrySizeIn(entry);
     const pageIndex =
       panelHeight > 0
         ? Math.min(
             pageCount - 1,
-            Math.max(
-              0,
-              Math.floor((entry.top + renderedHeight(entry) / 2) / panelHeight),
-            ),
+            Math.max(0, Math.floor((entry.top + size.h / 2) / panelHeight)),
           )
         : 0;
-    const field = entryToField(
-      pageIndex
-        ? { ...entry, top: entry.top - pageIndex * panelHeight }
-        : entry,
-    );
-    field.inverted =
-      Boolean(entry.inverted) !== foldInvertForPage(fold, pageIndex);
+    const foldInvert = foldInvertForPage(fold, pageIndex);
+    const local = {
+      top: entry.top - pageIndex * panelHeight,
+      left: entry.left,
+    };
+    const box = foldInvert
+      ? mirrorInPanel(local, size, { width: opts.width, height: panelHeight })
+      : local;
+    const field = entryToField({ ...entry, ...box });
+    field.inverted = Boolean(entry.inverted) !== foldInvert;
     pages[pageIndex].fields.push(field);
   }
 
