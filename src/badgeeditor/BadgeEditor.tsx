@@ -48,7 +48,7 @@ import { BadgeThumbnailStage } from "./BadgeThumbnailStage";
 import { captureBadgeThumbnail } from "./captureBadgeThumbnail";
 import { BadgeImageProvider } from "./BadgeImageProvider";
 import { ImageGallery } from "@/editor/components/panels/ImageGallery";
-import type { EditorImage } from "@/editor";
+import type { EditorImage } from "@/editor/types";
 import { placedImageSize } from "@/editor/utils/placedImageSize";
 import { flatten, foldInvertForPage, inflate } from "./serialize";
 import type { AttendeeOption, AttendeeProvider, BadgeData } from "./badgeData";
