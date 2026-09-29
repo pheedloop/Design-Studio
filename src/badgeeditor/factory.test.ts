@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { createCustomField, fieldHeading } from "./factory";
+import {
+  createCustomField,
+  createField,
+  fieldHeading,
+  printAsPatch,
+} from "./factory";
 import { defaultTranslate } from "./i18n";
 import { fieldToEntry } from "./serialize";
 
@@ -36,5 +41,24 @@ describe("fieldHeading", () => {
         defaultTranslate,
       ),
     ).toBe("QR Code");
+  });
+});
+
+describe("printAsPatch", () => {
+  it("switches an internal code between text and QR", () => {
+    const text = { ...createField("code_internal"), top: 1, left: 0.5 };
+    const qr = { ...text, ...printAsPatch(text, true) };
+    expect(fieldToEntry(qr)).toEqual({
+      top: 1,
+      left: 0.5,
+      field: "code_internal",
+      scale: 1,
+      printAsQr: true,
+    });
+
+    const back = { ...qr, ...printAsPatch(qr, false) };
+    expect(back).toMatchObject({ kind: "text", top: 1, left: 0.5 });
+    expect(fieldToEntry(back).printAsQr).toBeUndefined();
+    expect(fieldToEntry(back)).toMatchObject({ fontSize: 20, numLines: 1 });
   });
 });

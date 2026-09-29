@@ -16,8 +16,12 @@ import { Row } from "@/components/Row";
 import { Stack } from "@/components/Stack";
 import { Text } from "@/components/Text";
 import { inchToPx, type BadgeField, type TextAlign } from "./model";
-import { isLiteralTextField, isUserFieldEditable } from "./fields";
-import { fieldHeading } from "./factory";
+import {
+  INTERNAL_CODE_FIELD,
+  isLiteralTextField,
+  isUserFieldEditable,
+} from "./fields";
+import { fieldHeading, printAsPatch } from "./factory";
 import { Checkbox } from "@/components/Checkbox";
 import { useT, type StringKey } from "./i18n";
 
@@ -120,6 +124,25 @@ export function PropertiesPanel({
       </Row>
 
       <Stack gap="s" className="p-xs overflow-y-auto flex-1">
+        {field.field === INTERNAL_CODE_FIELD && (
+          <FieldRow label={t("badgeeditor.properties.printAs")}>
+            <Select
+              className="w-full"
+              value={field.printAsQr ? "qr" : "text"}
+              onChange={e =>
+                onChange(printAsPatch(field, e.target.value === "qr"))
+              }
+            >
+              <option value="text">
+                {t("badgeeditor.properties.printAsText")}
+              </option>
+              <option value="qr">
+                {t("badgeeditor.properties.printAsQr")}
+              </option>
+            </Select>
+          </FieldRow>
+        )}
+
         {isLiteralTextField(field.field) && (
           <Stack gap="tight">
             <SectionLabel>{t("badgeeditor.properties.text")}</SectionLabel>

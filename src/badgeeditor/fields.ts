@@ -147,6 +147,16 @@ export const getFieldDef = (field: string): FieldDef | undefined =>
 export const kindForField = (field: string): FieldKind =>
   FIELD_DEF_BY_KEY[field]?.kind ?? "text";
 
+export const INTERNAL_CODE_FIELD = "code_internal";
+
+export const kindForEntry = (entry: {
+  field: string;
+  printAsQr?: boolean;
+}): FieldKind =>
+  entry.field === INTERNAL_CODE_FIELD && entry.printAsQr
+    ? "qrCode"
+    : kindForField(entry.field);
+
 /** Fields whose `text` literal is part of the layout (designer-authored copy). */
 export const isLiteralTextField = (field: string): boolean =>
   field === "custom_text" || field === "extra_fields";

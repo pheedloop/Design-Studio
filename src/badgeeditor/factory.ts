@@ -77,6 +77,39 @@ export function createField(
   };
 }
 
+/** Patch that switches a code_internal field between text and QR. */
+export function printAsPatch(
+  field: BadgeField,
+  asQr: boolean,
+): Partial<BadgeField> {
+  if (asQr) {
+    return {
+      kind: "qrCode",
+      printAsQr: true,
+      scale: 1,
+      width: undefined,
+      height: undefined,
+      fontSize: undefined,
+      numLines: undefined,
+      textAlign: undefined,
+      userEditable: undefined,
+    };
+  }
+  const { kind, width, height, fontSize, numLines, textAlign, userEditable } =
+    createField(field.field);
+  return {
+    kind,
+    width,
+    height,
+    fontSize,
+    numLines,
+    textAlign,
+    userEditable,
+    printAsQr: undefined,
+    scale: undefined,
+  };
+}
+
 export function createCustomField(custom: BadgeCustomField): BadgeField {
   return {
     ...createField("extra_fields", custom.label),

@@ -94,6 +94,7 @@ export function fieldQrUrl(
   field: BadgeField,
   data: BadgeData,
 ): string | undefined {
+  if (field.printAsQr) return undefined;
   return field.field === "externalQRCodeUrl"
     ? data.externalQRCodeUrl
     : data.qrCode;

@@ -29,6 +29,7 @@ import { PPI, fieldSizePx } from "./canvasMetrics";
 import {
   isLiteralTextField,
   isUserFieldEditable,
+  kindForEntry,
   kindForField,
 } from "./fields";
 
@@ -102,6 +103,7 @@ export function fieldToEntry(
       field: field.field,
       scale: field.scale ?? 1,
     };
+    if (field.printAsQr) entry.printAsQr = true;
     if (inverted) entry.inverted = true;
     return entry;
   }
@@ -210,7 +212,7 @@ export function flatten(doc: BadgeDocument): FlattenResult {
  * top-left (matches the backend's rotate-about-center).
  */
 export function entryToField(entry: LegacyLayoutEntry): BadgeField {
-  const kind = kindForField(entry.field);
+  const kind = kindForEntry(entry);
   const inverted = Boolean(entry.inverted);
 
   const base: BadgeField = {
@@ -222,7 +224,9 @@ export function entryToField(entry: LegacyLayoutEntry): BadgeField {
   };
 
   if (kind === "qrCode") {
-    return { ...base, scale: entry.scale ?? 1, inverted };
+    return entry.printAsQr
+      ? { ...base, scale: entry.scale ?? 1, printAsQr: true, inverted }
+      : { ...base, scale: entry.scale ?? 1, inverted };
   }
   if (kind === "image") {
     return {
@@ -259,7 +263,7 @@ export function entryToField(entry: LegacyLayoutEntry): BadgeField {
 }
 
 function entrySizeIn(entry: LegacyLayoutEntry): { w: number; h: number } {
-  return fieldSizeIn({ ...entry, kind: kindForField(entry.field) });
+  return fieldSizeIn({ ...entry, kind: kindForEntry(entry) });
 }
 
 export interface InflateOptions {

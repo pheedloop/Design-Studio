@@ -72,6 +72,33 @@ describe("inflate + flatten round trip", () => {
     },
   );
 
+  it("keeps an internal code printed as a QR", () => {
+    const layout: LegacyLayoutEntry[] = [
+      {
+        top: 2,
+        left: 1.2,
+        field: "code_internal",
+        scale: 0.8,
+        printAsQr: true,
+      },
+    ];
+    const doc = inflate(layout, { width: 3.5, height: 3 });
+    expect(doc.pages[0].fields[0]).toMatchObject({
+      kind: "qrCode",
+      printAsQr: true,
+    });
+    expect(JSON.stringify(flatten(doc).layout)).toBe(JSON.stringify(layout));
+  });
+
+  it("keeps an internal code printed as text", () => {
+    const [field] = inflate([text(1, { field: "code_internal" })], {
+      width: 3.5,
+      height: 3,
+    }).pages[0].fields;
+    expect(field.kind).toBe("text");
+    expect(field.printAsQr).toBeUndefined();
+  });
+
   it("keeps the template height when there is no fold", () => {
     const doc = inflate(FIXTURES.ticketedThermal, { width: 4, height: 16.5 });
     expect(flatten(doc)).toMatchObject({ width: 4, height: 16.5 });

@@ -69,6 +69,8 @@ export interface BadgeField {
 
   // qrCode / image — uniform scale factor (legacy stores scaleX)
   scale?: number;
+  /** code_internal printed as a QR instead of text (legacy `printAsQr`). */
+  printAsQr?: boolean;
   /** Image reference code (BadgeTemplateImage.code) for image fields. */
   code?: string;
 
@@ -163,6 +165,7 @@ export interface LegacyLayoutEntry {
   left: number;
   field: string;
   scale?: number;
+  printAsQr?: boolean;
   height?: number;
   width?: number;
   fontSize?: number;
