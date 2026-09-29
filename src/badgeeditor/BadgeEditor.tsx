@@ -48,6 +48,7 @@ import { useBadgeSave } from "./useBadgeSave";
 import { BadgeThumbnailStage } from "./BadgeThumbnailStage";
 import { captureBadgeThumbnail } from "./captureBadgeThumbnail";
 import { BadgeImageProvider } from "./BadgeImageProvider";
+import { refusePlacedImageDelete } from "./imageDelete";
 import { ImageGallery } from "@/editor/components/panels/ImageGallery";
 import type { EditorImage } from "@/editor/types";
 import { placedImageSize } from "@/editor/utils/placedImageSize";
@@ -60,6 +61,7 @@ import {
   type BadgeCustomField,
   type BadgeDocument,
   type BadgeField,
+  type BadgeLimits,
   type BadgePreset,
   type FlattenResult,
 } from "./model";
@@ -76,6 +78,8 @@ export interface BadgeEditorProps {
   ) => Promise<void>;
   onDirtyChange?: (dirty: boolean) => void;
   presets?: BadgePreset[];
+  /** Setup sizes the server would refuse are blocked in the setup dialog. */
+  limits?: BadgeLimits;
   customFields?: BadgeCustomField[];
   name?: string;
   onNameChange?: (name: string) => void;
@@ -136,6 +140,7 @@ function BadgeEditorInner({
   onSave,
   onDirtyChange,
   presets = [],
+  limits,
   customFields = [],
   name,
   onNameChange,
@@ -833,7 +838,7 @@ function BadgeEditorInner({
         <ImageGallery
           images={images}
           onUpload={onUploadImage}
-          onDelete={onDeleteImage}
+          onDelete={refusePlacedImageDelete(doc, onDeleteImage)}
           onConfirm={image => {
             addImageField(image);
             setShowImageGallery(false);
@@ -850,6 +855,7 @@ function BadgeEditorInner({
           holePunch={doc.holePunch ?? null}
           cornerRadiusMm={doc.cornerRadiusMm ?? 0}
           presets={presets}
+          limits={limits}
           unit={unit}
           onUnitChange={setUnit}
           onApply={applySetup}

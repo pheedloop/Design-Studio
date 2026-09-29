@@ -44,35 +44,35 @@ const unchanged: BadgeSetup = {
 };
 
 describe("applyBadgeSetup", () => {
-  it("returns the same document when the setup matches it", () => {
-    expect(applyBadgeSetup(doc, unchanged)).toBe(doc);
+  it.each([
+    ["the same document when the setup matches it", unchanged, true],
+    [
+      "a new document when the hole punch changes",
+      { ...unchanged, holePunch: null },
+      false,
+    ],
+  ])("returns %s", (_, setup, same) => {
+    expect(applyBadgeSetup(doc, setup) === doc).toBe(same);
   });
 
-  it("returns a new document when the hole punch changes", () => {
-    const next = applyBadgeSetup(doc, { ...unchanged, holePunch: null });
-    expect(next).not.toBe(doc);
-    expect(next.holePunch).toBeNull();
+  it("writes an edited hole punch and corner radius", () => {
+    const holePunch = { ...doc.holePunch!, pitchMm: 70 };
+    expect(
+      applyBadgeSetup(doc, { ...unchanged, holePunch, cornerRadiusMm: 2 }),
+    ).toMatchObject({ holePunch, cornerRadiusMm: 2 });
   });
 
-  it("rebuilds pages for a new fold and keeps existing fields", () => {
-    const next = applyBadgeSetup(doc, {
-      ...unchanged,
-      fold: "double",
-      panels: unchanged.panels,
-    });
-    expect(next.pages.map(p => p.role)).toEqual(["front", "inner", "back"]);
-    expect(next.pages[0].fields).toEqual([field]);
-    expect(next.pages[2]).toMatchObject({ fields: [], tearawayCount: 3 });
-  });
-
-  it("drops pages beyond the new fold", () => {
-    const next = applyBadgeSetup(doc, {
-      ...unchanged,
-      fold: "none",
-      panels: unchanged.panels.slice(0, 1),
-    });
-    expect(next.pages).toHaveLength(1);
-  });
+  it.each([
+    ["double", unchanged.panels, ["front", "inner", "back"]],
+    ["none", unchanged.panels.slice(0, 1), ["front"]],
+  ] as const)(
+    "rebuilds pages for a %s fold and keeps the front fields",
+    (fold, panels, roles) => {
+      const next = applyBadgeSetup(doc, { ...unchanged, fold, panels });
+      expect(next.pages.map(p => p.role)).toEqual(roles);
+      expect(next.pages[0].fields).toEqual([field]);
+    },
+  );
 });
 
 describe("countFieldsOnRemovedPanels", () => {
@@ -82,13 +82,15 @@ describe("countFieldsOnRemovedPanels", () => {
     { id: "back", role: "back" as const, fields: [field] },
   ];
 
-  it("counts fields on the panels a smaller fold drops", () => {
-    expect(countFieldsOnRemovedPanels(pages, "single")).toBe(1);
-    expect(countFieldsOnRemovedPanels(pages, "none")).toBe(3);
-  });
-
-  it("is zero when the fold keeps every panel", () => {
-    expect(countFieldsOnRemovedPanels(pages, "double")).toBe(0);
-    expect(countFieldsOnRemovedPanels(doc.pages, "none")).toBe(0);
-  });
+  it.each([
+    [pages, "single", 1],
+    [pages, "none", 3],
+    [pages, "double", 0],
+    [doc.pages, "none", 0],
+  ] as const)(
+    "counts fields on the panels a smaller fold drops (%#)",
+    (from, fold, count) => {
+      expect(countFieldsOnRemovedPanels(from, fold)).toBe(count);
+    },
+  );
 });

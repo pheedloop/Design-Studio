@@ -15,10 +15,12 @@ import {
   PAGE_COUNT,
   pageRoleForIndex,
   pageRoleLabel,
+  type BadgeLimits,
   type BadgePage,
   type BadgePreset,
   type FoldType,
   type HolePunch,
+  type HolePunchShape,
 } from "./model";
 import { presetSetup } from "./presets";
 import {
@@ -26,8 +28,16 @@ import {
   type BadgeSetup,
   type PanelConfig,
 } from "./badgeSetup";
-import { draftToSetup, initSetupDraft, setupDraftReducer } from "./setupDraft";
-import { DimField } from "./DimField";
+import {
+  draftToSetup,
+  initSetupDraft,
+  setupDraftReducer,
+  setupSizeErrors,
+  setupSpecErrors,
+  type PunchMeasure,
+  type SpecError,
+} from "./setupDraft";
+import { DimField, NumberField } from "./DimField";
 import { useLocale, useT, type StringKey } from "./i18n";
 
 const FOLD_OPTIONS: { value: FoldType; labelKey: StringKey }[] = [
@@ -36,6 +46,28 @@ const FOLD_OPTIONS: { value: FoldType; labelKey: StringKey }[] = [
   { value: "double", labelKey: "badgeeditor.setup.foldDouble" },
 ];
 
+const PUNCH_OPTIONS: { value: HolePunchShape | null; labelKey: StringKey }[] = [
+  { value: null, labelKey: "badgeeditor.setup.punchNone" },
+  { value: "circle", labelKey: "badgeeditor.setup.punchRound" },
+  { value: "rect", labelKey: "badgeeditor.setup.punchSlot" },
+];
+
+const PUNCH_FIELDS: { key: PunchMeasure; labelKey: StringKey }[] = [
+  { key: "count", labelKey: "badgeeditor.setup.punchCount" },
+  { key: "widthMm", labelKey: "badgeeditor.setup.punchWidth" },
+  { key: "heightMm", labelKey: "badgeeditor.setup.punchHeight" },
+  { key: "pitchMm", labelKey: "badgeeditor.setup.punchPitch" },
+  { key: "topOffsetMm", labelKey: "badgeeditor.setup.punchTopOffset" },
+];
+
+const SPEC_ERROR_KEYS: Record<SpecError, StringKey> = {
+  positive: "badgeeditor.setup.errorPositive",
+  nonNegative: "badgeeditor.setup.errorNonNegative",
+  count: "badgeeditor.setup.errorCount",
+  wholeNumber: "badgeeditor.setup.errorWholeNumber",
+  maxMm: "badgeeditor.setup.errorMaxMm",
+};
+
 interface BadgeSetupDialogProps {
   fold: FoldType;
   panelSize: { width: number; height: number };
@@ -43,6 +75,7 @@ interface BadgeSetupDialogProps {
   holePunch: HolePunch | null;
   cornerRadiusMm: number;
   presets: BadgePreset[];
+  limits?: BadgeLimits;
   /** Display/input unit. Panel sizes are stored in inches regardless. */
   unit: Unit;
   /** Change the editor's measurement unit (applies live). */
@@ -58,6 +91,7 @@ export function BadgeSetupDialog({
   holePunch,
   cornerRadiusMm,
   presets,
+  limits,
   unit,
   onUnitChange,
   onApply,
@@ -70,11 +104,32 @@ export function BadgeSetupDialog({
     { fold, panelSize, pages, holePunch, cornerRadiusMm },
     initSetupDraft,
   );
-  const { presetKey, panels } = draft;
+  const { presetKey, panels, holePunch: punch } = draft;
   const localFold = draft.fold;
   const { width: w, height: h } = draft.panelSize;
   const count = PAGE_COUNT[localFold];
   const removedFields = countFieldsOnRemovedPanels(pages, localFold);
+  const sizeErrors = setupSizeErrors(draft, limits);
+  const specErrors = setupSpecErrors(draft, limits);
+  const hasErrors =
+    sizeErrors.width ||
+    sizeErrors.printedHeight ||
+    Object.values(specErrors).some(Boolean);
+  const specErrorText = (
+    field: PunchMeasure | "cornerRadiusMm",
+  ): string | undefined => {
+    const error = specErrors[field];
+    if (!error) return undefined;
+    if (!limits) return t(SPEC_ERROR_KEYS[error]);
+    const maxMm =
+      field === "cornerRadiusMm"
+        ? limits.maxCornerRadiusMm
+        : limits.maxHolePunchMm;
+    return t(SPEC_ERROR_KEYS[error], {
+      min: limits.minHolePunchCount,
+      max: error === "count" ? limits.maxHolePunchCount : maxMm,
+    });
+  };
 
   const applyPreset = (key: string) => {
     const preset = presets.find(p => p.key === key);
@@ -85,6 +140,10 @@ export function BadgeSetupDialog({
   const printsAs = {
     width: formatDim(w, unit, locale),
     height: formatDim(h * count, unit, locale),
+    unit: unitLabel,
+  };
+  const maxSize = limits && {
+    max: formatDim(limits.maxDimensionIn, unit, locale),
     unit: unitLabel,
   };
 
@@ -104,6 +163,7 @@ export function BadgeSetupDialog({
           <Button
             variant="solid"
             color="primary"
+            disabled={hasErrors}
             onClick={() => {
               onApply(draftToSetup(draft));
               onClose();
@@ -187,12 +247,22 @@ export function BadgeSetupDialog({
             value={w}
             unit={unit}
             onChange={width => dispatch({ type: "width", width })}
+            error={
+              sizeErrors.width
+                ? t("badgeeditor.setup.maxWidth", maxSize)
+                : undefined
+            }
           />
           <DimField
             label={t("badgeeditor.setup.panelHeight", { unit: unitLabel })}
             value={h}
             unit={unit}
             onChange={height => dispatch({ type: "height", height })}
+            error={
+              sizeErrors.printedHeight
+                ? t("badgeeditor.setup.maxPrintedHeight", maxSize)
+                : undefined
+            }
           />
         </Row>
 
@@ -201,6 +271,60 @@ export function BadgeSetupDialog({
             ? t("badgeeditor.setup.printsAsUnfolded", printsAs)
             : t("badgeeditor.setup.printsAs", printsAs)}
         </div>
+
+        <Stack gap="tight">
+          <SectionLabel>{t("badgeeditor.setup.holePunch")}</SectionLabel>
+          <Row gap="xxs">
+            {PUNCH_OPTIONS.map(o => {
+              const active = (punch?.shape ?? null) === o.value;
+              return (
+                <Button
+                  key={o.labelKey}
+                  variant="outline"
+                  color={active ? "primary" : "neutral"}
+                  active={active}
+                  className="flex-1"
+                  onClick={() =>
+                    dispatch({ type: "punchShape", shape: o.value })
+                  }
+                >
+                  {t(o.labelKey)}
+                </Button>
+              );
+            })}
+          </Row>
+          {punch && (
+            <>
+              <div className="grid grid-cols-3 gap-xs">
+                {PUNCH_FIELDS.map(f => (
+                  <NumberField
+                    key={f.key}
+                    label={t(f.labelKey)}
+                    value={punch[f.key]}
+                    step={f.key === "count" ? 1 : 0.5}
+                    onChange={value =>
+                      dispatch({ type: "punch", key: f.key, value })
+                    }
+                    error={specErrorText(f.key)}
+                  />
+                ))}
+              </div>
+              <span className="text-xs text-text-caption">
+                {t("badgeeditor.setup.punchMeasurements")}
+              </span>
+            </>
+          )}
+        </Stack>
+
+        <NumberField
+          label={t("badgeeditor.setup.cornerRadius")}
+          value={draft.cornerRadiusMm}
+          step={0.5}
+          onChange={cornerRadiusMm =>
+            dispatch({ type: "cornerRadius", cornerRadiusMm })
+          }
+          error={specErrorText("cornerRadiusMm")}
+        />
 
         {count > 1 && (
           <Stack gap="tight">

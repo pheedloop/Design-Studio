@@ -199,9 +199,16 @@ export interface BadgeSpec {
 export interface BadgePreset extends BadgeSpec {
   key: string;
   label: string;
-  /** Informational; the page count follows `fold`. */
-  panels: number;
   sampleLayout?: LegacyLayoutEntry[];
+}
+
+/** What the server accepts on save. */
+export interface BadgeLimits {
+  maxDimensionIn: number;
+  minHolePunchCount: number;
+  maxHolePunchCount: number;
+  maxHolePunchMm: number;
+  maxCornerRadiusMm: number;
 }
 
 export const BADGE_DOCUMENT_VERSION = "1.0";

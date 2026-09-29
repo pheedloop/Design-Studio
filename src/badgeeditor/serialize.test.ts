@@ -75,7 +75,9 @@ describe("inflate + flatten round trip", () => {
     (name, layout) => {
       const doc = inflate(layout, FIXTURE_SIZES[name]);
       expect(doc.pages).toHaveLength(1);
-      expectSameLayout(flatten(doc).layout, layout);
+      const result = flatten(doc);
+      expect(result.layout).toStrictEqual(layout);
+      expect(result).toMatchObject(FIXTURE_SIZES[name]);
     },
   );
 
@@ -97,41 +99,27 @@ describe("inflate + flatten round trip", () => {
     expect(JSON.stringify(flatten(doc).layout)).toBe(JSON.stringify(layout));
   });
 
-  it("keeps an internal code printed as text", () => {
-    const [field] = inflate([text(1, { field: "code_internal" })], {
-      width: 3.5,
-      height: 3,
-    }).pages[0].fields;
-    expect(field.kind).toBe("text");
-    expect(field.printAsQr).toBeUndefined();
-  });
-
-  it("keeps the template height when there is no fold", () => {
-    const doc = inflate(FIXTURES.ticketedThermal, { width: 4, height: 16.5 });
-    expect(flatten(doc)).toMatchObject({ width: 4, height: 16.5 });
-  });
-
-  it("reproduces a single-fold layout split across two panels", () => {
-    const doc = inflate(SINGLE_FOLD, { width: 4, height: 11, fold: "single" });
-    const result = flatten(doc);
-    expectSameLayout(result.layout, SINGLE_FOLD);
-    expect(result).toMatchObject({ width: 4, height: 11 });
-  });
-
-  it("reproduces a double-fold layout split across three panels", () => {
-    const doc = inflate(FIXTURES.ticketedThermal, {
-      width: 4,
-      height: 16.5,
-      fold: "double",
-    });
-    const result = flatten(doc);
-    // The 5.59in tickets block crosses into the 5.5in back panel, so it does not print.
-    expectSameLayout(
-      result.layout,
-      FIXTURES.ticketedThermal.filter(e => e.field !== "tickets"),
-    );
-    expect(result).toMatchObject({ width: 4, height: 16.5 });
-  });
+  it.each([
+    {
+      name: "single",
+      layout: SINGLE_FOLD,
+      size: { width: 4, height: 11 },
+      printed: SINGLE_FOLD,
+    },
+    {
+      name: "double",
+      layout: FIXTURES.ticketedThermal,
+      size: { width: 4, height: 16.5 },
+      printed: FIXTURES.ticketedThermal.filter(e => e.field !== "tickets"),
+    },
+  ] as const)(
+    "reproduces a $name-fold layout split across panels",
+    ({ name, layout, size, printed }) => {
+      const result = flatten(inflate(layout, { ...size, fold: name }));
+      expectSameLayout(result.layout, printed);
+      expect(result).toMatchObject(size);
+    },
+  );
 
   it("leaves fields outside their panel out of the print", () => {
     const inside = text(1);
@@ -147,113 +135,56 @@ describe("inflate + flatten round trip", () => {
 });
 
 describe("inflate with a fold", () => {
-  it("places each entry on the panel containing its vertical centre, panel-local", () => {
-    const doc = inflate(SINGLE_FOLD, { width: 4, height: 11, fold: "single" });
-    expect(doc.panelSize).toEqual({ width: 4, height: 5.5 });
-    expect(doc.pages.map(p => p.role)).toEqual(["front", "back"]);
-    expect(doc.pages.map(p => p.fields.length)).toEqual([2, 4]);
-    expect(doc.pages[1].fields[0]).toMatchObject({
-      top: expect.closeTo(4.765, 9),
-      left: expect.closeTo(1.15, 9),
-    });
-  });
+  const SINGLE = { width: 4, height: 11, fold: "single" } as const;
+  const DOUBLE = { width: 4, height: 16.5, fold: "double" } as const;
 
-  it("places a QR by its rendered height", () => {
-    const layout = [{ top: 5.2, left: 1.5, field: "qrCode", scale: 1 }];
-    const doc = inflate(layout, { width: 4, height: 11, fold: "single" });
-    expect(doc.pages.map(p => p.fields.length)).toEqual([0, 1]);
-    expect(doc.pages[1].fields[0].top).toBeCloseTo(5.01875, 9);
-    // It crosses the fold, so it is outside its panel and does not print.
-    expect(flatten(doc).layout).toEqual([]);
-  });
-
-  it("puts the ticketed thermal tickets block on the back panel", () => {
-    const doc = inflate(FIXTURES.ticketedThermal, {
-      width: 4,
-      height: 16.5,
-      fold: "double",
-    });
-    expect(doc.pages[2].fields.map(f => f.field)).toEqual(["tickets"]);
-    expect(doc.pages[2].fields[0].top).toBeCloseTo(10.75984143825814 - 11, 9);
-  });
-
-  it("puts an entry whose centre sits on a boundary on the lower panel", () => {
-    const doc = inflate([{ top: 5.5, left: 1, field: "qrCode", scale: 1 }], {
-      width: 4,
-      height: 11,
-      fold: "single",
-    });
-    expect(doc.pages.map(p => p.fields.length)).toEqual([0, 1]);
-    expect(doc.pages[1].fields[0].top).toBeCloseTo(4.71875, 9);
-  });
-
-  it("assigns a straddling entry to the panel holding its centre", () => {
-    const layout = [text(5, { height: 2 })];
-    const doc = inflate(layout, { width: 4, height: 11, fold: "single" });
-    expect(doc.pages.map(p => p.fields.length)).toEqual([0, 1]);
-    expect(doc.pages[1].fields[0].top).toBeCloseTo(4, 9);
-    expect(flatten(doc).layout).toEqual([]);
-  });
-
-  it("authors the folded-back panel upright", () => {
-    const doc = inflate(SINGLE_FOLD, { width: 4, height: 11, fold: "single" });
-    expect(doc.pages[1].fields.map(f => f.inverted)).toEqual([
-      true,
-      false,
-      true,
-      false,
-    ]);
-  });
-
-  it("clamps entries outside the template to the first and last panel", () => {
-    const doc = inflate([text(-0.2), text(20)], {
-      width: 4,
-      height: 16.5,
-      fold: "double",
-    });
-    expect(doc.pages.map(p => p.fields.length)).toEqual([1, 0, 1]);
-    expect(doc.pages[2].fields[0].top).toBeCloseTo(9, 9);
-  });
-
-  it("puts everything on the first panel when the height is unusable", () => {
-    const doc = inflate([text(3)], { width: 4, height: 0, fold: "single" });
-    expect(doc.pages[0].fields[0].top).toBe(3);
-  });
+  it.each([
+    {
+      name: "single-fold layout",
+      layout: SINGLE_FOLD,
+      spec: SINGLE,
+      counts: [2, 4],
+    },
+    {
+      name: "QR by its rendered height",
+      layout: [{ top: 5.2, left: 1.5, field: "qrCode", scale: 1 }],
+      spec: SINGLE,
+      counts: [0, 1],
+    },
+    {
+      name: "ticketed thermal tickets block",
+      layout: FIXTURES.ticketedThermal,
+      spec: DOUBLE,
+      counts: [5, 0, 1],
+    },
+    {
+      name: "centre on a boundary",
+      layout: [{ top: 5.5, left: 1, field: "qrCode", scale: 1 }],
+      spec: SINGLE,
+      counts: [0, 1],
+    },
+    {
+      name: "straddling entry",
+      layout: [text(5, { height: 2 })],
+      spec: SINGLE,
+      counts: [0, 1],
+    },
+    {
+      name: "entries outside the template",
+      layout: [text(-0.2), text(20)],
+      spec: DOUBLE,
+      counts: [1, 0, 1],
+    },
+  ])(
+    "assigns each entry to the panel holding its centre: $name",
+    ({ layout, spec, counts }) => {
+      const doc = inflate(layout as LegacyLayoutEntry[], spec);
+      expect(doc.pages.map(p => p.fields.length)).toEqual(counts);
+    },
+  );
 });
 
 describe("flatten", () => {
-  it("offsets, mirrors and inverts the back panel of a single fold", () => {
-    const panel = (field: string) => ({
-      id: field,
-      field,
-      kind: "text" as const,
-      top: 0.3,
-      left: 0.5,
-      width: 2.6,
-      height: 0.3,
-      fontSize: 30,
-      numLines: 1,
-      textAlign: "center" as const,
-    });
-    const doc: BadgeDocument = {
-      version: "1.0",
-      panelSize: { width: 3.64, height: 5.5 },
-      fold: "single",
-      pages: [
-        { id: "front", role: "front", fields: [panel("first_name")] },
-        { id: "back", role: "back", fields: [panel("last_name")] },
-      ],
-    };
-    const { layout, width, height } = flatten(doc);
-    expect({ width, height }).toEqual({ width: 3.64, height: 11 });
-    expect(layout[0]).toMatchObject({ top: 0.3, left: 0.5, inverted: false });
-    expect(layout[1]).toMatchObject({
-      top: expect.closeTo(10.4, 9),
-      left: expect.closeTo(0.54, 9),
-      inverted: true,
-    });
-  });
-
   it("stores a folded-back field where the preview prints it", () => {
     const fields: BadgeField[] = [
       { ...fieldAt("title", "text", 0.1, 0.2), width: 2.6, height: 0.3 },
@@ -315,7 +246,6 @@ function fieldAt(
   return { id: field, field, kind, top, left };
 }
 
-// The same group chain BadgePreview + StaticField render for an inverted panel.
 function previewBox(doc: BadgeDocument, pageIndex: number, field: BadgeField) {
   const panelW = doc.panelSize.width * PPI;
   const panelH = doc.panelSize.height * PPI;

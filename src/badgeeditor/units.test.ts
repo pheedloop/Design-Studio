@@ -2,19 +2,18 @@ import { describe, expect, it } from "vitest";
 import { syncDimText } from "./units";
 
 describe("syncDimText", () => {
-  it("keeps in-progress text that still parses to the value", () => {
-    expect(syncDimText("2.", 2, "in")).toBe("2.");
-  });
-
-  it("shows a value set from outside", () => {
-    expect(syncDimText("2", 5.5, "in")).toBe("5.5");
-  });
-
-  it("re-renders the value in a new unit", () => {
-    expect(syncDimText("2", 2, "cm")).toBe("5.08");
-  });
-
-  it("replaces empty text", () => {
-    expect(syncDimText("", 3, "in")).toBe("3");
+  it.each([
+    [
+      "keeps in-progress text that still parses to the value",
+      "2.",
+      2,
+      "in",
+      "2.",
+    ],
+    ["shows a value set from outside", "2", 5.5, "in", "5.5"],
+    ["re-renders the value in a new unit", "2", 2, "cm", "5.08"],
+    ["replaces empty text", "", 3, "in", "3"],
+  ] as const)("%s", (_, text, value, unit, expected) => {
+    expect(syncDimText(text, value, unit)).toBe(expected);
   });
 });

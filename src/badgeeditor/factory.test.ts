@@ -23,24 +23,22 @@ describe("createCustomField", () => {
 });
 
 describe("fieldHeading", () => {
-  it("names a custom attendee field by its label, then its key", () => {
-    const field = createCustomField({
-      name: "shirt_size",
-      label: "Shirt Size",
-    });
-    expect(fieldHeading(field, defaultTranslate)).toBe("Shirt Size");
-    expect(fieldHeading({ ...field, text: undefined }, defaultTranslate)).toBe(
-      "shirt_size",
-    );
-  });
+  const custom = createCustomField({ name: "shirt_size", label: "Shirt Size" });
 
-  it("names a registry field by its translated label", () => {
-    expect(
-      fieldHeading(
-        { id: "q", field: "qrCode", kind: "qrCode", top: 0, left: 0 },
-        defaultTranslate,
-      ),
-    ).toBe("QR Code");
+  it.each([
+    ["a custom field by its label", custom, "Shirt Size"],
+    [
+      "a custom field without a label by its key",
+      { ...custom, text: undefined },
+      "shirt_size",
+    ],
+    [
+      "a registry field by its translated label",
+      { id: "q", field: "qrCode", kind: "qrCode" as const, top: 0, left: 0 },
+      "QR Code",
+    ],
+  ])("names %s", (_, field, heading) => {
+    expect(fieldHeading(field, defaultTranslate)).toBe(heading);
   });
 });
 

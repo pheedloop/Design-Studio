@@ -11,7 +11,7 @@ const makeDoc = (name: string): BadgeDocument => ({
   pages: [{ id: "front", role: "front", fields: [] }],
 });
 
-function setup(persist?: (doc: BadgeDocument) => Promise<void>) {
+function setup(persist: (doc: BadgeDocument) => Promise<void>) {
   const onDirtyChange = vi.fn();
   const initial = makeDoc("a");
   const hook = renderHook(
@@ -22,20 +22,15 @@ function setup(persist?: (doc: BadgeDocument) => Promise<void>) {
 }
 
 describe("useBadgeSave", () => {
-  it("is clean until the document changes", () => {
-    const { hook, onDirtyChange } = setup(vi.fn());
-    expect(hook.result.current.isDirty).toBe(false);
-
-    hook.rerender({ doc: makeDoc("b") });
-    expect(hook.result.current.isDirty).toBe(true);
-    expect(onDirtyChange).toHaveBeenLastCalledWith(true);
-  });
-
-  it("saves the current document and becomes clean", async () => {
+  it("is clean until the document changes, then saves it and becomes clean", async () => {
     const persist = vi.fn().mockResolvedValue(undefined);
     const { hook, onDirtyChange } = setup(persist);
+    expect(hook.result.current.isDirty).toBe(false);
+
     const edited = makeDoc("b");
     hook.rerender({ doc: edited });
+    expect(hook.result.current.isDirty).toBe(true);
+    expect(onDirtyChange).toHaveBeenLastCalledWith(true);
 
     await act(() => hook.result.current.save());
 
@@ -90,12 +85,5 @@ describe("useBadgeSave", () => {
     });
 
     expect(persist).toHaveBeenCalledTimes(1);
-  });
-
-  it("does nothing without a persist callback", async () => {
-    const { hook } = setup();
-    hook.rerender({ doc: makeDoc("b") });
-    await act(() => hook.result.current.save());
-    expect(hook.result.current.isDirty).toBe(true);
   });
 });

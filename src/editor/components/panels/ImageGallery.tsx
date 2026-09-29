@@ -10,6 +10,7 @@ import type { EditorImage } from "@/editor/types";
 import { withMeasuredSize } from "@/editor/utils/placedImageSize";
 import { filterAndSortImages, type GallerySort } from "./galleryFilter";
 import { ImageThumbnail } from "./ImageThumbnail";
+import { ImageDeleteError } from "./imageDeleteError";
 
 const ACCEPT = "image/png,image/jpeg,image/gif,image/svg+xml";
 
@@ -75,8 +76,12 @@ export function ImageGallery({
     try {
       await onDelete(id);
       setSelectedId(current => (current === id ? null : current));
-    } catch {
-      setError("common.error.imageDelete");
+    } catch (e) {
+      setError(
+        e instanceof ImageDeleteError
+          ? e.messageKey
+          : "common.error.imageDelete",
+      );
     }
   };
 

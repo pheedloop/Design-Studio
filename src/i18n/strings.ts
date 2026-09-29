@@ -18,6 +18,8 @@ export const COMMON = {
   "distribute.horizontal": "Distribute horizontally",
   "distribute.vertical": "Distribute vertically",
   "error.imageDelete": "Could not delete this image.",
+  "error.imageInUse":
+    "This image is in use in the design. Remove it from the design first.",
   "error.uploadFailed": "Upload failed. Please try again.",
   "gallery.browse": "Browse",
   "gallery.deleteImage": "Delete image",
@@ -737,10 +739,20 @@ export const BADGEEDITOR = {
   "selection.hint":
     "Drag to move them together, or select a single field to edit its properties.",
   "setup.apply": "Apply",
+  "setup.cornerRadius": "Corner radius (mm)",
+  "setup.errorCount": "Enter a whole number from {{min}} to {{max}}.",
+  "setup.errorMaxMm": "Enter {{max}} mm or less.",
+  "setup.errorNonNegative": "Enter 0 or a positive number.",
+  "setup.errorPositive": "Enter a number greater than 0.",
+  "setup.errorWholeNumber": "Enter a whole number greater than 0.",
   "setup.fold": "Fold",
   "setup.foldDouble": "Double fold",
   "setup.foldNone": "No fold",
   "setup.foldSingle": "Single fold",
+  "setup.holePunch": "Hole punch",
+  "setup.maxPrintedHeight":
+    "The printed height must be {{max}} {{unit}} or less.",
+  "setup.maxWidth": "The width must be {{max}} {{unit}} or less.",
   "setup.panelCount_one": "{{count}} panel, stacked top-to-bottom",
   "setup.panelCount_other": "{{count}} panels, stacked top-to-bottom",
   "setup.panelHeight": "Panel height ({{unit}})",
@@ -752,6 +764,16 @@ export const BADGEEDITOR = {
   "setup.printsAsUnfolded":
     "Prints as {{width}} × {{height}} {{unit}} (unfolded)",
   "setup.printsUpsideDown": "Prints upside-down",
+  "setup.punchCount": "Count",
+  "setup.punchHeight": "Height (mm)",
+  "setup.punchMeasurements":
+    "Pitch is measured centre to centre. Top offset runs from the top edge of the badge to the top of the punch.",
+  "setup.punchNone": "None",
+  "setup.punchPitch": "Pitch (mm)",
+  "setup.punchRound": "Round",
+  "setup.punchSlot": "Slot",
+  "setup.punchTopOffset": "Top offset (mm)",
+  "setup.punchWidth": "Width (mm)",
   "setup.removedFields_one":
     "{{count}} field on a removed panel will be deleted. You can undo this.",
   "setup.removedFields_other":

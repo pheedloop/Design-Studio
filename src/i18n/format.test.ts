@@ -1,10 +1,5 @@
 import { describe, expect, it } from "vitest";
-import {
-  canonicalLocale,
-  formatList,
-  formatNumber,
-  formatPercent,
-} from "./format";
+import { canonicalLocale, formatList, formatNumber } from "./format";
 
 describe("canonicalLocale", () => {
   it("canonicalizes a well-formed tag", () => {
@@ -24,11 +19,5 @@ describe("canonicalLocale", () => {
     expect(() =>
       formatList(["a", "b"], canonicalLocale("fr_CA")),
     ).not.toThrow();
-  });
-});
-
-describe("formatPercent", () => {
-  it("formats a ratio as a whole percentage", () => {
-    expect(formatPercent(1.254, "en-US")).toBe("125%");
   });
 });

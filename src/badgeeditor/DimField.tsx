@@ -19,6 +19,7 @@ export function DimField({
   value,
   unit,
   onChange,
+  error,
 }: {
   label: string;
   /** Value in inches. */
@@ -26,6 +27,7 @@ export function DimField({
   unit: Unit;
   /** Reports the new value in inches. */
   onChange: (inches: number) => void;
+  error?: string;
 }) {
   const [text, setText] = useState(() => fmtUnit(value, unit, 3));
   const [synced, setSynced] = useState({ value, unit });
@@ -34,20 +36,84 @@ export function DimField({
     setText(syncDimText(text, value, unit));
   }
   return (
+    <LabelledInput
+      label={label}
+      text={text}
+      step={unitStep[unit]}
+      min={unitMin[unit]}
+      error={error}
+      onTextChange={next => {
+        setText(next);
+        const n = Number(next);
+        if (Number.isFinite(n) && n > 0) onChange(fromUnit(n, unit));
+      }}
+    />
+  );
+}
+
+const parseNumber = (text: string) => (text.trim() === "" ? NaN : Number(text));
+
+/** Reports every edit, NaN when blank, so the caller can validate it. */
+export function NumberField({
+  label,
+  value,
+  step,
+  onChange,
+  error,
+}: {
+  label: string;
+  value: number;
+  step: number;
+  onChange: (value: number) => void;
+  error?: string;
+}) {
+  const [text, setText] = useState(() => String(value));
+  if (!Object.is(parseNumber(text), value) && !Number.isNaN(value)) {
+    setText(String(value));
+  }
+  return (
+    <LabelledInput
+      label={label}
+      text={text}
+      step={step}
+      min={0}
+      error={error}
+      onTextChange={next => {
+        setText(next);
+        onChange(parseNumber(next));
+      }}
+    />
+  );
+}
+
+function LabelledInput({
+  label,
+  text,
+  step,
+  min,
+  error,
+  onTextChange,
+}: {
+  label: string;
+  text: string;
+  step: number;
+  min: number;
+  error?: string;
+  onTextChange: (text: string) => void;
+}) {
+  return (
     <label className="flex-1 flex flex-col gap-tight">
       <SectionLabel>{label}</SectionLabel>
       <input
         type="number"
-        step={unitStep[unit]}
-        min={unitMin[unit]}
+        step={step}
+        min={min}
         value={text}
-        onChange={e => {
-          setText(e.target.value);
-          const n = Number(e.target.value);
-          if (!Number.isNaN(n) && n > 0) onChange(fromUnit(n, unit));
-        }}
-        className="w-full px-xxs py-xxxs text-xs border border-border-neutral-light rounded bg-white [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+        onChange={e => onTextChange(e.target.value)}
+        aria-invalid={error ? true : undefined}
+        className={`w-full px-xxs py-xxxs text-xs border ${error ? "border-red-600" : "border-border-neutral-light"} rounded bg-white [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none`}
       />
+      {error && <span className="text-xs text-red-600">{error}</span>}
     </label>
   );
 }
