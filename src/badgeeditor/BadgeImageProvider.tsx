@@ -1,5 +1,5 @@
 import { useMemo, type ReactNode } from "react";
-import type { EditorImage } from "@/editor";
+import type { EditorImage } from "@/editor/types";
 import { BadgeImageContext, type ResolveImageUrl } from "./badgeImageContext";
 
 export function BadgeImageProvider({

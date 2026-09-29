@@ -106,6 +106,7 @@ export default defineConfig({
         "src/editor",
         "src/viewer",
         "src/seatviewer",
+        "src/badgeeditor",
         "src/components",
         "src/hooks",
         "src/types",
@@ -130,6 +131,7 @@ export default defineConfig({
         editor: resolve(__dirname, "src/editor/index.ts"),
         viewer: resolve(__dirname, "src/viewer/index.ts"),
         seatviewer: resolve(__dirname, "src/seatviewer/index.ts"),
+        badgeeditor: resolve(__dirname, "src/badgeeditor/index.ts"),
         // Merged English manifest, for host build steps.
         i18n: resolve(__dirname, "src/i18n/index.ts"),
         // Style-only entry — produces dist/style.css consumed by the host app

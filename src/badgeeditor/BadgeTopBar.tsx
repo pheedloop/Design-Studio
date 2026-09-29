@@ -3,6 +3,7 @@ import { PiIdentificationBadge, PiBug } from "react-icons/pi";
 import { DropdownMenu, MenuButton } from "@/editor/components/ui";
 import type { MenuEntry } from "@/editor/components/ui";
 import { Row } from "@/components/Row";
+import { useT } from "./i18n";
 
 interface BadgeTopBarProps {
   fileMenuItems?: MenuEntry[];
@@ -28,6 +29,7 @@ export function BadgeTopBar({
   debug,
   onDebugClick,
 }: BadgeTopBarProps) {
+  const t = useT();
   const [open, setOpen] = useState<string | null>(null);
   const close = () => setOpen(null);
 
@@ -59,9 +61,9 @@ export function BadgeTopBar({
       >
         <PiIdentificationBadge size={20} />
       </Row>
-      {menu("file", "File", fileMenuItems)}
-      {menu("edit", "Edit", editMenuItems)}
-      {menu("view", "View", viewMenuItems)}
+      {menu("file", t("badgeeditor.menu.file"), fileMenuItems)}
+      {menu("edit", t("badgeeditor.menu.edit"), editMenuItems)}
+      {menu("view", t("badgeeditor.menu.view"), viewMenuItems)}
       <div className="flex-1" />
       {rightActions && (
         <Row gap="xs" align="center" className="px-xs">
@@ -69,12 +71,9 @@ export function BadgeTopBar({
         </Row>
       )}
       {debug && (
-        <MenuButton
-          onClick={onDebugClick}
-          title="Debug: View badge_layout JSON"
-        >
+        <MenuButton onClick={onDebugClick} title={t("badgeeditor.debug.title")}>
           <PiBug size={16} />
-          <span className="text-xs">Debug</span>
+          <span className="text-xs">{t("badgeeditor.debug.open")}</span>
         </MenuButton>
       )}
     </Row>

@@ -1,5 +1,8 @@
 import { describe, it, expect } from "vitest";
-import { render } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
+import { I18nProvider } from "@/i18n/I18nProvider";
+import { interpolate } from "@/i18n/interpolate";
+import { resolveEnglish, type Translate } from "@/badgeeditor/i18n";
 import { AlignmentControls } from "./AlignmentControls";
 
 const noop = () => {};
@@ -53,5 +56,17 @@ describe("AlignmentControls", () => {
       buttons: 5,
       dividers: 1,
     });
+  });
+
+  it("labels its buttons from the badge surface's strings", () => {
+    const badgeHostTranslate: Translate = (key, vars) =>
+      interpolate(resolveEnglish(key, vars), vars);
+    render(
+      <I18nProvider translate={badgeHostTranslate}>
+        <AlignmentControls {...ALIGN_H} {...DISTRIBUTE} />
+      </I18nProvider>,
+    );
+    expect(screen.getByTitle("Align left edges")).toBeTruthy();
+    expect(screen.getByTitle("Distribute vertically")).toBeTruthy();
   });
 });

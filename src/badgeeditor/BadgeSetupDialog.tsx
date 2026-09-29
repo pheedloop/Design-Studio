@@ -1,139 +1,172 @@
-import { useState } from "react";
+import { useReducer } from "react";
 import { Checkbox } from "@/components/Checkbox";
 import { Button } from "@/components/Button";
-import { Dialog, NumberInput, SectionLabel } from "@/editor/components/ui";
+import {
+  Dialog,
+  NumberInput,
+  SectionLabel,
+  Select,
+} from "@/editor/components/ui";
 import { Row } from "@/components/Row";
 import { Stack } from "@/components/Stack";
 import { Text } from "@/components/Text";
-import { fmtUnit, unitLabel, unitName, type Unit } from "./units";
+import { UNIT_LABEL_KEYS, UNIT_NAME_KEYS, formatDim, type Unit } from "./units";
 import {
   PAGE_COUNT,
   pageRoleForIndex,
   pageRoleLabel,
   type BadgePage,
+  type BadgePreset,
   type FoldType,
-  type SlotType,
+  type HolePunch,
+  type HolePunchShape,
 } from "./model";
-import { foldInvertForPage } from "./serialize";
-import { DimField } from "./DimField";
+import { presetSetup } from "./presets";
+import {
+  countFieldsOnRemovedPanels,
+  type BadgeSetup,
+  type PanelConfig,
+} from "./badgeSetup";
+import {
+  draftToSetup,
+  initSetupDraft,
+  setupDraftReducer,
+  setupErrors,
+  type PunchMeasure,
+  type ValidateBadgeSetup,
+} from "./setupDraft";
+import { DimField, NumberField } from "./DimField";
+import { useLocale, useT, type StringKey } from "./i18n";
 
-const FOLD_OPTIONS: { value: FoldType; label: string }[] = [
-  { value: "none", label: "No fold" },
-  { value: "single", label: "Single fold" },
-  { value: "double", label: "Double fold" },
+const FOLD_OPTIONS: { value: FoldType; labelKey: StringKey }[] = [
+  { value: "none", labelKey: "badgeeditor.setup.foldNone" },
+  { value: "single", labelKey: "badgeeditor.setup.foldSingle" },
+  { value: "double", labelKey: "badgeeditor.setup.foldDouble" },
 ];
 
-const SLOT_OPTIONS: { value: SlotType; label: string }[] = [
-  { value: "none", label: "None" },
-  { value: "two-circle", label: "Two circular" },
-  { value: "three-rect", label: "Three rectangular" },
+const PUNCH_OPTIONS: { value: HolePunchShape | null; labelKey: StringKey }[] = [
+  { value: null, labelKey: "badgeeditor.setup.punchNone" },
+  { value: "circle", labelKey: "badgeeditor.setup.punchRound" },
+  { value: "rect", labelKey: "badgeeditor.setup.punchSlot" },
 ];
 
-const DEFAULT_TEARAWAYS = 3;
-
-/** Per-panel configuration edited in the dialog. */
-export interface PanelConfig {
-  inverted: boolean;
-  tearaway: boolean;
-  tearawayCount: number;
-}
+const PUNCH_FIELDS: { key: PunchMeasure; labelKey: StringKey }[] = [
+  { key: "count", labelKey: "badgeeditor.setup.punchCount" },
+  { key: "widthMm", labelKey: "badgeeditor.setup.punchWidth" },
+  { key: "heightMm", labelKey: "badgeeditor.setup.punchHeight" },
+  { key: "pitchMm", labelKey: "badgeeditor.setup.punchPitch" },
+  { key: "topOffsetMm", labelKey: "badgeeditor.setup.punchTopOffset" },
+];
 
 interface BadgeSetupDialogProps {
   fold: FoldType;
   panelSize: { width: number; height: number };
   pages: BadgePage[];
-  slots: SlotType;
+  holePunch: HolePunch | null;
+  cornerRadiusMm: number;
+  presets: BadgePreset[];
+  validateSetup?: ValidateBadgeSetup;
   /** Display/input unit. Panel sizes are stored in inches regardless. */
   unit: Unit;
   /** Change the editor's measurement unit (applies live). */
   onUnitChange: (unit: Unit) => void;
-  onApply: (
-    fold: FoldType,
-    panelSize: { width: number; height: number },
-    panels: PanelConfig[],
-    slots: SlotType,
-  ) => void;
+  onApply: (setup: BadgeSetup) => void;
   onClose: () => void;
-}
-
-function panelConfigFor(
-  pages: BadgePage[],
-  fold: FoldType,
-  i: number,
-): PanelConfig {
-  return {
-    inverted: pages[i]?.inverted ?? foldInvertForPage(fold, i),
-    tearaway: pages[i]?.tearaway ?? false,
-    tearawayCount: pages[i]?.tearawayCount ?? DEFAULT_TEARAWAYS,
-  };
 }
 
 export function BadgeSetupDialog({
   fold,
   panelSize,
   pages,
-  slots,
+  holePunch,
+  cornerRadiusMm,
+  presets,
+  validateSetup,
   unit,
   onUnitChange,
   onApply,
   onClose,
 }: BadgeSetupDialogProps) {
-  const [localFold, setLocalFold] = useState<FoldType>(fold);
-  const [w, setW] = useState(panelSize.width);
-  const [h, setH] = useState(panelSize.height);
-  const [localSlots, setLocalSlots] = useState<SlotType>(slots);
-  const [panels, setPanels] = useState<PanelConfig[]>(() =>
-    Array.from({ length: PAGE_COUNT[fold] }, (_, i) =>
-      panelConfigFor(pages, fold, i),
-    ),
+  const t = useT();
+  const locale = useLocale();
+  const [draft, dispatch] = useReducer(
+    setupDraftReducer,
+    { fold, panelSize, pages, holePunch, cornerRadiusMm },
+    initSetupDraft,
   );
-
+  const { presetKey, panels, holePunch: punch } = draft;
+  const localFold = draft.fold;
+  const { width: w, height: h } = draft.panelSize;
   const count = PAGE_COUNT[localFold];
+  const removedFields = countFieldsOnRemovedPanels(pages, localFold);
+  const errors = setupErrors(
+    draft,
+    validateSetup,
+    t("badgeeditor.setup.errorNotANumber"),
+  );
+  const hasErrors = Object.values(errors).some(Boolean);
 
-  const changeFold = (f: FoldType) => {
-    setLocalFold(f);
-    setPanels(prev =>
-      Array.from({ length: PAGE_COUNT[f] }, (_, i) =>
-        i < prev.length
-          ? prev[i]
-          : {
-              inverted: foldInvertForPage(f, i),
-              tearaway: false,
-              tearawayCount: DEFAULT_TEARAWAYS,
-            },
-      ),
-    );
+  const applyPreset = (key: string) => {
+    const preset = presets.find(p => p.key === key);
+    if (preset) dispatch({ type: "preset", key, setup: presetSetup(preset) });
   };
 
-  const setPanel = (i: number, patch: Partial<PanelConfig>) =>
-    setPanels(prev => prev.map((p, j) => (j === i ? { ...p, ...patch } : p)));
+  const unitLabel = t(UNIT_LABEL_KEYS[unit]);
+  const printsAs = {
+    width: formatDim(w, unit, locale),
+    height: formatDim(h * count, unit, locale),
+    unit: unitLabel,
+  };
+
+  const setPanel = (index: number, patch: Partial<PanelConfig>) =>
+    dispatch({ type: "panel", index, patch });
 
   return (
     <Dialog
-      title="Badge Setup"
+      title={t("badgeeditor.setup.title")}
       onClose={onClose}
       width="400px"
       footer={
         <>
           <Button variant="outline" color="neutral" onClick={onClose}>
-            Cancel
+            {t("common.action.cancel")}
           </Button>
           <Button
             variant="solid"
             color="primary"
+            disabled={hasErrors}
             onClick={() => {
-              onApply(localFold, { width: w, height: h }, panels, localSlots);
+              onApply(draftToSetup(draft));
               onClose();
             }}
           >
-            Apply
+            {t("badgeeditor.setup.apply")}
           </Button>
         </>
       }
     >
       <Stack gap="s" className="p-s">
+        {presets.length > 0 && (
+          <Stack gap="tight">
+            <SectionLabel>{t("badgeeditor.setup.presets")}</SectionLabel>
+            <Select
+              value={presetKey}
+              onChange={e => applyPreset(e.target.value)}
+            >
+              <option value="" disabled>
+                {t("badgeeditor.setup.presetPlaceholder")}
+              </option>
+              {presets.map(p => (
+                <option key={p.key} value={p.key}>
+                  {p.label}
+                </option>
+              ))}
+            </Select>
+          </Stack>
+        )}
+
         <Stack gap="tight">
-          <SectionLabel>Fold</SectionLabel>
+          <SectionLabel>{t("badgeeditor.setup.fold")}</SectionLabel>
           <Row gap="xxs">
             {FOLD_OPTIONS.map(o => (
               <Button
@@ -142,19 +175,27 @@ export function BadgeSetupDialog({
                 color={localFold === o.value ? "primary" : "neutral"}
                 active={localFold === o.value}
                 className="flex-1"
-                onClick={() => changeFold(o.value)}
+                onClick={() => dispatch({ type: "fold", fold: o.value })}
               >
-                {o.label}
+                {t(o.labelKey)}
               </Button>
             ))}
           </Row>
           <span className="text-xs text-text-subtle">
-            {count} panel{count > 1 ? "s" : ""}, stacked top-to-bottom
+            {t("badgeeditor.setup.panelCount", { count })}
           </span>
+          {removedFields > 0 && (
+            <div
+              role="alert"
+              className="rounded border border-amber-200 bg-amber-50 px-xs py-tight text-xs text-amber-700"
+            >
+              {t("badgeeditor.setup.removedFields", { count: removedFields })}
+            </div>
+          )}
         </Stack>
 
         <Stack gap="tight">
-          <SectionLabel>Units</SectionLabel>
+          <SectionLabel>{t("badgeeditor.setup.units")}</SectionLabel>
           <Row gap="xxs">
             {(["in", "cm"] as Unit[]).map(u => (
               <Button
@@ -165,51 +206,92 @@ export function BadgeSetupDialog({
                 className="flex-1"
                 onClick={() => onUnitChange(u)}
               >
-                {unitName[u]}
+                {t(UNIT_NAME_KEYS[u])}
               </Button>
             ))}
           </Row>
         </Stack>
 
         <Row gap="xs">
-          <DimField label="Panel width" value={w} unit={unit} onChange={setW} />
           <DimField
-            label="Panel height"
+            label={t("badgeeditor.setup.panelWidth", { unit: unitLabel })}
+            value={w}
+            unit={unit}
+            onChange={width => dispatch({ type: "width", width })}
+            error={errors.panelWidth}
+          />
+          <DimField
+            label={t("badgeeditor.setup.panelHeight", { unit: unitLabel })}
             value={h}
             unit={unit}
-            onChange={setH}
+            onChange={height => dispatch({ type: "height", height })}
+            error={errors.panelHeight}
           />
         </Row>
 
         <div className="text-xs text-text-caption">
-          Prints as{" "}
-          <span className="font-medium text-text-body">
-            {fmtUnit(w, unit)} × {fmtUnit(h * count, unit)} {unitLabel[unit]}
-          </span>
-          {count > 1 && " (unfolded)"}
+          {localFold !== "none"
+            ? t("badgeeditor.setup.printsAsUnfolded", printsAs)
+            : t("badgeeditor.setup.printsAs", printsAs)}
         </div>
 
         <Stack gap="tight">
-          <SectionLabel>Lanyard slots</SectionLabel>
+          <SectionLabel>{t("badgeeditor.setup.holePunch")}</SectionLabel>
           <Row gap="xxs">
-            {SLOT_OPTIONS.map(o => (
-              <Button
-                key={o.value}
-                variant="outline"
-                color={localSlots === o.value ? "primary" : "neutral"}
-                active={localSlots === o.value}
-                className="flex-1 text-xs"
-                onClick={() => setLocalSlots(o.value)}
-              >
-                {o.label}
-              </Button>
-            ))}
+            {PUNCH_OPTIONS.map(o => {
+              const active = (punch?.shape ?? null) === o.value;
+              return (
+                <Button
+                  key={o.labelKey}
+                  variant="outline"
+                  color={active ? "primary" : "neutral"}
+                  active={active}
+                  className="flex-1"
+                  onClick={() =>
+                    dispatch({ type: "punchShape", shape: o.value, presets })
+                  }
+                >
+                  {t(o.labelKey)}
+                </Button>
+              );
+            })}
           </Row>
+          {punch && (
+            <>
+              <div className="grid grid-cols-3 gap-xs">
+                {PUNCH_FIELDS.map(f => (
+                  <NumberField
+                    key={f.key}
+                    label={t(f.labelKey)}
+                    value={punch[f.key]}
+                    step={f.key === "count" ? 1 : 0.5}
+                    onChange={value =>
+                      dispatch({ type: "punch", key: f.key, value })
+                    }
+                    error={errors[f.key]}
+                  />
+                ))}
+              </div>
+              <span className="text-xs text-text-caption">
+                {t("badgeeditor.setup.punchMeasurements")}
+              </span>
+            </>
+          )}
         </Stack>
+
+        <NumberField
+          label={t("badgeeditor.setup.cornerRadius")}
+          value={draft.cornerRadiusMm}
+          step={0.5}
+          onChange={cornerRadiusMm =>
+            dispatch({ type: "cornerRadius", cornerRadiusMm })
+          }
+          error={errors.cornerRadiusMm}
+        />
 
         {count > 1 && (
           <Stack gap="tight">
-            <SectionLabel>Panels</SectionLabel>
+            <SectionLabel>{t("badgeeditor.setup.panels")}</SectionLabel>
             <Stack gap="tight">
               {panels.map((cfg, i) => (
                 <Stack
@@ -218,15 +300,15 @@ export function BadgeSetupDialog({
                   className="px-snug py-xxs rounded border border-border-neutral-light"
                 >
                   <Text size="xs" weight="medium" color="body" as="span">
-                    {pageRoleLabel(pageRoleForIndex(count, i))}
+                    {pageRoleLabel(pageRoleForIndex(count, i), t)}
                   </Text>
                   <Checkbox
-                    label="Prints upside-down"
+                    label={t("badgeeditor.setup.printsUpsideDown")}
                     checked={cfg.inverted}
                     onChange={v => setPanel(i, { inverted: v })}
                   />
                   <Checkbox
-                    label="Tear-away (perforated stubs)"
+                    label={t("badgeeditor.setup.tearaway")}
                     checked={cfg.tearaway}
                     onChange={v => setPanel(i, { tearaway: v })}
                   />
@@ -236,7 +318,7 @@ export function BadgeSetupDialog({
                       align="center"
                       className="text-xs text-text-caption pl-5"
                     >
-                      <span>Stubs</span>
+                      <span>{t("badgeeditor.setup.stubs")}</span>
                       <div className="w-20">
                         <NumberInput
                           value={cfg.tearawayCount}

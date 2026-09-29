@@ -120,7 +120,15 @@ export function createSampleDocument(): BadgeDocument {
     name: "Direct Thermal",
     panelSize: { width: 4, height: PANEL_H },
     fold: "double",
-    slots: "three-rect",
+    cornerRadiusMm: 6,
+    holePunch: {
+      shape: "rect",
+      count: 3,
+      widthMm: 16,
+      heightMm: 4,
+      pitchMm: 34,
+      topOffsetMm: 5,
+    },
     pages: [
       { id: "front", role: "front", fields: frontFields() },
       { id: "inner", role: "inner", inverted: true, fields: innerFields() },

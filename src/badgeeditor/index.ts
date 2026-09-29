@@ -2,16 +2,28 @@
 export { BadgeEditor } from "./BadgeEditor";
 export type { BadgeEditorProps } from "./BadgeEditor";
 export { flatten, inflate } from "./serialize";
+export type { FlattenOptions, InflateOptions } from "./serialize";
+export { createBadgeDocument, createDocumentFromPreset } from "./presets";
 export { FIELD_DEFS } from "./fields";
 export type {
   BadgeDocument,
   BadgePage,
   BadgeField,
+  BadgeCustomField,
+  BadgePreset,
+  BadgeSpec,
   FoldType,
-  SlotType,
+  HolePunch,
+  HolePunchShape,
   FlattenResult,
   LegacyLayoutEntry,
 } from "./model";
+export type {
+  BadgeSetupErrors,
+  BadgeSetupField,
+  BadgeSetupValues,
+  ValidateBadgeSetup,
+} from "./setupDraft";
 export type {
   BadgeData,
   AttendeeOption,

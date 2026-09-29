@@ -72,7 +72,7 @@ export function ToolSidebarHeader({
         (objectsState === "locked" ? (
           <span
             className="relative inline-flex shrink-0"
-            title={t("editor.premiumFeature")}
+            title={t("common.premiumFeature")}
           >
             <IconButton size="sm" disabled>
               {placementIcon}

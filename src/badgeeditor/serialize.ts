@@ -9,7 +9,7 @@
 // editor_document yet.
 //
 // COMPATIBILITY IS LOAD-BEARING. The per-field math here must match
-// raichu .../BadgeDesigner/editorClasses.jsx field-for-field. See verify.ts.
+// raichu .../BadgeDesigner/editorClasses.jsx field-for-field.
 
 import { v4 as uuid } from "uuid";
 import {
@@ -17,15 +17,19 @@ import {
   BADGE_DOCUMENT_VERSION,
   PAGE_COUNT,
   inchToPx,
+  pageRoleForIndex,
   type BadgeDocument,
   type BadgeField,
+  type BadgePage,
   type FlattenResult,
   type FoldType,
   type LegacyLayoutEntry,
 } from "./model";
+import { PPI, fieldSizePx, isFieldOutsidePanel } from "./canvasMetrics";
 import {
   isLiteralTextField,
   isUserFieldEditable,
+  kindForEntry,
   kindForField,
 } from "./fields";
 
@@ -38,21 +42,56 @@ interface FlattenContext {
   offsetTop: number;
   /** Whether the page this field lives on is printed upside-down (fold). */
   foldInvert: boolean;
+  panelWidth: number;
+  panelHeight: number;
+}
+
+type SizedField = Pick<BadgeField, "kind" | "scale" | "width" | "height">;
+
+function fieldSizeIn(field: SizedField): { w: number; h: number } {
+  const { w, h } = fieldSizePx(field);
+  return { w: w / PPI, h: h / PPI };
+}
+
+/**
+ * Rotate a panel-local box 180° about the panel centre (its own inverse). This
+ * is how a folded-back panel, authored upright, lands on the unfolded sheet.
+ */
+function mirrorInPanel(
+  box: { top: number; left: number },
+  size: { w: number; h: number },
+  panel: { width: number; height: number },
+): { top: number; left: number } {
+  return {
+    top: panel.height - box.top - size.h,
+    left: panel.width - box.left - size.w,
+  };
 }
 
 export function fieldToEntry(
   field: BadgeField,
-  ctx: FlattenContext = { offsetTop: 0, foldInvert: false },
+  ctx: FlattenContext = {
+    offsetTop: 0,
+    foldInvert: false,
+    panelWidth: 0,
+    panelHeight: 0,
+  },
 ): LegacyLayoutEntry {
   const kind = field.kind ?? kindForField(field.field);
 
   // Effective 180° rotation = user-applied inversion XOR page-fold inversion
   // (two 180° rotations cancel). The backend (badge_generator.py) renders
-  // `inverted` as rotate(180deg) about the box CENTER, so top/left stays the
-  // footprint top-left — NO coordinate shift. Only the panel offset is added.
+  // `inverted` as rotate(180deg) about the box CENTER, so a folded-back field
+  // also has its box mirrored within the panel to match the printed sheet.
   const inverted = Boolean(field.inverted) !== ctx.foldInvert;
-  const top = field.top + ctx.offsetTop;
-  const left = field.left;
+  const box = ctx.foldInvert
+    ? mirrorInPanel(field, fieldSizeIn({ ...field, kind }), {
+        width: ctx.panelWidth,
+        height: ctx.panelHeight,
+      })
+    : field;
+  const top = box.top + ctx.offsetTop;
+  const left = box.left;
 
   // qrCode / image: legacy emits only position (+ scale or size); `inverted` is
   // omitted unless actually inverted (keeps single-page output byte-identical to
@@ -64,6 +103,7 @@ export function fieldToEntry(
       field: field.field,
       scale: field.scale ?? 1,
     };
+    if (field.printAsQr) entry.printAsQr = true;
     if (inverted) entry.inverted = true;
     return entry;
   }
@@ -140,7 +180,16 @@ export function foldInvertForPage(fold: FoldType, pageIndex: number): boolean {
   return false;
 }
 
-export function flatten(doc: BadgeDocument): FlattenResult {
+export interface FlattenOptions {
+  /** Inches of print overshoot the host's printer tolerates. Default 0 (strict). */
+  printOvershootAllowanceIn?: number;
+}
+
+export function flatten(
+  doc: BadgeDocument,
+  options?: FlattenOptions,
+): FlattenResult {
+  const allowanceIn = options?.printOvershootAllowanceIn ?? 0;
   const panelHeight = doc.panelSize.height;
   const layout: LegacyLayoutEntry[] = [];
 
@@ -148,8 +197,11 @@ export function flatten(doc: BadgeDocument): FlattenResult {
     const ctx: FlattenContext = {
       offsetTop: pageIndex * panelHeight,
       foldInvert: page.inverted ?? foldInvertForPage(doc.fold, pageIndex),
+      panelWidth: doc.panelSize.width,
+      panelHeight,
     };
     for (const field of page.fields) {
+      if (isFieldOutsidePanel(field, doc.panelSize, allowanceIn)) continue;
       layout.push(fieldToEntry(field, ctx));
     }
   });
@@ -162,17 +214,15 @@ export function flatten(doc: BadgeDocument): FlattenResult {
 }
 
 // ---------------------------------------------------------------------------
-// Flat layout -> document (legacy load, single page)
+// Flat layout -> document
 // ---------------------------------------------------------------------------
 
 /**
  * Recover a BadgeField from a legacy entry. Stored top/left is the footprint
- * top-left (no shift — matches the backend's rotate-about-center). Every field
- * lands on a single front page; legacy templates edit as one page and the first
- * save writes a rich document. (Optional later: heuristic page-region splitting.)
+ * top-left (matches the backend's rotate-about-center).
  */
 export function entryToField(entry: LegacyLayoutEntry): BadgeField {
-  const kind = kindForField(entry.field);
+  const kind = kindForEntry(entry);
   const inverted = Boolean(entry.inverted);
 
   const base: BadgeField = {
@@ -184,7 +234,9 @@ export function entryToField(entry: LegacyLayoutEntry): BadgeField {
   };
 
   if (kind === "qrCode") {
-    return { ...base, scale: entry.scale ?? 1, inverted };
+    return entry.printAsQr
+      ? { ...base, scale: entry.scale ?? 1, printAsQr: true, inverted }
+      : { ...base, scale: entry.scale ?? 1, inverted };
   }
   if (kind === "image") {
     return {
@@ -220,6 +272,10 @@ export function entryToField(entry: LegacyLayoutEntry): BadgeField {
   };
 }
 
+function entrySizeIn(entry: LegacyLayoutEntry): { w: number; h: number } {
+  return fieldSizeIn({ ...entry, kind: kindForEntry(entry) });
+}
+
 export interface InflateOptions {
   /** Full template size in INCHES (BadgeTemplate.width/height). */
   width: number;
@@ -233,16 +289,39 @@ export function inflate(
 ): BadgeDocument {
   const fold = opts.fold ?? "none";
   const pageCount = PAGE_COUNT[fold];
+  const panelHeight = opts.height / pageCount;
+  const pages: BadgePage[] = Array.from({ length: pageCount }, (_, i) => ({
+    id: uuid(),
+    role: pageRoleForIndex(pageCount, i),
+    fields: [],
+  }));
+
+  for (const entry of layout) {
+    const size = entrySizeIn(entry);
+    const pageIndex =
+      panelHeight > 0
+        ? Math.min(
+            pageCount - 1,
+            Math.max(0, Math.floor((entry.top + size.h / 2) / panelHeight)),
+          )
+        : 0;
+    const foldInvert = foldInvertForPage(fold, pageIndex);
+    const local = {
+      top: entry.top - pageIndex * panelHeight,
+      left: entry.left,
+    };
+    const box = foldInvert
+      ? mirrorInPanel(local, size, { width: opts.width, height: panelHeight })
+      : local;
+    const field = entryToField({ ...entry, ...box });
+    field.inverted = Boolean(entry.inverted) !== foldInvert;
+    pages[pageIndex].fields.push(field);
+  }
+
   return {
     version: BADGE_DOCUMENT_VERSION,
-    panelSize: { width: opts.width, height: opts.height / pageCount },
+    panelSize: { width: opts.width, height: panelHeight },
     fold,
-    pages: [
-      {
-        id: uuid(),
-        role: "front",
-        fields: layout.map(entryToField),
-      },
-    ],
+    pages,
   };
 }

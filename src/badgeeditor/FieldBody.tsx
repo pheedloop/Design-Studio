@@ -2,10 +2,11 @@ import { Rect, Text, Group, Image as KonvaImage } from "react-konva";
 import { GRAY_200, GRAY_400, GRAY_900, WHITE } from "@/canvasColors";
 import type { BadgeField } from "./model";
 import { fieldQrUrl, type BadgeData } from "./badgeData";
-import { PPI, QR_BASE_PX } from "./canvasMetrics";
+import { fieldSizePx } from "./canvasMetrics";
 import { useImageLoader } from "./useImageLoader";
 import { FieldContent } from "./FieldContent";
 import { useBadgeImageUrl } from "./badgeImageContext";
+import { useT } from "./i18n";
 
 /**
  * The visual contents of a field (no interaction), shared by the editor's
@@ -19,6 +20,7 @@ export function FieldBody({
   field: BadgeField;
   data: BadgeData | null;
 }) {
+  const t = useT();
   const resolveImageUrl = useBadgeImageUrl();
   const imageUrl =
     field.kind === "image" ? resolveImageUrl(field.code) : undefined;
@@ -27,7 +29,7 @@ export function FieldBody({
   const getImg = useImageLoader(isQrField ? [qrUrl] : []);
 
   if (isQrField) {
-    const size = QR_BASE_PX * (field.scale ?? 1);
+    const size = fieldSizePx(field).w;
     const img = getImg(qrUrl);
     return img ? (
       <>
@@ -38,7 +40,7 @@ export function FieldBody({
       <>
         <Rect width={size} height={size} fill={GRAY_900} cornerRadius={2} />
         <Text
-          text="QR"
+          text={t("badgeeditor.canvas.qr")}
           width={size}
           height={size}
           align="center"
@@ -51,8 +53,7 @@ export function FieldBody({
     );
   }
 
-  const w = (field.width ?? 2) * PPI;
-  const h = (field.height ?? 0.3) * PPI;
+  const { w, h } = fieldSizePx(field);
   const fontSize = field.fontSize ?? 20;
   const inverted = Boolean(field.inverted);
 

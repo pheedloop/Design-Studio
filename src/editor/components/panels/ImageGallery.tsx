@@ -10,13 +10,14 @@ import type { EditorImage } from "@/editor/types";
 import { withMeasuredSize } from "@/editor/utils/placedImageSize";
 import { filterAndSortImages, type GallerySort } from "./galleryFilter";
 import { ImageThumbnail } from "./ImageThumbnail";
+import { ImageDeleteError } from "./imageDeleteError";
 
 const ACCEPT = "image/png,image/jpeg,image/gif,image/svg+xml";
 
 const SORTS: { id: GallerySort; labelKey: StringKey }[] = [
-  { id: "recent", labelKey: "editor.gallery.sortRecent" },
-  { id: "name", labelKey: "editor.gallery.sortName" },
-  { id: "type", labelKey: "editor.gallery.sortType" },
+  { id: "recent", labelKey: "common.gallery.sortRecent" },
+  { id: "name", labelKey: "common.gallery.sortName" },
+  { id: "type", labelKey: "common.gallery.sortType" },
 ];
 
 interface ImageGalleryProps {
@@ -63,7 +64,7 @@ export function ImageGallery({
     try {
       await onUpload(file);
     } catch {
-      setError("editor.error.uploadFailed");
+      setError("common.error.uploadFailed");
     } finally {
       setPending(false);
     }
@@ -75,8 +76,12 @@ export function ImageGallery({
     try {
       await onDelete(id);
       setSelectedId(current => (current === id ? null : current));
-    } catch {
-      setError("editor.error.imageDelete");
+    } catch (e) {
+      setError(
+        e instanceof ImageDeleteError
+          ? e.messageKey
+          : "common.error.imageDelete",
+      );
     }
   };
 
@@ -97,18 +102,18 @@ export function ImageGallery({
 
   return (
     <Dialog
-      title={t("editor.gallery.title")}
+      title={t("common.gallery.title")}
       onClose={onClose}
       width="800px"
       footer={
         <>
           {onUpload && (
             <Text size="xs" color="caption" as="span" className="mr-auto">
-              {t("editor.gallery.dropHint")}
+              {t("common.gallery.dropHint")}
             </Text>
           )}
           <Button variant="outline" color="neutral" onClick={onClose}>
-            {t("editor.action.cancel")}
+            {t("common.action.cancel")}
           </Button>
           {selected ? (
             <Button
@@ -116,7 +121,7 @@ export function ImageGallery({
               color="primary"
               onClick={() => insert(selected)}
             >
-              {t("editor.gallery.insert")}
+              {t("common.gallery.insert")}
             </Button>
           ) : (
             onUpload && (
@@ -127,8 +132,8 @@ export function ImageGallery({
                 onClick={() => fileRef.current?.click()}
               >
                 {pending
-                  ? t("editor.gallery.uploading")
-                  : t("editor.gallery.browse")}
+                  ? t("common.gallery.uploading")
+                  : t("common.gallery.browse")}
               </Button>
             )
           )}
@@ -141,8 +146,8 @@ export function ImageGallery({
             <TextInput
               value={query}
               onChange={e => setQuery(e.target.value)}
-              placeholder={t("editor.gallery.searchPlaceholder")}
-              aria-label={t("editor.gallery.searchPlaceholder")}
+              placeholder={t("common.gallery.searchPlaceholder")}
+              aria-label={t("common.gallery.searchPlaceholder")}
               className="pr-6"
             />
             <PiMagnifyingGlass
@@ -152,7 +157,7 @@ export function ImageGallery({
           </div>
           <Row gap="xxs" align="center">
             <Text size="xs" color="caption" as="span">
-              {t("editor.gallery.sort")}
+              {t("common.gallery.sort")}
             </Text>
             <TabBar
               tabs={SORTS.map(option => ({
@@ -169,7 +174,7 @@ export function ImageGallery({
         {images.length === 0 && !onUpload ? (
           <Row align="center" justify="center" className="h-80">
             <Text size="sm" color="caption" as="span">
-              {t("editor.gallery.empty")}
+              {t("common.gallery.empty")}
             </Text>
           </Row>
         ) : images.length === 0 ? (
@@ -187,19 +192,19 @@ export function ImageGallery({
           >
             <PiUploadSimple size={24} className="mb-xxs text-text-subtle" />
             <Text size="sm" color="body" as="span">
-              {t("editor.gallery.uploadCta")}
+              {t("common.gallery.uploadCta")}
             </Text>
             <Text size="xs" color="subtle" as="span">
-              {t("editor.gallery.uploadHint")}
+              {t("common.gallery.uploadHint")}
             </Text>
             <Text size="xs" color="subtle" as="span">
-              {t("editor.gallery.uploadFormats")}
+              {t("common.gallery.uploadFormats")}
             </Text>
           </Stack>
         ) : visible.length === 0 ? (
           <Row align="center" justify="center" className="h-80">
             <Text size="sm" color="caption" as="span">
-              {t("editor.gallery.noResults")}
+              {t("common.gallery.noResults")}
             </Text>
           </Row>
         ) : (

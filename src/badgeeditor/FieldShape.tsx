@@ -1,14 +1,16 @@
-import { Group } from "react-konva";
+import { Group, Rect } from "react-konva";
 import type Konva from "konva";
 import type { BadgeField } from "./model";
 import type { BadgeData } from "./badgeData";
-import { fieldSizePx } from "./useBadgeGuides";
-import { PPI, QR_BASE_PX } from "./canvasMetrics";
+import { PPI, QR_BASE_PX, fieldSizePx } from "./canvasMetrics";
 import { FieldBody } from "./FieldBody";
+import { RED } from "@/canvasColors";
 
 interface FieldShapeProps {
   field: BadgeField;
   data: BadgeData | null;
+  /** Outside its panel, so it will not print. */
+  outside: boolean;
   panMode: boolean;
   registerRef: (node: Konva.Group | null) => void;
   onMouseDown: (additive: boolean) => void;
@@ -21,6 +23,7 @@ interface FieldShapeProps {
 export function FieldShape({
   field,
   data,
+  outside,
   panMode,
   registerRef,
   onMouseDown,
@@ -64,13 +67,19 @@ export function FieldShape({
           const newSize = node.width() * node.scaleX();
           node.scaleX(1);
           node.scaleY(1);
-          onChange({ scale: newSize / QR_BASE_PX });
+          onChange({
+            left: node.x() / PPI,
+            top: node.y() / PPI,
+            scale: newSize / QR_BASE_PX,
+          });
         } else {
           const newW = node.width() * node.scaleX();
           const newH = node.height() * node.scaleY();
           node.scaleX(1);
           node.scaleY(1);
           onChange({
+            left: node.x() / PPI,
+            top: node.y() / PPI,
             width: newW / PPI,
             height: newH / PPI,
             ...(isImageField
@@ -86,6 +95,16 @@ export function FieldShape({
       }}
     >
       <FieldBody field={field} data={data} />
+      {outside && (
+        <Rect
+          width={w}
+          height={h}
+          stroke={RED}
+          strokeWidth={2}
+          strokeScaleEnabled={false}
+          listening={false}
+        />
+      )}
     </Group>
   );
 }

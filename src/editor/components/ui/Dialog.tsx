@@ -44,7 +44,7 @@ export function Dialog({
             {headerActions}
             <button
               onClick={onClose}
-              aria-label={t("editor.action.close")}
+              aria-label={t("common.action.close")}
               className="text-text-subtle hover:text-text-body text-lg leading-none cursor-pointer"
             >
               &times;

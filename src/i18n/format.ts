@@ -28,6 +28,16 @@ export function formatList(
   }).format(items);
 }
 
+export function formatPercent(
+  ratio: number,
+  locale: string | undefined,
+): string {
+  return new Intl.NumberFormat(locale, {
+    style: "percent",
+    maximumFractionDigits: 0,
+  }).format(ratio);
+}
+
 /** Fixed-decimal number using the locale's separator. Replaces toFixed(). */
 export function formatNumber(
   value: number,

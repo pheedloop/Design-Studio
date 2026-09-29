@@ -1,8 +1,7 @@
 import { Group } from "react-konva";
 import type { BadgeField } from "./model";
 import type { BadgeData } from "./badgeData";
-import { fieldSizePx } from "./useBadgeGuides";
-import { PPI } from "./canvasMetrics";
+import { PPI, fieldSizePx } from "./canvasMetrics";
 import { FieldBody } from "./FieldBody";
 
 /** Read-only positioned field visual for the full-preview render. */

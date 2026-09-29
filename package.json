@@ -26,6 +26,10 @@
       "import": "./dist/i18n.js",
       "types": "./dist/i18n/index.d.ts"
     },
+    "./badgeeditor": {
+      "import": "./dist/badgeeditor.js",
+      "types": "./dist/badgeeditor/index.d.ts"
+    },
     "./style.css": "./dist/style.css"
   },
   "typesVersions": {
@@ -41,6 +45,9 @@
       ],
       "i18n": [
         "./dist/i18n/index.d.ts"
+      ],
+      "badgeeditor": [
+        "./dist/badgeeditor/index.d.ts"
       ]
     }
   },

@@ -1,6 +1,8 @@
 import { ProductSwitcher } from "@/components/ProductSwitcher";
 import { ChromeDivider } from "@/demo/ChromeDivider";
+import { useState } from "react";
 import { BadgeEditor } from "./BadgeEditor";
+import { createSampleDocument } from "./sample";
 import { sampleAttendeeProvider } from "./sample-attendees";
 import { LocaleSwitcher } from "@/demo/LocaleSwitcher";
 import { useDemoLocale } from "@/demo/useDemoLocale";
@@ -13,6 +15,7 @@ import { useDemoImageLibrary } from "@/demo/useDemoImageLibrary";
 export function BadgeEditorApp() {
   const { locale, setLocale, translate } = useDemoLocale();
   const { images, onUploadImage, onDeleteImage } = useDemoImageLibrary();
+  const [sample] = useState(createSampleDocument);
 
   return (
     <div className="h-screen flex flex-col">
@@ -27,6 +30,7 @@ export function BadgeEditorApp() {
       <div className="flex-1 overflow-hidden">
         <BadgeEditor
           debug
+          initialDocument={sample}
           translate={translate}
           attendeeProvider={sampleAttendeeProvider}
           images={images}
@@ -35,7 +39,7 @@ export function BadgeEditorApp() {
           // The demo has no backend. Save stays wired so the File menu keeps
           // its Save entry (it only renders when onSave is passed), and the
           // flattened badge_layout is already inspectable via `debug`.
-          onSave={() => {}}
+          onSave={async () => {}}
         />
       </div>
     </div>

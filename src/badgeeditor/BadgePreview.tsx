@@ -2,9 +2,9 @@ import { useLayoutEffect, useRef } from "react";
 import { Stage, Layer, Rect, Group, Line } from "react-konva";
 import { useCanvasControls } from "@/editor/hooks/useCanvasControls";
 import { BLACK, GRAY_300, GRAY_400, WHITE } from "@/canvasColors";
-import { Slots } from "./Slots";
+import { HolePunchShapes } from "./HolePunchShapes";
 import { StaticField } from "./StaticField";
-import { PANEL_CORNER_IN, PPI } from "./canvasMetrics";
+import { PPI, isFieldOutsidePanel, mmToPx } from "./canvasMetrics";
 import { BadgeRulers } from "./BadgeRulers";
 import { foldInvertForPage } from "./serialize";
 import { DPI } from "./model";
@@ -23,11 +23,14 @@ export function BadgePreview({
   data,
   showRulers = false,
   unit = "in",
+  printOvershootAllowanceIn = 0,
 }: {
   doc: BadgeDocument;
   data: BadgeData | null;
   showRulers?: boolean;
   unit?: Unit;
+  /** Inches of print overshoot the host's printer tolerates. Default 0. */
+  printOvershootAllowanceIn?: number;
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
   // Destructured individually (not kept as one bundled object) — accessing a
@@ -85,7 +88,7 @@ export function BadgePreview({
             y={0}
             width={panelW}
             height={totalH}
-            cornerRadius={PANEL_CORNER_IN * PPI}
+            cornerRadius={mmToPx(doc.cornerRadiusMm ?? 0)}
             fill={WHITE}
             stroke={GRAY_300}
             strokeWidth={1}
@@ -95,9 +98,8 @@ export function BadgePreview({
             shadowOffsetY={2}
           />
 
-          {/* Lanyard slots — top of the front panel */}
-          {doc.slots && doc.slots !== "none" && (
-            <Slots slots={doc.slots} panelW={panelW} />
+          {doc.holePunch && (
+            <HolePunchShapes holePunch={doc.holePunch} panelW={panelW} />
           )}
 
           {/* Each panel at its print offset, flipped if it prints inverted */}
@@ -114,9 +116,18 @@ export function BadgePreview({
                   y={inverted ? panelH : 0}
                   rotation={inverted ? 180 : 0}
                 >
-                  {page.fields.map(f => (
-                    <StaticField key={f.id} field={f} data={data} />
-                  ))}
+                  {page.fields
+                    .filter(
+                      f =>
+                        !isFieldOutsidePanel(
+                          f,
+                          doc.panelSize,
+                          printOvershootAllowanceIn,
+                        ),
+                    )
+                    .map(f => (
+                      <StaticField key={f.id} field={f} data={data} />
+                    ))}
                   {stubs > 1 &&
                     Array.from({ length: stubs - 1 }).map((_, k) => {
                       const y = (panelH * (k + 1)) / stubs;
