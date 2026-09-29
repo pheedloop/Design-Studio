@@ -202,15 +202,6 @@ export interface BadgePreset extends BadgeSpec {
   sampleLayout?: LegacyLayoutEntry[];
 }
 
-/** What the server accepts on save. */
-export interface BadgeLimits {
-  maxDimensionIn: number;
-  minHolePunchCount: number;
-  maxHolePunchCount: number;
-  maxHolePunchMm: number;
-  maxCornerRadiusMm: number;
-}
-
 export const BADGE_DOCUMENT_VERSION = "1.0";
 
 /** Number of panels implied by a fold type. */

@@ -180,7 +180,16 @@ export function foldInvertForPage(fold: FoldType, pageIndex: number): boolean {
   return false;
 }
 
-export function flatten(doc: BadgeDocument): FlattenResult {
+export interface FlattenOptions {
+  /** Inches of print overshoot the host's printer tolerates. Default 0 (strict). */
+  printOvershootAllowanceIn?: number;
+}
+
+export function flatten(
+  doc: BadgeDocument,
+  options?: FlattenOptions,
+): FlattenResult {
+  const allowanceIn = options?.printOvershootAllowanceIn ?? 0;
   const panelHeight = doc.panelSize.height;
   const layout: LegacyLayoutEntry[] = [];
 
@@ -192,7 +201,7 @@ export function flatten(doc: BadgeDocument): FlattenResult {
       panelHeight,
     };
     for (const field of page.fields) {
-      if (isFieldOutsidePanel(field, doc.panelSize)) continue;
+      if (isFieldOutsidePanel(field, doc.panelSize, allowanceIn)) continue;
       layout.push(fieldToEntry(field, ctx));
     }
   });

@@ -1,7 +1,7 @@
 import {
   PAGE_COUNT,
-  type BadgeLimits,
   type BadgePage,
+  type BadgePreset,
   type FoldType,
   type HolePunch,
   type HolePunchShape,
@@ -26,17 +26,29 @@ export interface SetupDraft {
 
 export type PunchMeasure = Exclude<keyof HolePunch, "shape">;
 
+export const PUNCH_MEASURES: PunchMeasure[] = [
+  "count",
+  "widthMm",
+  "heightMm",
+  "pitchMm",
+  "topOffsetMm",
+];
+
 export type SetupDraftAction =
   | { type: "preset"; key: string; setup: PresetSetup }
   | { type: "fold"; fold: FoldType }
   | { type: "width"; width: number }
   | { type: "height"; height: number }
   | { type: "panel"; index: number; patch: Partial<PanelConfig> }
-  | { type: "punchShape"; shape: HolePunchShape | null }
+  | {
+      type: "punchShape";
+      shape: HolePunchShape | null;
+      presets: BadgePreset[];
+    }
   | { type: "punch"; key: PunchMeasure; value: number }
   | { type: "cornerRadius"; cornerRadiusMm: number };
 
-const DEFAULT_HOLE_PUNCH: Record<HolePunchShape, HolePunch> = {
+const DEMO_HOLE_PUNCH: Record<HolePunchShape, HolePunch> = {
   circle: {
     shape: "circle",
     count: 2,
@@ -54,6 +66,16 @@ const DEFAULT_HOLE_PUNCH: Record<HolePunchShape, HolePunch> = {
     topOffsetMm: 5,
   },
 };
+
+function defaultHolePunch(
+  shape: HolePunchShape,
+  presets: BadgePreset[],
+): HolePunch {
+  return (
+    presets.find(p => p.holePunch?.shape === shape)?.holePunch ??
+    DEMO_HOLE_PUNCH[shape]
+  );
+}
 
 function panelsForFold(
   existing: (PanelConfig | undefined)[],
@@ -132,13 +154,13 @@ export function setupDraftReducer(
         panels: panelsForFold(draft.panels, action.fold),
       };
     case "width":
-      if (action.width === draft.panelSize.width) return draft;
+      if (Object.is(action.width, draft.panelSize.width)) return draft;
       return {
         ...leavePreset(draft),
         panelSize: { ...draft.panelSize, width: action.width },
       };
     case "height":
-      if (action.height === draft.panelSize.height) return draft;
+      if (Object.is(action.height, draft.panelSize.height)) return draft;
       return {
         ...leavePreset(draft),
         panelSize: { ...draft.panelSize, height: action.height },
@@ -158,7 +180,10 @@ export function setupDraftReducer(
         ...leavePreset(draft),
         ...withHolePunch(
           draft,
-          shape && (base ? { ...base, shape } : DEFAULT_HOLE_PUNCH[shape]),
+          shape &&
+            (base
+              ? { ...base, shape }
+              : defaultHolePunch(shape, action.presets)),
         ),
       };
     }
@@ -183,78 +208,53 @@ export function draftToSetup(draft: SetupDraft): BadgeSetup {
   return { fold, panelSize, panels, holePunch, cornerRadiusMm };
 }
 
-export interface SetupSizeErrors {
-  width: boolean;
-  printedHeight: boolean;
+export interface BadgeSetupValues {
+  /** Panel size is in inches. A measure is NaN when its input is not a number. */
+  panelWidth: number;
+  panelHeight: number;
+  fold: FoldType;
+  holePunch: HolePunch | null;
+  cornerRadiusMm: number;
 }
 
-export function setupSizeErrors(
-  draft: Pick<SetupDraft, "fold" | "panelSize">,
-  limits: BadgeLimits | undefined,
-): SetupSizeErrors {
-  if (!limits) return { width: false, printedHeight: false };
-  const { width, height } = draft.panelSize;
-  return {
-    width: width > limits.maxDimensionIn,
-    printedHeight: height * PAGE_COUNT[draft.fold] > limits.maxDimensionIn,
+export type BadgeSetupField =
+  "panelWidth" | "panelHeight" | PunchMeasure | "cornerRadiusMm";
+
+export type BadgeSetupErrors = Partial<Record<BadgeSetupField, string>>;
+
+export type ValidateBadgeSetup = (setup: BadgeSetupValues) => BadgeSetupErrors;
+
+export function setupErrors(
+  draft: Pick<
+    SetupDraft,
+    "fold" | "panelSize" | "holePunch" | "cornerRadiusMm"
+  >,
+  validateSetup: ValidateBadgeSetup | undefined,
+  notANumber: string,
+): BadgeSetupErrors {
+  const { fold, panelSize, holePunch, cornerRadiusMm } = draft;
+  const values: BadgeSetupValues = {
+    panelWidth: panelSize.width,
+    panelHeight: panelSize.height,
+    fold,
+    holePunch,
+    cornerRadiusMm,
   };
-}
-
-export type SpecError =
-  "positive" | "nonNegative" | "count" | "wholeNumber" | "maxMm";
-
-export type SetupSpecErrors = Partial<
-  Record<PunchMeasure | "cornerRadiusMm", SpecError>
->;
-
-function measureError(
-  value: number,
-  min: "positive" | "nonNegative",
-  max: number | undefined,
-): SpecError | undefined {
-  if (!Number.isFinite(value)) return min;
-  if (min === "positive" ? value <= 0 : value < 0) return min;
-  if (max !== undefined && value > max) return "maxMm";
-  return undefined;
-}
-
-function countError(
-  count: number,
-  limits: BadgeLimits | undefined,
-): SpecError | undefined {
-  if (!limits) {
-    return Number.isInteger(count) && count > 0 ? undefined : "wholeNumber";
-  }
-  const valid =
-    Number.isInteger(count) &&
-    count >= limits.minHolePunchCount &&
-    count <= limits.maxHolePunchCount;
-  return valid ? undefined : "count";
-}
-
-export function setupSpecErrors(
-  draft: Pick<SetupDraft, "holePunch" | "cornerRadiusMm">,
-  limits: BadgeLimits | undefined,
-): SetupSpecErrors {
-  const { holePunch } = draft;
-  const maxMm = limits?.maxHolePunchMm;
-  const errors: SetupSpecErrors = {
-    cornerRadiusMm: measureError(
-      draft.cornerRadiusMm,
-      "nonNegative",
-      limits?.maxCornerRadiusMm,
-    ),
-  };
-  if (holePunch) {
-    errors.count = countError(holePunch.count, limits);
-    errors.widthMm = measureError(holePunch.widthMm, "positive", maxMm);
-    errors.heightMm = measureError(holePunch.heightMm, "positive", maxMm);
-    errors.pitchMm = measureError(holePunch.pitchMm, "nonNegative", maxMm);
-    errors.topOffsetMm = measureError(
-      holePunch.topOffsetMm,
-      "nonNegative",
-      maxMm,
-    );
-  }
-  return errors;
+  if (validateSetup) return validateSetup(values);
+  const measures: [BadgeSetupField, number][] = [
+    ["panelWidth", panelSize.width],
+    ["panelHeight", panelSize.height],
+    ["cornerRadiusMm", cornerRadiusMm],
+    ...(holePunch
+      ? PUNCH_MEASURES.map((key): [BadgeSetupField, number] => [
+          key,
+          holePunch[key],
+        ])
+      : []),
+  ];
+  return Object.fromEntries(
+    measures
+      .filter(([, value]) => !Number.isFinite(value))
+      .map(([field]) => [field, notANumber]),
+  );
 }

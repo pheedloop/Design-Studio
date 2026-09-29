@@ -15,7 +15,6 @@ import {
   PAGE_COUNT,
   pageRoleForIndex,
   pageRoleLabel,
-  type BadgeLimits,
   type BadgePage,
   type BadgePreset,
   type FoldType,
@@ -32,10 +31,9 @@ import {
   draftToSetup,
   initSetupDraft,
   setupDraftReducer,
-  setupSizeErrors,
-  setupSpecErrors,
+  setupErrors,
   type PunchMeasure,
-  type SpecError,
+  type ValidateBadgeSetup,
 } from "./setupDraft";
 import { DimField, NumberField } from "./DimField";
 import { useLocale, useT, type StringKey } from "./i18n";
@@ -60,14 +58,6 @@ const PUNCH_FIELDS: { key: PunchMeasure; labelKey: StringKey }[] = [
   { key: "topOffsetMm", labelKey: "badgeeditor.setup.punchTopOffset" },
 ];
 
-const SPEC_ERROR_KEYS: Record<SpecError, StringKey> = {
-  positive: "badgeeditor.setup.errorPositive",
-  nonNegative: "badgeeditor.setup.errorNonNegative",
-  count: "badgeeditor.setup.errorCount",
-  wholeNumber: "badgeeditor.setup.errorWholeNumber",
-  maxMm: "badgeeditor.setup.errorMaxMm",
-};
-
 interface BadgeSetupDialogProps {
   fold: FoldType;
   panelSize: { width: number; height: number };
@@ -75,7 +65,7 @@ interface BadgeSetupDialogProps {
   holePunch: HolePunch | null;
   cornerRadiusMm: number;
   presets: BadgePreset[];
-  limits?: BadgeLimits;
+  validateSetup?: ValidateBadgeSetup;
   /** Display/input unit. Panel sizes are stored in inches regardless. */
   unit: Unit;
   /** Change the editor's measurement unit (applies live). */
@@ -91,7 +81,7 @@ export function BadgeSetupDialog({
   holePunch,
   cornerRadiusMm,
   presets,
-  limits,
+  validateSetup,
   unit,
   onUnitChange,
   onApply,
@@ -109,27 +99,12 @@ export function BadgeSetupDialog({
   const { width: w, height: h } = draft.panelSize;
   const count = PAGE_COUNT[localFold];
   const removedFields = countFieldsOnRemovedPanels(pages, localFold);
-  const sizeErrors = setupSizeErrors(draft, limits);
-  const specErrors = setupSpecErrors(draft, limits);
-  const hasErrors =
-    sizeErrors.width ||
-    sizeErrors.printedHeight ||
-    Object.values(specErrors).some(Boolean);
-  const specErrorText = (
-    field: PunchMeasure | "cornerRadiusMm",
-  ): string | undefined => {
-    const error = specErrors[field];
-    if (!error) return undefined;
-    if (!limits) return t(SPEC_ERROR_KEYS[error]);
-    const maxMm =
-      field === "cornerRadiusMm"
-        ? limits.maxCornerRadiusMm
-        : limits.maxHolePunchMm;
-    return t(SPEC_ERROR_KEYS[error], {
-      min: limits.minHolePunchCount,
-      max: error === "count" ? limits.maxHolePunchCount : maxMm,
-    });
-  };
+  const errors = setupErrors(
+    draft,
+    validateSetup,
+    t("badgeeditor.setup.errorNotANumber"),
+  );
+  const hasErrors = Object.values(errors).some(Boolean);
 
   const applyPreset = (key: string) => {
     const preset = presets.find(p => p.key === key);
@@ -140,10 +115,6 @@ export function BadgeSetupDialog({
   const printsAs = {
     width: formatDim(w, unit, locale),
     height: formatDim(h * count, unit, locale),
-    unit: unitLabel,
-  };
-  const maxSize = limits && {
-    max: formatDim(limits.maxDimensionIn, unit, locale),
     unit: unitLabel,
   };
 
@@ -247,22 +218,14 @@ export function BadgeSetupDialog({
             value={w}
             unit={unit}
             onChange={width => dispatch({ type: "width", width })}
-            error={
-              sizeErrors.width
-                ? t("badgeeditor.setup.maxWidth", maxSize)
-                : undefined
-            }
+            error={errors.panelWidth}
           />
           <DimField
             label={t("badgeeditor.setup.panelHeight", { unit: unitLabel })}
             value={h}
             unit={unit}
             onChange={height => dispatch({ type: "height", height })}
-            error={
-              sizeErrors.printedHeight
-                ? t("badgeeditor.setup.maxPrintedHeight", maxSize)
-                : undefined
-            }
+            error={errors.panelHeight}
           />
         </Row>
 
@@ -285,7 +248,7 @@ export function BadgeSetupDialog({
                   active={active}
                   className="flex-1"
                   onClick={() =>
-                    dispatch({ type: "punchShape", shape: o.value })
+                    dispatch({ type: "punchShape", shape: o.value, presets })
                   }
                 >
                   {t(o.labelKey)}
@@ -305,7 +268,7 @@ export function BadgeSetupDialog({
                     onChange={value =>
                       dispatch({ type: "punch", key: f.key, value })
                     }
-                    error={specErrorText(f.key)}
+                    error={errors[f.key]}
                   />
                 ))}
               </div>
@@ -323,7 +286,7 @@ export function BadgeSetupDialog({
           onChange={cornerRadiusMm =>
             dispatch({ type: "cornerRadius", cornerRadiusMm })
           }
-          error={specErrorText("cornerRadiusMm")}
+          error={errors.cornerRadiusMm}
         />
 
         {count > 1 && (

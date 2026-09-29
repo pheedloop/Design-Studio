@@ -9,6 +9,8 @@ import {
   type Unit,
 } from "./units";
 
+const parseNumber = (text: string) => (text.trim() === "" ? NaN : Number(text));
+
 /**
  * Fractional dimension input (NumberInput rounds to integers, so not usable
  * here). The stored `value` is always inches; the field displays and accepts
@@ -25,13 +27,13 @@ export function DimField({
   /** Value in inches. */
   value: number;
   unit: Unit;
-  /** Reports the new value in inches. */
+  /** Reports every edit in inches, NaN when not a number. */
   onChange: (inches: number) => void;
   error?: string;
 }) {
   const [text, setText] = useState(() => fmtUnit(value, unit, 3));
   const [synced, setSynced] = useState({ value, unit });
-  if (synced.value !== value || synced.unit !== unit) {
+  if (!Object.is(synced.value, value) || synced.unit !== unit) {
     setSynced({ value, unit });
     setText(syncDimText(text, value, unit));
   }
@@ -44,14 +46,11 @@ export function DimField({
       error={error}
       onTextChange={next => {
         setText(next);
-        const n = Number(next);
-        if (Number.isFinite(n) && n > 0) onChange(fromUnit(n, unit));
+        onChange(fromUnit(parseNumber(next), unit));
       }}
     />
   );
 }
-
-const parseNumber = (text: string) => (text.trim() === "" ? NaN : Number(text));
 
 /** Reports every edit, NaN when blank, so the caller can validate it. */
 export function NumberField({

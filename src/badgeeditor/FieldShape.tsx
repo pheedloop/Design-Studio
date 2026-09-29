@@ -67,13 +67,19 @@ export function FieldShape({
           const newSize = node.width() * node.scaleX();
           node.scaleX(1);
           node.scaleY(1);
-          onChange({ scale: newSize / QR_BASE_PX });
+          onChange({
+            left: node.x() / PPI,
+            top: node.y() / PPI,
+            scale: newSize / QR_BASE_PX,
+          });
         } else {
           const newW = node.width() * node.scaleX();
           const newH = node.height() * node.scaleY();
           node.scaleX(1);
           node.scaleY(1);
           onChange({
+            left: node.x() / PPI,
+            top: node.y() / PPI,
             width: newW / PPI,
             height: newH / PPI,
             ...(isImageField

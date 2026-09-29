@@ -1,10 +1,20 @@
 import { useEffect, useRef, useState } from "react";
 import { Stage, Layer, Rect, Line, Transformer } from "react-konva";
 import type Konva from "konva";
+import type { Box } from "konva/lib/shapes/Transformer";
 import { BLACK, BRAND, GRAY_300, GRAY_400, WHITE } from "@/canvasColors";
 import type { BadgeField, BadgePage, HolePunch } from "./model";
 import { GridLayer } from "@/editor/components/canvas/GridLayer";
-import { PPI, fieldSizePx, isFieldOutsidePanel, mmToPx } from "./canvasMetrics";
+import {
+  PPI,
+  clampResizeToPanel,
+  clampToPanel,
+  fieldSizePx,
+  fieldsBounds,
+  isFieldOutsidePanel,
+  mmToPx,
+  type PanelBox,
+} from "./canvasMetrics";
 import { useBadgeGuides } from "./useBadgeGuides";
 import type { BadgeData } from "./badgeData";
 import { FieldShape } from "./FieldShape";
@@ -28,6 +38,8 @@ interface BadgeCanvasProps {
   snapToGrid: boolean;
   /** Grid spacing in canvas px (inch spacing × PPI). */
   gridSpacingPx: number;
+  /** Inches of print overshoot the host's printer tolerates. Default 0. */
+  printOvershootAllowanceIn?: number;
   selectedIds: Set<string>;
   /** mousedown on a field — additive = shift held. */
   onFieldMouseDown: (id: string, additive: boolean) => void;
@@ -58,6 +70,7 @@ export function BadgeCanvas({
   showGrid,
   snapToGrid,
   gridSpacingPx,
+  printOvershootAllowanceIn = 0,
   selectedIds,
   onFieldMouseDown,
   onClearSelection,
@@ -120,6 +133,7 @@ export function BadgeCanvas({
   } | null>(null);
   // Start positions captured at drag start (for multi-move).
   const dragStarts = useRef(new Map<string, { x: number; y: number }>());
+  const dragStartBounds = useRef<PanelBox | null>(null);
 
   const singleSelectedId = selectedIds.size === 1 ? [...selectedIds][0] : null;
 
@@ -136,6 +150,7 @@ export function BadgeCanvas({
 
   const panelW = panelSize.width * PPI;
   const panelH = panelSize.height * PPI;
+  const panelPx = { width: panelW, height: panelH };
 
   const selectedKind = page.fields.find(f => f.id === singleSelectedId)?.kind;
   const isQr = selectedKind === "qrCode";
@@ -241,6 +256,9 @@ export function BadgeCanvas({
       const n = nodeRefs.current.get(fid);
       if (n) dragStarts.current.set(fid, { x: n.x(), y: n.y() });
     }
+    dragStartBounds.current = boundsPx(
+      page.fields.filter(f => dragStarts.current.has(f.id)),
+    );
   };
 
   const snapToGridPx = (v: number) =>
@@ -254,26 +272,29 @@ export function BadgeCanvas({
       if (!field) return;
       const { w, h } = fieldSizePx(field);
       // Grid snap first; alignment guides then refine when near other fields.
-      const { x, y } = snap(
+      const snapped = snap(
         id,
         snapToGridPx(node.x()),
         snapToGridPx(node.y()),
         w,
         h,
       );
-      node.x(x);
-      node.y(y);
+      node.position(clampToPanel({ ...snapped, width: w, height: h }, panelPx));
       return;
     }
     // Multi-move: snap the lead node to grid, then shift the rest by that delta.
     const start = dragStarts.current.get(id);
-    if (!start) return;
-    const nx = snapToGridPx(node.x());
-    const ny = snapToGridPx(node.y());
-    node.x(nx);
-    node.y(ny);
-    const dx = nx - start.x;
-    const dy = ny - start.y;
+    const bounds = dragStartBounds.current;
+    if (!start || !bounds) return;
+    const moved = {
+      ...bounds,
+      x: bounds.x + snapToGridPx(node.x()) - start.x,
+      y: bounds.y + snapToGridPx(node.y()) - start.y,
+    };
+    const clamped = clampToPanel(moved, panelPx);
+    const dx = clamped.x - bounds.x;
+    const dy = clamped.y - bounds.y;
+    node.position({ x: start.x + dx, y: start.y + dy });
     dragStarts.current.forEach((s, fid) => {
       if (fid === id) return;
       const n = nodeRefs.current.get(fid);
@@ -292,29 +313,41 @@ export function BadgeCanvas({
     });
     if (updates.length) onMoveMany(updates);
     dragStarts.current.clear();
+    dragStartBounds.current = null;
     clear();
   };
 
-  // Union bounds for a multi-selection outline.
+  const boundResize = (oldBox: Box, newBox: Box): Box => {
+    const stage = stageRef.current;
+    const anchor = transformerRef.current?.getActiveAnchor();
+    if (!stage || !anchor) return newBox;
+    const k = stage.scaleX();
+    const toLocal = (b: Box): PanelBox => ({
+      x: (b.x - stage.x()) / k,
+      y: (b.y - stage.y()) / k,
+      width: b.width / k,
+      height: b.height / k,
+    });
+    const local = clampResizeToPanel(
+      toLocal(oldBox),
+      toLocal(newBox),
+      panelPx,
+      anchor,
+      keepsAspect,
+    );
+    const box = {
+      ...newBox,
+      x: local.x * k + stage.x(),
+      y: local.y * k + stage.y(),
+      width: local.width * k,
+      height: local.height * k,
+    };
+    return box.width < 8 || box.height < 8 ? oldBox : box;
+  };
+
   const multiBounds =
     selectedIds.size > 1
-      ? (() => {
-          let minX = Infinity,
-            minY = Infinity,
-            maxX = -Infinity,
-            maxY = -Infinity;
-          for (const f of page.fields) {
-            if (!selectedIds.has(f.id)) continue;
-            const { w, h } = fieldSizePx(f);
-            minX = Math.min(minX, f.left * PPI);
-            minY = Math.min(minY, f.top * PPI);
-            maxX = Math.max(maxX, f.left * PPI + w);
-            maxY = Math.max(maxY, f.top * PPI + h);
-          }
-          return minX === Infinity
-            ? null
-            : { x: minX, y: minY, w: maxX - minX, h: maxY - minY };
-        })()
+      ? boundsPx(page.fields.filter(f => selectedIds.has(f.id)))
       : null;
 
   return (
@@ -393,7 +426,11 @@ export function BadgeCanvas({
             key={field.id}
             field={field}
             data={data}
-            outside={isFieldOutsidePanel(field, panelSize)}
+            outside={isFieldOutsidePanel(
+              field,
+              panelSize,
+              printOvershootAllowanceIn,
+            )}
             panMode={panMode}
             registerRef={node => {
               if (node) nodeRefs.current.set(field.id, node);
@@ -412,8 +449,8 @@ export function BadgeCanvas({
           <Rect
             x={multiBounds.x - 4}
             y={multiBounds.y - 4}
-            width={multiBounds.w + 8}
-            height={multiBounds.h + 8}
+            width={multiBounds.width + 8}
+            height={multiBounds.height + 8}
             stroke={BRAND}
             strokeWidth={1}
             dash={[6, 3]}
@@ -475,11 +512,21 @@ export function BadgeCanvas({
           keepRatio={keepsAspect}
           enabledAnchors={enabledAnchors}
           ignoreStroke
-          boundBoxFunc={(oldBox, newBox) =>
-            newBox.width < 8 || newBox.height < 8 ? oldBox : newBox
-          }
+          boundBoxFunc={boundResize}
         />
       </Layer>
     </Stage>
+  );
+}
+
+function boundsPx(fields: BadgeField[]): PanelBox | null {
+  const b = fieldsBounds(fields);
+  return (
+    b && {
+      x: b.x * PPI,
+      y: b.y * PPI,
+      width: b.width * PPI,
+      height: b.height * PPI,
+    }
   );
 }

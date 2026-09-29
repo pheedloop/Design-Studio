@@ -121,16 +121,32 @@ describe("inflate + flatten round trip", () => {
     },
   );
 
-  it("leaves fields outside their panel out of the print", () => {
-    const inside = text(1);
-    const layout = [
-      inside,
-      text(2.9),
-      { ...text(1), left: -0.1 },
+  it.each([
+    ["a field inside", text(1), 0, true],
+    [
+      "a hair over the left edge, no allowance",
+      text(1, { left: -0.001 }),
+      0,
+      false,
+    ],
+    [
+      "a field exactly ⅛ in over the left edge, ⅛ allowance",
+      text(1, { left: -0.125 }),
+      0.125,
+      true,
+    ],
+    ["a field 0.135 in over the bottom, ⅛ allowance", text(2.9), 0.125, false],
+    [
+      "a QR code past the right edge, ⅛ allowance",
       { top: 1, left: 3.2, field: "qrCode", scale: 1 },
-    ];
-    const result = flatten(inflate(layout, { width: 3.5, height: 3 }));
-    expectSameLayout(result.layout, [inside]);
+      0.125,
+      false,
+    ],
+  ] as const)("prints %s: %s", (_, entry, allowance, prints) => {
+    const result = flatten(inflate([entry], { width: 3.5, height: 3 }), {
+      printOvershootAllowanceIn: allowance,
+    });
+    expectSameLayout(result.layout, prints ? [entry] : []);
   });
 });
 

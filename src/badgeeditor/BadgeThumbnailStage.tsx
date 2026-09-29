@@ -11,9 +11,12 @@ import { StaticField } from "./StaticField";
 export const BadgeThumbnailStage = memo(function BadgeThumbnailStage({
   doc,
   stageRef,
+  printOvershootAllowanceIn = 0,
 }: {
   doc: BadgeDocument;
   stageRef: RefObject<Konva.Stage | null>;
+  /** Inches of print overshoot the host's printer tolerates. Default 0. */
+  printOvershootAllowanceIn?: number;
 }) {
   const panelW = doc.panelSize.width * PPI;
   const panelH = doc.panelSize.height * PPI;
@@ -43,7 +46,14 @@ export const BadgeThumbnailStage = memo(function BadgeThumbnailStage({
             <HolePunchShapes holePunch={doc.holePunch} panelW={panelW} />
           )}
           {doc.pages[0]?.fields
-            .filter(f => !isFieldOutsidePanel(f, doc.panelSize))
+            .filter(
+              f =>
+                !isFieldOutsidePanel(
+                  f,
+                  doc.panelSize,
+                  printOvershootAllowanceIn,
+                ),
+            )
             .map(f => (
               <StaticField key={f.id} field={f} data={null} />
             ))}

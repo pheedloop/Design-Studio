@@ -38,8 +38,9 @@ import { UNIT_LABEL_KEYS, formatDim, type Unit } from "./units";
 import { BadgeSidebar } from "./BadgeSidebar";
 import { BadgePreview } from "./BadgePreview";
 import { BadgeSetupDialog } from "./BadgeSetupDialog";
-import { isFieldOutsidePanel } from "./canvasMetrics";
+import { clampFieldsToPanel, isFieldOutsidePanel } from "./canvasMetrics";
 import { applyBadgeSetup, type BadgeSetup } from "./badgeSetup";
+import type { ValidateBadgeSetup } from "./setupDraft";
 import { savePayload } from "./savePayload";
 import { AttendeePicker } from "./AttendeePicker";
 import { PropertiesPanel } from "./PropertiesPanel";
@@ -61,7 +62,6 @@ import {
   type BadgeCustomField,
   type BadgeDocument,
   type BadgeField,
-  type BadgeLimits,
   type BadgePreset,
   type FlattenResult,
 } from "./model";
@@ -78,8 +78,9 @@ export interface BadgeEditorProps {
   ) => Promise<void>;
   onDirtyChange?: (dirty: boolean) => void;
   presets?: BadgePreset[];
-  /** Setup sizes the server would refuse are blocked in the setup dialog. */
-  limits?: BadgeLimits;
+  /** Returns a translated message per invalid Badge Setup field; any message blocks Apply.
+   *  Omit to check only that each field is a number. */
+  validateSetup?: ValidateBadgeSetup;
   customFields?: BadgeCustomField[];
   name?: string;
   onNameChange?: (name: string) => void;
@@ -95,6 +96,10 @@ export interface BadgeEditorProps {
   images?: EditorImage[];
   onUploadImage?: (file: File) => Promise<void>;
   onDeleteImage?: (id: string) => Promise<void>;
+  /** Inches of print overshoot the host's printer tolerates — how far a field's
+   *  box may lie outside its panel and still print. Default 0 (strict): canvas
+   *  outline, preview, thumbnail and the flattened save payload all agree. */
+  printOvershootAllowanceIn?: number;
 }
 
 const BLANK_BADGE_SIZE = { width: 4, height: 3 };
@@ -140,7 +145,7 @@ function BadgeEditorInner({
   onSave,
   onDirtyChange,
   presets = [],
-  limits,
+  validateSetup,
   customFields = [],
   name,
   onNameChange,
@@ -149,6 +154,7 @@ function BadgeEditorInner({
   onUploadImage,
   onDeleteImage,
   attendeeProvider,
+  printOvershootAllowanceIn = 0,
 }: Omit<BadgeEditorProps, "translate" | "locale">) {
   const t = useT();
   const locale = useLocale();
@@ -234,7 +240,7 @@ function BadgeEditorInner({
   const pageIndex = Math.min(activePageIndex, doc.pages.length - 1);
   const activePage = doc.pages[pageIndex];
   const outsideCount = activePage.fields.filter(f =>
-    isFieldOutsidePanel(f, doc.panelSize),
+    isFieldOutsidePanel(f, doc.panelSize, printOvershootAllowanceIn),
   ).length;
 
   // Properties panel edits the field only when exactly one is selected.
@@ -242,7 +248,10 @@ function BadgeEditorInner({
     selectedIds.size === 1
       ? (activePage.fields.find(f => selectedIds.has(f.id)) ?? null)
       : null;
-  const flattened = useMemo(() => flatten(doc), [doc]);
+  const flattened = useMemo(
+    () => flatten(doc, { printOvershootAllowanceIn }),
+    [doc, printOvershootAllowanceIn],
+  );
 
   const selectPage = useCallback((i: number) => {
     setActivePageIndex(i);
@@ -294,40 +303,41 @@ function BadgeEditorInner({
     [setDoc, pageIndex],
   );
 
-  const addField = useCallback(
-    (fieldKey: string) => {
-      const field = createField(
-        fieldKey,
-        t("badgeeditor.field.customTextDefault"),
-      );
-      mutateActivePage(fields => [...fields, field]);
-      setSelectedIds(new Set([field.id]));
+  const placeFields = useCallback(
+    (added: BadgeField[]) => {
+      const placed = clampFieldsToPanel(added, doc.panelSize);
+      mutateActivePage(fields => [...fields, ...placed]);
+      setSelectedIds(new Set(placed.map(f => f.id)));
     },
-    [mutateActivePage, t],
+    [mutateActivePage, doc.panelSize],
+  );
+
+  const addField = useCallback(
+    (fieldKey: string) =>
+      placeFields([
+        createField(fieldKey, t("badgeeditor.field.customTextDefault")),
+      ]),
+    [placeFields, t],
   );
 
   const addCustomField = useCallback(
-    (custom: BadgeCustomField) => {
-      const field = createCustomField(custom);
-      mutateActivePage(fields => [...fields, field]);
-      setSelectedIds(new Set([field.id]));
-    },
-    [mutateActivePage],
+    (custom: BadgeCustomField) => placeFields([createCustomField(custom)]),
+    [placeFields],
   );
 
   const addImageField = useCallback(
     (image: EditorImage) => {
       const { width, height } = placedImageSize(image);
-      const field: BadgeField = {
-        ...createField("image"),
-        code: image.id,
-        width: pxToInch(width),
-        height: pxToInch(height),
-      };
-      mutateActivePage(fields => [...fields, field]);
-      setSelectedIds(new Set([field.id]));
+      placeFields([
+        {
+          ...createField("image"),
+          code: image.id,
+          width: pxToInch(width),
+          height: pxToInch(height),
+        },
+      ]);
     },
-    [mutateActivePage],
+    [placeFields],
   );
 
   const updateField = useCallback(
@@ -361,10 +371,19 @@ function BadgeEditorInner({
   );
   const runAlign = useCallback(
     (fn: (fields: BadgeField[]) => FieldMove[]) => {
-      const moves = fn(selectedFields);
+      const byId = new Map(selectedFields.map(f => [f.id, f]));
+      const moves = fn(selectedFields).flatMap(move => {
+        const field = byId.get(move.id);
+        if (!field) return [];
+        const [placed] = clampFieldsToPanel(
+          [{ ...field, ...move }],
+          doc.panelSize,
+        );
+        return [{ id: move.id, top: placed.top, left: placed.left }];
+      });
       if (moves.length) moveMany(moves);
     },
-    [selectedFields, moveMany],
+    [selectedFields, moveMany, doc.panelSize],
   );
 
   const deleteSelected = useCallback(() => {
@@ -383,15 +402,15 @@ function BadgeEditorInner({
 
   const pasteClipboard = useCallback(() => {
     if (!clipboard.current.length) return;
-    const pasted = clipboard.current.map(src => ({
-      ...src,
-      id: uuid(),
-      top: src.top + 0.15,
-      left: src.left + 0.15,
-    }));
-    mutateActivePage(fields => [...fields, ...pasted]);
-    setSelectedIds(new Set(pasted.map(f => f.id)));
-  }, [mutateActivePage]);
+    placeFields(
+      clipboard.current.map(src => ({
+        ...src,
+        id: uuid(),
+        top: src.top + 0.15,
+        left: src.left + 0.15,
+      })),
+    );
+  }, [placeFields]);
 
   const applySetup = useCallback(
     (setup: BadgeSetup) => {
@@ -412,9 +431,11 @@ function BadgeEditorInner({
         const thumbnail = await captureBadgeThumbnail(
           thumbnailStageRef.current,
         );
-        await onSave(...savePayload(current, name, thumbnail));
+        await onSave(
+          ...savePayload(current, name, thumbnail, printOvershootAllowanceIn),
+        );
       }),
-    [onSave, name],
+    [onSave, name, printOvershootAllowanceIn],
   );
   const { isSaving, save: handleSave } = useBadgeSave({
     doc,
@@ -698,6 +719,7 @@ function BadgeEditorInner({
                     data={previewData}
                     showRulers={showRulers}
                     unit={unit}
+                    printOvershootAllowanceIn={printOvershootAllowanceIn}
                   />
                 </div>
               ) : (
@@ -717,6 +739,7 @@ function BadgeEditorInner({
                     showGrid={showGrid}
                     snapToGrid={snapToGrid}
                     gridSpacingPx={GRID_SPACING_IN * DPI}
+                    printOvershootAllowanceIn={printOvershootAllowanceIn}
                     selectedIds={selectedIds}
                     onFieldMouseDown={selectField}
                     onClearSelection={clearSelection}
@@ -832,7 +855,13 @@ function BadgeEditorInner({
         </div>
       </div>
 
-      {onSave && <BadgeThumbnailStage doc={doc} stageRef={thumbnailStageRef} />}
+      {onSave && (
+        <BadgeThumbnailStage
+          doc={doc}
+          stageRef={thumbnailStageRef}
+          printOvershootAllowanceIn={printOvershootAllowanceIn}
+        />
+      )}
 
       {showImageGallery && (
         <ImageGallery
@@ -855,7 +884,7 @@ function BadgeEditorInner({
           holePunch={doc.holePunch ?? null}
           cornerRadiusMm={doc.cornerRadiusMm ?? 0}
           presets={presets}
-          limits={limits}
+          validateSetup={validateSetup}
           unit={unit}
           onUnitChange={setUnit}
           onApply={applySetup}

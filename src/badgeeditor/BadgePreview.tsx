@@ -23,11 +23,14 @@ export function BadgePreview({
   data,
   showRulers = false,
   unit = "in",
+  printOvershootAllowanceIn = 0,
 }: {
   doc: BadgeDocument;
   data: BadgeData | null;
   showRulers?: boolean;
   unit?: Unit;
+  /** Inches of print overshoot the host's printer tolerates. Default 0. */
+  printOvershootAllowanceIn?: number;
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
   // Destructured individually (not kept as one bundled object) — accessing a
@@ -114,7 +117,14 @@ export function BadgePreview({
                   rotation={inverted ? 180 : 0}
                 >
                   {page.fields
-                    .filter(f => !isFieldOutsidePanel(f, doc.panelSize))
+                    .filter(
+                      f =>
+                        !isFieldOutsidePanel(
+                          f,
+                          doc.panelSize,
+                          printOvershootAllowanceIn,
+                        ),
+                    )
                     .map(f => (
                       <StaticField key={f.id} field={f} data={data} />
                     ))}

@@ -1,12 +1,13 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import {
   initSetupDraft,
   setupDraftReducer,
-  setupSizeErrors,
-  setupSpecErrors,
+  setupErrors,
+  type BadgeSetupValues,
+  type SetupDraft,
   type SetupDraftAction,
 } from "./setupDraft";
-import type { BadgeLimits, HolePunch } from "./model";
+import type { BadgePreset, HolePunch } from "./model";
 
 const ROUND: HolePunch = {
   shape: "circle",
@@ -52,7 +53,12 @@ describe("setupDraftReducer", () => {
     ["an unchanged fold", { type: "fold", fold: "single" }, true, {}],
     ["an unchanged width", { type: "width", width: 4 }, true, {}],
     ["an unchanged height", { type: "height", height: 5.5 }, true, {}],
-    ["an unchanged shape", { type: "punchShape", shape: "circle" }, true, {}],
+    [
+      "an unchanged shape",
+      { type: "punchShape", shape: "circle", presets: [] },
+      true,
+      {},
+    ],
     [
       "a width edit",
       { type: "width", width: 3 },
@@ -72,7 +78,7 @@ describe("setupDraftReducer", () => {
     ],
     [
       "a shape change",
-      { type: "punchShape", shape: "rect" },
+      { type: "punchShape", shape: "rect", presets: [] },
       false,
       { presetKey: "", holePunch: { ...ROUND, shape: "rect" } },
     ],
@@ -106,10 +112,22 @@ describe("setupDraftReducer", () => {
     },
   );
 
+  const SLOT: HolePunch = { ...ROUND, shape: "rect", widthMm: 12 };
+  const PRESETS = [ROUND, SLOT].map((holePunch, i): BadgePreset => ({
+    key: `p${i}`,
+    label: `P${i}`,
+    width: 4,
+    height: 3,
+    fold: "none",
+    holePunch,
+    cornerRadiusMm: 0,
+  }));
+
   it.each([
     [
-      "the shape default with no earlier punch",
+      "the demo default with no earlier punch or preset",
       initial,
+      [],
       {
         shape: "rect",
         count: 2,
@@ -119,108 +137,74 @@ describe("setupDraftReducer", () => {
         topOffsetMm: 5,
       },
     ],
+    ["the first preset with that shape", initial, PRESETS, SLOT],
     [
       "the last punch after None",
-      setupDraftReducer(withPreset, { type: "punchShape", shape: null }),
+      setupDraftReducer(withPreset, {
+        type: "punchShape",
+        shape: null,
+        presets: PRESETS,
+      }),
+      PRESETS,
       { ...ROUND, shape: "rect" },
     ],
-  ] as const)("starts a punch from %s", (_, draft, expected) => {
-    expect(
-      setupDraftReducer(draft, { type: "punchShape", shape: "rect" }).holePunch,
-    ).toEqual(expected);
-  });
-});
-
-const LIMITS: BadgeLimits = {
-  maxDimensionIn: 24,
-  minHolePunchCount: 1,
-  maxHolePunchCount: 10,
-  maxHolePunchMm: 100,
-  maxCornerRadiusMm: 100,
-};
-
-describe("setupSizeErrors", () => {
-  it.each([
-    ["at the limit", "double", 24, 8, LIMITS, false, false],
-    ["too wide", "none", 24.1, 3, LIMITS, true, false],
-    ["printed height within one fold", "single", 4, 9, LIMITS, false, false],
-    ["printed height across two folds", "double", 4, 9, LIMITS, false, true],
-    ["no limits", "double", 100, 100, undefined, false, false],
-  ] as const)(
-    "flags a size %s",
-    (_, fold, width, height, limits, widthError, printedHeight) => {
+  ] as [string, SetupDraft, BadgePreset[], HolePunch][])(
+    "starts a punch from %s",
+    (_, draft, presets, expected) => {
       expect(
-        setupSizeErrors({ fold, panelSize: { width, height } }, limits),
-      ).toEqual({ width: widthError, printedHeight });
+        setupDraftReducer(draft, { type: "punchShape", shape: "rect", presets })
+          .holePunch,
+      ).toEqual(expected);
     },
   );
 });
 
-describe("setupSpecErrors", () => {
+const VALUES: BadgeSetupValues = {
+  panelWidth: 3.5,
+  panelHeight: 3,
+  fold: "none",
+  holePunch: ROUND,
+  cornerRadiusMm: 1,
+};
+
+const draftOf = (values: BadgeSetupValues) => ({
+  fold: values.fold,
+  panelSize: { width: values.panelWidth, height: values.panelHeight },
+  holePunch: values.holePunch,
+  cornerRadiusMm: values.cornerRadiusMm,
+});
+
+describe("setupErrors", () => {
   it.each([
     [
-      "nothing at the limits",
-      { count: 10, widthMm: 100, pitchMm: 0 },
-      100,
-      LIMITS,
-      {},
+      "the host's messages",
+      VALUES,
+      { pitchMm: "Too far" },
+      { pitchMm: "Too far" },
     ],
+    ["nothing when the host finds no error", VALUES, {}, {}],
     [
-      "a count outside the limits",
-      { count: 11 },
-      0,
-      LIMITS,
-      { count: "count" },
-    ],
-    ["a fractional count", { count: 1.5 }, 0, LIMITS, { count: "count" }],
-    ["a zero width", { widthMm: 0 }, 0, LIMITS, { widthMm: "positive" }],
-    [
-      "a height over the limit",
-      { heightMm: 100.5 },
-      0,
-      LIMITS,
-      { heightMm: "maxMm" },
-    ],
-    [
-      "a negative pitch",
-      { pitchMm: -1 },
-      0,
-      LIMITS,
-      { pitchMm: "nonNegative" },
-    ],
-    [
-      "a blank top offset",
-      { topOffsetMm: NaN },
-      0,
-      LIMITS,
-      { topOffsetMm: "nonNegative" },
-    ],
-    ["a radius over the limit", {}, 101, LIMITS, { cornerRadiusMm: "maxMm" }],
-    [
-      "no maxima without limits",
-      { count: 50, widthMm: 500 },
-      500,
-      undefined,
-      {},
-    ],
-    [
-      "sign rules without limits",
-      { count: 0, widthMm: 0, pitchMm: -1 },
-      -1,
-      undefined,
+      "not-a-number fields without a host check",
       {
-        count: "wholeNumber",
-        widthMm: "positive",
-        pitchMm: "nonNegative",
-        cornerRadiusMm: "nonNegative",
+        ...VALUES,
+        panelWidth: NaN,
+        holePunch: { ...ROUND, count: NaN, topOffsetMm: 0 },
+        cornerRadiusMm: -1,
       },
+      undefined,
+      { panelWidth: "NaN", count: "NaN" },
     ],
-  ] as const)("flags %s", (_, punch, cornerRadiusMm, limits, expected) => {
-    expect(
-      setupSpecErrors(
-        { holePunch: { ...ROUND, ...punch }, cornerRadiusMm },
-        limits,
-      ),
-    ).toEqual(expected);
+    [
+      "no punch fields without a punch",
+      { ...VALUES, holePunch: null },
+      undefined,
+      {},
+    ],
+  ] as const)("returns %s", (_, values, hostErrors, expected) => {
+    const validateSetup = hostErrors && vi.fn(() => hostErrors);
+    expect(setupErrors(draftOf(values), validateSetup, "NaN")).toEqual(
+      expected,
+    );
+    if (validateSetup) expect(validateSetup).toHaveBeenCalledWith(values);
   });
 });

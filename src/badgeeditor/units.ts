@@ -48,6 +48,7 @@ export const fmtUnit = (inches: number, u: Unit, dp = 2) =>
   String(+(inches * PER_INCH[u]).toFixed(dp));
 
 export function syncDimText(text: string, inches: number, u: Unit): string {
+  if (Number.isNaN(inches)) return text;
   const n = Number(text);
   const matches =
     text.trim() !== "" &&
