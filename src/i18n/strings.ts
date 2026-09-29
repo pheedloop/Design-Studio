@@ -748,6 +748,10 @@ export const BADGEEDITOR = {
   "setup.printsAsUnfolded":
     "Prints as {{width}} × {{height}} {{unit}} (unfolded)",
   "setup.printsUpsideDown": "Prints upside-down",
+  "setup.removedFields_one":
+    "{{count}} field on a removed panel will be deleted. You can undo this.",
+  "setup.removedFields_other":
+    "{{count}} fields on removed panels will be deleted. You can undo this.",
   "setup.stubs": "Stubs",
   "setup.tearaway": "Tear-away (perforated stubs)",
   "setup.title": "Badge Setup",

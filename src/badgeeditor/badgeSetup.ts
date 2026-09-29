@@ -52,6 +52,16 @@ function samePanel(
   );
 }
 
+/** Fields on the panels a switch to `fold` would remove. */
+export function countFieldsOnRemovedPanels(
+  pages: BadgePage[],
+  fold: FoldType,
+): number {
+  return pages
+    .slice(PAGE_COUNT[fold])
+    .reduce((sum, page) => sum + page.fields.length, 0);
+}
+
 export function applyBadgeSetup(
   doc: BadgeDocument,
   setup: BadgeSetup,

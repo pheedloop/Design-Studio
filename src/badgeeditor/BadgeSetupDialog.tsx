@@ -21,7 +21,11 @@ import {
   type HolePunch,
 } from "./model";
 import { presetSetup } from "./presets";
-import type { BadgeSetup, PanelConfig } from "./badgeSetup";
+import {
+  countFieldsOnRemovedPanels,
+  type BadgeSetup,
+  type PanelConfig,
+} from "./badgeSetup";
 import { draftToSetup, initSetupDraft, setupDraftReducer } from "./setupDraft";
 import { DimField } from "./DimField";
 import { useLocale, useT, type StringKey } from "./i18n";
@@ -70,6 +74,7 @@ export function BadgeSetupDialog({
   const localFold = draft.fold;
   const { width: w, height: h } = draft.panelSize;
   const count = PAGE_COUNT[localFold];
+  const removedFields = countFieldsOnRemovedPanels(pages, localFold);
 
   const applyPreset = (key: string) => {
     const preset = presets.find(p => p.key === key);
@@ -148,6 +153,14 @@ export function BadgeSetupDialog({
           <span className="text-xs text-text-subtle">
             {t("badgeeditor.setup.panelCount", { count })}
           </span>
+          {removedFields > 0 && (
+            <div
+              role="alert"
+              className="rounded border border-amber-200 bg-amber-50 px-xs py-tight text-xs text-amber-700"
+            >
+              {t("badgeeditor.setup.removedFields", { count: removedFields })}
+            </div>
+          )}
         </Stack>
 
         <Stack gap="tight">

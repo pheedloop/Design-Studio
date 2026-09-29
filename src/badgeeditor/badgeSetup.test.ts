@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { applyBadgeSetup, type BadgeSetup } from "./badgeSetup";
+import {
+  applyBadgeSetup,
+  countFieldsOnRemovedPanels,
+  type BadgeSetup,
+} from "./badgeSetup";
 import type { BadgeDocument } from "./model";
 
 const field = {
@@ -68,5 +72,23 @@ describe("applyBadgeSetup", () => {
       panels: unchanged.panels.slice(0, 1),
     });
     expect(next.pages).toHaveLength(1);
+  });
+});
+
+describe("countFieldsOnRemovedPanels", () => {
+  const pages = [
+    { id: "front", role: "front" as const, fields: [field] },
+    { id: "inside", role: "inner" as const, fields: [field, field] },
+    { id: "back", role: "back" as const, fields: [field] },
+  ];
+
+  it("counts fields on the panels a smaller fold drops", () => {
+    expect(countFieldsOnRemovedPanels(pages, "single")).toBe(1);
+    expect(countFieldsOnRemovedPanels(pages, "none")).toBe(3);
+  });
+
+  it("is zero when the fold keeps every panel", () => {
+    expect(countFieldsOnRemovedPanels(pages, "double")).toBe(0);
+    expect(countFieldsOnRemovedPanels(doc.pages, "none")).toBe(0);
   });
 });
