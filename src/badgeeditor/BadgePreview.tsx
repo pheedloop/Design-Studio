@@ -4,7 +4,7 @@ import { useCanvasControls } from "@/editor/hooks/useCanvasControls";
 import { BLACK, GRAY_300, GRAY_400, WHITE } from "@/canvasColors";
 import { HolePunchShapes } from "./HolePunchShapes";
 import { StaticField } from "./StaticField";
-import { PPI, mmToPx } from "./canvasMetrics";
+import { PPI, isFieldOutsidePanel, mmToPx } from "./canvasMetrics";
 import { BadgeRulers } from "./BadgeRulers";
 import { foldInvertForPage } from "./serialize";
 import { DPI } from "./model";
@@ -113,9 +113,11 @@ export function BadgePreview({
                   y={inverted ? panelH : 0}
                   rotation={inverted ? 180 : 0}
                 >
-                  {page.fields.map(f => (
-                    <StaticField key={f.id} field={f} data={data} />
-                  ))}
+                  {page.fields
+                    .filter(f => !isFieldOutsidePanel(f, doc.panelSize))
+                    .map(f => (
+                      <StaticField key={f.id} field={f} data={data} />
+                    ))}
                   {stubs > 1 &&
                     Array.from({ length: stubs - 1 }).map((_, k) => {
                       const y = (panelH * (k + 1)) / stubs;

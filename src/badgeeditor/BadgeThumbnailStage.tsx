@@ -4,7 +4,7 @@ import { Layer, Rect, Stage } from "react-konva";
 import { WHITE } from "@/canvasColors";
 import { THUMBNAIL_MAX_EDGE } from "@/editor/utils/captureThumbnail";
 import type { BadgeDocument } from "./model";
-import { PPI, mmToPx } from "./canvasMetrics";
+import { PPI, isFieldOutsidePanel, mmToPx } from "./canvasMetrics";
 import { HolePunchShapes } from "./HolePunchShapes";
 import { StaticField } from "./StaticField";
 
@@ -42,9 +42,11 @@ export const BadgeThumbnailStage = memo(function BadgeThumbnailStage({
           {doc.holePunch && (
             <HolePunchShapes holePunch={doc.holePunch} panelW={panelW} />
           )}
-          {doc.pages[0]?.fields.map(f => (
-            <StaticField key={f.id} field={f} data={null} />
-          ))}
+          {doc.pages[0]?.fields
+            .filter(f => !isFieldOutsidePanel(f, doc.panelSize))
+            .map(f => (
+              <StaticField key={f.id} field={f} data={null} />
+            ))}
         </Layer>
       </Stage>
     </div>

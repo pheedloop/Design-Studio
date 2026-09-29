@@ -18,3 +18,22 @@ export function fieldSizePx(
 const MM_PER_INCH = 25.4;
 
 export const mmToPx = (mm: number): number => (mm / MM_PER_INCH) * PPI;
+
+const EDGE_TOLERANCE_IN = 1e-6;
+
+/** Any part of the field's rendered box lies outside its panel. Such fields do not print. */
+export function isFieldOutsidePanel(
+  field: Pick<
+    BadgeField,
+    "kind" | "scale" | "width" | "height" | "top" | "left"
+  >,
+  panel: { width: number; height: number },
+): boolean {
+  const { w, h } = fieldSizePx(field);
+  return (
+    field.top < -EDGE_TOLERANCE_IN ||
+    field.left < -EDGE_TOLERANCE_IN ||
+    field.top + h / PPI > panel.height + EDGE_TOLERANCE_IN ||
+    field.left + w / PPI > panel.width + EDGE_TOLERANCE_IN
+  );
+}

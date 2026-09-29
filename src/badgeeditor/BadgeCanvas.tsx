@@ -4,7 +4,7 @@ import type Konva from "konva";
 import { BLACK, BRAND, GRAY_300, GRAY_400, WHITE } from "@/canvasColors";
 import type { BadgeField, BadgePage, HolePunch } from "./model";
 import { GridLayer } from "@/editor/components/canvas/GridLayer";
-import { PPI, fieldSizePx, mmToPx } from "./canvasMetrics";
+import { PPI, fieldSizePx, isFieldOutsidePanel, mmToPx } from "./canvasMetrics";
 import { useBadgeGuides } from "./useBadgeGuides";
 import type { BadgeData } from "./badgeData";
 import { FieldShape } from "./FieldShape";
@@ -393,6 +393,7 @@ export function BadgeCanvas({
             key={field.id}
             field={field}
             data={data}
+            outside={isFieldOutsidePanel(field, panelSize)}
             panMode={panMode}
             registerRef={node => {
               if (node) nodeRefs.current.set(field.id, node);

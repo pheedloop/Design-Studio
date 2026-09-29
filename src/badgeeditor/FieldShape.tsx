@@ -1,13 +1,16 @@
-import { Group } from "react-konva";
+import { Group, Rect } from "react-konva";
 import type Konva from "konva";
 import type { BadgeField } from "./model";
 import type { BadgeData } from "./badgeData";
 import { PPI, QR_BASE_PX, fieldSizePx } from "./canvasMetrics";
 import { FieldBody } from "./FieldBody";
+import { RED } from "@/canvasColors";
 
 interface FieldShapeProps {
   field: BadgeField;
   data: BadgeData | null;
+  /** Outside its panel, so it will not print. */
+  outside: boolean;
   panMode: boolean;
   registerRef: (node: Konva.Group | null) => void;
   onMouseDown: (additive: boolean) => void;
@@ -20,6 +23,7 @@ interface FieldShapeProps {
 export function FieldShape({
   field,
   data,
+  outside,
   panMode,
   registerRef,
   onMouseDown,
@@ -85,6 +89,16 @@ export function FieldShape({
       }}
     >
       <FieldBody field={field} data={data} />
+      {outside && (
+        <Rect
+          width={w}
+          height={h}
+          stroke={RED}
+          strokeWidth={2}
+          strokeScaleEnabled={false}
+          listening={false}
+        />
+      )}
     </Group>
   );
 }

@@ -212,3 +212,28 @@ describe("createBadgeDocument", () => {
     });
   });
 });
+
+describe("createBadgeDocument sample fields", () => {
+  it("fits a field taller than its panel so it prints", () => {
+    const tickets: LegacyLayoutEntry = {
+      top: 10.76,
+      left: 0.41,
+      field: "tickets",
+      height: 5.59,
+      width: 3.18,
+      numRows: 4,
+    };
+    const doc = createBadgeDocument(
+      {
+        width: 4,
+        height: 16.5,
+        fold: "double",
+        holePunch: null,
+        cornerRadiusMm: 0,
+      },
+      [tickets],
+    );
+    expect(doc.pages[2].fields[0]).toMatchObject({ top: 0, height: 5.5 });
+    expect(flatten(doc).layout.map(e => e.field)).toEqual(["tickets"]);
+  });
+});

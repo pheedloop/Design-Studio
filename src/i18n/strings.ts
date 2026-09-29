@@ -703,6 +703,10 @@ export const BADGEEDITOR = {
   "menu.view": "View",
   "name.untitled": "Untitled Badge",
   "notice.invertedPanel": "⤓ This panel prints upside-down automatically.",
+  "notice.outsidePanel_one":
+    "{{count}} field is outside the panel and will not print.",
+  "notice.outsidePanel_other":
+    "{{count}} fields are outside the panel and will not print.",
   "page.back": "Back",
   "page.front": "Front",
   "page.inside": "Inside",

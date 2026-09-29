@@ -12,6 +12,9 @@ export const BRAND_DARK = "#0063cc";
 export const WHITE = "#ffffff";
 export const BLACK = "#000000";
 
+// Mirrors --red in tokens.css.
+export const RED = "#eb5757";
+
 export const GRAY_100 = "#f5f8fc";
 export const GRAY_200 = "#e9edf6";
 export const GRAY_300 = "#c7d3e2";

@@ -38,6 +38,7 @@ import { UNIT_LABEL_KEYS, formatDim, type Unit } from "./units";
 import { BadgeSidebar } from "./BadgeSidebar";
 import { BadgePreview } from "./BadgePreview";
 import { BadgeSetupDialog } from "./BadgeSetupDialog";
+import { isFieldOutsidePanel } from "./canvasMetrics";
 import { applyBadgeSetup, type BadgeSetup } from "./badgeSetup";
 import { savePayload } from "./savePayload";
 import { AttendeePicker } from "./AttendeePicker";
@@ -227,6 +228,9 @@ function BadgeEditorInner({
   // Active page (clamped — fold changes can shrink the page count).
   const pageIndex = Math.min(activePageIndex, doc.pages.length - 1);
   const activePage = doc.pages[pageIndex];
+  const outsideCount = activePage.fields.filter(f =>
+    isFieldOutsidePanel(f, doc.panelSize),
+  ).length;
 
   // Properties panel edits the field only when exactly one is selected.
   const selectedField =
@@ -666,6 +670,16 @@ function BadgeEditorInner({
           <div className="flex flex-1 overflow-hidden">
             <div className="flex flex-col flex-1 min-w-0 min-h-0">
               {/* Invert ribbon — contextual to the active folded-back panel. */}
+              {!previewMode && outsideCount > 0 && (
+                <div
+                  role="alert"
+                  className="shrink-0 bg-red-50 border-b border-red-200 px-xs py-tight text-xs text-red-700"
+                >
+                  {t("badgeeditor.notice.outsidePanel", {
+                    count: outsideCount,
+                  })}
+                </div>
+              )}
               {!previewMode && pageInverts[pageIndex] && (
                 <div className="shrink-0 bg-amber-50 border-b border-amber-200 px-xs py-tight text-xs text-amber-700">
                   {t("badgeeditor.notice.invertedPanel")}

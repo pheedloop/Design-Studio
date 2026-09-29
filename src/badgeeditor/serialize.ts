@@ -25,7 +25,7 @@ import {
   type FoldType,
   type LegacyLayoutEntry,
 } from "./model";
-import { PPI, fieldSizePx } from "./canvasMetrics";
+import { PPI, fieldSizePx, isFieldOutsidePanel } from "./canvasMetrics";
 import {
   isLiteralTextField,
   isUserFieldEditable,
@@ -192,6 +192,7 @@ export function flatten(doc: BadgeDocument): FlattenResult {
       panelHeight,
     };
     for (const field of page.fields) {
+      if (isFieldOutsidePanel(field, doc.panelSize)) continue;
       layout.push(fieldToEntry(field, ctx));
     }
   });

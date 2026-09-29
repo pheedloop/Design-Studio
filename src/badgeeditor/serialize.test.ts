@@ -62,11 +62,18 @@ const SINGLE_FOLD: LegacyLayoutEntry[] = [
   { top: 9, left: 1.5, field: "externalQRCodeUrl", scale: 1, inverted: true },
 ];
 
+const FIXTURE_SIZES: Record<string, { width: number; height: number }> = {
+  label: { width: 3.5, height: 3 },
+  ticketedThermal: { width: 4, height: 16.5 },
+  realExport: { width: 4, height: 11 },
+  newFields: { width: 3.64, height: 11 },
+};
+
 describe("inflate + flatten round trip", () => {
   it.each(Object.entries(FIXTURES))(
     "reproduces the %s layout on one page with no fold",
-    (_, layout) => {
-      const doc = inflate(layout, { width: 3.64, height: 11 });
+    (name, layout) => {
+      const doc = inflate(layout, FIXTURE_SIZES[name]);
       expect(doc.pages).toHaveLength(1);
       expectSameLayout(flatten(doc).layout, layout);
     },
@@ -118,8 +125,24 @@ describe("inflate + flatten round trip", () => {
       fold: "double",
     });
     const result = flatten(doc);
-    expectSameLayout(result.layout, FIXTURES.ticketedThermal);
+    // The 5.59in tickets block crosses into the 5.5in back panel, so it does not print.
+    expectSameLayout(
+      result.layout,
+      FIXTURES.ticketedThermal.filter(e => e.field !== "tickets"),
+    );
     expect(result).toMatchObject({ width: 4, height: 16.5 });
+  });
+
+  it("leaves fields outside their panel out of the print", () => {
+    const inside = text(1);
+    const layout = [
+      inside,
+      text(2.9),
+      { ...text(1), left: -0.1 },
+      { top: 1, left: 3.2, field: "qrCode", scale: 1 },
+    ];
+    const result = flatten(inflate(layout, { width: 3.5, height: 3 }));
+    expectSameLayout(result.layout, [inside]);
   });
 });
 
@@ -140,7 +163,8 @@ describe("inflate with a fold", () => {
     const doc = inflate(layout, { width: 4, height: 11, fold: "single" });
     expect(doc.pages.map(p => p.fields.length)).toEqual([0, 1]);
     expect(doc.pages[1].fields[0].top).toBeCloseTo(5.01875, 9);
-    expectSameLayout(flatten(doc).layout, layout);
+    // It crosses the fold, so it is outside its panel and does not print.
+    expect(flatten(doc).layout).toEqual([]);
   });
 
   it("puts the ticketed thermal tickets block on the back panel", () => {
@@ -168,7 +192,7 @@ describe("inflate with a fold", () => {
     const doc = inflate(layout, { width: 4, height: 11, fold: "single" });
     expect(doc.pages.map(p => p.fields.length)).toEqual([0, 1]);
     expect(doc.pages[1].fields[0].top).toBeCloseTo(4, 9);
-    expectSameLayout(flatten(doc).layout, layout);
+    expect(flatten(doc).layout).toEqual([]);
   });
 
   it("authors the folded-back panel upright", () => {
