@@ -18,7 +18,6 @@ export type {
 } from "@/viewer/types";
 export type { Tier, FeatureKey, FeatureOverride } from "@/tiers";
 export type { EditorImage } from "./types";
-export { ImageUploadError } from "./components/panels/imageUploadError";
 export type { ImageType } from "./components/panels/imageTypes";
 
 export {

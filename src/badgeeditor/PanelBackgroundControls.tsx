@@ -32,9 +32,15 @@ export function PanelBackgroundControls({
             <button
               type="button"
               onClick={onChoose}
+              aria-label={t("badgeeditor.background.replace")}
               className="block w-full h-16 rounded-md border border-border-neutral-light overflow-hidden bg-surface-neutral"
             >
-              <img src={url} alt="" className="w-full h-full object-cover" />
+              <img
+                src={url}
+                alt=""
+                crossOrigin="anonymous"
+                className="w-full h-full object-cover"
+              />
             </button>
           )}
           <FieldRow label={t("badgeeditor.background.fit")}>

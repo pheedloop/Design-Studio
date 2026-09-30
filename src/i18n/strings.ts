@@ -20,6 +20,7 @@ export const COMMON = {
   "error.imageDelete": "Could not delete this image.",
   "error.imageInUse":
     "This image is in use in the design. Remove it from the design first.",
+  "error.unsupportedFileType": "This file type is not supported.",
   "error.uploadFailed": "Upload failed. Please try again.",
   "gallery.browse": "Browse",
   "gallery.deleteImage": "Delete image",

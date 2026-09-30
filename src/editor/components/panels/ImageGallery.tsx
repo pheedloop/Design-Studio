@@ -70,6 +70,10 @@ export function ImageGallery({
 
   const upload = async (file: File | undefined) => {
     if (!file || !onUpload) return;
+    if (!accept.includes(file.type as ImageType)) {
+      setError(t("common.error.unsupportedFileType"));
+      return;
+    }
     setPending(true);
     setError(null);
     try {
@@ -122,6 +126,7 @@ export function ImageGallery({
     <Dialog
       title={t("common.gallery.title")}
       onClose={onClose}
+      closeDisabled={pending}
       width="800px"
       footer={
         <>
@@ -130,7 +135,12 @@ export function ImageGallery({
               {t("common.gallery.dropHint")}
             </Text>
           )}
-          <Button variant="outline" color="neutral" onClick={onClose}>
+          <Button
+            variant="outline"
+            color="neutral"
+            disabled={pending}
+            onClick={onClose}
+          >
             {t("common.action.cancel")}
           </Button>
           {selected ? (

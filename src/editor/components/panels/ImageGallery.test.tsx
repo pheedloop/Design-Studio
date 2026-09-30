@@ -124,8 +124,14 @@ describe("ImageGallery under the badge editor surface", () => {
 
     expect(input.getAttribute("accept")).toBe("image/png,image/jpeg,image/gif");
     expect(screen.getByText("PNG, JPEG or GIF")).toBeTruthy();
+    fireEvent.drop(screen.getByText("Click to upload").parentElement!, {
+      dataTransfer: {
+        files: [new File(["<svg/>"], "logo.svg", { type: "image/svg+xml" })],
+      },
+    });
+    expect(screen.getByText("This file type is not supported.")).toBeTruthy();
     fireEvent.change(input, {
-      target: { files: [new File(["x"], "logo.svg")] },
+      target: { files: [new File(["x"], "logo.png", { type: "image/png" })] },
     });
     expect(await screen.findAllByText("Unsupported file type.")).toHaveLength(
       1,
