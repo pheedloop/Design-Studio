@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import Konva from "konva";
-import { flatten, inflate } from "./serialize";
+import { flatten, inferFold, inflate } from "./serialize";
 import { PPI, fieldSizePx } from "./canvasMetrics";
 import type { BadgeDocument, BadgeField, LegacyLayoutEntry } from "./model";
 
@@ -309,7 +309,8 @@ describe("panel backgrounds", () => {
   });
 
   it("keeps a panel's printed orientation when it differs from the fold default", () => {
-    const [front, back] = flatten({
+    const qr = { ...fieldAt("qrCode", "qrCode", 1, 0.5), scale: 1 };
+    const [front, back, qrEntry] = flatten({
       version: "1.0",
       panelSize: { width: 4, height: 5.5 },
       fold: "single",
@@ -324,20 +325,56 @@ describe("panel backgrounds", () => {
         {
           id: "back",
           role: "back",
-          fields: [],
+          fields: [qr],
           inverted: false,
           background: { imageCode: "B", fit: "cover" },
         },
       ],
     }).layout;
 
-    const inflated = inflate([front, back], {
+    const inflated = inflate([qrEntry, back, front], {
       width: 4,
       height: 11,
       fold: "single",
     });
 
     expect(inflated.pages.map(p => p.inverted)).toEqual([true, false]);
+    expect(inflated.pages[1].fields[0]).toMatchObject({
+      top: expect.closeTo(1, 9),
+      left: expect.closeTo(0.5, 9),
+      inverted: false,
+    });
+  });
+
+  it("stays a field when it lacks the background shape", () => {
+    const doc = inflate(
+      [{ field: "background", top: 0, left: 0, width: 1, height: 1 }],
+      { width: 4, height: 3 },
+    );
+    expect(doc.pages[0].background).toBeUndefined();
+    expect(doc.pages[0].fields).toHaveLength(1);
+  });
+});
+
+describe("inferFold", () => {
+  const panel = (height: number): LegacyLayoutEntry => ({
+    field: "background",
+    code: "B",
+    fit: "cover",
+    top: 0,
+    left: 0,
+    width: 4,
+    height,
+  });
+
+  it.each([
+    ["no backgrounds", [text(1)], 11, "none"],
+    ["one full-height panel", [panel(3)], 3, "none"],
+    ["two panels", [panel(5.5)], 11, "single"],
+    ["three panels", [panel(5.5)], 16.5, "double"],
+    ["an impossible count", [panel(2)], 11, "none"],
+  ] as const)("reads %s", (_, layout, height, fold) => {
+    expect(inferFold([...layout], height)).toBe(fold);
   });
 });
 

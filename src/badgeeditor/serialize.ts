@@ -21,6 +21,7 @@ import {
   pageRoleForIndex,
   type BadgeDocument,
   type BadgeField,
+  type BackgroundFit,
   type BadgePage,
   type BadgePageBackground,
   type FlattenResult,
@@ -304,6 +305,43 @@ function entrySizeIn(entry: LegacyLayoutEntry): { w: number; h: number } {
   return fieldSizeIn({ ...entry, kind: kindForEntry(entry) });
 }
 
+type BackgroundEntry = LegacyLayoutEntry &
+  Required<Pick<LegacyLayoutEntry, "code" | "fit" | "height">>;
+
+const BACKGROUND_FITS: readonly BackgroundFit[] = [
+  "cover",
+  "contain",
+  "stretch",
+];
+
+/** Only the shape `flatten` writes is a background; anything else stays a field. */
+function isBackgroundEntry(entry: LegacyLayoutEntry): entry is BackgroundEntry {
+  return (
+    entry.field === BACKGROUND_FIELD &&
+    typeof entry.code === "string" &&
+    BACKGROUND_FITS.includes(entry.fit as BackgroundFit) &&
+    typeof entry.height === "number" &&
+    entry.height > 0
+  );
+}
+
+/**
+ * The fold a layout with no editor document was saved with, read from its
+ * panel backgrounds. Without them the fold cannot be told apart, so "none".
+ */
+export function inferFold(
+  layout: LegacyLayoutEntry[],
+  templateHeight: number,
+): FoldType {
+  const background = layout.find(isBackgroundEntry);
+  if (!background) return "none";
+  const count = Math.round(templateHeight / background.height);
+  const fold = (Object.keys(PAGE_COUNT) as FoldType[]).find(
+    key => PAGE_COUNT[key] === count,
+  );
+  return fold ?? "none";
+}
+
 export interface InflateOptions {
   /** Full template size in INCHES (BadgeTemplate.width/height). */
   width: number;
@@ -324,33 +362,29 @@ export function inflate(
     fields: [],
   }));
 
-  for (const entry of layout) {
-    if (entry.field === BACKGROUND_FIELD) {
-      if (entry.code && entry.fit) {
-        const index = Math.min(
-          pageCount - 1,
-          Math.max(
-            0,
-            panelHeight > 0 ? Math.round(entry.top / panelHeight) : 0,
-          ),
-        );
-        const page = pages[index];
-        page.background = { imageCode: entry.code, fit: entry.fit };
-        if (Boolean(entry.inverted) !== foldInvertForPage(fold, index)) {
-          page.inverted = Boolean(entry.inverted);
-        }
-      }
-      continue;
+  const panelIndex = (top: number) =>
+    Math.min(
+      pageCount - 1,
+      Math.max(0, panelHeight > 0 ? Math.floor(top / panelHeight) : 0),
+    );
+
+  for (const entry of layout.filter(isBackgroundEntry)) {
+    const index = panelIndex(entry.top + entry.height / 2);
+    const page = pages[index];
+    page.background = { imageCode: entry.code, fit: entry.fit };
+    if (Boolean(entry.inverted) !== foldInvertForPage(fold, index)) {
+      page.inverted = Boolean(entry.inverted);
     }
+  }
+  const pageInverts = pages.map(
+    (page, i) => page.inverted ?? foldInvertForPage(fold, i),
+  );
+
+  for (const entry of layout) {
+    if (isBackgroundEntry(entry)) continue;
     const size = entrySizeIn(entry);
-    const pageIndex =
-      panelHeight > 0
-        ? Math.min(
-            pageCount - 1,
-            Math.max(0, Math.floor((entry.top + size.h / 2) / panelHeight)),
-          )
-        : 0;
-    const foldInvert = foldInvertForPage(fold, pageIndex);
+    const pageIndex = panelIndex(entry.top + size.h / 2);
+    const foldInvert = pageInverts[pageIndex];
     const local = {
       top: entry.top - pageIndex * panelHeight,
       left: entry.left,
