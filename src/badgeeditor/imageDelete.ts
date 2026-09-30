@@ -2,8 +2,10 @@ import { ImageDeleteError } from "@/editor/components/panels/imageDeleteError";
 import type { BadgeDocument } from "./model";
 
 const isPlaced = (doc: BadgeDocument, code: string) =>
-  doc.pages.some(page =>
-    page.fields.some(field => field.kind === "image" && field.code === code),
+  doc.pages.some(
+    page =>
+      page.background?.imageCode === code ||
+      page.fields.some(field => field.kind === "image" && field.code === code),
   );
 
 /** A save with a deleted image on the badge fails, so refuse the delete first. */

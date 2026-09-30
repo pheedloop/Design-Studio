@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { clampResizeToPanel, clampToPanel } from "./canvasMetrics";
+import {
+  clampResizeToPanel,
+  clampToPanel,
+  panelCornerRadii,
+} from "./canvasMetrics";
 
 const PANEL = { width: 4, height: 3 };
 
@@ -72,4 +76,18 @@ describe("clampResizeToPanel", () => {
       ),
     ).toEqual(old);
   });
+});
+
+describe("panelCornerRadii", () => {
+  it.each([
+    ["a single panel", 0, 1, false, [6, 6, 6, 6]],
+    ["the top of three", 0, 3, false, [6, 6, 0, 0]],
+    ["the middle of three", 1, 3, true, [0, 0, 0, 0]],
+    ["an inverted bottom panel", 1, 2, true, [6, 6, 0, 0]],
+  ] as const)(
+    "rounds only the sheet's outer corners of %s",
+    (_, index, count, inverted, radii) => {
+      expect(panelCornerRadii(index, count, 6, inverted)).toEqual(radii);
+    },
+  );
 });

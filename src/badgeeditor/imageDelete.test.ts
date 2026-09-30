@@ -7,7 +7,12 @@ const doc: BadgeDocument = {
   panelSize: { width: 4, height: 5.5 },
   fold: "single",
   pages: [
-    { id: "front", role: "front", fields: [] },
+    {
+      id: "front",
+      role: "front",
+      fields: [],
+      background: { imageCode: "backdrop", fit: "cover" },
+    },
     {
       id: "back",
       role: "back",
@@ -26,10 +31,14 @@ const doc: BadgeDocument = {
 };
 
 describe("refusePlacedImageDelete", () => {
-  it("refuses an image placed on any page without calling the host", async () => {
+  it("refuses an image placed or used as a background on any page without calling the host", async () => {
     const onDelete = vi.fn(async () => {});
     const remove = refusePlacedImageDelete(doc, onDelete)!;
     await expect(remove("placed")).rejects.toMatchObject({
+      messageKey: "common.error.imageInUse",
+    });
+    expect(onDelete).not.toHaveBeenCalled();
+    await expect(remove("backdrop")).rejects.toMatchObject({
       messageKey: "common.error.imageInUse",
     });
     expect(onDelete).not.toHaveBeenCalled();

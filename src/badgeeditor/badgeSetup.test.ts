@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   applyBadgeSetup,
+  countBackgroundsOnRemovedPanels,
   countFieldsOnRemovedPanels,
   type BadgeSetup,
 } from "./badgeSetup";
@@ -91,6 +92,21 @@ describe("countFieldsOnRemovedPanels", () => {
     "counts fields on the panels a smaller fold drops (%#)",
     (from, fold, count) => {
       expect(countFieldsOnRemovedPanels(from, fold)).toBe(count);
+    },
+  );
+
+  it.each([
+    ["single", 1],
+    ["none", 2],
+    ["double", 0],
+  ] as const)(
+    "counts backgrounds on the panels a switch to %s drops",
+    (fold, count) => {
+      const background = { imageCode: "BIMG1", fit: "cover" as const };
+      const withBackgrounds = pages.map(page => ({ ...page, background }));
+      expect(countBackgroundsOnRemovedPanels(withBackgrounds, fold)).toBe(
+        count,
+      );
     },
   );
 });

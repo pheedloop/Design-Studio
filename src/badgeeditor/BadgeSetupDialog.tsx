@@ -23,6 +23,7 @@ import {
 } from "./model";
 import { presetSetup } from "./presets";
 import {
+  countBackgroundsOnRemovedPanels,
   countFieldsOnRemovedPanels,
   type BadgeSetup,
   type PanelConfig,
@@ -99,6 +100,7 @@ export function BadgeSetupDialog({
   const { width: w, height: h } = draft.panelSize;
   const count = PAGE_COUNT[localFold];
   const removedFields = countFieldsOnRemovedPanels(pages, localFold);
+  const removedBackgrounds = countBackgroundsOnRemovedPanels(pages, localFold);
   const errors = setupErrors(
     draft,
     validateSetup,
@@ -190,6 +192,16 @@ export function BadgeSetupDialog({
               className="rounded border border-amber-200 bg-amber-50 px-xs py-tight text-xs text-amber-700"
             >
               {t("badgeeditor.setup.removedFields", { count: removedFields })}
+            </div>
+          )}
+          {removedBackgrounds > 0 && (
+            <div
+              role="alert"
+              className="rounded border border-amber-200 bg-amber-50 px-xs py-tight text-xs text-amber-700"
+            >
+              {t("badgeeditor.setup.removedBackgrounds", {
+                count: removedBackgrounds,
+              })}
             </div>
           )}
         </Stack>

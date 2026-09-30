@@ -1,13 +1,16 @@
 // Public API for the badge editor library export.
 export { BadgeEditor } from "./BadgeEditor";
+export type { ImageType } from "@/editor/components/panels/imageTypes";
 export type { BadgeEditorProps } from "./BadgeEditor";
-export { flatten, inflate } from "./serialize";
+export { flatten, inferFold, inflate } from "./serialize";
 export type { FlattenOptions, InflateOptions } from "./serialize";
 export { createBadgeDocument, createDocumentFromPreset } from "./presets";
 export { FIELD_DEFS } from "./fields";
 export type {
+  BackgroundFit,
   BadgeDocument,
   BadgePage,
+  BadgePageBackground,
   BadgeField,
   BadgeCustomField,
   BadgePreset,

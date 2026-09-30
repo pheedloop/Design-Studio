@@ -132,6 +132,11 @@ export default defineConfig({
         viewer: resolve(__dirname, "src/viewer/index.ts"),
         seatviewer: resolve(__dirname, "src/seatviewer/index.ts"),
         badgeeditor: resolve(__dirname, "src/badgeeditor/index.ts"),
+        // The gallery's upload error on its own, so a host throwing it loads no editor.
+        "upload-error": resolve(
+          __dirname,
+          "src/editor/components/panels/imageUploadError.ts",
+        ),
         // Merged English manifest, for host build steps.
         i18n: resolve(__dirname, "src/i18n/index.ts"),
         // Style-only entry — produces dist/style.css consumed by the host app
