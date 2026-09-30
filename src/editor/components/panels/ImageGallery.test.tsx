@@ -108,7 +108,7 @@ describe("ImageGallery under the badge editor surface", () => {
 
   it("offers only the host's types and shows its upload error once", async () => {
     const { container } = render(
-      <I18nProvider translate={badgeHostTranslate}>
+      <I18nProvider translate={badgeHostTranslate} locale="en-CA">
         <ImageGallery
           images={[]}
           accept={["image/png", "image/jpeg", "image/gif"]}
