@@ -34,7 +34,6 @@ export const COMMON = {
   "gallery.sortType": "Type",
   "gallery.title": "Image Gallery",
   "gallery.uploadCta": "Click to upload",
-  "gallery.uploadFormats": "SVG, PNG, JPEG or GIF",
   "gallery.uploadHint": "or drag and drop",
   "gallery.uploading": "Uploading…",
   legend: "Legend",

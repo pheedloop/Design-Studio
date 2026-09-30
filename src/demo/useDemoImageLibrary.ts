@@ -27,17 +27,16 @@ export function useDemoImageLibrary() {
   const onUploadImage = useCallback(async (file: File) => {
     const url = URL.createObjectURL(file);
     const { width, height } = await measure(url);
-    setImages(current => [
-      {
-        id: crypto.randomUUID(),
-        url,
-        name: file.name,
-        width,
-        height,
-        createdAt: new Date().toISOString(),
-      },
-      ...current,
-    ]);
+    const image: EditorImage = {
+      id: crypto.randomUUID(),
+      url,
+      name: file.name,
+      width,
+      height,
+      createdAt: new Date().toISOString(),
+    };
+    setImages(current => [image, ...current]);
+    return image;
   }, []);
 
   const onDeleteImage = useCallback(async (id: string) => {

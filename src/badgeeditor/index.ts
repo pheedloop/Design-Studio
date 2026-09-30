@@ -1,5 +1,7 @@
 // Public API for the badge editor library export.
 export { BadgeEditor } from "./BadgeEditor";
+export { ImageUploadError } from "@/editor/components/panels/imageUploadError";
+export type { ImageType } from "@/editor/components/panels/imageTypes";
 export type { BadgeEditorProps } from "./BadgeEditor";
 export { flatten, inflate } from "./serialize";
 export type { FlattenOptions, InflateOptions } from "./serialize";

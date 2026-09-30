@@ -127,7 +127,7 @@ interface MapEditorProps {
   /** Host-owned image library for the gallery. The editor never fetches it. */
   images?: EditorImage[];
   /** Uploads one file and refreshes `images`; omit to hide upload. */
-  onUploadImage?: (file: File) => Promise<void>;
+  onUploadImage?: (file: File) => Promise<EditorImage | void>;
   onDeleteImage?: (id: string) => Promise<void>;
   onEditProperties?: () => void;
   name?: string;

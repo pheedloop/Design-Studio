@@ -1,10 +1,13 @@
-import { describe, expect, it } from "vitest";
+import { useState } from "react";
+import { describe, expect, it, vi } from "vitest";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { I18nProvider } from "@/i18n/I18nProvider";
 import { interpolate } from "@/i18n/interpolate";
 import { resolveEnglish, type Translate } from "@/badgeeditor/i18n";
 import { ImageGallery } from "./ImageGallery";
 import { ImageDeleteError } from "./imageDeleteError";
+import { ImageUploadError } from "./imageUploadError";
+import type { EditorImage } from "@/editor/types";
 
 // A badge-editor host with no catalogue entries, falling back to the badge
 // surface's English the way ditto does.
@@ -60,5 +63,73 @@ describe("ImageGallery under the badge editor surface", () => {
         "This image is in use in the design. Remove it from the design first.",
       ),
     ).toBeTruthy();
+  });
+
+  it("selects the uploaded image so it can be confirmed at once", async () => {
+    const stored: EditorImage = {
+      id: "new",
+      url: "new.png",
+      name: "new.png",
+      width: 10,
+      height: 10,
+      createdAt: "2026-01-01",
+    };
+    const onConfirm = vi.fn();
+    function Host() {
+      const [images, setImages] = useState<EditorImage[]>([]);
+      return (
+        <ImageGallery
+          images={images}
+          onUpload={async () => {
+            setImages([stored]);
+            return stored;
+          }}
+          onConfirm={onConfirm}
+          onClose={() => {}}
+          confirmLabel="Use as background"
+        />
+      );
+    }
+    const { container } = render(
+      <I18nProvider translate={badgeHostTranslate}>
+        <Host />
+      </I18nProvider>,
+    );
+
+    fireEvent.change(container.querySelector('input[type="file"]')!, {
+      target: { files: [new File(["x"], "new.png", { type: "image/png" })] },
+    });
+    fireEvent.click(await screen.findByText("Use as background"));
+
+    expect(onConfirm).toHaveBeenCalledWith(
+      expect.objectContaining({ id: "new" }),
+    );
+  });
+
+  it("offers only the host's types and shows its upload error once", async () => {
+    const { container } = render(
+      <I18nProvider translate={badgeHostTranslate}>
+        <ImageGallery
+          images={[]}
+          accept={["image/png", "image/jpeg", "image/gif"]}
+          onUpload={async () => {
+            throw new ImageUploadError("Unsupported file type.");
+          }}
+          onConfirm={() => {}}
+          onClose={() => {}}
+        />
+      </I18nProvider>,
+    );
+    const input = container.querySelector('input[type="file"]')!;
+
+    expect(input.getAttribute("accept")).toBe("image/png,image/jpeg,image/gif");
+    expect(screen.getByText("PNG, JPEG or GIF")).toBeTruthy();
+    fireEvent.change(input, {
+      target: { files: [new File(["x"], "logo.svg")] },
+    });
+    expect(await screen.findAllByText("Unsupported file type.")).toHaveLength(
+      1,
+    );
+    expect(screen.queryByText("Upload failed. Please try again.")).toBeNull();
   });
 });

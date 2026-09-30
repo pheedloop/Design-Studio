@@ -52,6 +52,7 @@ import { BadgeImageProvider } from "./BadgeImageProvider";
 import { refusePlacedImageDelete } from "./imageDelete";
 import { ImageGallery } from "@/editor/components/panels/ImageGallery";
 import type { EditorImage } from "@/editor/types";
+import type { ImageType } from "@/editor/components/panels/imageTypes";
 import { placedImageSize } from "@/editor/utils/placedImageSize";
 import { flatten, foldInvertForPage, inflate } from "./serialize";
 import type { AttendeeOption, AttendeeProvider, BadgeData } from "./badgeData";
@@ -96,7 +97,9 @@ export interface BadgeEditorProps {
   /** BCP-47 tag for number and list formatting. */
   locale?: string;
   images?: EditorImage[];
-  onUploadImage?: (file: File) => Promise<void>;
+  onUploadImage?: (file: File) => Promise<EditorImage | void>;
+  /** Image types the gallery accepts for upload. Defaults to every type it can show. */
+  acceptedImageTypes?: ImageType[];
   onDeleteImage?: (id: string) => Promise<void>;
   /** Inches of print overshoot the host's printer tolerates — how far a field's
    *  box may lie outside its panel and still print. Default 0 (strict): canvas
@@ -158,6 +161,7 @@ function BadgeEditorInner({
   images = [],
   onUploadImage,
   onDeleteImage,
+  acceptedImageTypes,
   attendeeProvider,
   printOvershootAllowanceIn = 0,
   legacyBackgroundNotice = false,
@@ -893,6 +897,7 @@ function BadgeEditorInner({
         <ImageGallery
           images={images}
           onUpload={onUploadImage}
+          accept={acceptedImageTypes}
           onDelete={refusePlacedImageDelete(doc, onDeleteImage)}
           onConfirm={image => {
             if (galleryTarget === "background") {

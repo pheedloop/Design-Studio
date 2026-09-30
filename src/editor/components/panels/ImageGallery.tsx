@@ -6,13 +6,18 @@ import { Stack } from "@/components/Stack";
 import { Text } from "@/components/Text";
 import { Dialog, TabBar, TextInput } from "@/editor/components/ui";
 import { useLocale, useT, type StringKey } from "@/editor/i18n";
+import { formatList } from "@/i18n/format";
 import type { EditorImage } from "@/editor/types";
 import { withMeasuredSize } from "@/editor/utils/placedImageSize";
 import { filterAndSortImages, type GallerySort } from "./galleryFilter";
 import { ImageThumbnail } from "./ImageThumbnail";
 import { ImageDeleteError } from "./imageDeleteError";
-
-const ACCEPT = "image/png,image/jpeg,image/gif,image/svg+xml";
+import {
+  ALL_IMAGE_TYPES,
+  IMAGE_TYPE_LABELS,
+  type ImageType,
+} from "./imageTypes";
+import { ImageUploadError } from "./imageUploadError";
 
 const SORTS: { id: GallerySort; labelKey: StringKey }[] = [
   { id: "recent", labelKey: "common.gallery.sortRecent" },
@@ -22,12 +27,14 @@ const SORTS: { id: GallerySort; labelKey: StringKey }[] = [
 
 interface ImageGalleryProps {
   images: EditorImage[];
-  onUpload?: (file: File) => Promise<void>;
+  /** Resolve with the stored image to select it. */
+  onUpload?: (file: File) => Promise<EditorImage | void>;
   onDelete?: (id: string) => Promise<void>;
   onConfirm: (image: EditorImage) => void;
   onClose: () => void;
   /** Defaults to the gallery's insert label. */
   confirmLabel?: string;
+  accept?: ImageType[];
 }
 
 export function ImageGallery({
@@ -37,6 +44,7 @@ export function ImageGallery({
   onConfirm,
   onClose,
   confirmLabel,
+  accept = ALL_IMAGE_TYPES,
 }: ImageGalleryProps) {
   const t = useT();
   const locale = useLocale();
@@ -48,7 +56,7 @@ export function ImageGallery({
   const [measured, setMeasured] = useState<
     Record<string, { width: number; height: number }>
   >({});
-  const [error, setError] = useState<StringKey | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
 
   const visible = useMemo(
@@ -65,9 +73,14 @@ export function ImageGallery({
     setPending(true);
     setError(null);
     try {
-      await onUpload(file);
-    } catch {
-      setError("common.error.uploadFailed");
+      const uploaded = await onUpload(file);
+      if (uploaded) setSelectedId(uploaded.id);
+    } catch (e) {
+      setError(
+        e instanceof ImageUploadError
+          ? e.message
+          : t("common.error.uploadFailed"),
+      );
     } finally {
       setPending(false);
     }
@@ -81,9 +94,11 @@ export function ImageGallery({
       setSelectedId(current => (current === id ? null : current));
     } catch (e) {
       setError(
-        e instanceof ImageDeleteError
-          ? e.messageKey
-          : "common.error.imageDelete",
+        t(
+          e instanceof ImageDeleteError
+            ? e.messageKey
+            : "common.error.imageDelete",
+        ),
       );
     }
   };
@@ -201,7 +216,10 @@ export function ImageGallery({
               {t("common.gallery.uploadHint")}
             </Text>
             <Text size="xs" color="subtle" as="span">
-              {t("common.gallery.uploadFormats")}
+              {formatList(
+                accept.map(type => IMAGE_TYPE_LABELS[type]),
+                locale,
+              )}
             </Text>
           </Stack>
         ) : visible.length === 0 ? (
@@ -236,12 +254,12 @@ export function ImageGallery({
           </div>
         )}
 
-        {error && <p className="text-xs text-red-600">{t(error)}</p>}
+        {error && <p className="text-xs text-red-600">{error}</p>}
 
         <input
           ref={fileRef}
           type="file"
-          accept={ACCEPT}
+          accept={accept.join(",")}
           onChange={e => {
             void upload(e.target.files?.[0]);
             e.target.value = "";
