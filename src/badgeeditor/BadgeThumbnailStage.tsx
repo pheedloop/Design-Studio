@@ -7,6 +7,7 @@ import type { BadgeDocument } from "./model";
 import { PPI, isFieldOutsidePanel, mmToPx } from "./canvasMetrics";
 import { HolePunchShapes } from "./HolePunchShapes";
 import { StaticField } from "./StaticField";
+import { PanelBackground } from "./PanelBackground";
 
 export const BadgeThumbnailStage = memo(function BadgeThumbnailStage({
   doc,
@@ -42,6 +43,14 @@ export const BadgeThumbnailStage = memo(function BadgeThumbnailStage({
             cornerRadius={mmToPx(doc.cornerRadiusMm ?? 0)}
             fill={WHITE}
           />
+          {doc.pages[0]?.background && (
+            <PanelBackground
+              background={doc.pages[0].background}
+              width={panelW}
+              height={panelH}
+              cornerRadius={mmToPx(doc.cornerRadiusMm ?? 0)}
+            />
+          )}
           {doc.holePunch && (
             <HolePunchShapes holePunch={doc.holePunch} panelW={panelW} />
           )}

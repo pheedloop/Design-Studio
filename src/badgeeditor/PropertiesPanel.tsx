@@ -15,7 +15,13 @@ import {
 import { Row } from "@/components/Row";
 import { Stack } from "@/components/Stack";
 import { Text } from "@/components/Text";
-import { inchToPx, type BadgeField, type TextAlign } from "./model";
+import {
+  inchToPx,
+  type BadgeField,
+  type BadgePageBackground,
+  type TextAlign,
+} from "./model";
+import { PanelBackgroundControls } from "./PanelBackgroundControls";
 import {
   INTERNAL_CODE_FIELD,
   isLiteralTextField,
@@ -71,17 +77,28 @@ interface PropertiesPanelProps {
   field: BadgeField | null;
   onChange: (patch: Partial<BadgeField>) => void;
   onDelete: () => void;
+  pageBackground?: BadgePageBackground;
+  onChooseBackground: () => void;
+  onPageBackgroundChange: (background: BadgePageBackground | undefined) => void;
 }
 
 export function PropertiesPanel({
   field,
   onChange,
   onDelete,
+  pageBackground,
+  onChooseBackground,
+  onPageBackgroundChange,
 }: PropertiesPanelProps) {
   const t = useT();
   if (!field) {
     return (
       <div className="w-48 shrink-0 border-l border-border-neutral-light bg-white flex flex-col">
+        <PanelBackgroundControls
+          background={pageBackground}
+          onChoose={onChooseBackground}
+          onChange={onPageBackgroundChange}
+        />
         <Row align="center" justify="center" className="flex-1 p-m text-center">
           <span className="text-xs text-text-subtle">
             {t("badgeeditor.properties.empty")}

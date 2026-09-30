@@ -4,7 +4,13 @@ import { useCanvasControls } from "@/editor/hooks/useCanvasControls";
 import { BLACK, GRAY_300, GRAY_400, WHITE } from "@/canvasColors";
 import { HolePunchShapes } from "./HolePunchShapes";
 import { StaticField } from "./StaticField";
-import { PPI, isFieldOutsidePanel, mmToPx } from "./canvasMetrics";
+import { PanelBackground } from "./PanelBackground";
+import {
+  PPI,
+  isFieldOutsidePanel,
+  mmToPx,
+  panelCornerRadii,
+} from "./canvasMetrics";
 import { BadgeRulers } from "./BadgeRulers";
 import { foldInvertForPage } from "./serialize";
 import { DPI } from "./model";
@@ -98,10 +104,6 @@ export function BadgePreview({
             shadowOffsetY={2}
           />
 
-          {doc.holePunch && (
-            <HolePunchShapes holePunch={doc.holePunch} panelW={panelW} />
-          )}
-
           {/* Each panel at its print offset, flipped if it prints inverted */}
           {doc.pages.map((page, i) => {
             const offsetTop = i * panelH;
@@ -116,6 +118,19 @@ export function BadgePreview({
                   y={inverted ? panelH : 0}
                   rotation={inverted ? 180 : 0}
                 >
+                  {page.background && (
+                    <PanelBackground
+                      background={page.background}
+                      width={panelW}
+                      height={panelH}
+                      cornerRadius={panelCornerRadii(
+                        i,
+                        n,
+                        mmToPx(doc.cornerRadiusMm ?? 0),
+                        inverted,
+                      )}
+                    />
+                  )}
                   {page.fields
                     .filter(
                       f =>
@@ -146,6 +161,10 @@ export function BadgePreview({
               </Group>
             );
           })}
+
+          {doc.holePunch && (
+            <HolePunchShapes holePunch={doc.holePunch} panelW={panelW} />
+          )}
 
           {/* Fold creases between panels */}
           {Array.from({ length: n - 1 }).map((_, i) => {

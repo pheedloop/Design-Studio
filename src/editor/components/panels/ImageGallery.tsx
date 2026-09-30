@@ -26,6 +26,8 @@ interface ImageGalleryProps {
   onDelete?: (id: string) => Promise<void>;
   onConfirm: (image: EditorImage) => void;
   onClose: () => void;
+  /** Defaults to the gallery's insert label. */
+  confirmLabel?: string;
 }
 
 export function ImageGallery({
@@ -34,6 +36,7 @@ export function ImageGallery({
   onDelete,
   onConfirm,
   onClose,
+  confirmLabel,
 }: ImageGalleryProps) {
   const t = useT();
   const locale = useLocale();
@@ -121,7 +124,7 @@ export function ImageGallery({
               color="primary"
               onClick={() => insert(selected)}
             >
-              {t("common.gallery.insert")}
+              {confirmLabel ?? t("common.gallery.insert")}
             </Button>
           ) : (
             onUpload && (

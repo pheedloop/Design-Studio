@@ -14,6 +14,7 @@
 import { v4 as uuid } from "uuid";
 import {
   BACKEND_REFERENCE_FONT_SIZE,
+  BACKGROUND_FIELD,
   BADGE_DOCUMENT_VERSION,
   PAGE_COUNT,
   inchToPx,
@@ -21,6 +22,7 @@ import {
   type BadgeDocument,
   type BadgeField,
   type BadgePage,
+  type BadgePageBackground,
   type FlattenResult,
   type FoldType,
   type LegacyLayoutEntry,
@@ -185,13 +187,36 @@ export interface FlattenOptions {
   printOvershootAllowanceIn?: number;
 }
 
+/**
+ * A panel background spans its whole panel, so fold inversion rotates it in
+ * place: only `inverted` changes, never the box.
+ */
+function backgroundToEntry(
+  background: BadgePageBackground,
+  ctx: FlattenContext,
+): LegacyLayoutEntry {
+  const entry: LegacyLayoutEntry = {
+    top: ctx.offsetTop,
+    left: 0,
+    width: ctx.panelWidth,
+    height: ctx.panelHeight,
+    field: BACKGROUND_FIELD,
+    code: background.imageCode,
+    fit: background.fit,
+  };
+  if (ctx.foldInvert) entry.inverted = true;
+  return entry;
+}
+
 export function flatten(
   doc: BadgeDocument,
   options?: FlattenOptions,
 ): FlattenResult {
   const allowanceIn = options?.printOvershootAllowanceIn ?? 0;
   const panelHeight = doc.panelSize.height;
-  const layout: LegacyLayoutEntry[] = [];
+  // Backgrounds lead the layout: the backend paints entries in order.
+  const backgrounds: LegacyLayoutEntry[] = [];
+  const fields: LegacyLayoutEntry[] = [];
 
   doc.pages.forEach((page, pageIndex) => {
     const ctx: FlattenContext = {
@@ -200,14 +225,17 @@ export function flatten(
       panelWidth: doc.panelSize.width,
       panelHeight,
     };
+    if (page.background) {
+      backgrounds.push(backgroundToEntry(page.background, ctx));
+    }
     for (const field of page.fields) {
       if (isFieldOutsidePanel(field, doc.panelSize, allowanceIn)) continue;
-      layout.push(fieldToEntry(field, ctx));
+      fields.push(fieldToEntry(field, ctx));
     }
   });
 
   return {
-    layout,
+    layout: [...backgrounds, ...fields],
     width: doc.panelSize.width,
     height: panelHeight * doc.pages.length,
   };
@@ -297,6 +325,23 @@ export function inflate(
   }));
 
   for (const entry of layout) {
+    if (entry.field === BACKGROUND_FIELD) {
+      if (entry.code && entry.fit) {
+        const index = Math.min(
+          pageCount - 1,
+          Math.max(
+            0,
+            panelHeight > 0 ? Math.round(entry.top / panelHeight) : 0,
+          ),
+        );
+        const page = pages[index];
+        page.background = { imageCode: entry.code, fit: entry.fit };
+        if (Boolean(entry.inverted) !== foldInvertForPage(fold, index)) {
+          page.inverted = Boolean(entry.inverted);
+        }
+      }
+      continue;
+    }
     const size = entrySizeIn(entry);
     const pageIndex =
       panelHeight > 0

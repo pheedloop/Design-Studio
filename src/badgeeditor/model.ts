@@ -108,6 +108,17 @@ export interface HolePunch {
   topOffsetMm: number;
 }
 
+export type BackgroundFit = "cover" | "contain" | "stretch";
+
+/** badge_layout `field` of a panel background entry. */
+export const BACKGROUND_FIELD = "background";
+
+export interface BadgePageBackground {
+  /** BadgeTemplateImage.code. */
+  imageCode: string;
+  fit: BackgroundFit;
+}
+
 export interface BadgePage {
   id: string;
   role: PageRole;
@@ -126,16 +137,7 @@ export interface BadgePage {
   tearaway?: boolean;
   /** Number of tear-off stubs (sections) on a tearaway panel. Default 3. */
   tearawayCount?: number;
-}
-
-export interface BadgeBackground {
-  /** BadgeTemplateImage.code, when the background is a stored image. */
-  imageCode?: string;
-  /** CSS-style fit, persisted to BadgeTemplate.background_image_box_fit. */
-  boxFit?: string;
-  /** Reference image dimensions in INCHES. */
-  width: number;
-  height: number;
+  background?: BadgePageBackground;
 }
 
 export interface BadgeDocument {
@@ -149,7 +151,6 @@ export interface BadgeDocument {
   pages: BadgePage[];
   holePunch?: HolePunch | null;
   cornerRadiusMm?: number;
-  background?: BadgeBackground;
 }
 
 // --- Legacy flat layout (badge_layout) ---
@@ -177,6 +178,7 @@ export interface LegacyLayoutEntry {
   custom_attendee_field?: string | null;
   numRows?: number;
   code?: string;
+  fit?: BackgroundFit;
 }
 
 /** Flattened output paired with the template dimensions the backend stores. */

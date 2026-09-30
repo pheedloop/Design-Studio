@@ -253,6 +253,94 @@ describe("flatten", () => {
   });
 });
 
+describe("panel backgrounds", () => {
+  it("lead the layout as full-panel entries and round-trip onto their panels", () => {
+    const doc: BadgeDocument = {
+      version: "1.0",
+      panelSize: { width: 4, height: 5.5 },
+      fold: "single",
+      pages: [
+        {
+          id: "front",
+          role: "front",
+          fields: [{ ...fieldAt("qrCode", "qrCode", 1, 1), scale: 1 }],
+          background: { imageCode: "BIMGFRONT", fit: "cover" },
+        },
+        {
+          id: "back",
+          role: "back",
+          fields: [],
+          background: { imageCode: "BIMGBACK", fit: "stretch" },
+        },
+      ],
+    };
+
+    const { layout } = flatten(doc);
+
+    expect(layout.slice(0, 2)).toEqual([
+      {
+        top: 0,
+        left: 0,
+        width: 4,
+        height: 5.5,
+        field: "background",
+        code: "BIMGFRONT",
+        fit: "cover",
+      },
+      {
+        top: 5.5,
+        left: 0,
+        width: 4,
+        height: 5.5,
+        field: "background",
+        code: "BIMGBACK",
+        fit: "stretch",
+        inverted: true,
+      },
+    ]);
+    expect(layout[2].field).toBe("qrCode");
+    const inflated = inflate(layout, { width: 4, height: 11, fold: "single" });
+    expect(inflated.pages.map(p => p.background)).toEqual([
+      doc.pages[0].background,
+      doc.pages[1].background,
+    ]);
+    expect(inflated.pages.map(p => p.fields.length)).toEqual([1, 0]);
+    expect(inflated.pages.map(p => p.inverted)).toEqual([undefined, undefined]);
+  });
+
+  it("keeps a panel's printed orientation when it differs from the fold default", () => {
+    const [front, back] = flatten({
+      version: "1.0",
+      panelSize: { width: 4, height: 5.5 },
+      fold: "single",
+      pages: [
+        {
+          id: "front",
+          role: "front",
+          fields: [],
+          inverted: true,
+          background: { imageCode: "F", fit: "cover" },
+        },
+        {
+          id: "back",
+          role: "back",
+          fields: [],
+          inverted: false,
+          background: { imageCode: "B", fit: "cover" },
+        },
+      ],
+    }).layout;
+
+    const inflated = inflate([front, back], {
+      width: 4,
+      height: 11,
+      fold: "single",
+    });
+
+    expect(inflated.pages.map(p => p.inverted)).toEqual([true, false]);
+  });
+});
+
 function fieldAt(
   field: string,
   kind: BadgeField["kind"],

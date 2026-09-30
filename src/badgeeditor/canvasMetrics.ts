@@ -139,3 +139,21 @@ export function clampResizeToPanel(
     height,
   };
 }
+
+export type CornerRadii = [number, number, number, number];
+
+/**
+ * Corner radii [top-left, top-right, bottom-right, bottom-left] of one panel of
+ * the unfolded sheet, in the panel's own frame: only the sheet's outer corners
+ * are rounded, and an inverted panel sees them rotated 180°.
+ */
+export function panelCornerRadii(
+  index: number,
+  count: number,
+  radius: number,
+  inverted: boolean,
+): CornerRadii {
+  const top = index === 0 ? radius : 0;
+  const bottom = index === count - 1 ? radius : 0;
+  return inverted ? [bottom, bottom, top, top] : [top, top, bottom, bottom];
+}

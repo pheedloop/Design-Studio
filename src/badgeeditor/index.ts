@@ -6,8 +6,10 @@ export type { FlattenOptions, InflateOptions } from "./serialize";
 export { createBadgeDocument, createDocumentFromPreset } from "./presets";
 export { FIELD_DEFS } from "./fields";
 export type {
+  BackgroundFit,
   BadgeDocument,
   BadgePage,
+  BadgePageBackground,
   BadgeField,
   BadgeCustomField,
   BadgePreset,

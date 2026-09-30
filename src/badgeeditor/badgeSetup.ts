@@ -62,6 +62,14 @@ export function countFieldsOnRemovedPanels(
     .reduce((sum, page) => sum + page.fields.length, 0);
 }
 
+/** Backgrounds on the panels a switch to `fold` would remove. */
+export function countBackgroundsOnRemovedPanels(
+  pages: BadgePage[],
+  fold: FoldType,
+): number {
+  return pages.slice(PAGE_COUNT[fold]).filter(page => page.background).length;
+}
+
 export function applyBadgeSetup(
   doc: BadgeDocument,
   setup: BadgeSetup,
