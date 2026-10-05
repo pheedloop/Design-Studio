@@ -9,13 +9,19 @@ import { IconButton } from "@/components/IconButton";
 import {
   Select,
   SectionLabel,
+  SortablePicklist,
   FieldRow,
   TextInput,
 } from "@/editor/components/ui";
 import { Row } from "@/components/Row";
 import { Stack } from "@/components/Stack";
 import { Text } from "@/components/Text";
-import { inchToPx, type BadgeField, type TextAlign } from "./model";
+import {
+  inchToPx,
+  type BadgeField,
+  type BadgeTicketType,
+  type TextAlign,
+} from "./model";
 import {
   INTERNAL_CODE_FIELD,
   isLiteralTextField,
@@ -69,12 +75,14 @@ const TOKENS = [
 
 interface PropertiesPanelProps {
   field: BadgeField | null;
+  ticketTypes: BadgeTicketType[];
   onChange: (patch: Partial<BadgeField>) => void;
   onDelete: () => void;
 }
 
 export function PropertiesPanel({
   field,
+  ticketTypes,
   onChange,
   onDelete,
 }: PropertiesPanelProps) {
@@ -200,6 +208,28 @@ export function PropertiesPanel({
               ))}
             </Select>
           </FieldRow>
+        )}
+
+        {field.kind === "tickets" && ticketTypes.length > 0 && (
+          <Stack gap="tight">
+            <SectionLabel>
+              {t("badgeeditor.properties.ticketTypes")}
+            </SectionLabel>
+            <SortablePicklist
+              options={ticketTypes.map(ticketType => ({
+                value: ticketType.code,
+                label: ticketType.name,
+              }))}
+              value={field.ticketCodes ?? []}
+              onChange={ticketCodes => onChange({ ticketCodes })}
+              addLabel={t("badgeeditor.properties.addTicketType")}
+              emptyTitle={t("badgeeditor.properties.allTickets")}
+              emptyHint={t("badgeeditor.properties.allTicketsHint")}
+              removeLabel={name =>
+                t("badgeeditor.properties.removeTicketType", { name })
+              }
+            />
+          </Stack>
         )}
 
         {(isText || field.kind === "tickets") && (

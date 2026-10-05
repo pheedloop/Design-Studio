@@ -122,7 +122,7 @@ export function fieldToEntry(
   }
 
   if (kind === "tickets") {
-    return {
+    const entry: LegacyLayoutEntry = {
       top,
       left,
       field: field.field,
@@ -131,6 +131,8 @@ export function fieldToEntry(
       numRows: field.numRows,
       inverted,
     };
+    if (field.ticketCodes?.length) entry.ticketCodes = field.ticketCodes;
+    return entry;
   }
 
   // text / sessionSchedule
@@ -248,13 +250,16 @@ export function entryToField(entry: LegacyLayoutEntry): BadgeField {
     };
   }
   if (kind === "tickets") {
-    return {
+    const field: BadgeField = {
       ...base,
       width: entry.width,
       height: entry.height,
       numRows: entry.numRows,
       inverted,
     };
+    return entry.ticketCodes?.length
+      ? { ...field, ticketCodes: entry.ticketCodes }
+      : field;
   }
 
   // text / sessionSchedule

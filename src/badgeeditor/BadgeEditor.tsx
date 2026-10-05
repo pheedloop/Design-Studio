@@ -61,6 +61,7 @@ import {
   pageRoleLabel,
   type BadgeCustomField,
   type BadgeDocument,
+  type BadgeTicketType,
   type BadgeField,
   type BadgePreset,
   type FlattenResult,
@@ -82,6 +83,8 @@ export interface BadgeEditorProps {
    *  Omit to check only that each field is a number. */
   validateSetup?: ValidateBadgeSetup;
   customFields?: BadgeCustomField[];
+  /** The event's ticket types, offered on tickets fields. */
+  ticketTypes?: BadgeTicketType[];
   name?: string;
   onNameChange?: (name: string) => void;
   /** Show the debug affordance (badge_layout JSON viewer). */
@@ -147,6 +150,7 @@ function BadgeEditorInner({
   presets = [],
   validateSetup,
   customFields = [],
+  ticketTypes = [],
   name,
   onNameChange,
   debug,
@@ -845,6 +849,7 @@ function BadgeEditorInner({
             ) : (
               <PropertiesPanel
                 field={selectedField}
+                ticketTypes={ticketTypes}
                 onChange={patch =>
                   selectedField && updateField(selectedField.id, patch)
                 }

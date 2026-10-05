@@ -10,6 +10,7 @@ export type {
   BadgePage,
   BadgeField,
   BadgeCustomField,
+  BadgeTicketType,
   BadgePreset,
   BadgeSpec,
   FoldType,
