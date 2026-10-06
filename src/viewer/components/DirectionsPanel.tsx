@@ -1,4 +1,4 @@
-import { PiX, PiArrowsDownUp, PiFootprints } from "react-icons/pi";
+import { PiFootprints } from "react-icons/pi";
 import { IconButton } from "@/components/IconButton";
 import type { SearchResult } from "@/viewer/hooks/useSearch";
 import type {
@@ -18,6 +18,7 @@ import { Row } from "@/components/Row";
 import { Stack } from "@/components/Stack";
 import { Text } from "@/components/Text";
 import { LocationField } from "./LocationField";
+import { SortIcon, XIcon } from "@/icons/icons";
 
 interface DirectionsPanelProps {
   startLocation: DirectionsLocation | null;
@@ -54,7 +55,7 @@ export function DirectionsPanel({
           {t("viewer.directions.title")}
         </Text>
         <IconButton variant="bare" size="sm" onClick={onClose}>
-          <PiX size={16} />
+          <XIcon size={16} />
         </IconButton>
       </Row>
 
@@ -86,7 +87,7 @@ export function DirectionsPanel({
           className="self-center shrink-0"
           title={t("viewer.directions.swap")}
         >
-          <PiArrowsDownUp size={16} />
+          <SortIcon size={16} />
         </IconButton>
       </Row>
 

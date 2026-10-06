@@ -1,5 +1,4 @@
 import { useMemo, useRef, useState } from "react";
-import { PiMagnifyingGlass, PiUploadSimple } from "react-icons/pi";
 import { Button } from "@/components/Button";
 import { Row } from "@/components/Row";
 import { Stack } from "@/components/Stack";
@@ -18,6 +17,7 @@ import {
   type ImageType,
 } from "./imageTypes";
 import { ImageUploadError } from "./imageUploadError";
+import { SearchIcon, UploadIcon } from "@/icons/icons";
 
 const SORTS: { id: GallerySort; labelKey: StringKey }[] = [
   { id: "recent", labelKey: "common.gallery.sortRecent" },
@@ -178,7 +178,7 @@ export function ImageGallery({
               aria-label={t("common.gallery.searchPlaceholder")}
               className="pr-6"
             />
-            <PiMagnifyingGlass
+            <SearchIcon
               size={16}
               className="pointer-events-none absolute right-xxs top-1/2 -translate-y-1/2 text-text-subtle"
             />
@@ -218,7 +218,7 @@ export function ImageGallery({
                 : "border-border-neutral bg-surface-neutral"
             }`}
           >
-            <PiUploadSimple size={24} className="mb-xxs text-text-subtle" />
+            <UploadIcon size={24} className="mb-xxs text-text-subtle" />
             <Text size="sm" color="body" as="span">
               {t("common.gallery.uploadCta")}
             </Text>

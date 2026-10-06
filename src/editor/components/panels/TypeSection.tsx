@@ -1,6 +1,5 @@
 import { useState } from "react";
 import type { ElementProperties, ElementTypeDefaults } from "@/types";
-import { PiCaretDown, PiCaretRight } from "react-icons/pi";
 import { useT } from "@/editor/i18n";
 import {
   ColorSwatch,
@@ -13,6 +12,7 @@ import { Stack } from "@/components/Stack";
 import { Text } from "@/components/Text";
 import { GRAY_400 } from "@/canvasColors";
 import { LabelSection } from "./LabelSection";
+import { ChevronDownIcon, ChevronRightIcon } from "@/icons/icons";
 
 const TYPE_DISPLAY_NAMES: Record<string, string> = {
   booth: "Booth",
@@ -71,9 +71,9 @@ export function TypeSection({ typeKey, defaults, onChange }: TypeSectionProps) {
           </Text>
         </Row>
         {open ? (
-          <PiCaretDown size={12} className="text-text-subtle" />
+          <ChevronDownIcon size={12} className="text-text-subtle" />
         ) : (
-          <PiCaretRight size={12} className="text-text-subtle" />
+          <ChevronRightIcon size={12} className="text-text-subtle" />
         )}
       </button>
 

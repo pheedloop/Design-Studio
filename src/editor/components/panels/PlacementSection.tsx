@@ -1,8 +1,8 @@
 import type React from "react";
-import { PiSparkle, PiCaretUp, PiCaretDown } from "react-icons/pi";
 import { useT } from "@/editor/i18n";
 import { SectionShapeContext } from "./sectionShapeContext";
 import { PlacementFilterBar, type StatusFilter } from "./PlacementFilterBar";
+import { ChevronDownIcon, ChevronUpIcon, SparkleIcon } from "@/icons/icons";
 
 interface PlacementSectionProps {
   title: string;
@@ -91,10 +91,10 @@ export function PlacementSection({
             if (totalUnplaced > 0) onAutoArrange?.();
           }}
         >
-          <PiSparkle size={14} />
+          <SparkleIcon size={14} />
         </span>
         <span className="shrink-0 text-text-subtle">
-          {isOpen ? <PiCaretUp size={12} /> : <PiCaretDown size={12} />}
+          {isOpen ? <ChevronUpIcon size={12} /> : <ChevronDownIcon size={12} />}
         </span>
       </button>
 

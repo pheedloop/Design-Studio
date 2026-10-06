@@ -1,15 +1,15 @@
-import { PiArrowUpRight } from "react-icons/pi";
 import type { ToolDefinition } from "./types";
 import { useLineInteraction } from "./hooks/useLineInteraction";
 import type { LinePreviewState } from "./hooks/useLineInteraction";
 import { ArrowPreview } from "./previews/ArrowPreview";
 import { LineEndpointHandles } from "./handles/LineEndpointHandles";
+import { ToolArrowIcon } from "@/icons/icons";
 
 export const arrowTool: ToolDefinition<LinePreviewState | null> = {
   id: "arrow",
   labelKey: "editor.tool.arrow",
   shortcut: "A",
-  icon: <PiArrowUpRight size={20} />,
+  icon: <ToolArrowIcon size={20} />,
   cursor: "crosshair",
 
   useInteraction: ctx =>

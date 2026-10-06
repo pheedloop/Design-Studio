@@ -1,12 +1,6 @@
 import { useState, useRef, useLayoutEffect } from "react";
 import { createPortal } from "react-dom";
-import {
-  PiCursorFill,
-  PiHandFill,
-  PiPaintBrush,
-  PiEraser,
-  PiSquare,
-} from "react-icons/pi";
+import { PiHandFill, PiEraser } from "react-icons/pi";
 import type { ActiveTool, EditorMode, PathingTool } from "@/editor/types";
 import { TOOL_REGISTRY } from "@/editor/tools/registry";
 import { isToolVisible, toolFeature } from "@/editor/tools/toolAvailability";
@@ -21,6 +15,11 @@ import { ToolRow, type ToolDef } from "./ToolRow";
 import { ToolSidebarHeader } from "./ToolSidebarHeader";
 import { PlacementPanel } from "./PlacementPanel";
 import type { AutoArrangeRecord } from "./PlacementPanel";
+import {
+  CreativeBrushIcon,
+  GeneralSquareIcon,
+  ToolSelectIcon,
+} from "@/icons/icons";
 
 // ---------------------------------------------------------------------------
 // Tool lists
@@ -37,7 +36,7 @@ const selectDef: ToolDef<ActiveTool> = {
   id: "select",
   labelKey: "editor.tool.select",
   shortcut: "V",
-  icon: <PiCursorFill size={16} />,
+  icon: <ToolSelectIcon size={16} />,
 };
 
 const toolDefs: ToolDef<ActiveTool>[] = TOOL_REGISTRY.map(t => ({
@@ -52,13 +51,13 @@ const pathingToolDefs: ToolDef<PathingTool>[] = [
     id: "select",
     labelKey: "editor.tool.select",
     shortcut: "V",
-    icon: <PiCursorFill size={16} />,
+    icon: <ToolSelectIcon size={16} />,
   },
   {
     id: "paintWalkable",
     labelKey: "editor.tool.paintWalkable",
     shortcut: "W",
-    icon: <PiPaintBrush size={16} />,
+    icon: <CreativeBrushIcon size={16} />,
   },
   {
     id: "paintImpassable",
@@ -70,7 +69,7 @@ const pathingToolDefs: ToolDef<PathingTool>[] = [
     id: "rectFill",
     labelKey: "editor.tool.rectangleFill",
     shortcut: "R",
-    icon: <PiSquare size={16} />,
+    icon: <GeneralSquareIcon size={16} />,
   },
 ];
 

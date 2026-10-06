@@ -1,8 +1,8 @@
-import { PiTrash } from "react-icons/pi";
 import { Stack } from "@/components/Stack";
 import { Text } from "@/components/Text";
 import { useT } from "@/editor/i18n";
 import type { EditorImage } from "@/editor/types";
+import { BinIcon } from "@/icons/icons";
 
 interface ImageThumbnailProps {
   image: EditorImage;
@@ -59,7 +59,7 @@ export function ImageThumbnail({
             isSelected ? "opacity-100" : "opacity-0 pointer-events-none"
           }`}
         >
-          <PiTrash size={14} />
+          <BinIcon size={14} />
         </button>
       )}
       <Text

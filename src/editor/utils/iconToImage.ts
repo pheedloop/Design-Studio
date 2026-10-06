@@ -1,27 +1,29 @@
 import { renderToStaticMarkup } from "react-dom/server";
 import { createElement } from "react";
-import type { IconType } from "react-icons";
+import type { IconEntry } from "./iconRegistry";
 
 const imageCache = new Map<string, HTMLImageElement>();
 
 /**
- * Convert a react-icons component to an HTMLImageElement for Konva.
+ * Convert a registry icon to an HTMLImageElement for Konva.
  * Caches by icon id + color + size.
  */
 export function iconToImage(
-  Icon: IconType,
+  entry: IconEntry,
   color: string,
   size: number,
   onLoad: (img: HTMLImageElement) => void,
 ): void {
-  const cacheKey = `${Icon.name || Icon.toString()}-${color}-${size}`;
+  const cacheKey = `${entry.id}-${color}-${size}`;
   const cached = imageCache.get(cacheKey);
   if (cached) {
     onLoad(cached);
     return;
   }
 
-  const svgString = renderToStaticMarkup(createElement(Icon, { size, color }));
+  const svgString = renderToStaticMarkup(
+    createElement(entry.component, { size, color }),
+  );
 
   const blob = new Blob([svgString], { type: "image/svg+xml" });
   const url = URL.createObjectURL(blob);

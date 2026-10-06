@@ -1,12 +1,12 @@
-import { PiTextT } from "react-icons/pi";
 import type { ToolDefinition } from "./types";
 import { useClickPlaceInteraction } from "./hooks/useClickPlaceInteraction";
+import { ToolTextIcon } from "@/icons/icons";
 
 export const textTool: ToolDefinition<null> = {
   id: "text",
   labelKey: "editor.tool.text",
   shortcut: "T",
-  icon: <PiTextT size={20} />,
+  icon: <ToolTextIcon size={20} />,
   cursor: "crosshair",
 
   useInteraction: ctx =>

@@ -1,14 +1,14 @@
-import { PiStorefront } from "react-icons/pi";
 import type { ToolDefinition } from "./types";
 import { useClickDragInteraction } from "./hooks/useClickDragInteraction";
 import type { DrawingRect } from "./hooks/useClickDragInteraction";
 import { RectPreview } from "./previews/RectPreview";
+import { BoothIcon } from "@/icons/icons";
 
 export const boothTool: ToolDefinition<DrawingRect | null> = {
   id: "booth",
   labelKey: "common.type.booth",
   shortcut: "B",
-  icon: <PiStorefront size={20} />,
+  icon: <BoothIcon size={20} />,
   cursor: "crosshair",
 
   useInteraction: ctx =>

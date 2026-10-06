@@ -1,30 +1,28 @@
-import {
-  PiTextT,
-  PiQrCode,
-  PiTicket,
-  PiImage,
-  PiCalendarBlank,
-  PiTagSimple,
-  PiAddressBook,
-} from "react-icons/pi";
+import { PiImage, PiTagSimple, PiAddressBook } from "react-icons/pi";
 import { SidebarRow } from "@/components/SidebarRow";
 import { SectionLabel } from "@/editor/components/ui";
 import { FIELD_DEFS, type FieldDef } from "./fields";
 import { BadgeSidebarHeader } from "./BadgeSidebarHeader";
 import type { BadgeCustomField } from "./model";
 import { useT } from "./i18n";
+import {
+  CalendarIcon,
+  QrCodeIcon,
+  TicketIcon,
+  ToolTextIcon,
+} from "@/icons/icons";
 
 const iconProps = { size: 16, className: "text-text-subtle" };
 
 function iconFor(def: FieldDef) {
-  if (def.kind === "qrCode") return <PiQrCode {...iconProps} />;
-  if (def.kind === "tickets") return <PiTicket {...iconProps} />;
+  if (def.kind === "qrCode") return <QrCodeIcon {...iconProps} />;
+  if (def.kind === "tickets") return <TicketIcon {...iconProps} />;
   if (def.kind === "image") return <PiImage {...iconProps} />;
-  if (def.kind === "sessionSchedule") return <PiCalendarBlank {...iconProps} />;
+  if (def.kind === "sessionSchedule") return <CalendarIcon {...iconProps} />;
   if (def.field === "tags") return <PiTagSimple {...iconProps} />;
   if (def.field.startsWith("address_") || def.field === "city_state")
     return <PiAddressBook {...iconProps} />;
-  return <PiTextT {...iconProps} />;
+  return <ToolTextIcon {...iconProps} />;
 }
 
 interface BadgeSidebarProps {
@@ -79,7 +77,7 @@ export function BadgeSidebar({
               <SidebarRow
                 key={c.name}
                 label={c.label}
-                icon={<PiTextT {...iconProps} />}
+                icon={<ToolTextIcon {...iconProps} />}
                 onClick={() => onAddCustomField(c)}
               />
             ))}
