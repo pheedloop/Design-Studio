@@ -1,14 +1,14 @@
-import { PiCircle } from "react-icons/pi";
 import type { ToolDefinition } from "./types";
 import { useClickDragInteraction } from "./hooks/useClickDragInteraction";
 import type { DrawingRect } from "./hooks/useClickDragInteraction";
 import { EllipsePreview } from "./previews/EllipsePreview";
+import { GeneralCircleIcon } from "@/icons/icons";
 
 export const ellipseTool: ToolDefinition<DrawingRect | null> = {
   id: "ellipse",
   labelKey: "editor.tool.ellipse",
   shortcut: "O",
-  icon: <PiCircle size={20} />,
+  icon: <GeneralCircleIcon size={20} />,
   cursor: "crosshair",
 
   useInteraction: ctx =>

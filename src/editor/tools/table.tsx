@@ -1,14 +1,14 @@
-import { PiArmchair } from "react-icons/pi";
 import type { ToolDefinition } from "./types";
 import { useClickDragInteraction } from "./hooks/useClickDragInteraction";
 import type { DrawingRect } from "./hooks/useClickDragInteraction";
 import { RectPreview } from "./previews/RectPreview";
+import { SeatIcon } from "@/icons/icons";
 
 export const tableTool: ToolDefinition<DrawingRect | null> = {
   id: "table",
   labelKey: "editor.tool.table",
   shortcut: "T",
-  icon: <PiArmchair size={20} />,
+  icon: <SeatIcon size={20} />,
   cursor: "crosshair",
 
   useInteraction: ctx =>

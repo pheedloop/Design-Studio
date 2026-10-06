@@ -1,4 +1,3 @@
-import { PiX } from "react-icons/pi";
 import { Button } from "@/components/Button";
 import { IconButton } from "@/components/IconButton";
 import type { SeatOccupant, SeatTableState } from "@/seatviewer/types";
@@ -7,6 +6,7 @@ import { useT } from "@/seatviewer/i18n";
 import { occupantHeading } from "@/seatviewer/labels";
 import { Row } from "@/components/Row";
 import { Heading } from "@/components/Heading";
+import { XIcon } from "@/icons/icons";
 
 interface TableDetailPopoverProps {
   table: SeatTableState;
@@ -94,7 +94,7 @@ export function TableDetailPopover({
           aria-label={t("seatviewer.table.close")}
           onClick={onClose}
         >
-          <PiX size={16} />
+          <XIcon size={16} />
         </IconButton>
       </Row>
 

@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { PiCaretUp, PiCaretDown } from "react-icons/pi";
 import { Row } from "@/components/Row";
+import { ChevronDownIcon, ChevronUpIcon } from "@/icons/icons";
 
 interface NumberInputProps {
   value: number;
@@ -64,7 +64,7 @@ export function NumberInput({
             className="flex items-center justify-center px-xxxs h-1/2 hover:bg-surface-neutral cursor-pointer text-text-subtle hover:text-text-body transition-colors"
             tabIndex={-1}
           >
-            <PiCaretUp size={10} />
+            <ChevronUpIcon size={10} />
           </button>
           <button
             type="button"
@@ -72,7 +72,7 @@ export function NumberInput({
             className="flex items-center justify-center px-xxxs h-1/2 border-t border-border-neutral-light hover:bg-surface-neutral cursor-pointer text-text-subtle hover:text-text-body transition-colors"
             tabIndex={-1}
           >
-            <PiCaretDown size={10} />
+            <ChevronDownIcon size={10} />
           </button>
         </div>
       )}

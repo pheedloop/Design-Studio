@@ -18,7 +18,7 @@ export function IconShape({ geo, iconName, color }: IconShapeProps) {
     if (!entry) return;
 
     // Use a large render size for quality, Konva scales to geo.width/height
-    iconToImage(entry.component, color, 128, setImage);
+    iconToImage(entry, color, 128, setImage);
   }, [iconName, color]);
 
   if (!image) return null;

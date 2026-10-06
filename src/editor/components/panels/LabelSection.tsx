@@ -10,8 +10,8 @@ import { Row } from "@/components/Row";
 import { Stack } from "@/components/Stack";
 import { BLACK, WHITE } from "@/canvasColors";
 import { LabelPositionPicker } from "./LabelPositionPicker";
-import { PiEye, PiEyeSlash } from "react-icons/pi";
 import { useT } from "@/editor/i18n";
+import { HideIcon, VisibleIcon } from "@/icons/icons";
 
 interface LabelSectionProps {
   properties: ElementProperties;
@@ -36,7 +36,7 @@ export function LabelSection({ properties, onChange }: LabelSectionProps) {
           onClick={() => onChange({ labelVisible: !visible })}
           title={visible ? t("editor.label.hide") : t("editor.label.show")}
         >
-          {visible ? <PiEye size={16} /> : <PiEyeSlash size={16} />}
+          {visible ? <VisibleIcon size={16} /> : <HideIcon size={16} />}
         </button>
       </Row>
 

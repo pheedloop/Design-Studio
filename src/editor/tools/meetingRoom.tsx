@@ -1,14 +1,14 @@
-import { PiDoor } from "react-icons/pi";
 import type { ToolDefinition } from "./types";
 import { useClickDragInteraction } from "./hooks/useClickDragInteraction";
 import type { DrawingRect } from "./hooks/useClickDragInteraction";
 import { RectPreview } from "./previews/RectPreview";
+import { FacilityDoorIcon } from "@/icons/icons";
 
 export const meetingRoomTool: ToolDefinition<DrawingRect | null> = {
   id: "meeting_room",
   labelKey: "common.type.meetingRoom",
   shortcut: "N",
-  icon: <PiDoor size={20} />,
+  icon: <FacilityDoorIcon size={20} />,
   cursor: "crosshair",
 
   useInteraction: ctx =>

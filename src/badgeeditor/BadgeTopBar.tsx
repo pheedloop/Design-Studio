@@ -1,9 +1,10 @@
 import { useState, type ReactNode } from "react";
-import { PiIdentificationBadge, PiBug } from "react-icons/pi";
+import { PiBug } from "react-icons/pi";
 import { DropdownMenu, MenuButton } from "@/editor/components/ui";
 import type { MenuEntry } from "@/editor/components/ui";
 import { Row } from "@/components/Row";
 import { useT } from "./i18n";
+import { BusinessCardIcon } from "@/icons/icons";
 
 interface BadgeTopBarProps {
   fileMenuItems?: MenuEntry[];
@@ -59,7 +60,7 @@ export function BadgeTopBar({
         justify="center"
         className="w-12 shrink-0 h-10 border-r border-border-neutral-light text-text-subtle"
       >
-        <PiIdentificationBadge size={20} />
+        <BusinessCardIcon size={20} />
       </Row>
       {menu("file", t("badgeeditor.menu.file"), fileMenuItems)}
       {menu("edit", t("badgeeditor.menu.edit"), editMenuItems)}

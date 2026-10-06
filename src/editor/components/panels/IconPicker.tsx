@@ -1,5 +1,4 @@
 import { useState, useRef, useEffect } from "react";
-import { PiMagnifyingGlass } from "react-icons/pi";
 import {
   ICON_CATEGORIES,
   iconRegistry,
@@ -8,6 +7,7 @@ import {
 import { ICON_CATEGORY_LABEL, ICON_LABEL } from "@/editor/utils/iconLabels";
 import { useT } from "@/editor/i18n";
 import { Row } from "@/components/Row";
+import { SearchIcon } from "@/icons/icons";
 
 interface IconPickerProps {
   selectedId: string | null;
@@ -73,7 +73,7 @@ export function IconPicker({
         align="center"
         className="px-xs py-xxs border-b border-border-neutral-light"
       >
-        <PiMagnifyingGlass size={14} className="text-text-subtle shrink-0" />
+        <SearchIcon size={14} className="text-text-subtle shrink-0" />
         <input
           ref={inputRef}
           type="text"
