@@ -10,7 +10,7 @@ import {
 import type { T } from "@/viewer/i18n";
 import { Row } from "@/components/Row";
 import { Text } from "@/components/Text";
-import { SearchIcon, XIcon } from "@/icons/icons";
+import { SearchIcon, CloseIcon } from "@/icons/icons";
 
 export function LocationField({
   label,
@@ -58,7 +58,7 @@ export function LocationField({
           }}
           className="shrink-0"
         >
-          <XIcon size={12} />
+          <CloseIcon size={12} />
         </IconButton>
       </Row>
     );

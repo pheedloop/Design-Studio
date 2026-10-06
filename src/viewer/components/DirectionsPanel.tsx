@@ -18,7 +18,7 @@ import { Row } from "@/components/Row";
 import { Stack } from "@/components/Stack";
 import { Text } from "@/components/Text";
 import { LocationField } from "./LocationField";
-import { SortIcon, XIcon } from "@/icons/icons";
+import { SortIcon, CloseIcon } from "@/icons/icons";
 
 interface DirectionsPanelProps {
   startLocation: DirectionsLocation | null;
@@ -55,7 +55,7 @@ export function DirectionsPanel({
           {t("viewer.directions.title")}
         </Text>
         <IconButton variant="bare" size="sm" onClick={onClose}>
-          <XIcon size={16} />
+          <CloseIcon size={16} />
         </IconButton>
       </Row>
 
