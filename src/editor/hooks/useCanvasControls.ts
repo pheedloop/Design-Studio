@@ -120,6 +120,15 @@ export function useCanvasControls(
     }
   }, []);
 
+  // Konva withholds touchmove from the stage while it drags, so a one-finger
+  // drag already underway would swallow the pinch. The second finger ends it.
+  const handleTouchStart = useCallback(
+    (e: Konva.KonvaEventObject<TouchEvent>) => {
+      if (e.evt.touches.length > 1) stageRef.current?.stopDrag();
+    },
+    [],
+  );
+
   const handleTouchMove = useCallback(
     (e: Konva.KonvaEventObject<TouchEvent>) => {
       const [touch1, touch2] = e.evt.touches;
@@ -128,8 +137,6 @@ export function useCanvasControls(
       e.evt.preventDefault();
       const stage = stageRef.current;
       if (!stage) return;
-
-      if (stage.isDragging()) stage.stopDrag();
 
       const box = stage.container().getBoundingClientRect();
       const p1 = { x: touch1.clientX - box.left, y: touch1.clientY - box.top };
@@ -192,6 +199,7 @@ export function useCanvasControls(
     fitToBounds,
     handleWheel,
     handleDragEnd,
+    handleTouchStart,
     handleTouchMove,
     handleTouchEnd,
     zoomIn,
