@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { PiMapTrifold, PiBug, PiQuestion } from "react-icons/pi";
+import { PiBug, PiQuestion } from "react-icons/pi";
 import { Row } from "@/components/Row";
 import { DropdownMenu, MenuButton } from "./ui";
 import type { MenuEntry } from "./ui";
 import { useT } from "@/editor/i18n";
+import { MapIcon } from "@/icons/icons";
 
 interface TopBarProps {
   debug?: boolean;
@@ -49,7 +50,7 @@ export function TopBar({
         justify="center"
         className="w-12 shrink-0 h-10 border-r border-border-neutral-light text-text-subtle"
       >
-        <PiMapTrifold size={20} />
+        <MapIcon size={20} />
       </Row>
       <div className="relative">
         <MenuButton

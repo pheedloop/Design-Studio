@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { PiCaretDown, PiMagnifyingGlass, PiFunnel, PiX } from "react-icons/pi";
 import { IconButton } from "@/components/IconButton";
 import { useT, type StringKey } from "@/editor/i18n";
 import { Row } from "@/components/Row";
+import { ChevronDownIcon, FilterIcon, SearchIcon, XIcon } from "@/icons/icons";
 
 /** The ellipse option is offered as "Circle" — the placement grid only ever squares it. */
 const PLACEMENT_SHAPE_LABEL: Record<"rect" | "ellipse", StringKey> = {
@@ -66,7 +66,7 @@ export function PlacementFilterBar({
               style={{ borderRadius: shape === "ellipse" ? "9999px" : "0px" }}
             />
             {t(PLACEMENT_SHAPE_LABEL[shape])}
-            <PiCaretDown size={10} className="text-text-subtle" />
+            <ChevronDownIcon size={10} className="text-text-subtle" />
           </button>
           {shapeOpen && (
             <div className="absolute top-full left-0 mt-hair bg-white border border-border-neutral-light rounded shadow-md z-20 py-hair w-28">
@@ -106,7 +106,7 @@ export function PlacementFilterBar({
           onClick={toggleSearch}
           title={t("editor.placement.search")}
         >
-          <PiMagnifyingGlass size={13} />
+          <SearchIcon size={13} />
         </IconButton>
 
         {/* Filter toggle + popover */}
@@ -121,7 +121,7 @@ export function PlacementFilterBar({
             }}
             title={t("editor.placement.filterByStatus")}
           >
-            <PiFunnel size={13} />
+            <FilterIcon size={13} />
           </IconButton>
           {filterOpen && (
             <div className="absolute right-0 top-full mt-xxxs bg-white border border-border-neutral-light rounded-lg shadow-lg z-20 py-tight w-36">
@@ -176,7 +176,7 @@ export function PlacementFilterBar({
                 onClick={() => onQueryChange("")}
                 className="absolute right-1.5 top-1/2 -translate-y-1/2"
               >
-                <PiX size={11} />
+                <XIcon size={11} />
               </IconButton>
             )}
           </div>

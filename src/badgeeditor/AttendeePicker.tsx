@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from "react";
-import { PiMagnifyingGlass, PiX, PiCaretDown } from "react-icons/pi";
 import { IconButton } from "@/components/IconButton";
 import type { AttendeeOption, AttendeeProvider } from "./badgeData";
 import { useDismiss } from "@/hooks/useDismiss";
 import { useT } from "./i18n";
+import { ChevronDownIcon, SearchIcon, XIcon } from "@/icons/icons";
 
 interface AttendeePickerProps {
   provider: AttendeeProvider;
@@ -51,7 +51,7 @@ export function AttendeePicker({
           open ? "border-primary-400" : "border-border-neutral-light"
         } bg-white`}
       >
-        <PiMagnifyingGlass size={13} className="text-text-subtle shrink-0" />
+        <SearchIcon size={13} className="text-text-subtle shrink-0" />
         <button
           type="button"
           onClick={() =>
@@ -79,10 +79,10 @@ export function AttendeePicker({
             onClick={() => onChange(null)}
             className="shrink-0"
           >
-            <PiX size={13} />
+            <XIcon size={13} />
           </IconButton>
         ) : (
-          <PiCaretDown size={12} className="text-text-subtle shrink-0" />
+          <ChevronDownIcon size={12} className="text-text-subtle shrink-0" />
         )}
       </div>
 

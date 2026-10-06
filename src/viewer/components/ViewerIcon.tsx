@@ -18,7 +18,7 @@ export function ViewerIcon({
   useEffect(() => {
     const entry = getIconEntry(iconName);
     if (!entry) return;
-    iconToImage(entry.component, color, 128, setImage);
+    iconToImage(entry, color, 128, setImage);
   }, [iconName, color]);
   if (!image) return null;
   return <KonvaImage image={image} width={width} height={height} />;

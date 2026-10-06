@@ -1,10 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
-import {
-  PiDesktop,
-  PiDeviceMobile,
-  PiUser,
-  PiStorefront,
-} from "react-icons/pi";
+import { PiDeviceMobile } from "react-icons/pi";
 import { MapEditor, definePlacementCategory, type Tier } from "@/editor";
 import { LocaleSwitcher } from "@/demo/LocaleSwitcher";
 import { useDemoLocale } from "@/demo/useDemoLocale";
@@ -23,6 +18,7 @@ import type {
   SessionLocation,
   MeetingRoom,
 } from "@/viewer/types";
+import { BoothIcon, DesktopIcon, PersonIcon } from "@/icons/icons";
 
 type Mode = "editor" | "viewer";
 function getMode(): Mode {
@@ -142,7 +138,7 @@ export function MapApp() {
               }`}
               title="Desktop"
             >
-              <PiDesktop size={16} />
+              <DesktopIcon size={16} />
             </button>
             <button
               onClick={() => setViewport("mobile")}
@@ -162,7 +158,7 @@ export function MapApp() {
               className="flex items-center gap-xxxs"
               title="Attendee view"
             >
-              <PiUser size={14} />
+              <PersonIcon size={14} />
               <span>Attendee</span>
             </ChromeToggle>
             <ChromeToggle
@@ -171,7 +167,7 @@ export function MapApp() {
               className="flex items-center gap-xxxs"
               title="Exhibitor view"
             >
-              <PiStorefront size={14} />
+              <BoothIcon size={14} />
               <span>Exhibitor</span>
             </ChromeToggle>
           </>

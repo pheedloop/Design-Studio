@@ -1,5 +1,4 @@
 import { useMemo, useRef, useState } from "react";
-import { PiMagnifyingGlass, PiUploadSimple } from "react-icons/pi";
 import { Button } from "@/components/Button";
 import { Row } from "@/components/Row";
 import { Stack } from "@/components/Stack";
@@ -11,6 +10,7 @@ import { withMeasuredSize } from "@/editor/utils/placedImageSize";
 import { filterAndSortImages, type GallerySort } from "./galleryFilter";
 import { ImageThumbnail } from "./ImageThumbnail";
 import { ImageDeleteError } from "./imageDeleteError";
+import { SearchIcon, UploadIcon } from "@/icons/icons";
 
 const ACCEPT = "image/png,image/jpeg,image/gif,image/svg+xml";
 
@@ -150,7 +150,7 @@ export function ImageGallery({
               aria-label={t("common.gallery.searchPlaceholder")}
               className="pr-6"
             />
-            <PiMagnifyingGlass
+            <SearchIcon
               size={16}
               className="pointer-events-none absolute right-xxs top-1/2 -translate-y-1/2 text-text-subtle"
             />
@@ -190,7 +190,7 @@ export function ImageGallery({
                 : "border-border-neutral bg-surface-neutral"
             }`}
           >
-            <PiUploadSimple size={24} className="mb-xxs text-text-subtle" />
+            <UploadIcon size={24} className="mb-xxs text-text-subtle" />
             <Text size="sm" color="body" as="span">
               {t("common.gallery.uploadCta")}
             </Text>

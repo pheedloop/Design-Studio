@@ -1,15 +1,15 @@
-import { PiBezierCurve } from "react-icons/pi";
 import type { ToolDefinition } from "./types";
 import { useArcInteraction } from "./hooks/useArcInteraction";
 import type { ArcToolState } from "./hooks/useArcInteraction";
 import { ArcPreview } from "./previews/ArcPreview";
 import { ArcControlHandle } from "./handles/ArcControlHandle";
+import { ToolArcIcon } from "@/icons/icons";
 
 export const arcTool: ToolDefinition<ArcToolState> = {
   id: "arc",
   labelKey: "editor.tool.arc",
   shortcut: "C",
-  icon: <PiBezierCurve size={20} />,
+  icon: <ToolArcIcon size={20} />,
   cursor: "crosshair",
 
   useInteraction: ctx =>
