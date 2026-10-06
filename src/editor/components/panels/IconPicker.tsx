@@ -7,7 +7,6 @@ import {
 } from "@/editor/utils/iconRegistry";
 import { ICON_CATEGORY_LABEL, ICON_LABEL } from "@/editor/utils/iconLabels";
 import { useT } from "@/editor/i18n";
-import { useDismiss } from "@/hooks/useDismiss";
 import { Row } from "@/components/Row";
 
 interface IconPickerProps {
@@ -25,14 +24,11 @@ export function IconPicker({
 }: IconPickerProps) {
   const t = useT();
   const [query, setQuery] = useState("");
-  const ref = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     inputRef.current?.focus();
   }, []);
-
-  useDismiss(ref, onClose);
 
   // Matches the translated label so search works in the reading language, and the
   // English keywords, which stay untranslated as a synonym index.
@@ -69,7 +65,6 @@ export function IconPicker({
 
   return (
     <div
-      ref={ref}
       className="bg-white border border-border-neutral-light rounded-lg shadow-lg z-dialog w-[280px] max-h-[400px] flex flex-col"
       style={{ position: "fixed", left: anchorRect.right + 8, top }}
     >
@@ -84,6 +79,7 @@ export function IconPicker({
           type="text"
           value={query}
           onChange={e => setQuery(e.target.value)}
+          onKeyDown={e => e.key === "Escape" && onClose()}
           placeholder={t("editor.icon.search")}
           className="flex-1 text-xs text-text-heading placeholder:text-text-subtle outline-none bg-transparent"
         />
