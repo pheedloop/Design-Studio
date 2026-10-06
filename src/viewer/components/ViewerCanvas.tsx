@@ -59,6 +59,7 @@ export function ViewerCanvas({
     fitToBounds,
     handleWheel,
     handleDragEnd,
+    handleTouchStart,
     handleTouchMove,
     handleTouchEnd,
   } = useCanvasControls(containerRef);
@@ -127,6 +128,7 @@ export function ViewerCanvas({
           }}
           onDragStart={markViewMoved}
           onDragEnd={handleDragEnd}
+          onTouchStart={handleTouchStart}
           onTouchMove={e => {
             if (e.evt.touches.length > 1) markViewMoved();
             handleTouchMove(e);
