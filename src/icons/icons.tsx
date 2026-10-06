@@ -122,6 +122,18 @@ export const ChevronUpIcon = (props: IconProps) => (
   </SvgIcon>
 );
 
+export const CloseIcon = (props: IconProps) => (
+  <SvgIcon viewBox="0 0 16 16" {...props}>
+    <path
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      d="M12 4L4 12M4 4l8 8"
+    />
+  </SvgIcon>
+);
+
 export const CreativeBookIcon = (props: IconProps) => (
   <SvgIcon viewBox="0 0 16 16" {...props}>
     <path
@@ -1302,15 +1314,6 @@ export const WeatherWindIcon = (props: IconProps) => (
     <path
       fill="currentColor"
       d="M10.419 12.465a.93.93 0 0 0-.93-.93H.558a.558.558 0 0 1 0-1.116h8.93a2.047 2.047 0 1 1-1.526 3.41.559.559 0 0 1 .832-.744.93.93 0 0 0 1.624-.62m4.465-6.698a1.674 1.674 0 0 0-2.923-1.116.559.559 0 0 1-.832-.744 2.79 2.79 0 1 1 2.08 4.651H.56a.558.558 0 0 1 0-1.116h12.65c.925 0 1.675-.75 1.675-1.675M8.186 3.535a.93.93 0 0 0-1.623-.62.559.559 0 0 1-.833-.745 2.047 2.047 0 1 1 1.525 3.411H.559a.558.558 0 0 1 0-1.116h6.698a.93.93 0 0 0 .93-.93"
-    />
-  </SvgIcon>
-);
-
-export const XIcon = (props: IconProps) => (
-  <SvgIcon viewBox="0 0 16 16" {...props}>
-    <path
-      fill="currentColor"
-      d="M8.559 5.112 12.6 0h2.454l-5.36 6.777L16 16h-4.937l-3.868-5.594L2.771 16H.316L6.05 8.751 0 0h5.063zm3.181 9.263h1.36L4.324 1.539H2.865z"
     />
   </SvgIcon>
 );
