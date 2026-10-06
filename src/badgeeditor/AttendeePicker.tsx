@@ -3,7 +3,7 @@ import { IconButton } from "@/components/IconButton";
 import type { AttendeeOption, AttendeeProvider } from "./badgeData";
 import { useDismiss } from "@/hooks/useDismiss";
 import { useT } from "./i18n";
-import { ChevronDownIcon, SearchIcon, XIcon } from "@/icons/icons";
+import { ChevronDownIcon, SearchIcon, CloseIcon } from "@/icons/icons";
 
 interface AttendeePickerProps {
   provider: AttendeeProvider;
@@ -79,7 +79,7 @@ export function AttendeePicker({
             onClick={() => onChange(null)}
             className="shrink-0"
           >
-            <XIcon size={13} />
+            <CloseIcon size={13} />
           </IconButton>
         ) : (
           <ChevronDownIcon size={12} className="text-text-subtle shrink-0" />

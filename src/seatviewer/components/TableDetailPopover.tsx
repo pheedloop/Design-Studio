@@ -6,7 +6,7 @@ import { useT } from "@/seatviewer/i18n";
 import { occupantHeading } from "@/seatviewer/labels";
 import { Row } from "@/components/Row";
 import { Heading } from "@/components/Heading";
-import { XIcon } from "@/icons/icons";
+import { CloseIcon } from "@/icons/icons";
 
 interface TableDetailPopoverProps {
   table: SeatTableState;
@@ -94,7 +94,7 @@ export function TableDetailPopover({
           aria-label={t("seatviewer.table.close")}
           onClick={onClose}
         >
-          <XIcon size={16} />
+          <CloseIcon size={16} />
         </IconButton>
       </Row>
 

@@ -5,7 +5,7 @@ import { TYPE_BADGE, displayName } from "@/viewer/utils/elementTypes";
 import { useT } from "@/viewer/i18n";
 import { Row } from "@/components/Row";
 import { Text } from "@/components/Text";
-import { SearchIcon, XIcon } from "@/icons/icons";
+import { SearchIcon, CloseIcon } from "@/icons/icons";
 
 interface SearchBarProps {
   query: string;
@@ -57,7 +57,7 @@ export function SearchBar({
               inputRef.current?.focus();
             }}
           >
-            <XIcon size={14} />
+            <CloseIcon size={14} />
           </IconButton>
         )}
       </Row>

@@ -7,7 +7,7 @@ import {
   useLayoutEffect,
 } from "react";
 import { MdOutlineTableBar } from "react-icons/md";
-import { XIcon } from "@/icons/icons";
+import { CloseIcon } from "@/icons/icons";
 import { Row } from "@/components/Row";
 import { GRAY_300, GRAY_400 } from "@/canvasColors";
 import type { ActiveTool, EditorImage, EditorMode, PathingTool } from "./types";
@@ -1681,7 +1681,7 @@ function MapEditorInner({
             aria-label={t("editor.action.dismiss")}
             onClick={() => setDxfHydrationError(null)}
           >
-            <XIcon size={12} />
+            <CloseIcon size={12} />
           </button>
         </Row>
       )}
