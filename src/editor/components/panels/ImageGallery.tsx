@@ -69,7 +69,7 @@ export function ImageGallery({
     onConfirm(withMeasuredSize(image, measured));
 
   const upload = async (file: File | undefined) => {
-    if (!file || !onUpload) return;
+    if (!file || !onUpload || pending) return;
     if (!accept.includes(file.type as ImageType)) {
       setError(t("common.error.unsupportedFileType"));
       return;
