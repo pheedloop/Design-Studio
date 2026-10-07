@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import { PiStack, PiEye, PiEyeSlash } from "react-icons/pi";
+import { PiStack } from "react-icons/pi";
 import type { LayerDefinition, LayerId } from "@/types";
 import type { FeatureMap } from "@/tiers";
 import { showTrophy } from "@/tiers";
@@ -9,6 +9,7 @@ import { useT } from "@/editor/i18n";
 import { useDismiss } from "@/hooks/useDismiss";
 import { Row } from "@/components/Row";
 import { BRAND, GRAY_400 } from "@/canvasColors";
+import { HideIcon, VisibleIcon } from "@/icons/icons";
 
 interface LayerPanelProps {
   layers: LayerDefinition[];
@@ -117,9 +118,9 @@ export function LayerPanel({
                     }
                   >
                     {layer.visible ? (
-                      <PiEye size={14} />
+                      <VisibleIcon size={14} />
                     ) : (
-                      <PiEyeSlash size={14} />
+                      <HideIcon size={14} />
                     )}
                   </IconButton>
                 )}

@@ -1,5 +1,4 @@
 import { useState, useRef } from "react";
-import { PiMagnifyingGlass, PiX } from "react-icons/pi";
 import { IconButton } from "@/components/IconButton";
 import type { SearchResult } from "@/viewer/hooks/useSearch";
 import type { DirectionsLocation } from "@/viewer/hooks/useDirections";
@@ -11,6 +10,7 @@ import {
 import type { T } from "@/viewer/i18n";
 import { Row } from "@/components/Row";
 import { Text } from "@/components/Text";
+import { SearchIcon, CloseIcon } from "@/icons/icons";
 
 export function LocationField({
   label,
@@ -58,7 +58,7 @@ export function LocationField({
           }}
           className="shrink-0"
         >
-          <PiX size={12} />
+          <CloseIcon size={12} />
         </IconButton>
       </Row>
     );
@@ -74,7 +74,7 @@ export function LocationField({
         <span className="text-xs font-semibold text-text-subtle uppercase w-8 shrink-0">
           {label}
         </span>
-        <PiMagnifyingGlass size={12} className="text-text-disabled shrink-0" />
+        <SearchIcon size={12} className="text-text-disabled shrink-0" />
         <input
           ref={inputRef}
           type="text"

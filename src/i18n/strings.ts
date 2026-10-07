@@ -20,6 +20,7 @@ export const COMMON = {
   "error.imageDelete": "Could not delete this image.",
   "error.imageInUse":
     "This image is in use in the design. Remove it from the design first.",
+  "error.unsupportedFileType": "This file type is not supported.",
   "error.uploadFailed": "Upload failed. Please try again.",
   "gallery.browse": "Browse",
   "gallery.deleteImage": "Delete image",
@@ -34,7 +35,6 @@ export const COMMON = {
   "gallery.sortType": "Type",
   "gallery.title": "Image Gallery",
   "gallery.uploadCta": "Click to upload",
-  "gallery.uploadFormats": "SVG, PNG, JPEG or GIF",
   "gallery.uploadHint": "or drag and drop",
   "gallery.uploading": "Uploading…",
   legend: "Legend",
@@ -658,6 +658,15 @@ export const BADGEEDITOR = {
   "attendee.placeholder": "Preview data…",
   "attendee.search": "Search attendee…",
   "attendee.searching": "Searching…",
+  "background.choose": "Choose image",
+  "background.fit": "Fit",
+  "background.fitContain": "Fit inside",
+  "background.fitCover": "Fill panel",
+  "background.fitStretch": "Stretch",
+  "background.remove": "Remove",
+  "background.replace": "Replace",
+  "background.title": "Panel background",
+  "background.useAsBackground": "Use as background",
   "canvas.noSessions": "(no sessions)",
   "canvas.qr": "QR",
   "canvas.ticketName": "Ticket Name",
@@ -705,6 +714,8 @@ export const BADGEEDITOR = {
   "menu.view": "View",
   "name.untitled": "Untitled Badge",
   "notice.invertedPanel": "⤓ This panel prints upside-down automatically.",
+  "notice.legacyBackground":
+    "This template's background is now on the front panel. Backgrounds are set per panel; the change prints once you save.",
   "notice.outsidePanel_one":
     "{{count}} field is outside the panel and will not print.",
   "notice.outsidePanel_other":
@@ -727,7 +738,8 @@ export const BADGEEDITOR = {
     "Add ticket types below to choose which print, and in what order.",
   "properties.attendeeEditable": "Attendee editable",
   "properties.deleteField": "Delete field",
-  "properties.empty": "Select a field to edit its properties.",
+  "properties.empty":
+    "Select a field to edit its properties, or set this panel's background above.",
   "properties.insertToken": "Insert token",
   "properties.invert": "Invert (180°)",
   "properties.printAs": "Print as",
@@ -773,6 +785,10 @@ export const BADGEEDITOR = {
   "setup.punchSlot": "Slot",
   "setup.punchTopOffset": "Top offset (mm)",
   "setup.punchWidth": "Width (mm)",
+  "setup.removedBackgrounds_one":
+    "{{count}} panel background on a removed panel will be deleted. You can undo this.",
+  "setup.removedBackgrounds_other":
+    "{{count}} panel backgrounds on removed panels will be deleted. You can undo this.",
   "setup.removedFields_one":
     "{{count}} field on a removed panel will be deleted. You can undo this.",
   "setup.removedFields_other":

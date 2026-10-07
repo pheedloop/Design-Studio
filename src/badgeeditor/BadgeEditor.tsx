@@ -52,6 +52,7 @@ import { BadgeImageProvider } from "./BadgeImageProvider";
 import { refusePlacedImageDelete } from "./imageDelete";
 import { ImageGallery } from "@/editor/components/panels/ImageGallery";
 import type { EditorImage } from "@/editor/types";
+import type { ImageType } from "@/editor/components/panels/imageTypes";
 import { placedImageSize } from "@/editor/utils/placedImageSize";
 import { flatten, foldInvertForPage, inflate } from "./serialize";
 import type { AttendeeOption, AttendeeProvider, BadgeData } from "./badgeData";
@@ -63,6 +64,8 @@ import {
   type BadgeDocument,
   type BadgeTicketType,
   type BadgeField,
+  type BadgePage,
+  type BadgePageBackground,
   type BadgePreset,
   type FlattenResult,
 } from "./model";
@@ -97,12 +100,17 @@ export interface BadgeEditorProps {
   /** BCP-47 tag for number and list formatting. */
   locale?: string;
   images?: EditorImage[];
-  onUploadImage?: (file: File) => Promise<void>;
+  onUploadImage?: (file: File) => Promise<EditorImage | void>;
+  /** Image types the gallery accepts for upload. Defaults to every type it can show. */
+  acceptedImageTypes?: ImageType[];
   onDeleteImage?: (id: string) => Promise<void>;
   /** Inches of print overshoot the host's printer tolerates — how far a field's
    *  box may lie outside its panel and still print. Default 0 (strict): canvas
    *  outline, preview, thumbnail and the flattened save payload all agree. */
   printOvershootAllowanceIn?: number;
+  /** Tells the user the template's legacy background now sits on the front
+   *  panel and prints that way once saved. */
+  legacyBackgroundNotice?: boolean;
 }
 
 const BLANK_BADGE_SIZE = { width: 4, height: 3 };
@@ -157,8 +165,10 @@ function BadgeEditorInner({
   images = [],
   onUploadImage,
   onDeleteImage,
+  acceptedImageTypes,
   attendeeProvider,
   printOvershootAllowanceIn = 0,
+  legacyBackgroundNotice = false,
 }: Omit<BadgeEditorProps, "translate" | "locale">) {
   const t = useT();
   const locale = useLocale();
@@ -188,7 +198,9 @@ function BadgeEditorInner({
   const [unit, setUnit] = useState<Unit>("in");
   const [showLayout, setShowLayout] = useState(false);
   const [showSetup, setShowSetup] = useState(false);
-  const [showImageGallery, setShowImageGallery] = useState(false);
+  const [galleryTarget, setGalleryTarget] = useState<
+    "field" | "background" | null
+  >(null);
   const [previewMode, setPreviewMode] = useState(false);
   const [previewAttendee, setPreviewAttendee] = useState<AttendeeOption | null>(
     null,
@@ -294,17 +306,27 @@ function BadgeEditorInner({
     [setDoc],
   );
 
-  /** Replace the active page's fields via a transform. */
-  const mutateActivePage = useCallback(
-    (fn: (fields: BadgeField[]) => BadgeField[]) => {
+  const updateActivePage = useCallback(
+    (fn: (page: BadgePage) => BadgePage) => {
       setDoc(d => ({
         ...d,
-        pages: d.pages.map((p, i) =>
-          i === pageIndex ? { ...p, fields: fn(p.fields) } : p,
-        ),
+        pages: d.pages.map((p, i) => (i === pageIndex ? fn(p) : p)),
       }));
     },
     [setDoc, pageIndex],
+  );
+
+  /** Replace the active page's fields via a transform. */
+  const mutateActivePage = useCallback(
+    (fn: (fields: BadgeField[]) => BadgeField[]) =>
+      updateActivePage(p => ({ ...p, fields: fn(p.fields) })),
+    [updateActivePage],
+  );
+
+  const setActivePageBackground = useCallback(
+    (background: BadgePageBackground | undefined) =>
+      updateActivePage(p => ({ ...p, background })),
+    [updateActivePage],
   );
 
   const placeFields = useCallback(
@@ -638,7 +660,7 @@ function BadgeEditorInner({
           onAddField={addField}
           customFields={customFields}
           onAddCustomField={addCustomField}
-          onOpenImageGallery={() => setShowImageGallery(true)}
+          onOpenImageGallery={() => setGalleryTarget("field")}
         />
 
         {/* Main column — OptionsBar on top, [canvas | properties] below, so the
@@ -708,6 +730,11 @@ function BadgeEditorInner({
                   {t("badgeeditor.notice.outsidePanel", {
                     count: outsideCount,
                   })}
+                </div>
+              )}
+              {!previewMode && legacyBackgroundNotice && (
+                <div className="shrink-0 bg-amber-50 border-b border-amber-200 px-xs py-tight text-xs text-amber-700">
+                  {t("badgeeditor.notice.legacyBackground")}
                 </div>
               )}
               {!previewMode && pageInverts[pageIndex] && (
@@ -854,6 +881,9 @@ function BadgeEditorInner({
                   selectedField && updateField(selectedField.id, patch)
                 }
                 onDelete={deleteSelected}
+                pageBackground={activePage.background}
+                onChooseBackground={() => setGalleryTarget("background")}
+                onPageBackgroundChange={setActivePageBackground}
               />
             )}
           </div>
@@ -868,16 +898,29 @@ function BadgeEditorInner({
         />
       )}
 
-      {showImageGallery && (
+      {galleryTarget && (
         <ImageGallery
           images={images}
           onUpload={onUploadImage}
+          accept={acceptedImageTypes}
           onDelete={refusePlacedImageDelete(doc, onDeleteImage)}
           onConfirm={image => {
-            addImageField(image);
-            setShowImageGallery(false);
+            if (galleryTarget === "background") {
+              setActivePageBackground({
+                imageCode: image.id,
+                fit: activePage.background?.fit ?? "cover",
+              });
+            } else {
+              addImageField(image);
+            }
+            setGalleryTarget(null);
           }}
-          onClose={() => setShowImageGallery(false)}
+          onClose={() => setGalleryTarget(null)}
+          confirmLabel={
+            galleryTarget === "background"
+              ? t("badgeeditor.background.useAsBackground")
+              : undefined
+          }
         />
       )}
 

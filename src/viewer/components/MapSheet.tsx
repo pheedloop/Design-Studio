@@ -1,10 +1,10 @@
 import { useState, useMemo } from "react";
-import { PiCaretUp, PiCaretDown } from "react-icons/pi";
 import type { FloorPlanElement } from "@/types";
 import type { Exhibitor, HoveredItem } from "@/viewer/types";
 import { useT } from "@/viewer/i18n";
 import { Row } from "@/components/Row";
 import { Text } from "@/components/Text";
+import { ChevronDownIcon, ChevronUpIcon } from "@/icons/icons";
 
 interface MapSheetProps {
   elements: FloorPlanElement[];
@@ -139,9 +139,9 @@ export function MapSheet({
             </Text>
           )}
           {expanded ? (
-            <PiCaretDown size={14} className="text-text-subtle" />
+            <ChevronDownIcon size={14} className="text-text-subtle" />
           ) : (
-            <PiCaretUp size={14} className="text-text-subtle" />
+            <ChevronUpIcon size={14} className="text-text-subtle" />
           )}
         </Row>
       </div>

@@ -1,10 +1,10 @@
 import { useState } from "react";
 import type { Legend } from "@/types";
-import { PiCaretUp, PiCaretDown } from "react-icons/pi";
 import { useT } from "@/viewer/i18n";
 import { Row } from "@/components/Row";
 import { Stack } from "@/components/Stack";
 import { Text } from "@/components/Text";
+import { ChevronDownIcon, ChevronUpIcon } from "@/icons/icons";
 
 interface ViewerLegendProps {
   legend: Legend;
@@ -51,9 +51,9 @@ export function ViewerLegend({ legend }: ViewerLegendProps) {
             {t("common.legend")}
           </Text>
           {collapsed ? (
-            <PiCaretUp size={11} className="text-text-subtle" />
+            <ChevronUpIcon size={11} className="text-text-subtle" />
           ) : (
-            <PiCaretDown size={11} className="text-text-subtle" />
+            <ChevronDownIcon size={11} className="text-text-subtle" />
           )}
         </button>
       </div>

@@ -1,15 +1,15 @@
-import { PiPolygon } from "react-icons/pi";
 import type { ToolDefinition } from "./types";
 import { usePolygonInteraction } from "./hooks/usePolygonInteraction";
 import type { PolygonToolState } from "./hooks/usePolygonInteraction";
 import { PolygonPreview } from "./previews/PolygonPreview";
 import { PolygonVertexHandles } from "./handles/PolygonVertexHandles";
+import { ToolPolygonIcon } from "@/icons/icons";
 
 export const polygonTool: ToolDefinition<PolygonToolState> = {
   id: "polygon",
   labelKey: "editor.tool.polygon",
   shortcut: "P",
-  icon: <PiPolygon size={20} />,
+  icon: <ToolPolygonIcon size={20} />,
   cursor: "crosshair",
 
   useInteraction: ctx =>

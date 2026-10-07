@@ -7,6 +7,7 @@ import {
   useLayoutEffect,
 } from "react";
 import { MdOutlineTableBar } from "react-icons/md";
+import { CloseIcon } from "@/icons/icons";
 import { Row } from "@/components/Row";
 import { GRAY_300, GRAY_400 } from "@/canvasColors";
 import type { ActiveTool, EditorImage, EditorMode, PathingTool } from "./types";
@@ -127,7 +128,7 @@ interface MapEditorProps {
   /** Host-owned image library for the gallery. The editor never fetches it. */
   images?: EditorImage[];
   /** Uploads one file and refreshes `images`; omit to hide upload. */
-  onUploadImage?: (file: File) => Promise<void>;
+  onUploadImage?: (file: File) => Promise<EditorImage | void>;
   onDeleteImage?: (id: string) => Promise<void>;
   onEditProperties?: () => void;
   name?: string;
@@ -1680,7 +1681,7 @@ function MapEditorInner({
             aria-label={t("editor.action.dismiss")}
             onClick={() => setDxfHydrationError(null)}
           >
-            ✕
+            <CloseIcon size={12} />
           </button>
         </Row>
       )}

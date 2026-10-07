@@ -1,11 +1,11 @@
 import { useRef, useState } from "react";
-import { PiMagnifyingGlass, PiX } from "react-icons/pi";
 import { IconButton } from "@/components/IconButton";
 import type { SearchResult } from "@/viewer/hooks/useSearch";
 import { TYPE_BADGE, displayName } from "@/viewer/utils/elementTypes";
 import { useT } from "@/viewer/i18n";
 import { Row } from "@/components/Row";
 import { Text } from "@/components/Text";
+import { SearchIcon, CloseIcon } from "@/icons/icons";
 
 interface SearchBarProps {
   query: string;
@@ -34,7 +34,7 @@ export function SearchBar({
         align="center"
         className="px-xs py-xxs bg-white border-b border-border-neutral-light"
       >
-        <PiMagnifyingGlass size={16} className="text-text-subtle shrink-0" />
+        <SearchIcon size={16} className="text-text-subtle shrink-0" />
         <input
           ref={inputRef}
           type="text"
@@ -57,7 +57,7 @@ export function SearchBar({
               inputRef.current?.focus();
             }}
           >
-            <PiX size={14} />
+            <CloseIcon size={14} />
           </IconButton>
         )}
       </Row>

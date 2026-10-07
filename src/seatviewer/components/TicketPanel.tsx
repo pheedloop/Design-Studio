@@ -1,10 +1,4 @@
 import { useRef, useState } from "react";
-import {
-  PiMagnifyingGlass,
-  PiCheck,
-  PiCaretDown,
-  PiWarningCircle,
-} from "react-icons/pi";
 import type {
   SeatFilterOption,
   SeatPlanMode,
@@ -21,6 +15,12 @@ import { Row } from "@/components/Row";
 import { Stack } from "@/components/Stack";
 import { Text } from "@/components/Text";
 import { Heading } from "@/components/Heading";
+import {
+  CheckIcon,
+  ChevronDownIcon,
+  InformationHelpCircleIcon,
+  SearchIcon,
+} from "@/icons/icons";
 
 interface TicketPanelProps {
   mode: SeatPlanMode;
@@ -122,7 +122,7 @@ export function TicketPanel({
               : "bg-white border-border-neutral"
           }`}
         >
-          {isSel && <PiCheck size={12} strokeWidth={2} />}
+          {isSel && <CheckIcon size={12} strokeWidth={2} />}
         </span>
         <span className="min-w-0 flex-1 flex flex-col gap-xxxs">
           <span className="flex items-start gap-xxs">
@@ -147,7 +147,7 @@ export function TicketPanel({
                   key={f}
                   className="inline-flex items-center gap-tight text-xs font-medium px-xxs py-hair rounded-full text-[#8a5300] bg-[rgba(240,169,46,0.16)]"
                 >
-                  <PiWarningCircle size={12} />
+                  <InformationHelpCircleIcon size={12} />
                   {t(SEAT_FLAG_LABEL_KEYS[f])}
                 </span>
               ))}
@@ -181,7 +181,7 @@ export function TicketPanel({
           className="w-full px-s py-snug border-b border-border-neutral-light"
         >
           <span className="size-[18px] shrink-0 grid place-items-center rounded-full bg-[#00a863] text-white">
-            <PiCheck size={11} strokeWidth={3} />
+            <CheckIcon size={11} strokeWidth={3} />
           </span>
           {label}
           <span className="shrink-0 flex items-center gap-snug">
@@ -258,7 +258,7 @@ export function TicketPanel({
           <span className="flex-1 min-w-0 text-sm text-text-caption truncate">
             {summary}
           </span>
-          <PiCaretDown
+          <ChevronDownIcon
             size={16}
             className={`shrink-0 text-text-subtle transition-transform ${expanded ? "rotate-180" : ""}`}
           />
@@ -301,7 +301,7 @@ export function TicketPanel({
           </span>
         </Row>
         <div className="relative">
-          <PiMagnifyingGlass
+          <SearchIcon
             className="absolute left-2.5 top-1/2 -translate-y-1/2 text-text-subtle"
             size={14}
           />

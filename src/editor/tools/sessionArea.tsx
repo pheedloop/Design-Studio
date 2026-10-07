@@ -1,14 +1,14 @@
-import { PiMicrophone } from "react-icons/pi";
 import type { ToolDefinition } from "./types";
 import { useClickDragInteraction } from "./hooks/useClickDragInteraction";
 import type { DrawingRect } from "./hooks/useClickDragInteraction";
 import { RectPreview } from "./previews/RectPreview";
+import { ServiceMicIcon } from "@/icons/icons";
 
 export const sessionAreaTool: ToolDefinition<DrawingRect | null> = {
   id: "session_area",
   labelKey: "editor.type.sessionLocation",
   shortcut: "S",
-  icon: <PiMicrophone size={20} />,
+  icon: <ServiceMicIcon size={20} />,
   cursor: "crosshair",
 
   useInteraction: ctx =>

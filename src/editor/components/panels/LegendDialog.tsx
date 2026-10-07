@@ -4,17 +4,17 @@ import { Button } from "@/components/Button";
 import { Checkbox } from "@/components/Checkbox";
 import { IconButton } from "@/components/IconButton";
 import { Dialog, TextInput, ColorSwatch } from "@/editor/components/ui";
-import {
-  PiEye,
-  PiEyeSlash,
-  PiArrowUp,
-  PiArrowDown,
-  PiTrash,
-  PiPlus,
-} from "react-icons/pi";
 import { useT } from "@/editor/i18n";
 import { Row } from "@/components/Row";
 import { Stack } from "@/components/Stack";
+import {
+  AddIcon,
+  BinIcon,
+  ChevronDownIcon,
+  ChevronUpIcon,
+  HideIcon,
+  VisibleIcon,
+} from "@/icons/icons";
 
 interface LegendDialogProps {
   legend: Legend;
@@ -125,9 +125,9 @@ export function LegendDialog({ legend, onSave, onClose }: LegendDialogProps) {
                   }
                 >
                   {entry.visible ? (
-                    <PiEye size={15} />
+                    <VisibleIcon size={15} />
                   ) : (
-                    <PiEyeSlash size={15} className="text-red-400" />
+                    <HideIcon size={15} className="text-red-400" />
                   )}
                 </IconButton>
                 <IconButton
@@ -136,7 +136,7 @@ export function LegendDialog({ legend, onSave, onClose }: LegendDialogProps) {
                   disabled={idx === 0}
                   title={t("editor.action.moveUp")}
                 >
-                  <PiArrowUp size={13} />
+                  <ChevronUpIcon size={13} />
                 </IconButton>
                 <IconButton
                   variant="bare"
@@ -144,7 +144,7 @@ export function LegendDialog({ legend, onSave, onClose }: LegendDialogProps) {
                   disabled={idx === local.entries.length - 1}
                   title={t("editor.action.moveDown")}
                 >
-                  <PiArrowDown size={13} />
+                  <ChevronDownIcon size={13} />
                 </IconButton>
                 {/* Raw: the red hover marks the destructive action, and a tone
                     prop for one site fails the ≥2-consumer bar. */}
@@ -153,7 +153,7 @@ export function LegendDialog({ legend, onSave, onClose }: LegendDialogProps) {
                   onClick={() => removeEntry(entry.id)}
                   title={t("editor.legend.removeEntry")}
                 >
-                  <PiTrash size={14} />
+                  <BinIcon size={14} />
                 </button>
               </Row>
             ))}
@@ -171,7 +171,7 @@ export function LegendDialog({ legend, onSave, onClose }: LegendDialogProps) {
           className="flex items-center gap-tight text-xs text-blue-600 hover:text-blue-700 transition-colors cursor-pointer self-start"
           onClick={addEntry}
         >
-          <PiPlus size={13} />
+          <AddIcon size={13} />
           {t("editor.legend.addEntry")}
         </button>
       </Stack>

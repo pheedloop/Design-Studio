@@ -1,6 +1,6 @@
 {
   "name": "@pheedloop/design-studio",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "type": "module",
   "repository": {
     "type": "git",
@@ -30,6 +30,10 @@
       "import": "./dist/badgeeditor.js",
       "types": "./dist/badgeeditor/index.d.ts"
     },
+    "./upload-error": {
+      "import": "./dist/upload-error.js",
+      "types": "./dist/editor/components/panels/imageUploadError.d.ts"
+    },
     "./style.css": "./dist/style.css"
   },
   "typesVersions": {
@@ -48,6 +52,9 @@
       ],
       "badgeeditor": [
         "./dist/badgeeditor/index.d.ts"
+      ],
+      "upload-error": [
+        "./dist/editor/components/panels/imageUploadError.d.ts"
       ]
     }
   },

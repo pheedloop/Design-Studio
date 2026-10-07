@@ -1,11 +1,11 @@
 import { InlineRenameField } from "@/components/InlineRenameField";
-import { PiPencilSimple, PiStorefront } from "react-icons/pi";
 import type { EditorMode } from "@/editor/types";
 import type { FeatureMap } from "@/tiers";
 import { useT } from "@/editor/i18n";
 import { IconButton } from "@/components/IconButton";
 import { TrophyIcon } from "@/editor/components/ui";
 import { Row } from "@/components/Row";
+import { BoothIcon, EditIcon } from "@/icons/icons";
 
 /**
  * Header row: map name (click to rename) + Design / Placement mode icon buttons.
@@ -18,7 +18,7 @@ export function ToolSidebarHeader({
   onEditorModeChange,
   isDirty,
   objectsState,
-  placementIcon = <PiStorefront size={16} />,
+  placementIcon = <BoothIcon size={16} />,
 }: {
   mapName: string;
   onMapNameChange: (name: string) => void;
@@ -66,7 +66,7 @@ export function ToolSidebarHeader({
         onClick={() => onEditorModeChange("design")}
         title={t("editor.mode.design")}
       >
-        <PiPencilSimple size={16} />
+        <EditIcon size={16} />
       </IconButton>
       {objectsState !== "hidden" &&
         (objectsState === "locked" ? (

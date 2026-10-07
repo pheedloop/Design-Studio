@@ -1,10 +1,3 @@
-import {
-  PiTextAlignLeft,
-  PiTextAlignCenter,
-  PiTextAlignRight,
-  PiTextAlignJustify,
-  PiTrash,
-} from "react-icons/pi";
 import { IconButton } from "@/components/IconButton";
 import {
   Select,
@@ -19,9 +12,11 @@ import { Text } from "@/components/Text";
 import {
   inchToPx,
   type BadgeField,
+  type BadgePageBackground,
   type BadgeTicketType,
   type TextAlign,
 } from "./model";
+import { PanelBackgroundControls } from "./PanelBackgroundControls";
 import {
   INTERNAL_CODE_FIELD,
   isLiteralTextField,
@@ -30,6 +25,13 @@ import {
 import { fieldHeading, printAsPatch } from "./factory";
 import { Checkbox } from "@/components/Checkbox";
 import { useT, type StringKey } from "./i18n";
+import {
+  BinIcon,
+  CentreAlignIcon,
+  JustifyAlignIcon,
+  LeftAlignIcon,
+  RightAlignIcon,
+} from "@/icons/icons";
 
 const FONT_SIZES = [10, 12, 16, 18, 20, 24, 30, 36, 42];
 const ROW_COUNTS = [1, 2, 3, 4, 5, 6];
@@ -41,22 +43,22 @@ const ALIGNMENTS: {
   {
     value: "left",
     labelKey: "badgeeditor.properties.alignLeft",
-    icon: <PiTextAlignLeft size={15} />,
+    icon: <LeftAlignIcon size={15} />,
   },
   {
     value: "center",
     labelKey: "badgeeditor.properties.alignCenter",
-    icon: <PiTextAlignCenter size={15} />,
+    icon: <CentreAlignIcon size={15} />,
   },
   {
     value: "right",
     labelKey: "badgeeditor.properties.alignRight",
-    icon: <PiTextAlignRight size={15} />,
+    icon: <RightAlignIcon size={15} />,
   },
   {
     value: "justify",
     labelKey: "badgeeditor.properties.alignJustify",
-    icon: <PiTextAlignJustify size={15} />,
+    icon: <JustifyAlignIcon size={15} />,
   },
 ];
 
@@ -78,6 +80,9 @@ interface PropertiesPanelProps {
   ticketTypes: BadgeTicketType[];
   onChange: (patch: Partial<BadgeField>) => void;
   onDelete: () => void;
+  pageBackground?: BadgePageBackground;
+  onChooseBackground: () => void;
+  onPageBackgroundChange: (background: BadgePageBackground | undefined) => void;
 }
 
 export function PropertiesPanel({
@@ -85,11 +90,19 @@ export function PropertiesPanel({
   ticketTypes,
   onChange,
   onDelete,
+  pageBackground,
+  onChooseBackground,
+  onPageBackgroundChange,
 }: PropertiesPanelProps) {
   const t = useT();
   if (!field) {
     return (
       <div className="w-48 shrink-0 border-l border-border-neutral-light bg-white flex flex-col">
+        <PanelBackgroundControls
+          background={pageBackground}
+          onChoose={onChooseBackground}
+          onChange={onPageBackgroundChange}
+        />
         <Row align="center" justify="center" className="flex-1 p-m text-center">
           <span className="text-xs text-text-subtle">
             {t("badgeeditor.properties.empty")}
@@ -127,7 +140,7 @@ export function PropertiesPanel({
           onClick={onDelete}
           title={t("badgeeditor.properties.deleteField")}
         >
-          <PiTrash size={15} />
+          <BinIcon size={15} />
         </IconButton>
       </Row>
 

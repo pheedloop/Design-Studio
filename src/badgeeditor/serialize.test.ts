@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import Konva from "konva";
-import { flatten, inflate } from "./serialize";
+import { flatten, inferFold, inflate } from "./serialize";
 import { PPI, fieldSizePx } from "./canvasMetrics";
 import type { BadgeDocument, BadgeField, LegacyLayoutEntry } from "./model";
 
@@ -267,6 +267,131 @@ describe("flatten", () => {
         .layout,
       layout,
     );
+  });
+});
+
+describe("panel backgrounds", () => {
+  it("lead the layout as full-panel entries and round-trip onto their panels", () => {
+    const doc: BadgeDocument = {
+      version: "1.0",
+      panelSize: { width: 4, height: 5.5 },
+      fold: "single",
+      pages: [
+        {
+          id: "front",
+          role: "front",
+          fields: [{ ...fieldAt("qrCode", "qrCode", 1, 1), scale: 1 }],
+          background: { imageCode: "BIMGFRONT", fit: "cover" },
+        },
+        {
+          id: "back",
+          role: "back",
+          fields: [],
+          background: { imageCode: "BIMGBACK", fit: "stretch" },
+        },
+      ],
+    };
+
+    const { layout } = flatten(doc);
+
+    expect(layout.slice(0, 2)).toEqual([
+      {
+        top: 0,
+        left: 0,
+        width: 4,
+        height: 5.5,
+        field: "background",
+        code: "BIMGFRONT",
+        fit: "cover",
+      },
+      {
+        top: 5.5,
+        left: 0,
+        width: 4,
+        height: 5.5,
+        field: "background",
+        code: "BIMGBACK",
+        fit: "stretch",
+        inverted: true,
+      },
+    ]);
+    expect(layout[2].field).toBe("qrCode");
+    const inflated = inflate(layout, { width: 4, height: 11, fold: "single" });
+    expect(inflated.pages.map(p => p.background)).toEqual([
+      doc.pages[0].background,
+      doc.pages[1].background,
+    ]);
+    expect(inflated.pages.map(p => p.fields.length)).toEqual([1, 0]);
+    expect(inflated.pages.map(p => p.inverted)).toEqual([undefined, undefined]);
+  });
+
+  it("keeps a panel's printed orientation when it differs from the fold default", () => {
+    const qr = { ...fieldAt("qrCode", "qrCode", 1, 0.5), scale: 1 };
+    const [front, back, qrEntry] = flatten({
+      version: "1.0",
+      panelSize: { width: 4, height: 5.5 },
+      fold: "single",
+      pages: [
+        {
+          id: "front",
+          role: "front",
+          fields: [],
+          inverted: true,
+          background: { imageCode: "F", fit: "cover" },
+        },
+        {
+          id: "back",
+          role: "back",
+          fields: [qr],
+          inverted: false,
+          background: { imageCode: "B", fit: "cover" },
+        },
+      ],
+    }).layout;
+
+    const inflated = inflate([qrEntry, back, front], {
+      width: 4,
+      height: 11,
+      fold: "single",
+    });
+
+    expect(inflated.pages.map(p => p.inverted)).toEqual([true, false]);
+    expect(inflated.pages[1].fields[0]).toMatchObject({
+      top: expect.closeTo(1, 9),
+      left: expect.closeTo(0.5, 9),
+      inverted: false,
+    });
+  });
+
+  it("stays a field when it lacks the background shape", () => {
+    const doc = inflate(
+      [{ field: "background", top: 0, left: 0, width: 1, height: 1 }],
+      { width: 4, height: 3 },
+    );
+    expect(doc.pages[0].background).toBeUndefined();
+    expect(doc.pages[0].fields).toHaveLength(1);
+  });
+});
+
+describe("inferFold", () => {
+  const panel = (height: number): LegacyLayoutEntry => ({
+    field: "background",
+    code: "B",
+    fit: "cover",
+    top: 0,
+    left: 0,
+    width: 4,
+    height,
+  });
+
+  it.each([
+    ["no backgrounds", [text(1)], 11, "none"],
+    ["one full-height panel", [panel(3)], 3, "none"],
+    ["two panels", [panel(5.5)], 11, "single"],
+    ["three panels", [panel(5.5)], 16.5, "double"],
+    ["an impossible count", [panel(2)], 11, "none"],
+  ] as const)("reads %s", (_, layout, height, fold) => {
+    expect(inferFold([...layout], height)).toBe(fold);
   });
 });
 

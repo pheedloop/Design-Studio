@@ -1,18 +1,23 @@
 import { useMemo, useRef, useState } from "react";
-import { PiMagnifyingGlass, PiUploadSimple } from "react-icons/pi";
 import { Button } from "@/components/Button";
 import { Row } from "@/components/Row";
 import { Stack } from "@/components/Stack";
 import { Text } from "@/components/Text";
 import { Dialog, TabBar, TextInput } from "@/editor/components/ui";
 import { useLocale, useT, type StringKey } from "@/editor/i18n";
+import { formatList } from "@/i18n/format";
 import type { EditorImage } from "@/editor/types";
 import { withMeasuredSize } from "@/editor/utils/placedImageSize";
 import { filterAndSortImages, type GallerySort } from "./galleryFilter";
 import { ImageThumbnail } from "./ImageThumbnail";
 import { ImageDeleteError } from "./imageDeleteError";
-
-const ACCEPT = "image/png,image/jpeg,image/gif,image/svg+xml";
+import {
+  ALL_IMAGE_TYPES,
+  IMAGE_TYPE_LABELS,
+  type ImageType,
+} from "./imageTypes";
+import { ImageUploadError } from "./imageUploadError";
+import { SearchIcon, UploadIcon } from "@/icons/icons";
 
 const SORTS: { id: GallerySort; labelKey: StringKey }[] = [
   { id: "recent", labelKey: "common.gallery.sortRecent" },
@@ -22,10 +27,14 @@ const SORTS: { id: GallerySort; labelKey: StringKey }[] = [
 
 interface ImageGalleryProps {
   images: EditorImage[];
-  onUpload?: (file: File) => Promise<void>;
+  /** Resolve with the stored image to select it. */
+  onUpload?: (file: File) => Promise<EditorImage | void>;
   onDelete?: (id: string) => Promise<void>;
   onConfirm: (image: EditorImage) => void;
   onClose: () => void;
+  /** Defaults to the gallery's insert label. */
+  confirmLabel?: string;
+  accept?: ImageType[];
 }
 
 export function ImageGallery({
@@ -34,6 +43,8 @@ export function ImageGallery({
   onDelete,
   onConfirm,
   onClose,
+  confirmLabel,
+  accept = ALL_IMAGE_TYPES,
 }: ImageGalleryProps) {
   const t = useT();
   const locale = useLocale();
@@ -45,7 +56,7 @@ export function ImageGallery({
   const [measured, setMeasured] = useState<
     Record<string, { width: number; height: number }>
   >({});
-  const [error, setError] = useState<StringKey | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
 
   const visible = useMemo(
@@ -58,13 +69,22 @@ export function ImageGallery({
     onConfirm(withMeasuredSize(image, measured));
 
   const upload = async (file: File | undefined) => {
-    if (!file || !onUpload) return;
+    if (!file || !onUpload || pending) return;
+    if (!accept.includes(file.type as ImageType)) {
+      setError(t("common.error.unsupportedFileType"));
+      return;
+    }
     setPending(true);
     setError(null);
     try {
-      await onUpload(file);
-    } catch {
-      setError("common.error.uploadFailed");
+      const uploaded = await onUpload(file);
+      if (uploaded) setSelectedId(uploaded.id);
+    } catch (e) {
+      setError(
+        e instanceof ImageUploadError
+          ? e.message
+          : t("common.error.uploadFailed"),
+      );
     } finally {
       setPending(false);
     }
@@ -78,9 +98,11 @@ export function ImageGallery({
       setSelectedId(current => (current === id ? null : current));
     } catch (e) {
       setError(
-        e instanceof ImageDeleteError
-          ? e.messageKey
-          : "common.error.imageDelete",
+        t(
+          e instanceof ImageDeleteError
+            ? e.messageKey
+            : "common.error.imageDelete",
+        ),
       );
     }
   };
@@ -104,6 +126,7 @@ export function ImageGallery({
     <Dialog
       title={t("common.gallery.title")}
       onClose={onClose}
+      closeDisabled={pending}
       width="800px"
       footer={
         <>
@@ -112,7 +135,12 @@ export function ImageGallery({
               {t("common.gallery.dropHint")}
             </Text>
           )}
-          <Button variant="outline" color="neutral" onClick={onClose}>
+          <Button
+            variant="outline"
+            color="neutral"
+            disabled={pending}
+            onClick={onClose}
+          >
             {t("common.action.cancel")}
           </Button>
           {selected ? (
@@ -121,7 +149,7 @@ export function ImageGallery({
               color="primary"
               onClick={() => insert(selected)}
             >
-              {t("common.gallery.insert")}
+              {confirmLabel ?? t("common.gallery.insert")}
             </Button>
           ) : (
             onUpload && (
@@ -150,7 +178,7 @@ export function ImageGallery({
               aria-label={t("common.gallery.searchPlaceholder")}
               className="pr-6"
             />
-            <PiMagnifyingGlass
+            <SearchIcon
               size={16}
               className="pointer-events-none absolute right-xxs top-1/2 -translate-y-1/2 text-text-subtle"
             />
@@ -190,7 +218,7 @@ export function ImageGallery({
                 : "border-border-neutral bg-surface-neutral"
             }`}
           >
-            <PiUploadSimple size={24} className="mb-xxs text-text-subtle" />
+            <UploadIcon size={24} className="mb-xxs text-text-subtle" />
             <Text size="sm" color="body" as="span">
               {t("common.gallery.uploadCta")}
             </Text>
@@ -198,7 +226,10 @@ export function ImageGallery({
               {t("common.gallery.uploadHint")}
             </Text>
             <Text size="xs" color="subtle" as="span">
-              {t("common.gallery.uploadFormats")}
+              {formatList(
+                accept.map(type => IMAGE_TYPE_LABELS[type]),
+                locale,
+              )}
             </Text>
           </Stack>
         ) : visible.length === 0 ? (
@@ -233,12 +264,12 @@ export function ImageGallery({
           </div>
         )}
 
-        {error && <p className="text-xs text-red-600">{t(error)}</p>}
+        {error && <p className="text-xs text-red-600">{error}</p>}
 
         <input
           ref={fileRef}
           type="file"
-          accept={ACCEPT}
+          accept={accept.join(",")}
           onChange={e => {
             void upload(e.target.files?.[0]);
             e.target.value = "";

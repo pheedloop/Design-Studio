@@ -18,6 +18,7 @@ export type {
 } from "@/viewer/types";
 export type { Tier, FeatureKey, FeatureOverride } from "@/tiers";
 export type { EditorImage } from "./types";
+export type { ImageType } from "./components/panels/imageTypes";
 
 export {
   designStudioStrings,

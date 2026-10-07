@@ -1,14 +1,14 @@
-import { PiRectangle } from "react-icons/pi";
 import type { ToolDefinition } from "./types";
 import { useClickDragInteraction } from "./hooks/useClickDragInteraction";
 import type { DrawingRect } from "./hooks/useClickDragInteraction";
 import { RectPreview } from "./previews/RectPreview";
+import { ToolRectangleIcon } from "@/icons/icons";
 
 export const rectangleTool: ToolDefinition<DrawingRect | null> = {
   id: "rectangle",
   labelKey: "editor.tool.rectangle",
   shortcut: "R",
-  icon: <PiRectangle size={20} />,
+  icon: <ToolRectangleIcon size={20} />,
   cursor: "crosshair",
 
   useInteraction: ctx =>
