@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { imageRetryDelay } from "./imageRetry";
 import qrCodeUrl from "./qr-code.png";
 
 // Shared image cache so per-field / per-ticket QR URLs load once. Undefined urls
@@ -17,20 +18,29 @@ export function useImageLoader(
   const key = urls.map(u => u ?? "").join("|");
   useEffect(() => {
     let alive = true;
+    const retries: number[] = [];
+    const load = (src: string, attempt: number) => {
+      const im = new window.Image();
+      im.crossOrigin = "anonymous";
+      im.onload = () => {
+        imageCache.set(src, im);
+        if (alive) bump(x => x + 1);
+      };
+      im.onerror = () => {
+        const delay = imageRetryDelay(attempt);
+        if (alive && delay !== null) {
+          retries.push(window.setTimeout(() => load(src, attempt + 1), delay));
+        }
+      };
+      im.src = src;
+    };
     for (const u of urls) {
       const src = u || STAND_IN_QR;
-      if (!imageCache.has(src)) {
-        const im = new window.Image();
-        im.crossOrigin = "anonymous";
-        im.onload = () => {
-          imageCache.set(src, im);
-          if (alive) bump(x => x + 1);
-        };
-        im.src = src;
-      }
+      if (!imageCache.has(src)) load(src, 1);
     }
     return () => {
       alive = false;
+      retries.forEach(window.clearTimeout);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [key]);

@@ -37,6 +37,7 @@ export function ImageThumbnail({
         }`}
       >
         <img
+          crossOrigin="anonymous"
           src={image.url}
           alt={image.name}
           onLoad={e => {

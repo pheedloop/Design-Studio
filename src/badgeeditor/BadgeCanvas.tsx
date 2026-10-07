@@ -19,6 +19,7 @@ import { useBadgeGuides } from "./useBadgeGuides";
 import type { BadgeData } from "./badgeData";
 import { FieldShape } from "./FieldShape";
 import { HolePunchShapes } from "./HolePunchShapes";
+import { PanelBackground } from "./PanelBackground";
 import { FoldIndicators } from "./FoldIndicators";
 
 interface BadgeCanvasProps {
@@ -386,6 +387,15 @@ export function BadgeCanvas({
           shadowBlur={12}
           shadowOffsetY={2}
         />
+
+        {page.background && (
+          <PanelBackground
+            background={page.background}
+            width={panelW}
+            height={panelH}
+            cornerRadius={mmToPx(cornerRadiusMm)}
+          />
+        )}
 
         {/* Reference grid (editor-only) */}
         {showGrid && gridSpacingPx > 0 && (

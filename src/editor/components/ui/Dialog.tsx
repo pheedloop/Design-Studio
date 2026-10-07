@@ -11,6 +11,7 @@ interface DialogProps {
   headerActions?: ReactNode;
   footer?: ReactNode;
   children: ReactNode;
+  closeDisabled?: boolean;
 }
 
 export function Dialog({
@@ -23,11 +24,15 @@ export function Dialog({
   headerActions,
   footer,
   children,
+  closeDisabled = false,
 }: DialogProps) {
   const t = useT();
   return (
     <Row align="center" justify="center" className="fixed inset-0 z-dialog p-s">
-      <div className="absolute inset-0 bg-black/50" onClick={onClose} />
+      <div
+        className="absolute inset-0 bg-black/50"
+        onClick={closeDisabled ? undefined : onClose}
+      />
       <div
         className="relative bg-white rounded-lg shadow-xl flex flex-col max-w-full"
         style={{ width, maxHeight }}
@@ -44,8 +49,9 @@ export function Dialog({
             {headerActions}
             <button
               onClick={onClose}
+              disabled={closeDisabled}
               aria-label={t("common.action.close")}
-              className="text-text-subtle hover:text-text-body text-lg leading-none cursor-pointer"
+              className="text-text-subtle hover:text-text-body text-lg leading-none cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
             >
               &times;
             </button>
