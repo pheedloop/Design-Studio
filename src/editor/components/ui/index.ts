@@ -7,6 +7,7 @@ export { NumberInput } from "./NumberInput";
 export { SectionLabel } from "./SectionLabel";
 export { FieldRow } from "./FieldRow";
 export { Select } from "./Select";
+export { SortablePicklist } from "./SortablePicklist";
 export { Slider } from "./Slider";
 export { TextArea } from "./TextArea";
 export { TextInput } from "./TextInput";
