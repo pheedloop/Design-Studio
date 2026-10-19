@@ -133,6 +133,7 @@ export function SortablePicklist({
             <DropdownMenu
               fullWidth
               items={available.map(option => ({
+                id: option.value,
                 label: option.label,
                 onClick: () => onChange([...codes, option.value]),
               }))}

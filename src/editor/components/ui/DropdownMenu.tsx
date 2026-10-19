@@ -3,6 +3,8 @@ import { useDismiss } from "@/hooks/useDismiss";
 import { MenuItem } from "./MenuItem";
 
 export interface MenuItemConfig {
+  /** Row key, for menus whose labels can repeat. Defaults to the label. */
+  id?: string;
   label: string;
   shortcut?: string;
   disabled?: boolean;
@@ -48,7 +50,7 @@ export function DropdownMenu({ items, onClose, fullWidth }: DropdownMenuProps) {
           />
         ) : (
           <MenuItem
-            key={entry.label}
+            key={entry.id ?? entry.label}
             {...entry}
             onClick={() => {
               entry.onClick?.();
