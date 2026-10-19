@@ -13,6 +13,7 @@ export type {
   BadgePageBackground,
   BadgeField,
   BadgeCustomField,
+  BadgeTicketType,
   BadgePreset,
   BadgeSpec,
   FoldType,

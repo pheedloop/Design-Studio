@@ -2,7 +2,7 @@ import { ProductSwitcher } from "@/components/ProductSwitcher";
 import { ChromeDivider } from "@/demo/ChromeDivider";
 import { useState } from "react";
 import { BadgeEditor } from "./BadgeEditor";
-import { createSampleDocument } from "./sample";
+import { createSampleDocument, SAMPLE_TICKET_TYPES } from "./sample";
 import { sampleAttendeeProvider } from "./sample-attendees";
 import { LocaleSwitcher } from "@/demo/LocaleSwitcher";
 import { useDemoLocale } from "@/demo/useDemoLocale";
@@ -33,6 +33,7 @@ export function BadgeEditorApp() {
           initialDocument={sample}
           translate={translate}
           attendeeProvider={sampleAttendeeProvider}
+          ticketTypes={SAMPLE_TICKET_TYPES}
           images={images}
           onUploadImage={onUploadImage}
           onDeleteImage={onDeleteImage}

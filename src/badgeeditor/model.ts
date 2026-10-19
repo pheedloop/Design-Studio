@@ -76,6 +76,8 @@ export interface BadgeField {
 
   // tickets
   numRows?: number;
+  /** Ticket type codes this field prints; empty prints every ticket. */
+  ticketCodes?: string[];
 
   /**
    * User-applied 180° rotation of the field itself (rare, legacy `inverted`).
@@ -88,6 +90,11 @@ export interface BadgeField {
 export interface BadgeCustomField {
   name: string;
   label: string;
+}
+
+export interface BadgeTicketType {
+  code: string;
+  name: string;
 }
 
 // --- Pages / fold ---
@@ -177,6 +184,7 @@ export interface LegacyLayoutEntry {
   text?: string;
   custom_attendee_field?: string | null;
   numRows?: number;
+  ticketCodes?: string[];
   code?: string;
   fit?: BackgroundFit;
 }

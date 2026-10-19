@@ -99,6 +99,23 @@ describe("inflate + flatten round trip", () => {
     expect(JSON.stringify(flatten(doc).layout)).toBe(JSON.stringify(layout));
   });
 
+  it("keeps the ticket types a tickets field prints", () => {
+    const layout: LegacyLayoutEntry[] = [
+      {
+        top: 1,
+        left: 0.5,
+        field: "tickets",
+        height: 1.5,
+        width: 3,
+        numRows: 3,
+        inverted: false,
+        ticketCodes: ["GALA", "EXPO"],
+      },
+    ];
+    const doc = inflate(layout, { width: 4, height: 3 });
+    expect(JSON.stringify(flatten(doc).layout)).toBe(JSON.stringify(layout));
+  });
+
   it.each([
     {
       name: "single",

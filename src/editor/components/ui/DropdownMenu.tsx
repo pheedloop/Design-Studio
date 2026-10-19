@@ -3,6 +3,8 @@ import { useDismiss } from "@/hooks/useDismiss";
 import { MenuItem } from "./MenuItem";
 
 export interface MenuItemConfig {
+  /** Row key, for menus whose labels can repeat. Defaults to the label. */
+  id?: string;
   label: string;
   shortcut?: string;
   disabled?: boolean;
@@ -25,9 +27,10 @@ function isMenuDivider(entry: MenuEntry): entry is MenuDivider {
 interface DropdownMenuProps {
   items: MenuEntry[];
   onClose: () => void;
+  fullWidth?: boolean;
 }
 
-export function DropdownMenu({ items, onClose }: DropdownMenuProps) {
+export function DropdownMenu({ items, onClose, fullWidth }: DropdownMenuProps) {
   const ref = useRef<HTMLDivElement>(null);
 
   useDismiss(ref, onClose);
@@ -35,7 +38,9 @@ export function DropdownMenu({ items, onClose }: DropdownMenuProps) {
   return (
     <div
       ref={ref}
-      className="absolute top-full left-0 mt-0 bg-white border border-border-neutral-light rounded-md shadow-lg py-xxxs min-w-[200px] z-dialog"
+      className={`absolute top-full left-0 mt-0 bg-white border border-border-neutral-light rounded-md shadow-lg py-xxxs z-dialog ${
+        fullWidth ? "right-0" : "min-w-[200px]"
+      }`}
     >
       {items.map((entry, i) =>
         isMenuDivider(entry) ? (
@@ -45,7 +50,7 @@ export function DropdownMenu({ items, onClose }: DropdownMenuProps) {
           />
         ) : (
           <MenuItem
-            key={entry.label}
+            key={entry.id ?? entry.label}
             {...entry}
             onClick={() => {
               entry.onClick?.();

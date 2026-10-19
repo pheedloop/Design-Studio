@@ -136,3 +136,11 @@ export function createSampleDocument(): BadgeDocument {
     ],
   };
 }
+
+export const SAMPLE_TICKET_TYPES = [
+  { code: "FULLCONF", name: "Full Conference" },
+  { code: "FULLWEEK", name: "Full Week Pass" },
+  { code: "EARLYBIRD", name: "Early Bird Full Access" },
+  { code: "WORKSHOP", name: "Workshop Add-on" },
+  { code: "GALA", name: "Gala Dinner" },
+];
