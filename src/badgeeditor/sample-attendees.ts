@@ -35,9 +35,9 @@ const SAMPLE: SampleAttendee[] = [
       qrCode: qrCodeUrl,
       externalQRCodeUrl: qrCodeUrl,
       tickets: [
-        { name: "Full Conference", qrUrl: qrCodeUrl },
+        { code: "FULLCONF", name: "Full Conference", qrUrl: qrCodeUrl },
         { name: "Workshop: Kubernetes", qrUrl: qrCodeUrl },
-        { name: "Gala Dinner", qrUrl: qrCodeUrl },
+        { code: "GALA", name: "Gala Dinner", qrUrl: qrCodeUrl },
       ],
       sessions: [
         { date: "May 12", time: "9:00 AM – 10:00 AM", speaker: "A. Okafor" },
@@ -71,7 +71,9 @@ const SAMPLE: SampleAttendee[] = [
       custom: { shirt_size: "M" },
       qrCode: qrCodeUrl,
       externalQRCodeUrl: qrCodeUrl,
-      tickets: [{ name: "Full Conference", qrUrl: qrCodeUrl }],
+      tickets: [
+        { code: "FULLCONF", name: "Full Conference", qrUrl: qrCodeUrl },
+      ],
       sessions: [
         { date: "May 12", time: "10:30 AM – 11:30 AM", speaker: "M. Chen" },
       ],
@@ -135,7 +137,7 @@ const SAMPLE: SampleAttendee[] = [
       qrCode: qrCodeUrl,
       externalQRCodeUrl: qrCodeUrl,
       tickets: [
-        { name: "Full Conference", qrUrl: qrCodeUrl },
+        { code: "FULLCONF", name: "Full Conference", qrUrl: qrCodeUrl },
         { name: "Speaker Dinner", qrUrl: qrCodeUrl },
       ],
       sessions: [
@@ -169,7 +171,9 @@ const SAMPLE: SampleAttendee[] = [
       custom: { shirt_size: "XL" },
       qrCode: qrCodeUrl,
       externalQRCodeUrl: qrCodeUrl,
-      tickets: [{ name: "Full Conference", qrUrl: qrCodeUrl }],
+      tickets: [
+        { code: "FULLCONF", name: "Full Conference", qrUrl: qrCodeUrl },
+      ],
       sessions: [
         { date: "May 12", time: "11:00 AM – 12:00 PM", speaker: "L. Müller" },
       ],
@@ -201,9 +205,9 @@ const SAMPLE: SampleAttendee[] = [
       qrCode: qrCodeUrl,
       externalQRCodeUrl: qrCodeUrl,
       tickets: [
-        { name: "Full Conference", qrUrl: qrCodeUrl },
+        { code: "FULLCONF", name: "Full Conference", qrUrl: qrCodeUrl },
         { name: "Investor Lounge", qrUrl: qrCodeUrl },
-        { name: "Gala Dinner", qrUrl: qrCodeUrl },
+        { code: "GALA", name: "Gala Dinner", qrUrl: qrCodeUrl },
       ],
       sessions: [],
     },
@@ -297,7 +301,7 @@ const SAMPLE: SampleAttendee[] = [
       qrCode: qrCodeUrl,
       externalQRCodeUrl: qrCodeUrl,
       tickets: [
-        { name: "Full Conference", qrUrl: qrCodeUrl },
+        { code: "FULLCONF", name: "Full Conference", qrUrl: qrCodeUrl },
         { name: "Workshop: ROS2", qrUrl: qrCodeUrl },
       ],
       sessions: [
@@ -330,7 +334,9 @@ const SAMPLE: SampleAttendee[] = [
       custom: { shirt_size: "M" },
       qrCode: qrCodeUrl,
       externalQRCodeUrl: qrCodeUrl,
-      tickets: [{ name: "Full Conference", qrUrl: qrCodeUrl }],
+      tickets: [
+        { code: "FULLCONF", name: "Full Conference", qrUrl: qrCodeUrl },
+      ],
       sessions: [],
     },
   },

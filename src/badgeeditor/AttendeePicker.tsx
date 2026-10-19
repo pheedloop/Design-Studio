@@ -26,6 +26,7 @@ export function AttendeePicker({
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<AttendeeOption[]>([]);
   const [loading, setLoading] = useState(false);
+  const [failed, setFailed] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
 
   // Debounced search while open. `loading` flips true the moment a new search
@@ -33,13 +34,25 @@ export function AttendeePicker({
   // body should only run the deferred fetch, not set state synchronously.
   useEffect(() => {
     if (!open) return;
+    let stale = false;
     const timer = setTimeout(() => {
       provider
         .search(query)
-        .then(r => setResults(r))
-        .finally(() => setLoading(false));
+        .then(
+          r => ({ r, ok: true }),
+          () => ({ r: [], ok: false }),
+        )
+        .then(({ r, ok }) => {
+          if (stale) return;
+          setResults(r);
+          setFailed(!ok);
+          setLoading(false);
+        });
     }, 200);
-    return () => clearTimeout(timer);
+    return () => {
+      stale = true;
+      clearTimeout(timer);
+    };
   }, [query, open, provider]);
 
   useDismiss(rootRef, () => setOpen(false), open);
@@ -104,6 +117,10 @@ export function AttendeePicker({
             {loading ? (
               <div className="px-xs py-xxs text-xs text-text-subtle">
                 {t("badgeeditor.attendee.searching")}
+              </div>
+            ) : failed ? (
+              <div role="alert" className="px-xs py-xxs text-xs text-red-700">
+                {t("badgeeditor.attendee.searchFailed")}
               </div>
             ) : results.length === 0 ? (
               <div className="px-xs py-xxs text-xs text-text-subtle">

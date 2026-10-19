@@ -36,5 +36,5 @@ export function useBadgeSave({
     setSavedDoc(doc);
   }, [doc, persist]);
 
-  return { isDirty, isSaving, save };
+  return { isDirty, isSaving, save, savedDoc };
 }

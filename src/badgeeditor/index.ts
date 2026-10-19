@@ -33,6 +33,7 @@ export type {
   AttendeeOption,
   AttendeeProvider,
   BadgeTicketData,
+  BadgePreviewImage,
   BadgeSessionData,
 } from "./badgeData";
 

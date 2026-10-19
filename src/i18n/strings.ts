@@ -654,9 +654,12 @@ export const EDITOR = {
 
 export const BADGEEDITOR = {
   "attendee.clear": "Clear",
+  "attendee.loadFailed":
+    "Couldn't load this attendee's data. Showing placeholders instead.",
   "attendee.noResults": "No attendees found",
   "attendee.placeholder": "Preview data…",
   "attendee.search": "Search attendee…",
+  "attendee.searchFailed": "Couldn't search attendees. Try again.",
   "attendee.searching": "Searching…",
   "background.choose": "Choose image",
   "background.fit": "Fit",
@@ -725,8 +728,16 @@ export const BADGEEDITOR = {
   "page.inside": "Inside",
   "page.invertedTab": "{{page}} ⤓",
   "preview.banner": "Full preview · as printed (read-only)",
+  "preview.chooseAttendee": "Choose an attendee to see the full preview.",
   "preview.enter": "Full preview",
   "preview.exit": "Exit preview",
+  "preview.failed": "Couldn't generate the preview.",
+  "preview.generated": "Full preview · generated for {{name}} (read-only)",
+  "preview.generating": "Generating preview…",
+  "preview.imageAlt": "Badge preview for {{name}}",
+  "preview.retry": "Try again",
+  "preview.unsaved":
+    "You have unsaved changes. The preview shows the last saved version.",
   "properties.addTicketType": "Add ticket type…",
   "properties.align": "Align",
   "properties.alignCenter": "Align center",

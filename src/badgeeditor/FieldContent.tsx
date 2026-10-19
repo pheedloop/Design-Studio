@@ -1,7 +1,7 @@
 import { Rect, Text, Group, Line, Image as KonvaImage } from "react-konva";
 import { GRAY_300, GRAY_400, GRAY_500, GRAY_900 } from "@/canvasColors";
 import type { BadgeField } from "./model";
-import { fieldValueText, type BadgeData } from "./badgeData";
+import { fieldValueText, ticketsForField, type BadgeData } from "./badgeData";
 import { fieldDisplayText } from "./factory";
 import { useImageLoader } from "./useImageLoader";
 import { useT } from "./i18n";
@@ -26,10 +26,11 @@ export function FieldContent({
 
   const isTickets = field.kind === "tickets";
   const rows = field.numRows ?? 1;
+  const tickets = isTickets && data ? ticketsForField(field, data.tickets) : [];
   // Ticket QR urls (real per-ticket, or stand-in placeholders) — one hook call.
   const ticketUrls = isTickets
     ? data
-      ? data.tickets.slice(0, rows).map(t => t.qrUrl)
+      ? tickets.map(t => t.qrUrl)
       : Array.from({ length: rows }, () => undefined)
     : [];
   const getTicketImg = useImageLoader(ticketUrls);
@@ -42,7 +43,7 @@ export function FieldContent({
     const qrSize = Math.max(0, rowH - pad * 2);
     const nameX = pad + qrSize + rowH * 0.18;
     const nameFont = Math.min(14, Math.max(7, rowH * 0.3));
-    const count = data ? Math.min(rows, data.tickets.length) : rows;
+    const count = data ? tickets.length : rows;
     return (
       <>
         {/* Perforations are part of the (pre-perforated) media: always numRows-1,
@@ -60,9 +61,9 @@ export function FieldContent({
         {Array.from({ length: count }).map((_, i) => {
           const top = rowH * i;
           const name = data
-            ? data.tickets[i].name
+            ? tickets[i].name
             : t("badgeeditor.canvas.ticketName");
-          const img = getTicketImg(data ? data.tickets[i].qrUrl : undefined);
+          const img = getTicketImg(data ? tickets[i].qrUrl : undefined);
           return (
             <Group key={i}>
               {img ? (
