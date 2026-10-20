@@ -8,11 +8,9 @@ import { FieldBody } from "./FieldBody";
 export function StaticField({
   field,
   data,
-  foldInvert,
 }: {
   field: BadgeField;
   data: BadgeData | null;
-  foldInvert: boolean;
 }) {
   const { w, h } = fieldSizePx(field);
   return (
@@ -23,7 +21,7 @@ export function StaticField({
       height={h}
       listening={false}
     >
-      <FieldBody field={field} data={data} foldInvert={foldInvert} />
+      <FieldBody field={field} data={data} />
     </Group>
   );
 }

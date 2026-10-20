@@ -20,7 +20,6 @@ export function FieldContent({
   h,
   fontSize,
   data,
-  effectiveInverted,
   imageUrl,
 }: {
   field: BadgeField;
@@ -28,8 +27,6 @@ export function FieldContent({
   h: number;
   fontSize: number;
   data: BadgeData | null;
-  /** The print's rotation of this field: own inversion XOR page fold inversion. */
-  effectiveInverted: boolean;
   imageUrl?: string;
 }) {
   const t = useT();
@@ -131,13 +128,11 @@ export function FieldContent({
     return (
       <SessionScheduleContent
         w={w}
-        h={h}
         fontPx={ptToPx(
           Math.min(field.fontSize ?? SESSION_FONT_MAX_PT, SESSION_FONT_MAX_PT),
         )}
         fontFamily={fontFamily}
         rows={rows}
-        inverted={effectiveInverted}
         mutedPlaceholder={data !== null}
       />
     );

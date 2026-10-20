@@ -71,14 +71,6 @@ function mirrorInPanel(
   };
 }
 
-/** Effective 180° rotation: the field's own inversion XOR its page's fold inversion. */
-export function effectiveInverted(
-  field: Pick<BadgeField, "inverted">,
-  foldInvert: boolean,
-): boolean {
-  return Boolean(field.inverted) !== foldInvert;
-}
-
 export function fieldToEntry(
   field: BadgeField,
   ctx: FlattenContext = {
@@ -94,7 +86,7 @@ export function fieldToEntry(
   // (two 180° rotations cancel). The backend (badge_generator.py) renders
   // `inverted` as rotate(180deg) about the box CENTER, so a folded-back field
   // also has its box mirrored within the panel to match the printed sheet.
-  const inverted = effectiveInverted(field, ctx.foldInvert);
+  const inverted = Boolean(field.inverted) !== ctx.foldInvert;
   const box = ctx.foldInvert
     ? mirrorInPanel(field, fieldSizeIn({ ...field, kind }), {
         width: ctx.panelWidth,

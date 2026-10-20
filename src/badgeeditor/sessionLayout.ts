@@ -44,8 +44,6 @@ export interface SessionLayout {
   contentHeight: number;
   /** Height of one line box. */
   lineHeight: number;
-  /** Where the content starts in the field box: 0, or far end when inverted. */
-  offsetY: number;
 }
 
 export function sessionColumns(width: number): { x: number; width: number }[] {
@@ -92,22 +90,16 @@ interface Cell {
 }
 
 /**
- * Lays the table out in content coordinates (origin at the table's top-left),
- * then places it in the field box. A non-inverted table starts at the box top.
- * An inverted one is rotated 180° about its own centre in print, so on the
- * upright (field-inverted) canvas it ends at the box bottom; when taller than
- * the box it overhangs the top.
+ * Lays the table out from the field box's top-left. Print turns an inverted
+ * field about the box centre, which the canvas's own rotation reproduces.
  */
 export function layoutSessionTable(input: {
   width: number;
-  boxHeight: number;
   fontPx: number;
   rows: SessionRow[];
-  /** Effective inversion: the field's own XOR its panel's fold inversion. */
-  inverted: boolean;
   measure: MeasureText;
 }): SessionLayout {
-  const { width, boxHeight, fontPx, rows, inverted, measure } = input;
+  const { width, fontPx, rows, measure } = input;
   const columns = sessionColumns(width);
   const lineH = sessionLineHeight(fontPx);
   const pad = SESSION_CELL_PAD_X;
@@ -173,6 +165,5 @@ export function layoutSessionTable(input: {
     ruleY,
     contentHeight: y,
     lineHeight: lineH,
-    offsetY: inverted ? boxHeight - y : 0,
   };
 }

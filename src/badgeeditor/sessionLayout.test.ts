@@ -1,5 +1,4 @@
 import { describe, expect, it } from "vitest";
-import { effectiveInverted } from "./serialize";
 import {
   SESSION_HEADER_LABELS,
   layoutSessionTable,
@@ -10,7 +9,7 @@ import {
 // 1 px per character, so wrapping is easy to reason about.
 const measure = (text: string) => text.length;
 const lineH = 13; // ceil(0.928 * 10) + ceil(0.244 * 10)
-const base = { fontPx: 10, measure, boxHeight: 100, inverted: false };
+const base = { fontPx: 10, measure };
 
 describe("sessionColumns", () => {
   it.each([
@@ -63,51 +62,10 @@ describe("layoutSessionTable", () => {
     expect(tall.contentHeight - one.contentHeight).toBeCloseTo(2 * lineH);
   });
 
-  it("starts at the box top, or ends at the box bottom when inverted", () => {
-    const rows = [["a", "b", "c"]];
-    const upright = layoutSessionTable({ ...base, width: 200, rows });
-    const inverted = layoutSessionTable({
-      ...base,
-      width: 200,
-      rows,
-      inverted: true,
-    });
-    expect(upright.offsetY).toBe(0);
-    expect(inverted.offsetY).toBeCloseTo(100 - upright.contentHeight);
-    expect(inverted.offsetY).toBeGreaterThan(0);
-  });
-
-  it.each([
-    [false, false, false],
-    [true, false, true],
-    [false, true, true],
-    [true, true, false],
-  ])(
-    "field inverted=%s, page fold-inverted=%s: bottom-aligned %s",
-    (fieldInverted, foldInvert, bottomAligned) => {
-      const layout = layoutSessionTable({
-        ...base,
-        width: 200,
-        rows: [["a", "b", "c"]],
-        inverted: effectiveInverted({ inverted: fieldInverted }, foldInvert),
-      });
-      expect(layout.offsetY).toBeCloseTo(
-        bottomAligned ? 100 - layout.contentHeight : 0,
-      );
-    },
-  );
-
-  it("is not clipped when taller than the box", () => {
+  it("is not clipped when taller than a box", () => {
     const rows = Array.from({ length: 20 }, () => ["a", "b", "c"]);
-    const upright = layoutSessionTable({ ...base, width: 200, rows });
-    const inverted = layoutSessionTable({
-      ...base,
-      width: 200,
-      rows,
-      inverted: true,
-    });
-    expect(upright.contentHeight).toBeGreaterThan(100);
-    expect(Math.max(...upright.lines.map(l => l.y))).toBeGreaterThan(100);
-    expect(inverted.offsetY).toBeLessThan(0);
+    const layout = layoutSessionTable({ ...base, width: 200, rows });
+    expect(layout.contentHeight).toBeGreaterThan(100);
+    expect(Math.max(...layout.lines.map(l => l.y))).toBeGreaterThan(100);
   });
 });

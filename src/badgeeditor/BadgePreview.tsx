@@ -141,12 +141,7 @@ export function BadgePreview({
                         ),
                     )
                     .map(f => (
-                      <StaticField
-                        key={f.id}
-                        field={f}
-                        data={data}
-                        foldInvert={inverted}
-                      />
+                      <StaticField key={f.id} field={f} data={data} />
                     ))}
                   {stubs > 1 &&
                     Array.from({ length: stubs - 1 }).map((_, k) => {

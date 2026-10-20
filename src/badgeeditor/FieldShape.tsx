@@ -9,7 +9,6 @@ import { RED } from "@/canvasColors";
 interface FieldShapeProps {
   field: BadgeField;
   data: BadgeData | null;
-  foldInvert: boolean;
   /** Outside its panel, so it will not print. */
   outside: boolean;
   panMode: boolean;
@@ -24,7 +23,6 @@ interface FieldShapeProps {
 export function FieldShape({
   field,
   data,
-  foldInvert,
   outside,
   panMode,
   registerRef,
@@ -96,7 +94,7 @@ export function FieldShape({
         }
       }}
     >
-      <FieldBody field={field} data={data} foldInvert={foldInvert} />
+      <FieldBody field={field} data={data} />
       {outside && (
         <Rect
           width={w}

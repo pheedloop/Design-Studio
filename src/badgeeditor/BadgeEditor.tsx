@@ -862,7 +862,6 @@ function BadgeEditorInner({
                     holePunch={doc.holePunch ?? null}
                     cornerRadiusMm={doc.cornerRadiusMm ?? 0}
                     isFrontPage={pageIndex === 0}
-                    foldInvert={pageInverts[pageIndex]}
                     foldTop={foldTop}
                     foldBottom={foldBottom}
                     showGrid={showGrid}

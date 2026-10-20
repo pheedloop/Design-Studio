@@ -8,38 +8,32 @@ import type { SessionRow } from "./sessionLayout";
 /** The generator's session table, drawn unclipped from `layoutSessionTable`. */
 export function SessionScheduleContent({
   w,
-  h,
   fontPx,
   fontFamily,
   rows,
-  inverted,
   mutedPlaceholder,
 }: {
   w: number;
-  h: number;
   fontPx: number;
   fontFamily: string;
   rows: SessionRow[];
-  inverted: boolean;
   mutedPlaceholder: boolean;
 }) {
   const layout = useMemo(
     () =>
       layoutSessionTable({
         width: w,
-        boxHeight: h,
         fontPx,
         rows,
-        inverted,
         measure: canvasTextMeasure(fontFamily),
       }),
-    [w, h, fontPx, rows, inverted, fontFamily],
+    [w, fontPx, rows, fontFamily],
   );
   // Konva draws with the canvas's unrounded advances; spread each line's
   // difference from the print's width across its glyphs.
   const glyphSum = canvasGlyphSum(fontFamily);
   return (
-    <Group y={layout.offsetY} listening={false}>
+    <Group listening={false}>
       <Line
         points={[0, layout.ruleY, w, layout.ruleY]}
         stroke={GRAY_900}

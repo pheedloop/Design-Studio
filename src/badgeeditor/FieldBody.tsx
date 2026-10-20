@@ -7,7 +7,6 @@ import { useImageLoader } from "./useImageLoader";
 import { FieldContent } from "./FieldContent";
 import { useBadgeImageUrl } from "./badgeImageContext";
 import { useT } from "./i18n";
-import { effectiveInverted } from "./serialize";
 
 /**
  * The visual contents of a field (no interaction), shared by the editor's
@@ -17,12 +16,9 @@ import { effectiveInverted } from "./serialize";
 export function FieldBody({
   field,
   data,
-  foldInvert,
 }: {
   field: BadgeField;
   data: BadgeData | null;
-  /** Whether the field's page prints fold-inverted. */
-  foldInvert: boolean;
 }) {
   const t = useT();
   const resolveImageUrl = useBadgeImageUrl();
@@ -103,7 +99,6 @@ export function FieldBody({
           h={h}
           fontSize={fontSize}
           data={data}
-          effectiveInverted={effectiveInverted(field, foldInvert)}
           imageUrl={imageUrl}
         />
       </Group>
