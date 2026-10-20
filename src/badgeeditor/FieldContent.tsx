@@ -1,22 +1,18 @@
 import { Rect, Text, Group, Line, Image as KonvaImage } from "react-konva";
-import { GRAY_300, GRAY_400, GRAY_500, GRAY_900 } from "@/canvasColors";
+import { GRAY_300, GRAY_500, GRAY_900 } from "@/canvasColors";
 import type { BadgeField } from "./model";
 import { fieldValueText, ticketsForField, type BadgeData } from "./badgeData";
 import { fieldDisplayText } from "./factory";
 import { useImageLoader } from "./useImageLoader";
 import { useT } from "./i18n";
 import { useBadgeFontFamily } from "./useBadgeFontFamily";
+import { SessionScheduleContent } from "./SessionScheduleContent";
+import type { SessionRow } from "./sessionLayout";
 import { SESSION_FONT_MAX_PT, printFontPx, ptToPx } from "./textMetrics";
 
 // tickets.html: 20px between the QR and the name, in the 16px body font size.
 const TICKET_NAME_GAP_PX = 20;
 const TICKET_NAME_PX = 16;
-
-// session_schedule.html: date/time/session columns and cell padding, in px.
-const SESSION_COLUMNS = [0.2, 0.25, 0.55];
-const SESSION_CELL_PAD_X = 4;
-const SESSION_CELL_PAD_Y = 2;
-const SESSION_LINE_HEIGHT = 1.172;
 
 export function FieldContent({
   field,
@@ -24,6 +20,7 @@ export function FieldContent({
   h,
   fontSize,
   data,
+  effectiveInverted,
   imageUrl,
 }: {
   field: BadgeField;
@@ -31,6 +28,8 @@ export function FieldContent({
   h: number;
   fontSize: number;
   data: BadgeData | null;
+  /** The print's rotation of this field: own inversion XOR page fold inversion. */
+  effectiveInverted: boolean;
   imageUrl?: string;
 }) {
   const t = useT();
@@ -123,58 +122,24 @@ export function FieldContent({
     );
   }
 
-  // session_schedule with real data: the generator's three-column table at
-  // min(fontSize, 8) pt. Its header row is not drawn, but its height is kept.
-  if (field.kind === "sessionSchedule" && data) {
-    const lineFont = ptToPx(
-      Math.min(field.fontSize ?? SESSION_FONT_MAX_PT, SESSION_FONT_MAX_PT),
-    );
-    const rowH = lineFont * SESSION_LINE_HEIGHT + SESSION_CELL_PAD_Y * 2;
-    if (data.sessions.length === 0) {
-      return (
-        <Text
-          text={t("badgeeditor.canvas.noSessions")}
-          width={w}
-          height={h}
-          align="center"
-          verticalAlign="middle"
-          fontFamily={fontFamily}
-          fontStyle="bold"
-          fontSize={lineFont}
-          fill={GRAY_400}
-        />
-      );
-    }
-    const columnX = SESSION_COLUMNS.map((_, c) =>
-      SESSION_COLUMNS.slice(0, c).reduce((x, f) => x + f * w, 0),
-    );
+  if (field.kind === "sessionSchedule") {
+    const rows: SessionRow[] = !data
+      ? [{ placeholder: fieldDisplayText(field, t) }]
+      : data.sessions.length === 0
+        ? [{ placeholder: t("badgeeditor.canvas.noSessions") }]
+        : data.sessions.map(s => [s.date, s.time, s.speaker]);
     return (
-      <Group clipX={0} clipY={0} clipWidth={w} clipHeight={h}>
-        <Line
-          points={[0, rowH, w, rowH]}
-          stroke={GRAY_900}
-          strokeWidth={1}
-          listening={false}
-        />
-        {data.sessions.map((s, i) =>
-          [s.date, s.time, s.speaker].map((cell, c) => (
-            <Text
-              key={`${i}-${c}`}
-              x={columnX[c] + SESSION_CELL_PAD_X}
-              y={rowH + 1 + i * rowH + SESSION_CELL_PAD_Y}
-              width={SESSION_COLUMNS[c] * w - SESSION_CELL_PAD_X * 2}
-              text={cell}
-              fontFamily={fontFamily}
-              fontStyle="bold"
-              fontSize={lineFont}
-              lineHeight={SESSION_LINE_HEIGHT}
-              fill={GRAY_900}
-              wrap="none"
-              ellipsis
-            />
-          )),
+      <SessionScheduleContent
+        w={w}
+        h={h}
+        fontPx={ptToPx(
+          Math.min(field.fontSize ?? SESSION_FONT_MAX_PT, SESSION_FONT_MAX_PT),
         )}
-      </Group>
+        fontFamily={fontFamily}
+        rows={rows}
+        inverted={effectiveInverted}
+        mutedPlaceholder={data !== null}
+      />
     );
   }
 

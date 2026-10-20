@@ -7,6 +7,7 @@ import type { BadgeDocument } from "./model";
 import { PPI, isFieldOutsidePanel, mmToPx } from "./canvasMetrics";
 import { HolePunchShapes } from "./HolePunchShapes";
 import { StaticField } from "./StaticField";
+import { foldInvertForPage } from "./serialize";
 import { PanelBackground } from "./PanelBackground";
 
 export const BadgeThumbnailStage = memo(function BadgeThumbnailStage({
@@ -64,7 +65,14 @@ export const BadgeThumbnailStage = memo(function BadgeThumbnailStage({
                 ),
             )
             .map(f => (
-              <StaticField key={f.id} field={f} data={null} />
+              <StaticField
+                key={f.id}
+                field={f}
+                data={null}
+                foldInvert={
+                  doc.pages[0].inverted ?? foldInvertForPage(doc.fold, 0)
+                }
+              />
             ))}
         </Layer>
       </Stage>

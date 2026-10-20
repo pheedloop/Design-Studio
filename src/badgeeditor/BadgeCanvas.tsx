@@ -30,6 +30,8 @@ interface BadgeCanvasProps {
   holePunch: HolePunch | null;
   cornerRadiusMm: number;
   isFrontPage: boolean;
+  /** The page prints fold-inverted (the canvas itself stays upright). */
+  foldInvert: boolean;
   /** Fold edges connecting to adjacent panels (multi-page badges). */
   foldTop: boolean;
   foldBottom: boolean;
@@ -66,6 +68,7 @@ export function BadgeCanvas({
   holePunch,
   cornerRadiusMm,
   isFrontPage,
+  foldInvert,
   foldTop,
   foldBottom,
   showGrid,
@@ -436,6 +439,7 @@ export function BadgeCanvas({
             key={field.id}
             field={field}
             data={data}
+            foldInvert={foldInvert}
             outside={isFieldOutsidePanel(
               field,
               panelSize,
