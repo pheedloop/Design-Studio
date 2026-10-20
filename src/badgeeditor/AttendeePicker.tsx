@@ -5,6 +5,9 @@ import { useDismiss } from "@/hooks/useDismiss";
 import { useT } from "./i18n";
 import { ChevronDownIcon, SearchIcon, CloseIcon } from "@/icons/icons";
 
+/** About one row. */
+const NEAR_BOTTOM_PX = 40;
+
 interface AttendeePickerProps {
   provider: AttendeeProvider;
   value: AttendeeOption | null;
@@ -27,6 +30,13 @@ export function AttendeePicker({
   const [results, setResults] = useState<AttendeeOption[]>([]);
   const [loading, setLoading] = useState(false);
   const [failed, setFailed] = useState(false);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(false);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [moreFailed, setMoreFailed] = useState(false);
+  // Bumped whenever the query changes or the list closes, so a response for an
+  // earlier query (first page or next page) is dropped.
+  const generation = useRef(0);
   const rootRef = useRef<HTMLDivElement>(null);
 
   // Debounced search while open. `loading` flips true the moment a new search
@@ -34,26 +44,58 @@ export function AttendeePicker({
   // body should only run the deferred fetch, not set state synchronously.
   useEffect(() => {
     if (!open) return;
-    let stale = false;
+    const invalidate = () => {
+      generation.current++;
+    };
+    invalidate();
+    const gen = generation.current;
     const timer = setTimeout(() => {
       provider
-        .search(query)
+        .search(query, 1)
         .then(
-          r => ({ r, ok: true }),
-          () => ({ r: [], ok: false }),
+          p => ({ p, ok: true }),
+          () => ({ p: null, ok: false }),
         )
-        .then(({ r, ok }) => {
-          if (stale) return;
-          setResults(r);
+        .then(({ p, ok }) => {
+          if (gen !== generation.current) return;
+          setResults(p?.options ?? []);
+          setPage(1);
+          setHasMore(p?.hasMore ?? false);
           setFailed(!ok);
           setLoading(false);
+          setLoadingMore(false);
+          setMoreFailed(false);
         });
     }, 200);
     return () => {
-      stale = true;
+      invalidate();
       clearTimeout(timer);
     };
   }, [query, open, provider]);
+
+  const loadMore = () => {
+    if (loading || loadingMore || !hasMore) return;
+    const gen = generation.current;
+    setLoadingMore(true);
+    setMoreFailed(false);
+    provider.search(query, page + 1).then(
+      p => {
+        if (gen !== generation.current) return;
+        setResults(prev => {
+          const seen = new Set(prev.map(o => o.id));
+          return [...prev, ...p.options.filter(o => !seen.has(o.id))];
+        });
+        setPage(page + 1);
+        setHasMore(p.hasMore);
+        setLoadingMore(false);
+      },
+      () => {
+        if (gen !== generation.current) return;
+        setMoreFailed(true);
+        setLoadingMore(false);
+      },
+    );
+  };
 
   useDismiss(rootRef, () => setOpen(false), open);
 
@@ -113,7 +155,17 @@ export function AttendeePicker({
               className="w-full px-xxs py-xxxs text-xs border border-border-neutral-light rounded outline-none focus:border-primary-400"
             />
           </div>
-          <div className="max-h-64 overflow-y-auto py-xxxs">
+          <div
+            className="max-h-64 overflow-y-auto py-xxxs"
+            onScroll={e => {
+              const el = e.currentTarget;
+              if (
+                el.scrollHeight - el.scrollTop - el.clientHeight <=
+                NEAR_BOTTOM_PX
+              )
+                loadMore();
+            }}
+          >
             {loading ? (
               <div className="px-xs py-xxs text-xs text-text-subtle">
                 {t("badgeeditor.attendee.searching")}
@@ -127,26 +179,41 @@ export function AttendeePicker({
                 {t("badgeeditor.attendee.noResults")}
               </div>
             ) : (
-              results.map(o => (
-                <button
-                  key={o.id}
-                  type="button"
-                  onClick={() => {
-                    onChange(o);
-                    setOpen(false);
-                  }}
-                  className="w-full text-left px-xs py-tight hover:bg-surface-neutral"
-                >
-                  <div className="text-xs text-text-heading truncate">
-                    {o.name}
-                  </div>
-                  {o.subtitle && (
-                    <div className="text-xs text-text-subtle truncate">
-                      {o.subtitle}
+              <>
+                {results.map(o => (
+                  <button
+                    key={o.id}
+                    type="button"
+                    onClick={() => {
+                      onChange(o);
+                      setOpen(false);
+                    }}
+                    className="w-full text-left px-xs py-tight hover:bg-surface-neutral"
+                  >
+                    <div className="text-xs text-text-heading truncate">
+                      {o.name}
                     </div>
-                  )}
-                </button>
-              ))
+                    {o.subtitle && (
+                      <div className="text-xs text-text-subtle truncate">
+                        {o.subtitle}
+                      </div>
+                    )}
+                  </button>
+                ))}
+                {loadingMore && (
+                  <div className="px-xs py-xxs text-xs text-text-subtle">
+                    {t("badgeeditor.attendee.searching")}
+                  </div>
+                )}
+                {moreFailed && (
+                  <div
+                    role="alert"
+                    className="px-xs py-xxs text-xs text-red-700"
+                  >
+                    {t("badgeeditor.attendee.searchFailed")}
+                  </div>
+                )}
+              </>
             )}
           </div>
         </div>

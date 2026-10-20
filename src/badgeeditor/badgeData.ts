@@ -52,12 +52,18 @@ export interface BadgeData {
   sessions: BadgeSessionData[];
 }
 
+/** One page of attendee search results. */
+export interface AttendeeSearchPage {
+  options: AttendeeOption[];
+  hasMore: boolean;
+}
+
 export type BadgeDownloadFormat = "pdf" | "png";
 
 /** The host must pass a referentially stable provider (memoize it); the picker's search effect depends on its identity. */
 export interface AttendeeProvider {
-  /** Searches attendees for the picker (debounced by the picker). */
-  search(query: string): Promise<AttendeeOption[]>;
+  /** Searches attendees for the picker (debounced by the picker). `page` is 1-based; the picker asks for the next page as the list scrolls. */
+  search(query: string, page: number): Promise<AttendeeSearchPage>;
   /** Resolves a selected attendee id into renderable BadgeData. */
   resolve(id: string): Promise<BadgeData>;
   /** Renders the last saved template for this attendee as the host prints it. */
