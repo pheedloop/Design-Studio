@@ -43,7 +43,7 @@ export function PreviewActions({
       const format = action === "print" ? "pdf" : action;
       const blob = await download(attendee.id, format);
       if (!mounted.current) return;
-      if (action === "print") printPdf(blob);
+      if (action === "print") await printPdf(blob);
       else saveBlob(blob, badgeFileName(attendee.name, action));
     } catch {
       if (mounted.current) onFailedChange(true);

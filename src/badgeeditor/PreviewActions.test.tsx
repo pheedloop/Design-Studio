@@ -49,6 +49,13 @@ describe("PreviewActions", () => {
     expect(saveBlob).not.toHaveBeenCalled();
   });
 
+  it("reports a print that fails after the PDF arrives", async () => {
+    vi.mocked(printPdf).mockRejectedValueOnce(new Error("blocked"));
+    const { onFailedChange } = setup();
+    fireEvent.click(screen.getByRole("button", { name: "Print" }));
+    await waitFor(() => expect(onFailedChange).toHaveBeenLastCalledWith(true));
+  });
+
   it("reports a failed request and clears it on the next action", async () => {
     const download = vi
       .fn()

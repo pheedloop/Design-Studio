@@ -1,6 +1,7 @@
 import type { BadgeDownloadFormat } from "./badgeData";
 
 const PRINT_CLEANUP_MS = 60_000;
+const PRINT_LOAD_TIMEOUT_MS = 15_000;
 
 /** `First_Last_badge.pdf`: whitespace becomes `_`, characters unsafe in a file name are dropped. */
 export function badgeFileName(
@@ -24,41 +25,57 @@ export function saveBlob(blob: Blob, fileName: string): void {
   URL.revokeObjectURL(url);
 }
 
-/** Opens the system print dialog for a PDF through a hidden off-screen iframe. */
-export function printPdf(blob: Blob): void {
-  const url = URL.createObjectURL(blob);
-  const frame = document.createElement("iframe");
-  frame.setAttribute("aria-hidden", "true");
-  frame.tabIndex = -1;
-  Object.assign(frame.style, {
-    position: "fixed",
-    left: "-10000px",
-    top: "0",
-    width: "0",
-    height: "0",
-    border: "0",
-  });
+/**
+ * Opens the system print dialog for a PDF through a hidden off-screen iframe.
+ * Resolves once print() has been called; rejects if the frame has no window,
+ * print() throws, or the PDF never loads.
+ */
+export function printPdf(blob: Blob): Promise<void> {
+  return new Promise((resolve, reject) => {
+    const url = URL.createObjectURL(blob);
+    const frame = document.createElement("iframe");
+    frame.setAttribute("aria-hidden", "true");
+    frame.tabIndex = -1;
+    Object.assign(frame.style, {
+      position: "fixed",
+      left: "-10000px",
+      top: "0",
+      width: "0",
+      height: "0",
+      border: "0",
+    });
 
-  const cleanup = () => {
-    clearTimeout(timer);
-    frame.remove();
-    URL.revokeObjectURL(url);
-  };
-
-  const timer = setTimeout(cleanup, PRINT_CLEANUP_MS);
-
-  frame.onload = () => {
-    const win = frame.contentWindow;
-    try {
-      if (!win) throw new Error("no print window");
-      win.addEventListener("afterprint", cleanup);
-      win.focus();
-      win.print();
-    } catch {
+    const cleanup = () => {
+      clearTimeout(cleanupTimer);
+      clearTimeout(loadTimer);
       frame.remove();
-      window.open(url);
-    }
-  };
-  frame.src = url;
-  document.body.appendChild(frame);
+      URL.revokeObjectURL(url);
+    };
+    const fail = (error: Error) => {
+      cleanup();
+      reject(error);
+    };
+
+    const cleanupTimer = setTimeout(cleanup, PRINT_CLEANUP_MS);
+    const loadTimer = setTimeout(
+      () => fail(new Error("print frame did not load")),
+      PRINT_LOAD_TIMEOUT_MS,
+    );
+
+    frame.onload = () => {
+      clearTimeout(loadTimer);
+      const win = frame.contentWindow;
+      if (!win) return fail(new Error("no print window"));
+      try {
+        win.addEventListener("afterprint", cleanup);
+        win.focus();
+        win.print();
+      } catch (error) {
+        return fail(error instanceof Error ? error : new Error("print failed"));
+      }
+      resolve();
+    };
+    frame.src = url;
+    document.body.appendChild(frame);
+  });
 }
