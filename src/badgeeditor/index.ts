@@ -32,6 +32,7 @@ export type {
   BadgeData,
   AttendeeOption,
   AttendeeProvider,
+  BadgeDownloadFormat,
   BadgeTicketData,
   BadgePreviewImage,
   BadgeSessionData,

@@ -52,6 +52,8 @@ export interface BadgeData {
   sessions: BadgeSessionData[];
 }
 
+export type BadgeDownloadFormat = "pdf" | "png";
+
 /** The host must pass a referentially stable provider (memoize it); the picker's search effect depends on its identity. */
 export interface AttendeeProvider {
   /** Searches attendees for the picker (debounced by the picker). */
@@ -60,6 +62,8 @@ export interface AttendeeProvider {
   resolve(id: string): Promise<BadgeData>;
   /** Renders the last saved template for this attendee as the host prints it. */
   renderPreview?(id: string): Promise<BadgePreviewImage>;
+  /** The last saved template for this attendee as a file, for download and print. */
+  downloadBadge?(id: string, format: BadgeDownloadFormat): Promise<Blob>;
 }
 
 /**

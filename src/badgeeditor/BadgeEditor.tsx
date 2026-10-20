@@ -39,6 +39,7 @@ import { UNIT_LABEL_KEYS, formatDim, type Unit } from "./units";
 import { BadgeSidebar } from "./BadgeSidebar";
 import { BadgePreview } from "./BadgePreview";
 import { BadgeServerPreview } from "./BadgeServerPreview";
+import { PreviewActions } from "./PreviewActions";
 import { previewAvailability, previewNotices } from "./previewState";
 import { BadgeSetupDialog } from "./BadgeSetupDialog";
 import { clampFieldsToPanel, isFieldOutsidePanel } from "./canvasMetrics";
@@ -216,6 +217,11 @@ function BadgeEditorInner({
     [attendeeProvider],
   );
   const serverPreview = renderServerPreview !== undefined;
+  const downloadBadge = useMemo(
+    () => attendeeProvider?.downloadBadge?.bind(attendeeProvider),
+    [attendeeProvider],
+  );
+  const [actionFailed, setActionFailed] = useState(false);
   const previewReasonId = useId();
   const clipboard = useRef<BadgeField[]>([]);
   // Mirrors `clipboard.current.length > 0` as real state — the ref itself is
@@ -230,6 +236,7 @@ function BadgeEditorInner({
       const seq = ++resolveSeq.current;
       setPreviewAttendee(option);
       setLoadFailed(false);
+      setActionFailed(false);
       if (!option || !attendeeProvider) {
         setPreviewData(null);
         if (serverPreview) setPreviewMode(false);
@@ -739,6 +746,17 @@ function BadgeEditorInner({
                   </span>
                 )}
                 <div className="flex-1" />
+                {previewMode &&
+                  serverPreview &&
+                  downloadBadge &&
+                  previewAttendee && (
+                    <PreviewActions
+                      key={previewAttendee.id}
+                      attendee={previewAttendee}
+                      download={downloadBadge}
+                      onFailedChange={setActionFailed}
+                    />
+                  )}
                 {showAlign && (
                   <Row gap="hair" align="center">
                     <AlignmentControls
@@ -775,6 +793,14 @@ function BadgeEditorInner({
                   className="shrink-0 bg-red-50 border-b border-red-200 px-xs py-tight text-xs text-red-700"
                 >
                   {t("badgeeditor.attendee.loadFailed")}
+                </div>
+              )}
+              {previewMode && actionFailed && (
+                <div
+                  role="alert"
+                  className="shrink-0 bg-red-50 border-b border-red-200 px-xs py-tight text-xs text-red-700"
+                >
+                  {t("badgeeditor.preview.actionFailed")}
                 </div>
               )}
               {previewMode && previewNotice && (
