@@ -20,6 +20,7 @@ import { Button } from "@/components/Button";
 import type { PlacementRecordRef } from "@/editor/components/panels/placementDrag";
 import type { AutoArrangeRecord } from "./components/panels/PlacementPanel";
 import { getElementBounds } from "./utils/bounds";
+import { resolveCanvasTool } from "./utils/canvasTool";
 import {
   alignLeft,
   alignRight,
@@ -702,14 +703,13 @@ function MapEditorInner({
   );
 
   // --- Tool registry integration ---
-  // Resolve active tool string to ToolDefinition (null = select mode). The
-  // background layer holds only the background image/color, so drawing tools
-  // don't apply there — force select mode so shapes can't be drawn into a layer
-  // that never renders them.
-  const resolvedTool =
-    activeTool === "select" || activeLayerId === "background"
-      ? null
-      : (TOOL_MAP.get(activeTool) ?? null);
+  // Resolve active tool string to ToolDefinition (null = select mode).
+  const { drawToolId, isPanTool } = resolveCanvasTool(
+    activeTool,
+    activeLayerId,
+    editorMode,
+  );
+  const resolvedTool = drawToolId ? (TOOL_MAP.get(drawToolId) ?? null) : null;
 
   // Unified tool completion handler (used once tools are migrated to registry)
   const handleToolComplete = useCallback(
@@ -1774,10 +1774,7 @@ function MapEditorInner({
                 <Canvas
                   data={data}
                   activeTool={resolvedTool}
-                  // The hand tool lives in the design toolbar; in placement mode
-                  // the canvas stays selectable so placed objects can be moved
-                  // (Space / middle-mouse still pan).
-                  isPanTool={activeTool === "hand" && editorMode === "design"}
+                  isPanTool={isPanTool}
                   toolContext={toolContext}
                   selectedIds={selectedIds}
                   scale={scale}

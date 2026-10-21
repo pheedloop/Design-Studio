@@ -8,7 +8,7 @@ function press(key: string, target?: EventTarget) {
   (target ?? window).dispatchEvent(event);
 }
 
-function mount() {
+function mount(isPathingMode = false) {
   const setActiveTool = vi.fn();
   renderHook(() =>
     useKeyboardShortcuts({
@@ -21,6 +21,8 @@ function mount() {
       onSelectAll: vi.fn(),
       onUndo: vi.fn(),
       onRedo: vi.fn(),
+      isPathingMode,
+      setPathingTool: vi.fn(),
     }),
   );
   return setActiveTool;
@@ -51,6 +53,13 @@ describe("useKeyboardShortcuts", () => {
     press("v");
     expect(setActiveTool).toHaveBeenNthCalledWith(1, "hand");
     expect(setActiveTool).toHaveBeenNthCalledWith(2, "select");
+  });
+
+  it("leaves the content tool alone on the pathing layer", () => {
+    const setActiveTool = mount(true);
+    press("h");
+    press("o");
+    expect(setActiveTool).not.toHaveBeenCalled();
   });
 
   it("ignores shortcuts typed into a text field", () => {
