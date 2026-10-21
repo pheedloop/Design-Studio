@@ -305,7 +305,7 @@ function MapViewerInner({
     <div style={{ position: "relative", width: "100%", height: "100%" }}>
       <div
         ref={containerRef}
-        className="pl-map-editor flex flex-col h-full relative"
+        className="pl-map-editor pl-attendee-type flex flex-col h-full relative"
       >
         <Row gap="none" align="center" className="bg-white">
           <div className="flex-1 min-w-0">
