@@ -76,7 +76,10 @@ import { CanvasResizeDialog } from "./components/panels/CanvasResizeDialog";
 import { CalibrationDialog } from "./components/panels/CalibrationDialog";
 import { TypeDefaultsDialog } from "./components/panels/TypeDefaultsDialog";
 import { LegendDialog } from "./components/panels/LegendDialog";
-import { ArrangeGridDialog } from "./components/panels/ArrangeGridDialog";
+import {
+  ArrangeGridDialog,
+  type ArrangeGridSettings,
+} from "./components/panels/ArrangeGridDialog";
 import { LegendCanvasOverlay } from "./components/canvas/LegendCanvasOverlay";
 import { LayerPanel } from "./components/panels/LayerPanel";
 import { Rulers } from "./components/Rulers";
@@ -337,6 +340,8 @@ function MapEditorInner({
   const [showTypeDefaultsDialog, setShowTypeDefaultsDialog] = useState(false);
   const [showLegendDialog, setShowLegendDialog] = useState(false);
   const [showArrangeGridDialog, setShowArrangeGridDialog] = useState(false);
+  const [lastGridArrangement, setLastGridArrangement] =
+    useState<ArrangeGridSettings | null>(null);
   const [contextMenu, setContextMenu] = useState<{
     elementId: string;
     x: number;
@@ -2009,13 +2014,15 @@ function MapEditorInner({
       {showArrangeGridDialog && (
         <ArrangeGridDialog
           elementCount={alignmentUnitCount}
-          onConfirm={(cols, gapX, gapY, byName) => {
+          initial={lastGridArrangement}
+          onConfirm={settings => {
+            setLastGridArrangement(settings);
             const updates = arrangeAsGrid(
               elementsForAlignment,
-              cols,
-              gapX,
-              gapY,
-              byName ? naturalCompare(locale) : undefined,
+              settings.cols,
+              settings.gapX,
+              settings.gapY,
+              settings.byName ? naturalCompare(locale) : undefined,
             );
             if (updates.length) batchUpdateGeometry(updates);
           }}
