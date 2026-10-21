@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import { Group, Rect, Transformer } from "react-konva";
 import type Konva from "konva";
 import type { CropRect } from "@/editor/hooks/useCrop";
+import { useLeftButtonDrag } from "@/hooks/useLeftButtonDrag";
 
 interface CropOverlayProps {
   rect: CropRect;
@@ -40,6 +41,8 @@ export function CropOverlay({
     node.scaleY(1);
     onChange({ x: node.x(), y: node.y(), width, height });
   };
+
+  const drag = useLeftButtonDrag(() => {}, commit);
 
   const rightW = Math.max(0, canvasWidth - rect.x - rect.width);
   const bottomH = Math.max(0, canvasHeight - rect.y - rect.height);
@@ -93,7 +96,8 @@ export function CropOverlay({
         // Near-transparent fill so the whole box is draggable, not just the edge.
         fill="rgba(37,99,235,0.001)"
         draggable
-        onDragEnd={commit}
+        onDragStart={drag.onDragStart}
+        onDragEnd={drag.onDragEnd}
         onTransformEnd={commit}
       />
       <Transformer

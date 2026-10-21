@@ -1,5 +1,6 @@
 import { Circle } from "react-konva";
 import type Konva from "konva";
+import { refuseMiddleButtonDrag } from "@/hooks/useLeftButtonDrag";
 import type { FloorPlanElement, Geometry, PolygonGeometry } from "@/types";
 import { BRAND, WHITE } from "@/canvasColors";
 
@@ -48,6 +49,7 @@ export function PolygonVertexHandles({
           stroke={BRAND}
           strokeWidth={1.5}
           draggable
+          onDragStart={refuseMiddleButtonDrag}
           onDragMove={e => handleDrag(v.index, e)}
         />
       ))}

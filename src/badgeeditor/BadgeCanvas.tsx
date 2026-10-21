@@ -17,6 +17,7 @@ import {
 } from "./canvasMetrics";
 import { useBadgeGuides } from "./useBadgeGuides";
 import type { BadgeData } from "./badgeData";
+import { useMiddlePan } from "@/hooks/useMiddlePan";
 import { FieldShape } from "./FieldShape";
 import { HolePunchShapes } from "./HolePunchShapes";
 import { PanelBackground } from "./PanelBackground";
@@ -115,23 +116,24 @@ export function BadgeCanvas({
   }, []);
   const panMode = spaceHeld;
 
+  const middlePan = useMiddlePan(stageRef, onPositionChange);
+
   // Reflect pan mode on the cursor.
   useEffect(() => {
     const c = stageRef.current?.container();
-    if (c) c.style.cursor = panMode ? "grab" : "default";
-  }, [panMode, stageRef]);
+    if (c)
+      c.style.cursor = middlePan.isMiddlePanning
+        ? "grabbing"
+        : panMode
+          ? "grab"
+          : "default";
+  }, [panMode, middlePan.isMiddlePanning, stageRef]);
 
-  // Marquee + middle-mouse pan state.
+  // Marquee state.
   const marqueeOrigin = useRef<{ x: number; y: number } | null>(null);
   const [marquee, setMarquee] = useState<
     (Konva.Vector2d & { w: number; h: number }) | null
   >(null);
-  const middlePan = useRef<{
-    cx: number;
-    cy: number;
-    sx: number;
-    sy: number;
-  } | null>(null);
   // Start positions captured at drag start (for multi-move).
   const dragStarts = useRef(new Map<string, { x: number; y: number }>());
   const dragStartBounds = useRef<PanelBox | null>(null);
@@ -174,18 +176,7 @@ export function BadgeCanvas({
   // --- Stage-level mouse (marquee + middle-pan) ---
 
   const handleStageMouseDown = (e: Konva.KonvaEventObject<MouseEvent>) => {
-    if (e.evt.button === 1) {
-      e.evt.preventDefault();
-      const stage = stageRef.current;
-      if (!stage) return;
-      middlePan.current = {
-        cx: e.evt.clientX,
-        cy: e.evt.clientY,
-        sx: stage.x(),
-        sy: stage.y(),
-      };
-      return;
-    }
+    if (middlePan.onMouseDown(e)) return;
     if (panMode) return; // stage handles the drag-pan natively
     if (e.evt.button !== 0) return;
     if (isEmpty(e)) {
@@ -199,16 +190,7 @@ export function BadgeCanvas({
   };
 
   const handleStageMouseMove = (e: Konva.KonvaEventObject<MouseEvent>) => {
-    if (middlePan.current) {
-      const stage = stageRef.current;
-      if (!stage) return;
-      const { cx, cy, sx, sy } = middlePan.current;
-      stage.position({
-        x: sx + (e.evt.clientX - cx),
-        y: sy + (e.evt.clientY - cy),
-      });
-      return;
-    }
+    if (middlePan.onMouseMove(e)) return;
     if (marqueeOrigin.current) {
       const p = localPoint();
       if (!p) return;
@@ -223,12 +205,7 @@ export function BadgeCanvas({
   };
 
   const handleStageMouseUp = (e: Konva.KonvaEventObject<MouseEvent>) => {
-    if (middlePan.current) {
-      const stage = stageRef.current;
-      if (stage) onPositionChange(stage.position());
-      middlePan.current = null;
-      return;
-    }
+    if (middlePan.onMouseUp()) return;
     if (marqueeOrigin.current && marquee) {
       const r = marquee;
       const hit = page.fields.filter(f => {
@@ -361,7 +338,9 @@ export function BadgeCanvas({
       x={position.x}
       y={position.y}
       draggable={panMode}
-      onWheel={onWheel}
+      onWheel={e => {
+        if (!middlePan.onWheel(e)) onWheel(e);
+      }}
       onMouseDown={handleStageMouseDown}
       onMouseMove={handleStageMouseMove}
       onMouseUp={handleStageMouseUp}

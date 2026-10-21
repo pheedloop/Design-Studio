@@ -2,6 +2,7 @@ import { memo } from "react";
 import { Group } from "react-konva";
 import type { FloorPlanElement } from "@/types";
 import { useT } from "@/editor/i18n";
+import { useLeftButtonDrag } from "@/hooks/useLeftButtonDrag";
 import { BRAND, GRAY_400 } from "@/canvasColors";
 import { RectShape } from "./elements/RectShape";
 import { EllipseShape } from "./elements/EllipseShape";
@@ -68,6 +69,11 @@ function ElementShapeImpl({
     : (element.properties.strokeWidth ??
       (geo.shape === "line" || geo.shape === "arrow" ? 2 : 1));
 
+  const drag = useLeftButtonDrag(
+    () => onDragStart(element.id),
+    e => onDragEnd(element.id, e.target.x(), e.target.y()),
+  );
+
   const x = "x" in geo ? geo.x : 0;
   const y = "y" in geo ? geo.y : 0;
   const rotation = "rotation" in geo ? (geo.rotation ?? 0) : 0;
@@ -91,15 +97,11 @@ function ElementShapeImpl({
         e.cancelBubble = true;
         onDoubleClick?.(element.id);
       }}
-      onDragStart={() => {
-        onDragStart(element.id);
-      }}
+      onDragStart={drag.onDragStart}
       onDragMove={e => {
         onDragMove(element.id, e.target.x(), e.target.y());
       }}
-      onDragEnd={e => {
-        onDragEnd(element.id, e.target.x(), e.target.y());
-      }}
+      onDragEnd={drag.onDragEnd}
       onContextMenu={e => {
         e.evt.preventDefault();
         e.cancelBubble = true;

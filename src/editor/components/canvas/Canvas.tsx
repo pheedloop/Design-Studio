@@ -27,6 +27,7 @@ import type { CalibrationState } from "@/editor/hooks/useCalibration";
 import { CropOverlay } from "./CropOverlay";
 import type { CropRect } from "@/editor/hooks/useCrop";
 import { useAlignmentGuides } from "@/editor/hooks/useAlignmentGuides";
+import { useMiddlePan } from "@/hooks/useMiddlePan";
 import { getElementBounds, lineIntersectsRect } from "@/editor/utils/bounds";
 import { CAPTURE_EXCLUDE_NAME } from "@/editor/utils/captureThumbnail";
 import { PolygonVertexHandles } from "@/editor/tools/handles/PolygonVertexHandles";
@@ -215,30 +216,7 @@ export function Canvas({
     setHoveredElementId(null);
   }, []);
 
-  // Middle-click pan state
-  const [isMiddlePanning, setIsMiddlePanning] = useState(false);
-  const isMiddlePanningRef = useRef(false);
-  const middlePanStartRef = useRef<{
-    clientX: number;
-    clientY: number;
-    stageX: number;
-    stageY: number;
-  } | null>(null);
-
-  // Release middle-click pan if mouse-up happens outside the Stage
-  useEffect(() => {
-    if (!isMiddlePanning) return;
-    const onGlobalMouseUp = (e: MouseEvent) => {
-      if (e.button !== 1) return;
-      const stage = stageRef.current;
-      if (stage) onPositionChange(stage.position());
-      isMiddlePanningRef.current = false;
-      setIsMiddlePanning(false);
-      middlePanStartRef.current = null;
-    };
-    window.addEventListener("mouseup", onGlobalMouseUp);
-    return () => window.removeEventListener("mouseup", onGlobalMouseUp);
-  }, [isMiddlePanning, stageRef, onPositionChange]);
+  const middlePan = useMiddlePan(stageRef, onPositionChange);
 
   // Drag-select rectangle state
   const [dragSelectRect, setDragSelectRect] = useState<{
@@ -356,21 +334,7 @@ export function Canvas({
   // --- Mouse event handlers ---
 
   const handleMouseDown = (e: Konva.KonvaEventObject<MouseEvent>) => {
-    // Middle-click pan — intercept before all other handlers
-    if (e.evt.button === 1) {
-      e.evt.preventDefault();
-      const stage = stageRef.current;
-      if (!stage) return;
-      isMiddlePanningRef.current = true;
-      setIsMiddlePanning(true);
-      middlePanStartRef.current = {
-        clientX: e.evt.clientX,
-        clientY: e.evt.clientY,
-        stageX: stage.x(),
-        stageY: stage.y(),
-      };
-      return;
-    }
+    if (middlePan.onMouseDown(e)) return;
 
     if (isPanMode) return;
 
@@ -406,17 +370,7 @@ export function Canvas({
   };
 
   const handleMouseMove = (e: Konva.KonvaEventObject<MouseEvent>) => {
-    // Middle-click pan — move stage imperatively to avoid per-pixel re-renders
-    if (isMiddlePanningRef.current && middlePanStartRef.current) {
-      const stage = stageRef.current;
-      if (!stage) return;
-      const { clientX, clientY, stageX, stageY } = middlePanStartRef.current;
-      stage.position({
-        x: stageX + (e.evt.clientX - clientX),
-        y: stageY + (e.evt.clientY - clientY),
-      });
-      return;
-    }
+    if (middlePan.onMouseMove(e)) return;
 
     // Calibration mode
     if (isCalibrating && onCalibrationMouseMove) {
@@ -457,15 +411,7 @@ export function Canvas({
   };
 
   const handleMouseUp = () => {
-    // Middle-click pan end — sync stage position back to React state
-    if (isMiddlePanningRef.current) {
-      const stage = stageRef.current;
-      if (stage) onPositionChange(stage.position());
-      isMiddlePanningRef.current = false;
-      setIsMiddlePanning(false);
-      middlePanStartRef.current = null;
-      return;
-    }
+    if (middlePan.onMouseUp()) return;
 
     // Pathing mode
     if (isPathingMode && onPathingMouseUp) {
@@ -740,7 +686,7 @@ export function Canvas({
 
   // --- Cursor ---
   const cursor =
-    isMiddlePanning || (isPanMode && isStageDragging)
+    middlePan.isMiddlePanning || (isPanMode && isStageDragging)
       ? "grabbing"
       : isPanMode
         ? "grab"
@@ -772,7 +718,9 @@ export function Canvas({
           !isCropping &&
           (isPanMode || (!isPathingMode && isSelectMode && !dragSelectRect))
         }
-        onWheel={onWheel}
+        onWheel={e => {
+          if (!middlePan.onWheel(e)) onWheel(e);
+        }}
         onDragStart={e => {
           if (e.target === stageRef.current) setIsStageDragging(true);
         }}
