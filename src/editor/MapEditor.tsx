@@ -20,7 +20,6 @@ import { Button } from "@/components/Button";
 import type { PlacementRecordRef } from "@/editor/components/panels/placementDrag";
 import type { AutoArrangeRecord } from "./components/panels/PlacementPanel";
 import { getElementBounds } from "./utils/bounds";
-import { findOverlappingElementIds } from "./utils/overlappingElements";
 import {
   alignLeft,
   alignRight,
@@ -326,12 +325,6 @@ function MapEditorInner({
   });
   const [snapToObjects, setSnapToObjects] = useState(true);
   const [showTransformControls, setShowTransformControls] = useState(true);
-  // Derived from the elements, so it is computed rather than stored — an effect
-  // here would render once with a stale set before correcting itself.
-  const overlappingElementIds = useMemo(
-    () => findOverlappingElementIds(data.elements),
-    [data.elements],
-  );
   const [walkableGridOpacity, setWalkableGridOpacity] = useState(0.3);
   const [showRulers, setShowRulers] = useState(false);
   const [showGridDialog, setShowGridDialog] = useState(false);
@@ -357,7 +350,6 @@ function MapEditorInner({
   const {
     stageRef,
     scale,
-    setScale,
     position,
     setPosition,
     stageSize,
@@ -477,44 +469,6 @@ function MapEditorInner({
       data.elements.filter(el => el.properties.groupId === groupId),
     [data.elements],
   );
-
-  const handleLocateOverlapping = useCallback(() => {
-    if (overlappingElementIds.size === 0) return;
-    const els = data.elements.filter(el => overlappingElementIds.has(el.id));
-    selectMany(els.map(el => el.id));
-
-    // Compute bounding box of all overlapping elements
-    let left = Infinity,
-      right = -Infinity,
-      top = Infinity,
-      bottom = -Infinity;
-    for (const el of els) {
-      const b = getElementBounds(el);
-      if (b.left < left) left = b.left;
-      if (b.right > right) right = b.right;
-      if (b.top < top) top = b.top;
-      if (b.bottom > bottom) bottom = b.bottom;
-    }
-
-    const padding = 80;
-    const newScale = Math.min(
-      (stageSize.width - padding * 2) / (right - left),
-      (stageSize.height - padding * 2) / (bottom - top),
-      5,
-    );
-    setScale(newScale);
-    setPosition({
-      x: stageSize.width / 2 - ((left + right) / 2) * newScale,
-      y: stageSize.height / 2 - ((top + bottom) / 2) * newScale,
-    });
-  }, [
-    overlappingElementIds,
-    data.elements,
-    selectMany,
-    stageSize,
-    setScale,
-    setPosition,
-  ]);
 
   // Clipboard
   const { copy, paste, hasBuffer } = useClipboard();
@@ -1871,7 +1825,6 @@ function MapEditorInner({
                   onCalibrationMouseMove={calibration.handleMouseMove}
                   unlinkedElementIds={unlinkedElementIds}
                   showTransformControls={showTransformControls}
-                  overlappingElementIds={overlappingElementIds}
                 />
                 <Rulers
                   visible={showRulers}
@@ -1889,18 +1842,6 @@ function MapEditorInner({
                   features={featureMap}
                 />
                 <LegendCanvasOverlay legend={data.legend} />
-
-                {/* Overlap warning banner */}
-                {overlappingElementIds.size > 0 && (
-                  <button
-                    onClick={handleLocateOverlapping}
-                    className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-red-50 border border-red-300 text-red-700 text-sm px-xs py-tight rounded-full shadow-sm z-10 whitespace-nowrap hover:bg-red-100 cursor-pointer"
-                  >
-                    {t("editor.overlap.locate", {
-                      count: overlappingElementIds.size,
-                    })}
-                  </button>
-                )}
 
                 {/* Drag-to-place ghost preview */}
                 {dragOverCanvas && (

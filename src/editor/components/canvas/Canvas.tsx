@@ -109,7 +109,6 @@ interface CanvasProps {
   onCropChange?: (rect: CropRect) => void;
   unlinkedElementIds?: Set<string>;
   showTransformControls?: boolean;
-  overlappingElementIds?: Set<string>;
   activeGroupId?: string | null;
   onDoubleClick?: (id: string) => void;
   onGroupTransformEnd?: (
@@ -164,7 +163,6 @@ export function Canvas({
   onCalibrationMouseMove,
   unlinkedElementIds,
   showTransformControls = true,
-  overlappingElementIds,
   activeGroupId,
   onDoubleClick,
   onGroupTransformEnd,
@@ -862,9 +860,6 @@ export function Canvas({
                     isSelectMode={isSelectMode && isActiveLayer}
                     isLinked={!unlinkedElementIds?.has(element.id)}
                     isHovered={isSelectMode && hoveredElementId === element.id}
-                    isOverlapping={
-                      overlappingElementIds?.has(element.id) ?? false
-                    }
                     isDimmed={
                       activeGroupId != null &&
                       element.properties.groupId !== activeGroupId

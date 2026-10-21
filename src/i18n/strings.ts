@@ -558,8 +558,6 @@ export const EDITOR = {
   "menu.view": "View",
   "mode.design": "Design Mode",
   "mode.placement": "Placement Mode",
-  "overlap.locate_one": "{{count}} element overlapping — click to locate",
-  "overlap.locate_other": "{{count}} elements overlapping — click to locate",
   "pathing.autoAisles": "Auto-mark aisles",
   "pathing.autoAislesHint": "Mark all non-booth space as walkable",
   "pathing.autoObstacles": "Auto-mark obstacles",
