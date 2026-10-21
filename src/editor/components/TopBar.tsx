@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { PiBug, PiQuestion } from "react-icons/pi";
 import { Row } from "@/components/Row";
 import { DropdownMenu, MenuButton } from "./ui";
@@ -28,17 +28,25 @@ export function TopBar({
   toolsMenuItems = [],
 }: TopBarProps) {
   const t = useT();
-  const [fileOpen, setFileOpen] = useState(false);
-  const [editOpen, setEditOpen] = useState(false);
-  const [viewOpen, setViewOpen] = useState(false);
-  const [toolsOpen, setToolsOpen] = useState(false);
+  const [open, setOpen] = useState<string | null>(null);
+  const openRef = useRef<HTMLDivElement>(null);
+  const close = () => setOpen(null);
 
-  const closeAll = () => {
-    setFileOpen(false);
-    setEditOpen(false);
-    setViewOpen(false);
-    setToolsOpen(false);
-  };
+  const menu = (id: string, label: string, items: MenuEntry[]) => (
+    <div ref={open === id ? openRef : undefined} className="relative">
+      <MenuButton
+        open={open === id}
+        aria-haspopup="menu"
+        aria-expanded={open === id}
+        onClick={() => setOpen(prev => (prev === id ? null : id))}
+      >
+        {label}
+      </MenuButton>
+      {open === id && (
+        <DropdownMenu items={items} onClose={close} anchorRef={openRef} />
+      )}
+    </div>
+  );
 
   return (
     <Row
@@ -52,81 +60,13 @@ export function TopBar({
       >
         <MapIcon size={20} />
       </Row>
-      <div className="relative">
-        <MenuButton
-          open={fileOpen}
-          onMouseDown={e => {
-            e.stopPropagation();
-            closeAll();
-            setFileOpen(prev => !prev);
-          }}
-        >
-          {t("editor.menu.file")}
-        </MenuButton>
-        {fileOpen && (
-          <DropdownMenu
-            items={fileMenuItems}
-            onClose={() => setFileOpen(false)}
-          />
-        )}
-      </div>
-      <div className="relative">
-        <MenuButton
-          open={editOpen}
-          onMouseDown={e => {
-            e.stopPropagation();
-            closeAll();
-            setEditOpen(prev => !prev);
-          }}
-        >
-          {t("editor.menu.edit")}
-        </MenuButton>
-        {editOpen && (
-          <DropdownMenu
-            items={editMenuItems}
-            onClose={() => setEditOpen(false)}
-          />
-        )}
-      </div>
-      <div className="relative">
-        <MenuButton
-          open={viewOpen}
-          onMouseDown={e => {
-            e.stopPropagation();
-            closeAll();
-            setViewOpen(prev => !prev);
-          }}
-        >
-          {t("editor.menu.view")}
-        </MenuButton>
-        {viewOpen && (
-          <DropdownMenu
-            items={viewMenuItems}
-            onClose={() => setViewOpen(false)}
-          />
-        )}
-      </div>
-      <div className="relative">
-        <MenuButton
-          open={toolsOpen}
-          onMouseDown={e => {
-            e.stopPropagation();
-            closeAll();
-            setToolsOpen(prev => !prev);
-          }}
-        >
-          {t("editor.menu.tools")}
-        </MenuButton>
-        {toolsOpen && (
-          <DropdownMenu
-            items={toolsMenuItems}
-            onClose={() => setToolsOpen(false)}
-          />
-        )}
-      </div>
+      {menu("file", t("editor.menu.file"), fileMenuItems)}
+      {menu("edit", t("editor.menu.edit"), editMenuItems)}
+      {menu("view", t("editor.menu.view"), viewMenuItems)}
+      {menu("tools", t("editor.menu.tools"), toolsMenuItems)}
       <MenuButton
         onClick={() => {
-          closeAll();
+          close();
           onLegendClick?.();
         }}
       >

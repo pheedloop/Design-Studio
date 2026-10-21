@@ -1,4 +1,3 @@
-import { useRef } from "react";
 import { useDismiss } from "@/hooks/useDismiss";
 import { MenuItem } from "./MenuItem";
 
@@ -27,17 +26,21 @@ function isMenuDivider(entry: MenuEntry): entry is MenuDivider {
 interface DropdownMenuProps {
   items: MenuEntry[];
   onClose: () => void;
+  /** Holds the trigger too, so pressing it toggles rather than dismissing and reopening. */
+  anchorRef: React.RefObject<HTMLElement | null>;
   fullWidth?: boolean;
 }
 
-export function DropdownMenu({ items, onClose, fullWidth }: DropdownMenuProps) {
-  const ref = useRef<HTMLDivElement>(null);
-
-  useDismiss(ref, onClose);
+export function DropdownMenu({
+  items,
+  onClose,
+  anchorRef,
+  fullWidth,
+}: DropdownMenuProps) {
+  useDismiss(anchorRef, onClose);
 
   return (
     <div
-      ref={ref}
       className={`absolute top-full left-0 mt-0 bg-white border border-border-neutral-light rounded-md shadow-lg py-xxxs z-dialog ${
         fullWidth ? "right-0" : "min-w-[200px]"
       }`}

@@ -78,7 +78,6 @@ export function PreviewActions({
           aria-expanded={menuOpen}
           aria-disabled={busy !== null || undefined}
           className="aria-disabled:opacity-50 aria-disabled:cursor-not-allowed"
-          onPointerDown={e => e.stopPropagation()}
           onClick={() => {
             if (busy === null) setMenuOpen(o => !o);
           }}
@@ -90,7 +89,13 @@ export function PreviewActions({
               : t("badgeeditor.preview.download")}
           </span>
         </MenuButton>
-        {menuOpen && <DropdownMenu items={items} onClose={closeMenu} />}
+        {menuOpen && (
+          <DropdownMenu
+            items={items}
+            onClose={closeMenu}
+            anchorRef={menuRootRef}
+          />
+        )}
       </div>
       <MenuButton
         aria-disabled={busy !== null || undefined}
