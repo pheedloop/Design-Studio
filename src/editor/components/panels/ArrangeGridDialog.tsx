@@ -19,7 +19,6 @@ export interface ArrangeGridSettings {
 
 interface ArrangeGridDialogProps {
   elementCount: number;
-  // The settings last applied, so reopening the dialog keeps them.
   initial: ArrangeGridSettings | null;
   onConfirm: (settings: ArrangeGridSettings) => void;
   onClose: () => void;

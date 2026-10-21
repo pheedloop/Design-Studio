@@ -13,7 +13,6 @@ interface MultiSelectTransformerProps {
   ) => void;
 }
 
-// Resizes a group or a plain multi-selection as one box.
 export function MultiSelectTransformer({
   elements,
   onTransformEnd,
@@ -106,6 +105,7 @@ export function MultiSelectTransformer({
       <Transformer
         ref={trRef}
         rotateEnabled={false}
+        flipEnabled={false}
         borderStroke={BRAND}
         borderStrokeWidth={1.5}
         anchorFill={WHITE}

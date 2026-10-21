@@ -163,7 +163,6 @@ export function arrangeAsGrid(
     if (Math.abs(dy) > 10) return dy;
     return a.bounds.left - b.bounds.left;
   };
-  // Unnamed units go last, still in position order.
   const byName =
     compareNames &&
     ((a: AlignUnit, b: AlignUnit) => {

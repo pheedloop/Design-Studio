@@ -104,13 +104,16 @@ export function getElementBounds(element: FloorPlanElement): ElementBounds {
   }
 
   if (geo.shape === "ellipse") {
-    return rotatedBoxBounds(
-      geo.x,
-      geo.y,
-      geo.radiusX * 2,
-      geo.radiusY * 2,
-      geo.rotation,
-    );
+    const { radiusX: rx, radiusY: ry } = geo;
+    const rad = ((geo.rotation ?? 0) * Math.PI) / 180;
+    const cos = Math.cos(rad);
+    const sin = Math.sin(rad);
+    // Drawn from its box's top-left corner and rotated about it.
+    const cx = geo.x + rx * cos - ry * sin;
+    const cy = geo.y + rx * sin + ry * cos;
+    const halfW = Math.hypot(rx * cos, ry * sin);
+    const halfH = Math.hypot(rx * sin, ry * cos);
+    return boundsOf(cx - halfW, cy - halfH, cx + halfW, cy + halfH);
   }
 
   if (geo.shape === "circle") {

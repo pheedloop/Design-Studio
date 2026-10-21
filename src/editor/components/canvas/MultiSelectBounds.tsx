@@ -9,12 +9,15 @@ interface MultiSelectBoundsProps {
   selectedIds: Set<string>;
   // The multi-select transformer draws the same box when it is shown.
   showBox: boolean;
+  // A group reads as one object, so its members aren't marked one by one.
+  showEach: boolean;
 }
 
 export function MultiSelectBounds({
   elements,
   selectedIds,
   showBox,
+  showEach,
 }: MultiSelectBoundsProps) {
   if (selectedIds.size < 2) return null;
 
@@ -50,22 +53,27 @@ export function MultiSelectBounds({
           listening={false}
         />
       )}
-      {/* The box alone doesn't show which elements inside it are selected. */}
-      {selected.map(el => {
-        const outline = getElementOutline(el);
-        return (
-          <Fragment key={el.id}>
-            <Rect {...outline} fill={BRAND} opacity={0.15} listening={false} />
-            <Rect
-              {...outline}
-              stroke={BRAND}
-              strokeWidth={2}
-              strokeScaleEnabled={false}
-              listening={false}
-            />
-          </Fragment>
-        );
-      })}
+      {showEach &&
+        selected.map(el => {
+          const outline = getElementOutline(el);
+          return (
+            <Fragment key={el.id}>
+              <Rect
+                {...outline}
+                fill={BRAND}
+                opacity={0.15}
+                listening={false}
+              />
+              <Rect
+                {...outline}
+                stroke={BRAND}
+                strokeWidth={2}
+                strokeScaleEnabled={false}
+                listening={false}
+              />
+            </Fragment>
+          );
+        })}
     </>
   );
 }

@@ -40,6 +40,20 @@ describe("getElementBounds", () => {
     ]);
   });
 
+  it("hugs a rotated ellipse, not its box's corners", () => {
+    const b = getElementBounds(
+      el({
+        shape: "ellipse",
+        x: 0,
+        y: 0,
+        radiusX: 50,
+        radiusY: 50,
+        rotation: 45,
+      }),
+    );
+    expect(Math.round(b.right - b.left)).toBe(100);
+  });
+
   it("measures arrows like lines", () => {
     const b = getElementBounds(
       el({ shape: "arrow", x: 5, y: 5, points: [0, 0, 10, 20] }),

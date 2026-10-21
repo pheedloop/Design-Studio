@@ -432,8 +432,8 @@ export function Canvas({
 
           const shape = el.geometry.shape;
 
-          // Line: accurate segment intersection
-          if (shape === "line") {
+          // Line and arrow: accurate segment intersection
+          if (shape === "line" || shape === "arrow") {
             const geo = el.geometry;
             const [x1, y1, x2, y2] = geo.points;
             return lineIntersectsRect(
@@ -850,11 +850,12 @@ export function Canvas({
                 onTransformEnd={onMultiTransformEnd}
               />
             )}
-          {!groupSelectionGroupId && !isMultiDragging && (
+          {!isMultiDragging && (
             <MultiSelectBounds
               elements={data.elements}
               selectedIds={selectedIds}
               showBox={!showTransformControls}
+              showEach={!groupSelectionGroupId}
             />
           )}
           {/* Boundary outline shown while inside an entered group */}

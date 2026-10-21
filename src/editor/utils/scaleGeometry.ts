@@ -59,7 +59,6 @@ export function scaleGeometry(
     return { x: center.x - radius, y: center.y - radius, radius };
   }
 
-  // Point shapes: the anchor moves with the box, offsets stretch with it.
   const anchor = map(geo.x, geo.y);
   const points = geo.points.map((v, i) => v * (i % 2 === 0 ? sx : sy));
   return { ...anchor, points } as Partial<Geometry>;
