@@ -19,7 +19,7 @@ import { DxfDrawing } from "./DxfDrawing";
 import { AlignmentGuides } from "./AlignmentGuides";
 import { SelectionRect } from "./SelectionRect";
 import { MultiSelectBounds } from "./MultiSelectBounds";
-import { GroupTransformer } from "./GroupTransformer";
+import { MultiSelectTransformer } from "./MultiSelectTransformer";
 import { GridLayer } from "./GridLayer";
 import { WalkableGridOverlay } from "./WalkableGridOverlay";
 import { CalibrationPreview } from "./CalibrationPreview";
@@ -113,7 +113,7 @@ interface CanvasProps {
   showTransformControls?: boolean;
   activeGroupId?: string | null;
   onDoubleClick?: (id: string) => void;
-  onGroupTransformEnd?: (
+  onMultiTransformEnd?: (
     updates: Array<{
       id: string;
       geometry: Partial<import("@/types").Geometry>;
@@ -167,7 +167,7 @@ export function Canvas({
   showTransformControls = true,
   activeGroupId,
   onDoubleClick,
-  onGroupTransformEnd,
+  onMultiTransformEnd,
 }: CanvasProps) {
   // Hand tool and select mode are mutually exclusive built-in (non-drawing)
   // modes. Hand pans on drag; select rubber-bands / moves elements.
@@ -313,15 +313,16 @@ export function Canvas({
       : null;
   }, [selectedIds, activeGroupId, data.elements]);
 
-  const groupMemberElements = useMemo(
-    () =>
-      groupSelectionGroupId
-        ? data.elements.filter(
-            el => el.properties.groupId === groupSelectionGroupId,
-          )
-        : null,
-    [groupSelectionGroupId, data.elements],
-  );
+  const multiTransformElements = useMemo(() => {
+    if (groupSelectionGroupId) {
+      return data.elements.filter(
+        el => el.properties.groupId === groupSelectionGroupId,
+      );
+    }
+    return selectedIds.size > 1
+      ? data.elements.filter(el => selectedIds.has(el.id))
+      : null;
+  }, [groupSelectionGroupId, selectedIds, data.elements]);
 
   // Elements in the active group (for boundary overlay)
   const activeGroupElements = useMemo(
@@ -832,32 +833,29 @@ export function Canvas({
 
         {/* Selection overlay: transformer, multi-select bounds, handles */}
         <Layer name={CAPTURE_EXCLUDE_NAME}>
-          {groupSelectionGroupId &&
-          groupMemberElements &&
-          onGroupTransformEnd ? (
+          <SelectionTransformer
+            selectedIds={selectedIds}
+            stageRef={stageRef}
+            elements={data.elements}
+            onTransformEnd={onElementResize}
+            visible={showTransformControls}
+          />
+          {multiTransformElements &&
+            onMultiTransformEnd &&
+            showTransformControls &&
             !isMultiDragging && (
-              <GroupTransformer
-                groupId={groupSelectionGroupId}
-                memberElements={groupMemberElements}
-                onGroupTransformEnd={onGroupTransformEnd}
+              <MultiSelectTransformer
+                key={groupSelectionGroupId ?? [...selectedIds].join(",")}
+                elements={multiTransformElements}
+                onTransformEnd={onMultiTransformEnd}
               />
-            )
-          ) : (
-            <>
-              <SelectionTransformer
-                selectedIds={selectedIds}
-                stageRef={stageRef}
-                elements={data.elements}
-                onTransformEnd={onElementResize}
-                visible={showTransformControls}
-              />
-              {!isMultiDragging && (
-                <MultiSelectBounds
-                  elements={data.elements}
-                  selectedIds={selectedIds}
-                />
-              )}
-            </>
+            )}
+          {!groupSelectionGroupId && !isMultiDragging && (
+            <MultiSelectBounds
+              elements={data.elements}
+              selectedIds={selectedIds}
+              showBox={!showTransformControls}
+            />
           )}
           {/* Boundary outline shown while inside an entered group */}
           {activeGroupElements &&

@@ -7,11 +7,14 @@ import { BRAND } from "@/canvasColors";
 interface MultiSelectBoundsProps {
   elements: FloorPlanElement[];
   selectedIds: Set<string>;
+  // The multi-select transformer draws the same box when it is shown.
+  showBox: boolean;
 }
 
 export function MultiSelectBounds({
   elements,
   selectedIds,
+  showBox,
 }: MultiSelectBoundsProps) {
   if (selectedIds.size < 2) return null;
 
@@ -35,16 +38,18 @@ export function MultiSelectBounds({
 
   return (
     <>
-      <Rect
-        x={minX - padding}
-        y={minY - padding}
-        width={maxX - minX + padding * 2}
-        height={maxY - minY + padding * 2}
-        stroke={BRAND}
-        strokeWidth={1}
-        dash={[6, 3]}
-        listening={false}
-      />
+      {showBox && (
+        <Rect
+          x={minX - padding}
+          y={minY - padding}
+          width={maxX - minX + padding * 2}
+          height={maxY - minY + padding * 2}
+          stroke={BRAND}
+          strokeWidth={1}
+          dash={[6, 3]}
+          listening={false}
+        />
+      )}
       {/* The box alone doesn't show which elements inside it are selected. */}
       {selected.map(el => {
         const outline = getElementOutline(el);

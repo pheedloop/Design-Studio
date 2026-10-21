@@ -1016,7 +1016,7 @@ function MapEditorInner({
     [selectMany],
   );
 
-  const handleGroupTransformEnd = useCallback(
+  const handleMultiTransformEnd = useCallback(
     (
       updates: Array<{
         id: string;
@@ -1796,7 +1796,7 @@ function MapEditorInner({
                   onSelect={handleSelect}
                   onDoubleClick={handleDoubleClick}
                   onDragSelect={handleDragSelect}
-                  onGroupTransformEnd={handleGroupTransformEnd}
+                  onMultiTransformEnd={handleMultiTransformEnd}
                   onElementMove={handleElementMove}
                   onMultiMove={handleMultiMove}
                   onElementResize={handleElementResize}
