@@ -129,6 +129,8 @@ export function useCanvasControls(
     [],
   );
 
+  // A pinch moves the stage directly and commits to state when it ends, so it
+  // doesn't re-render every element on each touchmove.
   const handleTouchMove = useCallback(
     (e: Konva.KonvaEventObject<TouchEvent>) => {
       const [touch1, touch2] = e.evt.touches;
@@ -149,29 +151,36 @@ export function useCanvasControls(
         return;
       }
 
+      const oldScale = stage.scaleX();
+      const oldPosition = stage.position();
       const clamped = Math.min(
-        Math.max((scale * distance) / lastPinch.current.distance, MIN_SCALE),
+        Math.max((oldScale * distance) / lastPinch.current.distance, MIN_SCALE),
         MAX_SCALE,
       );
-
       const centerPointTo = {
-        x: (center.x - position.x) / scale,
-        y: (center.y - position.y) / scale,
+        x: (center.x - oldPosition.x) / oldScale,
+        y: (center.y - oldPosition.y) / oldScale,
       };
 
-      setScale(clamped);
-      setPosition({
+      stage.scale({ x: clamped, y: clamped });
+      stage.position({
         x: center.x - centerPointTo.x * clamped,
         y: center.y - centerPointTo.y * clamped,
       });
+      stage.batchDraw();
 
       lastPinch.current = { distance, center };
     },
-    [scale, position],
+    [],
   );
 
   const handleTouchEnd = useCallback(() => {
+    if (!lastPinch.current) return;
     lastPinch.current = null;
+    const stage = stageRef.current;
+    if (!stage) return;
+    setScale(stage.scaleX());
+    setPosition(stage.position());
   }, []);
 
   const zoomIn = useCallback(() => {
