@@ -29,6 +29,7 @@ import type { CropRect } from "@/editor/hooks/useCrop";
 import { useAlignmentGuides } from "@/editor/hooks/useAlignmentGuides";
 import { useMiddlePan } from "@/hooks/useMiddlePan";
 import { getElementBounds, lineIntersectsRect } from "@/editor/utils/bounds";
+import { resolveDragSet } from "@/editor/utils/dragSet";
 import { CAPTURE_EXCLUDE_NAME } from "@/editor/utils/captureThumbnail";
 import { PolygonVertexHandles } from "@/editor/tools/handles/PolygonVertexHandles";
 
@@ -549,12 +550,18 @@ export function Canvas({
     (id: string) => {
       startDrag(id);
 
-      if (selectedIds.has(id) && selectedIds.size > 1) {
+      const dragSet = resolveDragSet(
+        id,
+        selectedIds,
+        data.elements,
+        activeGroupId ?? null,
+      );
+      if (dragSet.length > 1) {
         setIsMultiDragging(true);
         const stage = stageRef.current;
         if (!stage) return;
         const positions = new Map<string, { x: number; y: number }>();
-        for (const sid of selectedIds) {
+        for (const sid of dragSet) {
           const node = stage.findOne(`.${sid}`);
           if (node) {
             positions.set(sid, { x: node.x(), y: node.y() });
@@ -565,27 +572,26 @@ export function Canvas({
         dragStartPositions.current = new Map();
       }
     },
-    [startDrag, selectedIds, stageRef],
+    [startDrag, selectedIds, data.elements, activeGroupId, stageRef],
   );
 
   const handleElementDragMove = useCallback(
     (id: string, x: number, y: number) => {
-      const isMulti = selectedIds.has(id) && selectedIds.size > 1;
+      const starts = dragStartPositions.current;
       const stage = stageRef.current;
       if (!stage) return;
 
-      if (isMulti) {
-        const startPos = dragStartPositions.current.get(id);
+      if (starts.size > 1) {
+        const startPos = starts.get(id);
         if (!startPos) return;
 
         const dx = x - startPos.x;
         const dy = y - startPos.y;
 
-        for (const sid of selectedIds) {
+        for (const [sid, sStart] of starts) {
           if (sid === id) continue;
-          const sStart = dragStartPositions.current.get(sid);
           const sNode = stage.findOne(`.${sid}`);
-          if (sStart && sNode) {
+          if (sNode) {
             sNode.x(sStart.x + dx);
             sNode.y(sStart.y + dy);
           }
@@ -644,25 +650,18 @@ export function Canvas({
         }
       }
     },
-    [
-      data.elements,
-      snapPosition,
-      stageRef,
-      selectedIds,
-      gridSettings,
-      snapToObjects,
-    ],
+    [data.elements, snapPosition, stageRef, gridSettings, snapToObjects],
   );
 
   const handleElementDragEnd = useCallback(
     (id: string, _x: number, _y: number) => {
       endDrag();
 
-      if (selectedIds.has(id) && selectedIds.size > 1) {
+      if (dragStartPositions.current.size > 1) {
         const stage = stageRef.current;
         if (!stage) return;
         const updates: Array<{ id: string; x: number; y: number }> = [];
-        for (const sid of selectedIds) {
+        for (const sid of dragStartPositions.current.keys()) {
           const node = stage.findOne(`.${sid}`);
           if (node) {
             updates.push({ id: sid, x: node.x(), y: node.y() });
@@ -681,7 +680,7 @@ export function Canvas({
         }
       }
     },
-    [endDrag, selectedIds, stageRef, onMultiMove, onElementMove],
+    [endDrag, stageRef, onMultiMove, onElementMove],
   );
 
   // --- Cursor ---
@@ -836,11 +835,13 @@ export function Canvas({
           {groupSelectionGroupId &&
           groupMemberElements &&
           onGroupTransformEnd ? (
-            <GroupTransformer
-              groupId={groupSelectionGroupId}
-              memberElements={groupMemberElements}
-              onGroupTransformEnd={onGroupTransformEnd}
-            />
+            !isMultiDragging && (
+              <GroupTransformer
+                groupId={groupSelectionGroupId}
+                memberElements={groupMemberElements}
+                onGroupTransformEnd={onGroupTransformEnd}
+              />
+            )
           ) : (
             <>
               <SelectionTransformer

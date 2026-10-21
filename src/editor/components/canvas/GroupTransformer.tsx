@@ -107,6 +107,8 @@ export function GroupTransformer({
         height={bounds.height}
         fill="rgba(0,0,0,0)"
         stroke="transparent"
+        // Presses fall through to the members, which drag the group.
+        listening={false}
         onTransformStart={handleTransformStart}
         onTransformEnd={handleTransformEnd}
       />
