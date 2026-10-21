@@ -41,7 +41,6 @@ export function RectShape({
         fill={color}
         stroke={strokeColor}
         strokeWidth={strokeWidth}
-        opacity={0.9}
       />
       {label && (
         <Group opacity={lp.labelVisible ? 1 : 0.35} listening={false}>

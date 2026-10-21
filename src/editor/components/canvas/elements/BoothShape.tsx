@@ -70,7 +70,7 @@ export function BoothShape({
           stroke={shapeStroke}
           strokeWidth={strokeWidth}
           dash={shapeDash}
-          opacity={isLinked ? 0.9 : 0.5}
+          opacity={isLinked ? 1 : 0.5}
         />
       )}
       {geo.shape === "polygon" && (
@@ -81,7 +81,7 @@ export function BoothShape({
           stroke={shapeStroke}
           strokeWidth={strokeWidth}
           dash={shapeDash}
-          opacity={isLinked ? 0.9 : 0.5}
+          opacity={isLinked ? 1 : 0.5}
         />
       )}
       {geo.shape === "ellipse" && (
@@ -94,7 +94,7 @@ export function BoothShape({
           stroke={shapeStroke}
           strokeWidth={strokeWidth}
           dash={shapeDash}
-          opacity={isLinked ? 0.9 : 0.5}
+          opacity={isLinked ? 1 : 0.5}
         />
       )}
       {geo.shape === "circle" && (
@@ -106,7 +106,7 @@ export function BoothShape({
           stroke={shapeStroke}
           strokeWidth={strokeWidth}
           dash={shapeDash}
-          opacity={isLinked ? 0.9 : 0.5}
+          opacity={isLinked ? 1 : 0.5}
         />
       )}
       <Text text="🏪" x={3} y={2} fontSize={10} listening={false} />

@@ -117,7 +117,6 @@ export function ViewerElement({
               stroke={strokeColor}
               strokeWidth={strokeWidth}
               cornerRadius={2}
-              opacity={0.9}
             />
             {label && element.properties.labelVisible !== false && (
               <Text
@@ -151,7 +150,6 @@ export function ViewerElement({
             fill={color}
             stroke={strokeColor}
             strokeWidth={strokeWidth}
-            opacity={0.9}
           />
           {label && element.properties.labelVisible !== false && (
             <Text
