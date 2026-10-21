@@ -1,6 +1,8 @@
 import { useMemo } from "react";
 import type { FloorPlanData } from "@/types";
 import type { PlacementCategory } from "@/editor/placement/types";
+import { useLocale } from "@/editor/i18n";
+import { naturalCompare } from "@/utils/naturalSort";
 
 // ---------------------------------------------------------------------------
 // Public types
@@ -35,6 +37,7 @@ export function usePlacementRecords(
   data: FloorPlanData,
   categories: PlacementCategory[],
 ): PlacementRecords {
+  const compare = naturalCompare(useLocale());
   return useMemo(() => {
     const elements = data.elements;
 
@@ -47,10 +50,14 @@ export function usePlacementRecords(
           .map(v => String(v)),
       );
 
-      const records: PlacedRecord[] = category.records.map(record => ({
-        record,
-        isPlaced: placedIds.has(category.getRecordId(record)),
-      }));
+      const records: PlacedRecord[] = [...category.records]
+        .sort((a, b) =>
+          compare(category.getPrimaryLabel(a), category.getPrimaryLabel(b)),
+        )
+        .map(record => ({
+          record,
+          isPlaced: placedIds.has(category.getRecordId(record)),
+        }));
 
       const counts: RecordCounts = {
         placed: records.filter(r => r.isPlaced).length,
@@ -63,5 +70,5 @@ export function usePlacementRecords(
 
       return { category, records, counts, knownIds };
     });
-  }, [data.elements, categories]);
+  }, [data.elements, categories, compare]);
 }

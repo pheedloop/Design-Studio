@@ -5,7 +5,8 @@ import {
   displayName,
   type ViewerElementType,
 } from "@/viewer/utils/elementTypes";
-import { useT } from "@/viewer/i18n";
+import { useLocale, useT } from "@/viewer/i18n";
+import { naturalCompare } from "@/utils/naturalSort";
 
 export interface SearchResult {
   elementId: string; // element.id UUID — use as React key and for canvas highlight lookup
@@ -24,6 +25,7 @@ export function useSearch(
   const boothsOnly = options?.boothsOnly ?? false;
   const [query, setQuery] = useState("");
   const t = useT();
+  const compare = naturalCompare(useLocale());
 
   const exhibitorsByBooth = useMemo(() => {
     const map = new Map<string, Exhibitor>();
@@ -71,7 +73,7 @@ export function useSearch(
     const q = query.trim().toLowerCase();
     if (!q) return [];
 
-    return allEntries.filter(entry => {
+    const matches = allEntries.filter(entry => {
       // Match what the user can actually read, so an unnamed room stays findable
       // by its type name — in whatever language it is currently shown in.
       if (displayName(entry, t).toLowerCase().includes(q)) return true;
@@ -90,7 +92,10 @@ export function useSearch(
         String(entry.code).toLowerCase().includes(q)
       );
     });
-  }, [query, allEntries, boothsOnly, t]);
+    return matches.sort((a, b) =>
+      compare(displayName(a, t), displayName(b, t)),
+    );
+  }, [query, allEntries, boothsOnly, t, compare]);
 
   const matchedElementIds = useMemo(
     () => new Set(results.map(r => r.elementId)),
