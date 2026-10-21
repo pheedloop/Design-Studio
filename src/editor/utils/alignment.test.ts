@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { arrangeAsGrid } from "./alignment";
+import { naturalCompare } from "@/utils/naturalSort";
 import type { FloorPlanElement } from "@/types";
 
 const rect = (
@@ -8,17 +9,27 @@ const rect = (
   y: number,
   width: number,
   height: number,
+  name?: string,
+  groupId?: string,
 ) =>
   ({
     id,
     type: "booth",
     geometry: { shape: "rect", x, y, width, height },
-    properties: {},
+    properties: { name, groupId },
   }) as unknown as FloorPlanElement;
 
-function arrange(elements: FloorPlanElement[], cols: number, gap: number) {
+function arrange(
+  elements: FloorPlanElement[],
+  cols: number,
+  gap: number,
+  compareNames?: (a: string, b: string) => number,
+) {
   const moved = new Map(
-    arrangeAsGrid(elements, cols, gap, gap).map(u => [u.id, u.geometry]),
+    arrangeAsGrid(elements, cols, gap, gap, compareNames).map(u => [
+      u.id,
+      u.geometry,
+    ]),
   );
   return elements.map(el => {
     const g = { ...el.geometry, ...moved.get(el.id) } as {
@@ -54,6 +65,32 @@ describe("arrangeAsGrid", () => {
       [45, 0],
       [0, 45],
       [45, 45],
+    ]);
+  });
+
+  it("orders by name, numbers by value, unnamed last", () => {
+    const elements = [
+      rect("ten", 0, 0, 10, 10, "10"),
+      rect("blank", 20, 0, 10, 10),
+      rect("two", 40, 0, 10, 10, "2"),
+    ];
+    expect(arrange(elements, 3, 5, naturalCompare("en"))).toEqual([
+      [15, 0],
+      [30, 0],
+      [0, 0],
+    ]);
+  });
+
+  it("orders a group by its lowest member name", () => {
+    const elements = [
+      rect("five", 0, 0, 10, 10, "5"),
+      rect("thirty", 20, 0, 10, 10, "30", "g"),
+      rect("three", 30, 0, 10, 10, "3", "g"),
+    ];
+    expect(arrange(elements, 2, 5, naturalCompare("en"))).toEqual([
+      [25, 0],
+      [0, 0],
+      [10, 0],
     ]);
   });
 });

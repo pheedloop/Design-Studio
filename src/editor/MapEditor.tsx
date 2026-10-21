@@ -21,6 +21,7 @@ import type { PlacementRecordRef } from "@/editor/components/panels/placementDra
 import type { AutoArrangeRecord } from "./components/panels/PlacementPanel";
 import { getElementBounds } from "./utils/bounds";
 import { resolveCanvasTool } from "./utils/canvasTool";
+import { naturalCompare } from "@/utils/naturalSort";
 import {
   alignLeft,
   alignRight,
@@ -97,7 +98,7 @@ import {
 import { resolveFeatures } from "@/tiers";
 import type { Tier, FeatureKey, FeatureOverride } from "@/tiers";
 import { I18nProvider } from "@/i18n/I18nProvider";
-import { useT } from "./i18n";
+import { useLocale, useT } from "./i18n";
 import type { Translate } from "./i18n";
 
 // Safari caps total canvas area near 16.7M px, so an unbounded 2x export of a
@@ -176,6 +177,7 @@ function MapEditorInner({
   features,
 }: Omit<MapEditorProps, "translate" | "locale">) {
   const t = useT();
+  const locale = useLocale();
   const debug = debugProp || import.meta.env.DEV;
   const storageKey = persistKey ?? DEFAULT_PERSIST_KEY;
 
@@ -2007,12 +2009,13 @@ function MapEditorInner({
       {showArrangeGridDialog && (
         <ArrangeGridDialog
           elementCount={alignmentUnitCount}
-          onConfirm={(cols, gapX, gapY) => {
+          onConfirm={(cols, gapX, gapY, byName) => {
             const updates = arrangeAsGrid(
               elementsForAlignment,
               cols,
               gapX,
               gapY,
+              byName ? naturalCompare(locale) : undefined,
             );
             if (updates.length) batchUpdateGeometry(updates);
           }}

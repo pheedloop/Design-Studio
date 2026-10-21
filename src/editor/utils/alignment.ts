@@ -152,16 +152,28 @@ export function arrangeAsGrid(
   cols: number,
   gapX: number,
   gapY: number,
+  compareNames?: (a: string, b: string) => number,
 ): AlignmentUpdate[] {
   const units = buildUnits(elements);
   if (units.length < 2) return [];
 
-  // Sort top-to-bottom, left-to-right so the order feels natural
-  units.sort((a, b) => {
+  // Top-to-bottom, left-to-right, so the order feels natural
+  const byPosition = (a: AlignUnit, b: AlignUnit) => {
     const dy = a.bounds.top - b.bounds.top;
     if (Math.abs(dy) > 10) return dy;
     return a.bounds.left - b.bounds.left;
-  });
+  };
+  // Unnamed units go last, still in position order.
+  const byName =
+    compareNames &&
+    ((a: AlignUnit, b: AlignUnit) => {
+      const an = unitName(a, compareNames);
+      const bn = unitName(b, compareNames);
+      if (an && bn) return compareNames(an, bn) || byPosition(a, b);
+      if (an || bn) return an ? -1 : 1;
+      return byPosition(a, b);
+    });
+  units.sort(byName || byPosition);
 
   const clampedCols = Math.max(1, Math.min(cols, units.length));
   // Each column is as wide as its widest unit and each row as tall as its
@@ -194,6 +206,17 @@ export function arrangeAsGrid(
     );
   });
   return updates;
+}
+
+// A group sorts by its lowest member name.
+function unitName(
+  unit: AlignUnit,
+  compare: (a: string, b: string) => number,
+): string | undefined {
+  return unit.elements
+    .map(el => el.properties.name)
+    .filter((name): name is string => Boolean(name))
+    .sort(compare)[0];
 }
 
 function trackStarts(sizes: number[], origin: number, gap: number): number[] {
