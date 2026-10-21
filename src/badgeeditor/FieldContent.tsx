@@ -1,10 +1,18 @@
 import { Rect, Text, Group, Line, Image as KonvaImage } from "react-konva";
-import { GRAY_300, GRAY_400, GRAY_500, GRAY_900 } from "@/canvasColors";
+import { GRAY_300, GRAY_500, GRAY_900 } from "@/canvasColors";
 import type { BadgeField } from "./model";
-import { fieldValueText, type BadgeData } from "./badgeData";
+import { fieldValueText, ticketsForField, type BadgeData } from "./badgeData";
 import { fieldDisplayText } from "./factory";
 import { useImageLoader } from "./useImageLoader";
 import { useT } from "./i18n";
+import { useBadgeFontFamily } from "./useBadgeFontFamily";
+import { SessionScheduleContent } from "./SessionScheduleContent";
+import type { SessionRow } from "./sessionLayout";
+import { SESSION_FONT_MAX_PT, printFontPx, ptToPx } from "./textMetrics";
+
+// tickets.html: 20px between the QR and the name, in the 16px body font size.
+const TICKET_NAME_GAP_PX = 20;
+const TICKET_NAME_PX = 16;
 
 export function FieldContent({
   field,
@@ -22,27 +30,28 @@ export function FieldContent({
   imageUrl?: string;
 }) {
   const t = useT();
+  const fontFamily = useBadgeFontFamily();
   const getImage = useImageLoader(imageUrl ? [imageUrl] : []);
 
   const isTickets = field.kind === "tickets";
   const rows = field.numRows ?? 1;
+  const tickets = isTickets && data ? ticketsForField(field, data.tickets) : [];
   // Ticket QR urls (real per-ticket, or stand-in placeholders) — one hook call.
   const ticketUrls = isTickets
     ? data
-      ? data.tickets.slice(0, rows).map(t => t.qrUrl)
+      ? tickets.map(t => t.qrUrl)
       : Array.from({ length: rows }, () => undefined)
     : [];
   const getTicketImg = useImageLoader(ticketUrls);
 
   if (isTickets) {
     const rowH = h / rows;
-    // Each row mirrors a printed ticket: a QR (~80% of row height) + the ticket
-    // name, like badge_generator.py _render_tickets.
-    const pad = rowH * 0.12;
-    const qrSize = Math.max(0, rowH - pad * 2);
-    const nameX = pad + qrSize + rowH * 0.18;
-    const nameFont = Math.min(14, Math.max(7, rowH * 0.3));
-    const count = data ? Math.min(rows, data.tickets.length) : rows;
+    // Each row mirrors the generator's tickets.html: a QR at 80% of the row
+    // height, then the ticket name after 20px of padding, in the 16px body size.
+    const qrSize = rowH * 0.8;
+    const pad = (rowH - qrSize) / 2;
+    const nameX = qrSize + TICKET_NAME_GAP_PX;
+    const count = data ? tickets.length : rows;
     return (
       <>
         {/* Perforations are part of the (pre-perforated) media: always numRows-1,
@@ -60,15 +69,21 @@ export function FieldContent({
         {Array.from({ length: count }).map((_, i) => {
           const top = rowH * i;
           const name = data
-            ? data.tickets[i].name
+            ? tickets[i].name
             : t("badgeeditor.canvas.ticketName");
-          const img = getTicketImg(data ? data.tickets[i].qrUrl : undefined);
+          const img = getTicketImg(data ? tickets[i].qrUrl : undefined);
           return (
-            <Group key={i}>
+            <Group
+              key={i}
+              clipX={0}
+              clipY={top}
+              clipWidth={w}
+              clipHeight={rowH}
+            >
               {img ? (
                 <KonvaImage
                   image={img}
-                  x={pad}
+                  x={0}
                   y={top + pad}
                   width={qrSize}
                   height={qrSize}
@@ -76,7 +91,7 @@ export function FieldContent({
                 />
               ) : (
                 <Rect
-                  x={pad}
+                  x={0}
                   y={top + pad}
                   width={qrSize}
                   height={qrSize}
@@ -88,11 +103,13 @@ export function FieldContent({
                 text={name}
                 x={nameX}
                 y={top}
-                width={Math.max(0, w - nameX - pad)}
+                width={Math.max(0, w - nameX)}
                 height={rowH}
                 verticalAlign="middle"
-                fontSize={nameFont}
+                fontFamily={fontFamily}
+                fontSize={TICKET_NAME_PX}
                 fontStyle="bold"
+                lineHeight={1}
                 fill={GRAY_900}
               />
             </Group>
@@ -102,39 +119,22 @@ export function FieldContent({
     );
   }
 
-  // session_schedule with real data → one line per session (date · time · speaker)
-  if (field.kind === "sessionSchedule" && data) {
-    const lineFont = Math.min(fontSize, 11);
-    const lineH = lineFont * 1.45;
-    if (data.sessions.length === 0) {
-      return (
-        <Text
-          text={t("badgeeditor.canvas.noSessions")}
-          width={w}
-          height={h}
-          align="center"
-          verticalAlign="middle"
-          fontSize={lineFont}
-          fill={GRAY_400}
-        />
-      );
-    }
+  if (field.kind === "sessionSchedule") {
+    const rows: SessionRow[] = !data
+      ? [{ placeholder: fieldDisplayText(field, t) }]
+      : data.sessions.length === 0
+        ? [{ placeholder: t("badgeeditor.canvas.noSessions") }]
+        : data.sessions.map(s => [s.date, s.time, s.speaker]);
     return (
-      <>
-        {data.sessions.map((s, i) => (
-          <Text
-            key={i}
-            x={2}
-            y={i * lineH}
-            width={w - 4}
-            text={`${s.date}  ${s.time}  ${s.speaker}`.trim()}
-            fontSize={lineFont}
-            fill={GRAY_900}
-            wrap="none"
-            ellipsis
-          />
-        ))}
-      </>
+      <SessionScheduleContent
+        w={w}
+        fontPx={ptToPx(
+          Math.min(field.fontSize ?? SESSION_FONT_MAX_PT, SESSION_FONT_MAX_PT),
+        )}
+        fontFamily={fontFamily}
+        rows={rows}
+        mutedPlaceholder={data !== null}
+      />
     );
   }
 
@@ -158,16 +158,21 @@ export function FieldContent({
 
   const text = data ? fieldValueText(field, data) : fieldDisplayText(field, t);
   return (
-    <Text
-      text={text}
-      width={w}
-      height={h}
-      align={
-        field.textAlign === "justify" ? "left" : (field.textAlign ?? "center")
-      }
-      verticalAlign="middle"
-      fontSize={fontSize}
-      fill={GRAY_900}
-    />
+    <Group clipX={0} clipY={0} clipWidth={w} clipHeight={h}>
+      <Text
+        text={text}
+        width={w}
+        height={h}
+        align={
+          field.textAlign === "justify" ? "left" : (field.textAlign ?? "center")
+        }
+        verticalAlign="top"
+        fontFamily={fontFamily}
+        fontStyle="bold"
+        lineHeight={1}
+        fontSize={printFontPx({ ...field, fontSize }, text)}
+        fill={GRAY_900}
+      />
+    </Group>
   );
 }

@@ -2,6 +2,7 @@ import {
   useCallback,
   useEffect,
   useLayoutEffect,
+  useId,
   useMemo,
   useRef,
   useState,
@@ -37,6 +38,9 @@ import {
 import { UNIT_LABEL_KEYS, formatDim, type Unit } from "./units";
 import { BadgeSidebar } from "./BadgeSidebar";
 import { BadgePreview } from "./BadgePreview";
+import { BadgeServerPreview } from "./BadgeServerPreview";
+import { PreviewActions } from "./PreviewActions";
+import { previewAvailability, previewNotices } from "./previewState";
 import { BadgeSetupDialog } from "./BadgeSetupDialog";
 import { clampFieldsToPanel, isFieldOutsidePanel } from "./canvasMetrics";
 import { applyBadgeSetup, type BadgeSetup } from "./badgeSetup";
@@ -206,6 +210,19 @@ function BadgeEditorInner({
     null,
   );
   const [previewData, setPreviewData] = useState<BadgeData | null>(null);
+  const [loadFailed, setLoadFailed] = useState(false);
+  const resolveSeq = useRef(0);
+  const renderServerPreview = useMemo(
+    () => attendeeProvider?.renderPreview?.bind(attendeeProvider),
+    [attendeeProvider],
+  );
+  const serverPreview = renderServerPreview !== undefined;
+  const downloadBadge = useMemo(
+    () => attendeeProvider?.downloadBadge?.bind(attendeeProvider),
+    [attendeeProvider],
+  );
+  const [actionFailed, setActionFailed] = useState(false);
+  const previewReasonId = useId();
   const clipboard = useRef<BadgeField[]>([]);
   // Mirrors `clipboard.current.length > 0` as real state — the ref itself is
   // only readable in event handlers/effects, never during render (the "Paste"
@@ -216,17 +233,27 @@ function BadgeEditorInner({
   // Resolve the selected attendee's badge data (or clear it).
   const selectAttendee = useCallback(
     (option: AttendeeOption | null) => {
+      const seq = ++resolveSeq.current;
       setPreviewAttendee(option);
+      setLoadFailed(false);
+      setActionFailed(false);
       if (!option || !attendeeProvider) {
         setPreviewData(null);
+        if (serverPreview) setPreviewMode(false);
         return;
       }
-      attendeeProvider
-        .resolve(option.id)
-        .then(d => setPreviewData(d))
-        .catch(() => setPreviewData(null));
+      attendeeProvider.resolve(option.id).then(
+        d => {
+          if (seq === resolveSeq.current) setPreviewData(d);
+        },
+        () => {
+          if (seq !== resolveSeq.current) return;
+          setPreviewData(null);
+          setLoadFailed(true);
+        },
+      );
     },
-    [attendeeProvider],
+    [attendeeProvider, serverPreview],
   );
 
   const containerRef = useRef<HTMLDivElement>(null);
@@ -463,11 +490,21 @@ function BadgeEditorInner({
       }),
     [onSave, name, printOvershootAllowanceIn],
   );
-  const { isSaving, save: handleSave } = useBadgeSave({
+  const {
+    isDirty,
+    isSaving,
+    save: handleSave,
+    savedDoc,
+  } = useBadgeSave({
     doc,
     persist,
     onDirtyChange,
   });
+  const previewBlockedReason = previewAvailability(
+    { serverPreview, attendee: previewAttendee },
+    t,
+  );
+  const previewNotice = previewNotices({ serverPreview, isDirty }, t);
 
   // Keyboard: delete, undo/redo, copy/paste (ignored while typing in a form).
   useEffect(() => {
@@ -641,12 +678,25 @@ function BadgeEditorInner({
               variant={previewMode ? "solid" : "outline"}
               color="neutral"
               size="sm"
-              onClick={() => setPreviewMode(p => !p)}
+              aria-disabled={previewBlockedReason !== null || undefined}
+              aria-describedby={
+                previewBlockedReason !== null ? previewReasonId : undefined
+              }
+              title={previewBlockedReason ?? undefined}
+              className="aria-disabled:opacity-50 aria-disabled:cursor-not-allowed"
+              onClick={() => {
+                if (previewBlockedReason === null) setPreviewMode(p => !p);
+              }}
             >
               {previewMode
                 ? t("badgeeditor.preview.exit")
                 : t("badgeeditor.preview.enter")}
             </Button>
+            {previewBlockedReason !== null && (
+              <span id={previewReasonId} className="sr-only">
+                {previewBlockedReason}
+              </span>
+            )}
           </>
         }
         debug={debug}
@@ -688,10 +738,25 @@ function BadgeEditorInner({
                 )}
                 {previewMode && (
                   <span className="text-xs text-text-caption">
-                    {t("badgeeditor.preview.banner")}
+                    {serverPreview && previewAttendee
+                      ? t("badgeeditor.preview.generated", {
+                          name: previewAttendee.name,
+                        })
+                      : t("badgeeditor.preview.banner")}
                   </span>
                 )}
                 <div className="flex-1" />
+                {previewMode &&
+                  serverPreview &&
+                  downloadBadge &&
+                  previewAttendee && (
+                    <PreviewActions
+                      key={previewAttendee.id}
+                      attendee={previewAttendee}
+                      download={downloadBadge}
+                      onFailedChange={setActionFailed}
+                    />
+                  )}
                 {showAlign && (
                   <Row gap="hair" align="center">
                     <AlignmentControls
@@ -722,6 +787,30 @@ function BadgeEditorInner({
           <div className="flex flex-1 overflow-hidden">
             <div className="flex flex-col flex-1 min-w-0 min-h-0">
               {/* Invert ribbon — contextual to the active folded-back panel. */}
+              {!previewMode && loadFailed && (
+                <div
+                  role="alert"
+                  className="shrink-0 bg-red-50 border-b border-red-200 px-xs py-tight text-xs text-red-700"
+                >
+                  {t("badgeeditor.attendee.loadFailed")}
+                </div>
+              )}
+              {previewMode && actionFailed && (
+                <div
+                  role="alert"
+                  className="shrink-0 bg-red-50 border-b border-red-200 px-xs py-tight text-xs text-red-700"
+                >
+                  {t("badgeeditor.preview.actionFailed")}
+                </div>
+              )}
+              {previewMode && previewNotice && (
+                <div
+                  role="status"
+                  className="shrink-0 bg-amber-50 border-b border-amber-200 px-xs py-tight text-xs text-amber-700"
+                >
+                  {previewNotice}
+                </div>
+              )}
               {!previewMode && outsideCount > 0 && (
                 <div
                   role="alert"
@@ -745,13 +834,21 @@ function BadgeEditorInner({
 
               {previewMode ? (
                 <div className="flex-1 min-h-0 overflow-hidden">
-                  <BadgePreview
-                    doc={doc}
-                    data={previewData}
-                    showRulers={showRulers}
-                    unit={unit}
-                    printOvershootAllowanceIn={printOvershootAllowanceIn}
-                  />
+                  {renderServerPreview && previewAttendee ? (
+                    <BadgeServerPreview
+                      attendee={previewAttendee}
+                      render={renderServerPreview}
+                      refreshKey={savedDoc}
+                    />
+                  ) : (
+                    <BadgePreview
+                      doc={doc}
+                      data={previewData}
+                      showRulers={showRulers}
+                      unit={unit}
+                      printOvershootAllowanceIn={printOvershootAllowanceIn}
+                    />
+                  )}
                 </div>
               ) : (
                 <div

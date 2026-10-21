@@ -2,7 +2,12 @@
 // replaced with calls to the attendee lookup + badge-context API.
 
 import qrCodeUrl from "./qr-code.png";
-import type { AttendeeOption, AttendeeProvider, BadgeData } from "./badgeData";
+import type {
+  AttendeeOption,
+  AttendeeProvider,
+  AttendeeSearchPage,
+  BadgeData,
+} from "./badgeData";
 
 interface SampleAttendee extends AttendeeOption {
   data: BadgeData;
@@ -35,9 +40,9 @@ const SAMPLE: SampleAttendee[] = [
       qrCode: qrCodeUrl,
       externalQRCodeUrl: qrCodeUrl,
       tickets: [
-        { name: "Full Conference", qrUrl: qrCodeUrl },
+        { code: "FULLCONF", name: "Full Conference", qrUrl: qrCodeUrl },
         { name: "Workshop: Kubernetes", qrUrl: qrCodeUrl },
-        { name: "Gala Dinner", qrUrl: qrCodeUrl },
+        { code: "GALA", name: "Gala Dinner", qrUrl: qrCodeUrl },
       ],
       sessions: [
         { date: "May 12", time: "9:00 AM – 10:00 AM", speaker: "A. Okafor" },
@@ -71,7 +76,9 @@ const SAMPLE: SampleAttendee[] = [
       custom: { shirt_size: "M" },
       qrCode: qrCodeUrl,
       externalQRCodeUrl: qrCodeUrl,
-      tickets: [{ name: "Full Conference", qrUrl: qrCodeUrl }],
+      tickets: [
+        { code: "FULLCONF", name: "Full Conference", qrUrl: qrCodeUrl },
+      ],
       sessions: [
         { date: "May 12", time: "10:30 AM – 11:30 AM", speaker: "M. Chen" },
       ],
@@ -135,7 +142,7 @@ const SAMPLE: SampleAttendee[] = [
       qrCode: qrCodeUrl,
       externalQRCodeUrl: qrCodeUrl,
       tickets: [
-        { name: "Full Conference", qrUrl: qrCodeUrl },
+        { code: "FULLCONF", name: "Full Conference", qrUrl: qrCodeUrl },
         { name: "Speaker Dinner", qrUrl: qrCodeUrl },
       ],
       sessions: [
@@ -169,7 +176,9 @@ const SAMPLE: SampleAttendee[] = [
       custom: { shirt_size: "XL" },
       qrCode: qrCodeUrl,
       externalQRCodeUrl: qrCodeUrl,
-      tickets: [{ name: "Full Conference", qrUrl: qrCodeUrl }],
+      tickets: [
+        { code: "FULLCONF", name: "Full Conference", qrUrl: qrCodeUrl },
+      ],
       sessions: [
         { date: "May 12", time: "11:00 AM – 12:00 PM", speaker: "L. Müller" },
       ],
@@ -201,9 +210,9 @@ const SAMPLE: SampleAttendee[] = [
       qrCode: qrCodeUrl,
       externalQRCodeUrl: qrCodeUrl,
       tickets: [
-        { name: "Full Conference", qrUrl: qrCodeUrl },
+        { code: "FULLCONF", name: "Full Conference", qrUrl: qrCodeUrl },
         { name: "Investor Lounge", qrUrl: qrCodeUrl },
-        { name: "Gala Dinner", qrUrl: qrCodeUrl },
+        { code: "GALA", name: "Gala Dinner", qrUrl: qrCodeUrl },
       ],
       sessions: [],
     },
@@ -297,7 +306,7 @@ const SAMPLE: SampleAttendee[] = [
       qrCode: qrCodeUrl,
       externalQRCodeUrl: qrCodeUrl,
       tickets: [
-        { name: "Full Conference", qrUrl: qrCodeUrl },
+        { code: "FULLCONF", name: "Full Conference", qrUrl: qrCodeUrl },
         { name: "Workshop: ROS2", qrUrl: qrCodeUrl },
       ],
       sessions: [
@@ -330,7 +339,9 @@ const SAMPLE: SampleAttendee[] = [
       custom: { shirt_size: "M" },
       qrCode: qrCodeUrl,
       externalQRCodeUrl: qrCodeUrl,
-      tickets: [{ name: "Full Conference", qrUrl: qrCodeUrl }],
+      tickets: [
+        { code: "FULLCONF", name: "Full Conference", qrUrl: qrCodeUrl },
+      ],
       sessions: [],
     },
   },
@@ -371,17 +382,25 @@ const SAMPLE: SampleAttendee[] = [
   },
 ];
 
+// Small enough that a page doesn't fill the picker's list, so the demo scrolls.
+const SAMPLE_PAGE_SIZE = 4;
+
 /** Local provider over SAMPLE with a small simulated latency. */
 export const sampleAttendeeProvider: AttendeeProvider = {
-  async search(query: string): Promise<AttendeeOption[]> {
+  async search(query: string, page: number): Promise<AttendeeSearchPage> {
     const q = query.trim().toLowerCase();
     await new Promise(r => setTimeout(r, 150));
-    return SAMPLE.filter(
+    const matches = SAMPLE.filter(
       a =>
         !q ||
         a.name.toLowerCase().includes(q) ||
         (a.subtitle ?? "").toLowerCase().includes(q),
     ).map(({ id, name, subtitle }) => ({ id, name, subtitle }));
+    const start = (page - 1) * SAMPLE_PAGE_SIZE;
+    return {
+      options: matches.slice(start, start + SAMPLE_PAGE_SIZE),
+      hasMore: start + SAMPLE_PAGE_SIZE < matches.length,
+    };
   },
   async resolve(id: string): Promise<BadgeData> {
     await new Promise(r => setTimeout(r, 100));

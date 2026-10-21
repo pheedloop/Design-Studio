@@ -21,6 +21,15 @@ export interface BadgeTicketData {
   name: string;
   /** Image URL / dataURI for this ticket's QR (optional). */
   qrUrl?: string;
+  /** Ticket code, matched against a tickets field's ticketCodes. */
+  code?: string;
+}
+
+/** A server-rendered badge image and its physical size. */
+export interface BadgePreviewImage {
+  src: string;
+  widthIn: number;
+  heightIn: number;
 }
 
 export interface BadgeSessionData {
@@ -43,11 +52,44 @@ export interface BadgeData {
   sessions: BadgeSessionData[];
 }
 
+/** One page of attendee search results. */
+export interface AttendeeSearchPage {
+  options: AttendeeOption[];
+  hasMore: boolean;
+}
+
+export type BadgeDownloadFormat = "pdf" | "png";
+
+/** The host must pass a referentially stable provider (memoize it); the picker's search effect depends on its identity. */
 export interface AttendeeProvider {
-  /** Searches attendees for the picker (debounced by the picker). */
-  search(query: string): Promise<AttendeeOption[]>;
+  /** Searches attendees for the picker (debounced by the picker). `page` is 1-based; the picker asks for the next page as the list scrolls. */
+  search(query: string, page: number): Promise<AttendeeSearchPage>;
   /** Resolves a selected attendee id into renderable BadgeData. */
   resolve(id: string): Promise<BadgeData>;
+  /** Renders the last saved template for this attendee as the host prints it. */
+  renderPreview?(id: string): Promise<BadgePreviewImage>;
+  /** The last saved template for this attendee as a file, for download and print. */
+  downloadBadge?(id: string, format: BadgeDownloadFormat): Promise<Blob>;
+}
+
+/**
+ * The tickets a tickets field prints: filtered and ordered by its ticketCodes
+ * (when set), then capped at numRows — pikachu's select_badge_tickets.
+ */
+export function ticketsForField(
+  field: BadgeField,
+  tickets: BadgeTicketData[],
+): BadgeTicketData[] {
+  const position = new Map<string, number>();
+  for (const code of field.ticketCodes ?? []) {
+    if (!position.has(code)) position.set(code, position.size);
+  }
+  const selected = position.size
+    ? tickets
+        .filter(t => t.code !== undefined && position.has(t.code))
+        .sort((a, b) => position.get(a.code!)! - position.get(b.code!)!)
+    : tickets;
+  return selected.slice(0, field.numRows ?? 1);
 }
 
 // --- custom_text token substitution -----------------------------------------

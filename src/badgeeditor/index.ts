@@ -32,7 +32,10 @@ export type {
   BadgeData,
   AttendeeOption,
   AttendeeProvider,
+  AttendeeSearchPage,
+  BadgeDownloadFormat,
   BadgeTicketData,
+  BadgePreviewImage,
   BadgeSessionData,
 } from "./badgeData";
 
