@@ -164,22 +164,46 @@ export function arrangeAsGrid(
   });
 
   const clampedCols = Math.max(1, Math.min(cols, units.length));
-  const maxW = Math.max(...units.map(u => u.bounds.right - u.bounds.left));
-  const maxH = Math.max(...units.map(u => u.bounds.bottom - u.bounds.top));
+  // Each column is as wide as its widest unit and each row as tall as its
+  // tallest, so mixed sizes stay on a grid without inflating every gap.
+  const colWidths: number[] = [];
+  const rowHeights: number[] = [];
+  units.forEach((u, i) => {
+    const col = i % clampedCols;
+    const row = Math.floor(i / clampedCols);
+    colWidths[col] = Math.max(
+      colWidths[col] ?? 0,
+      u.bounds.right - u.bounds.left,
+    );
+    rowHeights[row] = Math.max(
+      rowHeights[row] ?? 0,
+      u.bounds.bottom - u.bounds.top,
+    );
+  });
   const originX = Math.min(...units.map(u => u.bounds.left));
   const originY = Math.min(...units.map(u => u.bounds.top));
+  const colX = trackStarts(colWidths, originX, gapX);
+  const rowY = trackStarts(rowHeights, originY, gapY);
 
   const updates: AlignmentUpdate[] = [];
   units.forEach((unit, i) => {
-    const col = i % clampedCols;
-    const row = Math.floor(i / clampedCols);
-    const tx = originX + col * (maxW + gapX);
-    const ty = originY + row * (maxH + gapY);
+    const tx = colX[i % clampedCols];
+    const ty = rowY[Math.floor(i / clampedCols)];
     updates.push(
       ...applyDelta(unit, tx - unit.bounds.left, ty - unit.bounds.top),
     );
   });
   return updates;
+}
+
+function trackStarts(sizes: number[], origin: number, gap: number): number[] {
+  const starts: number[] = [];
+  let cursor = origin;
+  for (const size of sizes) {
+    starts.push(cursor);
+    cursor += size + gap;
+  }
+  return starts;
 }
 
 export function distributeV(elements: FloorPlanElement[]): AlignmentUpdate[] {
