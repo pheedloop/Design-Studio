@@ -152,6 +152,40 @@ export function getElementBounds(element: FloorPlanElement): ElementBounds {
 }
 
 /** Check if a line segment intersects an axis-aligned rectangle. */
+// The box that hugs an element as drawn: rect and ellipse keep their rotation,
+// every other geometry falls back to its axis-aligned bounds.
+export function getElementOutline(element: FloorPlanElement): {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  rotation: number;
+} {
+  const geo = element.geometry;
+  if (geo.shape === "rect") {
+    const { x, y, width, height } = geo;
+    return { x, y, width, height, rotation: geo.rotation ?? 0 };
+  }
+  if (geo.shape === "ellipse") {
+    const { x, y, radiusX, radiusY } = geo;
+    return {
+      x,
+      y,
+      width: radiusX * 2,
+      height: radiusY * 2,
+      rotation: geo.rotation ?? 0,
+    };
+  }
+  const b = getElementBounds(element);
+  return {
+    x: b.left,
+    y: b.top,
+    width: b.right - b.left,
+    height: b.bottom - b.top,
+    rotation: 0,
+  };
+}
+
 export function lineIntersectsRect(
   x1: number,
   y1: number,

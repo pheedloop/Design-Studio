@@ -1,6 +1,7 @@
+import { Fragment } from "react";
 import { Rect } from "react-konva";
 import type { FloorPlanElement } from "@/types";
-import { getElementBounds } from "@/editor/utils/bounds";
+import { getElementBounds, getElementOutline } from "@/editor/utils/bounds";
 import { BRAND } from "@/canvasColors";
 
 interface MultiSelectBoundsProps {
@@ -33,15 +34,33 @@ export function MultiSelectBounds({
   const padding = 4;
 
   return (
-    <Rect
-      x={minX - padding}
-      y={minY - padding}
-      width={maxX - minX + padding * 2}
-      height={maxY - minY + padding * 2}
-      stroke={BRAND}
-      strokeWidth={1}
-      dash={[6, 3]}
-      listening={false}
-    />
+    <>
+      <Rect
+        x={minX - padding}
+        y={minY - padding}
+        width={maxX - minX + padding * 2}
+        height={maxY - minY + padding * 2}
+        stroke={BRAND}
+        strokeWidth={1}
+        dash={[6, 3]}
+        listening={false}
+      />
+      {/* The box alone doesn't show which elements inside it are selected. */}
+      {selected.map(el => {
+        const outline = getElementOutline(el);
+        return (
+          <Fragment key={el.id}>
+            <Rect {...outline} fill={BRAND} opacity={0.15} listening={false} />
+            <Rect
+              {...outline}
+              stroke={BRAND}
+              strokeWidth={2}
+              strokeScaleEnabled={false}
+              listening={false}
+            />
+          </Fragment>
+        );
+      })}
+    </>
   );
 }
