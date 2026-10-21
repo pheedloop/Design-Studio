@@ -1,26 +1,42 @@
 import { useState } from "react";
 import { Button } from "@/components/Button";
-import { Dialog, NumberInput, SectionLabel } from "@/editor/components/ui";
+import {
+  Dialog,
+  NumberInput,
+  SectionLabel,
+  Select,
+} from "@/editor/components/ui";
 import { useT } from "@/editor/i18n";
 import { Row } from "@/components/Row";
 import { Stack } from "@/components/Stack";
 
+export interface ArrangeGridSettings {
+  cols: number;
+  gapX: number;
+  gapY: number;
+  byName: boolean;
+}
+
 interface ArrangeGridDialogProps {
   elementCount: number;
-  onConfirm: (cols: number, gapX: number, gapY: number) => void;
+  initial: ArrangeGridSettings | null;
+  onConfirm: (settings: ArrangeGridSettings) => void;
   onClose: () => void;
 }
 
 export function ArrangeGridDialog({
   elementCount,
+  initial,
   onConfirm,
   onClose,
 }: ArrangeGridDialogProps) {
   const t = useT();
-  const defaultCols = Math.ceil(Math.sqrt(elementCount));
-  const [cols, setCols] = useState(defaultCols);
-  const [gapX, setGapX] = useState(10);
-  const [gapY, setGapY] = useState(10);
+  const [cols, setCols] = useState(
+    Math.min(initial?.cols ?? Math.ceil(Math.sqrt(elementCount)), elementCount),
+  );
+  const [gapX, setGapX] = useState(initial?.gapX ?? 10);
+  const [gapY, setGapY] = useState(initial?.gapY ?? 10);
+  const [byName, setByName] = useState(initial?.byName ?? false);
 
   const rows = Math.ceil(elementCount / Math.max(1, cols));
 
@@ -37,7 +53,7 @@ export function ArrangeGridDialog({
             variant="solid"
             color="primary"
             onClick={() => {
-              onConfirm(cols, gapX, gapY);
+              onConfirm({ cols, gapX, gapY, byName });
               onClose();
             }}
           >
@@ -83,6 +99,18 @@ export function ArrangeGridDialog({
             <NumberInput value={gapY} onChange={v => setGapY(Math.max(0, v))} />
           </Stack>
         </Row>
+
+        <Stack gap="tight">
+          <SectionLabel>{t("editor.field.order")}</SectionLabel>
+          <Select
+            aria-label={t("editor.field.order")}
+            value={byName ? "name" : "position"}
+            onChange={e => setByName(e.target.value === "name")}
+          >
+            <option value="position">{t("editor.gridOrder.position")}</option>
+            <option value="name">{t("editor.gridOrder.name")}</option>
+          </Select>
+        </Stack>
       </Stack>
     </Dialog>
   );

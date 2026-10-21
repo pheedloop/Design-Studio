@@ -230,7 +230,7 @@ function SeatPlanViewerInner(
   return (
     <div
       className={`pl-map-editor flex h-full min-h-0 bg-surface-neutral relative ${
-        mode === "attendee" ? "flex-col" : ""
+        mode === "attendee" ? "flex-col pl-attendee-type" : ""
       }`}
     >
       <TicketPanel

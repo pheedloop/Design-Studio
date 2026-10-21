@@ -20,7 +20,8 @@ import { Button } from "@/components/Button";
 import type { PlacementRecordRef } from "@/editor/components/panels/placementDrag";
 import type { AutoArrangeRecord } from "./components/panels/PlacementPanel";
 import { getElementBounds } from "./utils/bounds";
-import { findOverlappingElementIds } from "./utils/overlappingElements";
+import { resolveCanvasTool } from "./utils/canvasTool";
+import { naturalCompare } from "@/utils/naturalSort";
 import {
   alignLeft,
   alignRight,
@@ -75,7 +76,10 @@ import { CanvasResizeDialog } from "./components/panels/CanvasResizeDialog";
 import { CalibrationDialog } from "./components/panels/CalibrationDialog";
 import { TypeDefaultsDialog } from "./components/panels/TypeDefaultsDialog";
 import { LegendDialog } from "./components/panels/LegendDialog";
-import { ArrangeGridDialog } from "./components/panels/ArrangeGridDialog";
+import {
+  ArrangeGridDialog,
+  type ArrangeGridSettings,
+} from "./components/panels/ArrangeGridDialog";
 import { LegendCanvasOverlay } from "./components/canvas/LegendCanvasOverlay";
 import { LayerPanel } from "./components/panels/LayerPanel";
 import { Rulers } from "./components/Rulers";
@@ -97,7 +101,7 @@ import {
 import { resolveFeatures } from "@/tiers";
 import type { Tier, FeatureKey, FeatureOverride } from "@/tiers";
 import { I18nProvider } from "@/i18n/I18nProvider";
-import { useT } from "./i18n";
+import { useLocale, useT } from "./i18n";
 import type { Translate } from "./i18n";
 
 // Safari caps total canvas area near 16.7M px, so an unbounded 2x export of a
@@ -176,6 +180,7 @@ function MapEditorInner({
   features,
 }: Omit<MapEditorProps, "translate" | "locale">) {
   const t = useT();
+  const locale = useLocale();
   const debug = debugProp || import.meta.env.DEV;
   const storageKey = persistKey ?? DEFAULT_PERSIST_KEY;
 
@@ -326,12 +331,6 @@ function MapEditorInner({
   });
   const [snapToObjects, setSnapToObjects] = useState(true);
   const [showTransformControls, setShowTransformControls] = useState(true);
-  // Derived from the elements, so it is computed rather than stored — an effect
-  // here would render once with a stale set before correcting itself.
-  const overlappingElementIds = useMemo(
-    () => findOverlappingElementIds(data.elements),
-    [data.elements],
-  );
   const [walkableGridOpacity, setWalkableGridOpacity] = useState(0.3);
   const [showRulers, setShowRulers] = useState(false);
   const [showGridDialog, setShowGridDialog] = useState(false);
@@ -341,6 +340,8 @@ function MapEditorInner({
   const [showTypeDefaultsDialog, setShowTypeDefaultsDialog] = useState(false);
   const [showLegendDialog, setShowLegendDialog] = useState(false);
   const [showArrangeGridDialog, setShowArrangeGridDialog] = useState(false);
+  const [lastGridArrangement, setLastGridArrangement] =
+    useState<ArrangeGridSettings | null>(null);
   const [contextMenu, setContextMenu] = useState<{
     elementId: string;
     x: number;
@@ -357,7 +358,6 @@ function MapEditorInner({
   const {
     stageRef,
     scale,
-    setScale,
     position,
     setPosition,
     stageSize,
@@ -477,44 +477,6 @@ function MapEditorInner({
       data.elements.filter(el => el.properties.groupId === groupId),
     [data.elements],
   );
-
-  const handleLocateOverlapping = useCallback(() => {
-    if (overlappingElementIds.size === 0) return;
-    const els = data.elements.filter(el => overlappingElementIds.has(el.id));
-    selectMany(els.map(el => el.id));
-
-    // Compute bounding box of all overlapping elements
-    let left = Infinity,
-      right = -Infinity,
-      top = Infinity,
-      bottom = -Infinity;
-    for (const el of els) {
-      const b = getElementBounds(el);
-      if (b.left < left) left = b.left;
-      if (b.right > right) right = b.right;
-      if (b.top < top) top = b.top;
-      if (b.bottom > bottom) bottom = b.bottom;
-    }
-
-    const padding = 80;
-    const newScale = Math.min(
-      (stageSize.width - padding * 2) / (right - left),
-      (stageSize.height - padding * 2) / (bottom - top),
-      5,
-    );
-    setScale(newScale);
-    setPosition({
-      x: stageSize.width / 2 - ((left + right) / 2) * newScale,
-      y: stageSize.height / 2 - ((top + bottom) / 2) * newScale,
-    });
-  }, [
-    overlappingElementIds,
-    data.elements,
-    selectMany,
-    stageSize,
-    setScale,
-    setPosition,
-  ]);
 
   // Clipboard
   const { copy, paste, hasBuffer } = useClipboard();
@@ -748,14 +710,13 @@ function MapEditorInner({
   );
 
   // --- Tool registry integration ---
-  // Resolve active tool string to ToolDefinition (null = select mode). The
-  // background layer holds only the background image/color, so drawing tools
-  // don't apply there — force select mode so shapes can't be drawn into a layer
-  // that never renders them.
-  const resolvedTool =
-    activeTool === "select" || activeLayerId === "background"
-      ? null
-      : (TOOL_MAP.get(activeTool) ?? null);
+  // Resolve active tool string to ToolDefinition (null = select mode).
+  const { drawToolId, isPanTool } = resolveCanvasTool(
+    activeTool,
+    activeLayerId,
+    editorMode,
+  );
+  const resolvedTool = drawToolId ? (TOOL_MAP.get(drawToolId) ?? null) : null;
 
   // Unified tool completion handler (used once tools are migrated to registry)
   const handleToolComplete = useCallback(
@@ -1055,7 +1016,7 @@ function MapEditorInner({
     [selectMany],
   );
 
-  const handleGroupTransformEnd = useCallback(
+  const handleMultiTransformEnd = useCallback(
     (
       updates: Array<{
         id: string;
@@ -1820,10 +1781,7 @@ function MapEditorInner({
                 <Canvas
                   data={data}
                   activeTool={resolvedTool}
-                  // The hand tool lives in the design toolbar; in placement mode
-                  // the canvas stays selectable so placed objects can be moved
-                  // (Space / middle-mouse still pan).
-                  isPanTool={activeTool === "hand" && editorMode === "design"}
+                  isPanTool={isPanTool}
                   toolContext={toolContext}
                   selectedIds={selectedIds}
                   scale={scale}
@@ -1838,7 +1796,7 @@ function MapEditorInner({
                   onSelect={handleSelect}
                   onDoubleClick={handleDoubleClick}
                   onDragSelect={handleDragSelect}
-                  onGroupTransformEnd={handleGroupTransformEnd}
+                  onMultiTransformEnd={handleMultiTransformEnd}
                   onElementMove={handleElementMove}
                   onMultiMove={handleMultiMove}
                   onElementResize={handleElementResize}
@@ -1871,7 +1829,6 @@ function MapEditorInner({
                   onCalibrationMouseMove={calibration.handleMouseMove}
                   unlinkedElementIds={unlinkedElementIds}
                   showTransformControls={showTransformControls}
-                  overlappingElementIds={overlappingElementIds}
                 />
                 <Rulers
                   visible={showRulers}
@@ -1889,18 +1846,6 @@ function MapEditorInner({
                   features={featureMap}
                 />
                 <LegendCanvasOverlay legend={data.legend} />
-
-                {/* Overlap warning banner */}
-                {overlappingElementIds.size > 0 && (
-                  <button
-                    onClick={handleLocateOverlapping}
-                    className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-red-50 border border-red-300 text-red-700 text-sm px-xs py-tight rounded-full shadow-sm z-10 whitespace-nowrap hover:bg-red-100 cursor-pointer"
-                  >
-                    {t("editor.overlap.locate", {
-                      count: overlappingElementIds.size,
-                    })}
-                  </button>
-                )}
 
                 {/* Drag-to-place ghost preview */}
                 {dragOverCanvas && (
@@ -2069,12 +2014,15 @@ function MapEditorInner({
       {showArrangeGridDialog && (
         <ArrangeGridDialog
           elementCount={alignmentUnitCount}
-          onConfirm={(cols, gapX, gapY) => {
+          initial={lastGridArrangement}
+          onConfirm={settings => {
+            setLastGridArrangement(settings);
             const updates = arrangeAsGrid(
               elementsForAlignment,
-              cols,
-              gapX,
-              gapY,
+              settings.cols,
+              settings.gapX,
+              settings.gapY,
+              settings.byName ? naturalCompare(locale) : undefined,
             );
             if (updates.length) batchUpdateGeometry(updates);
           }}

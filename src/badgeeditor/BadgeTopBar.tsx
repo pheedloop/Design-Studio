@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from "react";
+import { useRef, useState, type ReactNode } from "react";
 import { PiBug } from "react-icons/pi";
 import { DropdownMenu, MenuButton } from "@/editor/components/ui";
 import type { MenuEntry } from "@/editor/components/ui";
@@ -32,21 +32,23 @@ export function BadgeTopBar({
 }: BadgeTopBarProps) {
   const t = useT();
   const [open, setOpen] = useState<string | null>(null);
+  const openRef = useRef<HTMLDivElement>(null);
   const close = () => setOpen(null);
 
   const menu = (id: string, label: string, items: MenuEntry[]) =>
     items.length > 0 ? (
-      <div className="relative">
+      <div ref={open === id ? openRef : undefined} className="relative">
         <MenuButton
           open={open === id}
-          onMouseDown={e => {
-            e.stopPropagation();
-            setOpen(prev => (prev === id ? null : id));
-          }}
+          aria-haspopup="menu"
+          aria-expanded={open === id}
+          onClick={() => setOpen(prev => (prev === id ? null : id))}
         >
           {label}
         </MenuButton>
-        {open === id && <DropdownMenu items={items} onClose={close} />}
+        {open === id && (
+          <DropdownMenu items={items} onClose={close} anchorRef={openRef} />
+        )}
       </div>
     ) : null;
 

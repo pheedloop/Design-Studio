@@ -19,7 +19,7 @@ import { DxfDrawing } from "./DxfDrawing";
 import { AlignmentGuides } from "./AlignmentGuides";
 import { SelectionRect } from "./SelectionRect";
 import { MultiSelectBounds } from "./MultiSelectBounds";
-import { GroupTransformer } from "./GroupTransformer";
+import { MultiSelectTransformer } from "./MultiSelectTransformer";
 import { GridLayer } from "./GridLayer";
 import { WalkableGridOverlay } from "./WalkableGridOverlay";
 import { CalibrationPreview } from "./CalibrationPreview";
@@ -27,7 +27,9 @@ import type { CalibrationState } from "@/editor/hooks/useCalibration";
 import { CropOverlay } from "./CropOverlay";
 import type { CropRect } from "@/editor/hooks/useCrop";
 import { useAlignmentGuides } from "@/editor/hooks/useAlignmentGuides";
+import { useMiddlePan } from "@/hooks/useMiddlePan";
 import { getElementBounds, lineIntersectsRect } from "@/editor/utils/bounds";
+import { resolveDragSet } from "@/editor/utils/dragSet";
 import { CAPTURE_EXCLUDE_NAME } from "@/editor/utils/captureThumbnail";
 import { PolygonVertexHandles } from "@/editor/tools/handles/PolygonVertexHandles";
 
@@ -109,10 +111,9 @@ interface CanvasProps {
   onCropChange?: (rect: CropRect) => void;
   unlinkedElementIds?: Set<string>;
   showTransformControls?: boolean;
-  overlappingElementIds?: Set<string>;
   activeGroupId?: string | null;
   onDoubleClick?: (id: string) => void;
-  onGroupTransformEnd?: (
+  onMultiTransformEnd?: (
     updates: Array<{
       id: string;
       geometry: Partial<import("@/types").Geometry>;
@@ -164,10 +165,9 @@ export function Canvas({
   onCalibrationMouseMove,
   unlinkedElementIds,
   showTransformControls = true,
-  overlappingElementIds,
   activeGroupId,
   onDoubleClick,
-  onGroupTransformEnd,
+  onMultiTransformEnd,
 }: CanvasProps) {
   // Hand tool and select mode are mutually exclusive built-in (non-drawing)
   // modes. Hand pans on drag; select rubber-bands / moves elements.
@@ -217,30 +217,7 @@ export function Canvas({
     setHoveredElementId(null);
   }, []);
 
-  // Middle-click pan state
-  const [isMiddlePanning, setIsMiddlePanning] = useState(false);
-  const isMiddlePanningRef = useRef(false);
-  const middlePanStartRef = useRef<{
-    clientX: number;
-    clientY: number;
-    stageX: number;
-    stageY: number;
-  } | null>(null);
-
-  // Release middle-click pan if mouse-up happens outside the Stage
-  useEffect(() => {
-    if (!isMiddlePanning) return;
-    const onGlobalMouseUp = (e: MouseEvent) => {
-      if (e.button !== 1) return;
-      const stage = stageRef.current;
-      if (stage) onPositionChange(stage.position());
-      isMiddlePanningRef.current = false;
-      setIsMiddlePanning(false);
-      middlePanStartRef.current = null;
-    };
-    window.addEventListener("mouseup", onGlobalMouseUp);
-    return () => window.removeEventListener("mouseup", onGlobalMouseUp);
-  }, [isMiddlePanning, stageRef, onPositionChange]);
+  const middlePan = useMiddlePan(stageRef, onPositionChange);
 
   // Drag-select rectangle state
   const [dragSelectRect, setDragSelectRect] = useState<{
@@ -336,15 +313,16 @@ export function Canvas({
       : null;
   }, [selectedIds, activeGroupId, data.elements]);
 
-  const groupMemberElements = useMemo(
-    () =>
-      groupSelectionGroupId
-        ? data.elements.filter(
-            el => el.properties.groupId === groupSelectionGroupId,
-          )
-        : null,
-    [groupSelectionGroupId, data.elements],
-  );
+  const multiTransformElements = useMemo(() => {
+    if (groupSelectionGroupId) {
+      return data.elements.filter(
+        el => el.properties.groupId === groupSelectionGroupId,
+      );
+    }
+    return selectedIds.size > 1
+      ? data.elements.filter(el => selectedIds.has(el.id))
+      : null;
+  }, [groupSelectionGroupId, selectedIds, data.elements]);
 
   // Elements in the active group (for boundary overlay)
   const activeGroupElements = useMemo(
@@ -358,21 +336,7 @@ export function Canvas({
   // --- Mouse event handlers ---
 
   const handleMouseDown = (e: Konva.KonvaEventObject<MouseEvent>) => {
-    // Middle-click pan — intercept before all other handlers
-    if (e.evt.button === 1) {
-      e.evt.preventDefault();
-      const stage = stageRef.current;
-      if (!stage) return;
-      isMiddlePanningRef.current = true;
-      setIsMiddlePanning(true);
-      middlePanStartRef.current = {
-        clientX: e.evt.clientX,
-        clientY: e.evt.clientY,
-        stageX: stage.x(),
-        stageY: stage.y(),
-      };
-      return;
-    }
+    if (middlePan.onMouseDown(e)) return;
 
     if (isPanMode) return;
 
@@ -408,17 +372,7 @@ export function Canvas({
   };
 
   const handleMouseMove = (e: Konva.KonvaEventObject<MouseEvent>) => {
-    // Middle-click pan — move stage imperatively to avoid per-pixel re-renders
-    if (isMiddlePanningRef.current && middlePanStartRef.current) {
-      const stage = stageRef.current;
-      if (!stage) return;
-      const { clientX, clientY, stageX, stageY } = middlePanStartRef.current;
-      stage.position({
-        x: stageX + (e.evt.clientX - clientX),
-        y: stageY + (e.evt.clientY - clientY),
-      });
-      return;
-    }
+    if (middlePan.onMouseMove(e)) return;
 
     // Calibration mode
     if (isCalibrating && onCalibrationMouseMove) {
@@ -459,15 +413,7 @@ export function Canvas({
   };
 
   const handleMouseUp = () => {
-    // Middle-click pan end — sync stage position back to React state
-    if (isMiddlePanningRef.current) {
-      const stage = stageRef.current;
-      if (stage) onPositionChange(stage.position());
-      isMiddlePanningRef.current = false;
-      setIsMiddlePanning(false);
-      middlePanStartRef.current = null;
-      return;
-    }
+    if (middlePan.onMouseUp()) return;
 
     // Pathing mode
     if (isPathingMode && onPathingMouseUp) {
@@ -479,15 +425,15 @@ export function Canvas({
     if (dragSelectOrigin.current && dragSelectRect) {
       if (dragSelectRect.width > 5 && dragSelectRect.height > 5) {
         const rect = dragSelectRect;
-        const OVERLAP_THRESHOLD = 0.9;
+        const OVERLAP_THRESHOLD = 0.5;
         const enclosed = data.elements.filter(el => {
           const elLayer = el.layer ?? ELEMENT_TYPE_TO_LAYER[el.type];
           if (elLayer !== activeLayerId) return false;
 
           const shape = el.geometry.shape;
 
-          // Line: accurate segment intersection
-          if (shape === "line") {
+          // Line and arrow: accurate segment intersection
+          if (shape === "line" || shape === "arrow") {
             const geo = el.geometry;
             const [x1, y1, x2, y2] = geo.points;
             return lineIntersectsRect(
@@ -570,7 +516,7 @@ export function Canvas({
           const overlapArea = overlapX * overlapY;
           const elArea = elWidth * elHeight;
 
-          return overlapArea / elArea >= OVERLAP_THRESHOLD;
+          return overlapArea / elArea > OVERLAP_THRESHOLD;
         });
         if (enclosed.length > 0) {
           // Expand selection to include all members of any partially captured group
@@ -605,12 +551,18 @@ export function Canvas({
     (id: string) => {
       startDrag(id);
 
-      if (selectedIds.has(id) && selectedIds.size > 1) {
+      const dragSet = resolveDragSet(
+        id,
+        selectedIds,
+        data.elements,
+        activeGroupId ?? null,
+      );
+      if (dragSet.length > 1) {
         setIsMultiDragging(true);
         const stage = stageRef.current;
         if (!stage) return;
         const positions = new Map<string, { x: number; y: number }>();
-        for (const sid of selectedIds) {
+        for (const sid of dragSet) {
           const node = stage.findOne(`.${sid}`);
           if (node) {
             positions.set(sid, { x: node.x(), y: node.y() });
@@ -621,27 +573,26 @@ export function Canvas({
         dragStartPositions.current = new Map();
       }
     },
-    [startDrag, selectedIds, stageRef],
+    [startDrag, selectedIds, data.elements, activeGroupId, stageRef],
   );
 
   const handleElementDragMove = useCallback(
     (id: string, x: number, y: number) => {
-      const isMulti = selectedIds.has(id) && selectedIds.size > 1;
+      const starts = dragStartPositions.current;
       const stage = stageRef.current;
       if (!stage) return;
 
-      if (isMulti) {
-        const startPos = dragStartPositions.current.get(id);
+      if (starts.size > 1) {
+        const startPos = starts.get(id);
         if (!startPos) return;
 
         const dx = x - startPos.x;
         const dy = y - startPos.y;
 
-        for (const sid of selectedIds) {
+        for (const [sid, sStart] of starts) {
           if (sid === id) continue;
-          const sStart = dragStartPositions.current.get(sid);
           const sNode = stage.findOne(`.${sid}`);
-          if (sStart && sNode) {
+          if (sNode) {
             sNode.x(sStart.x + dx);
             sNode.y(sStart.y + dy);
           }
@@ -700,25 +651,18 @@ export function Canvas({
         }
       }
     },
-    [
-      data.elements,
-      snapPosition,
-      stageRef,
-      selectedIds,
-      gridSettings,
-      snapToObjects,
-    ],
+    [data.elements, snapPosition, stageRef, gridSettings, snapToObjects],
   );
 
   const handleElementDragEnd = useCallback(
     (id: string, _x: number, _y: number) => {
       endDrag();
 
-      if (selectedIds.has(id) && selectedIds.size > 1) {
+      if (dragStartPositions.current.size > 1) {
         const stage = stageRef.current;
         if (!stage) return;
         const updates: Array<{ id: string; x: number; y: number }> = [];
-        for (const sid of selectedIds) {
+        for (const sid of dragStartPositions.current.keys()) {
           const node = stage.findOne(`.${sid}`);
           if (node) {
             updates.push({ id: sid, x: node.x(), y: node.y() });
@@ -737,12 +681,12 @@ export function Canvas({
         }
       }
     },
-    [endDrag, selectedIds, stageRef, onMultiMove, onElementMove],
+    [endDrag, stageRef, onMultiMove, onElementMove],
   );
 
   // --- Cursor ---
   const cursor =
-    isMiddlePanning || (isPanMode && isStageDragging)
+    middlePan.isMiddlePanning || (isPanMode && isStageDragging)
       ? "grabbing"
       : isPanMode
         ? "grab"
@@ -774,7 +718,9 @@ export function Canvas({
           !isCropping &&
           (isPanMode || (!isPathingMode && isSelectMode && !dragSelectRect))
         }
-        onWheel={onWheel}
+        onWheel={e => {
+          if (!middlePan.onWheel(e)) onWheel(e);
+        }}
         onDragStart={e => {
           if (e.target === stageRef.current) setIsStageDragging(true);
         }}
@@ -862,9 +808,6 @@ export function Canvas({
                     isSelectMode={isSelectMode && isActiveLayer}
                     isLinked={!unlinkedElementIds?.has(element.id)}
                     isHovered={isSelectMode && hoveredElementId === element.id}
-                    isOverlapping={
-                      overlappingElementIds?.has(element.id) ?? false
-                    }
                     isDimmed={
                       activeGroupId != null &&
                       element.properties.groupId !== activeGroupId
@@ -890,30 +833,30 @@ export function Canvas({
 
         {/* Selection overlay: transformer, multi-select bounds, handles */}
         <Layer name={CAPTURE_EXCLUDE_NAME}>
-          {groupSelectionGroupId &&
-          groupMemberElements &&
-          onGroupTransformEnd ? (
-            <GroupTransformer
-              groupId={groupSelectionGroupId}
-              memberElements={groupMemberElements}
-              onGroupTransformEnd={onGroupTransformEnd}
-            />
-          ) : (
-            <>
-              <SelectionTransformer
-                selectedIds={selectedIds}
-                stageRef={stageRef}
-                elements={data.elements}
-                onTransformEnd={onElementResize}
-                visible={showTransformControls}
+          <SelectionTransformer
+            selectedIds={selectedIds}
+            stageRef={stageRef}
+            elements={data.elements}
+            onTransformEnd={onElementResize}
+            visible={showTransformControls}
+          />
+          {multiTransformElements &&
+            onMultiTransformEnd &&
+            showTransformControls &&
+            !isMultiDragging && (
+              <MultiSelectTransformer
+                key={groupSelectionGroupId ?? [...selectedIds].join(",")}
+                elements={multiTransformElements}
+                onTransformEnd={onMultiTransformEnd}
               />
-              {!isMultiDragging && (
-                <MultiSelectBounds
-                  elements={data.elements}
-                  selectedIds={selectedIds}
-                />
-              )}
-            </>
+            )}
+          {!isMultiDragging && (
+            <MultiSelectBounds
+              elements={data.elements}
+              selectedIds={selectedIds}
+              showBox={!showTransformControls}
+              showEach={!groupSelectionGroupId}
+            />
           )}
           {/* Boundary outline shown while inside an entered group */}
           {activeGroupElements &&

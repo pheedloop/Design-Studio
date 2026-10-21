@@ -1,5 +1,6 @@
 import { Circle } from "react-konva";
 import type Konva from "konva";
+import { refuseMiddleButtonDrag } from "@/hooks/useLeftButtonDrag";
 import type { FloorPlanElement, Geometry, ArcGeometry } from "@/types";
 import { BRAND, WHITE } from "@/canvasColors";
 
@@ -60,6 +61,7 @@ export function ArcControlHandle({
         stroke={BRAND}
         strokeWidth={1.5}
         draggable
+        onDragStart={refuseMiddleButtonDrag}
         onDragMove={e => handleDrag(0, e)}
       />
       <Circle
@@ -70,6 +72,7 @@ export function ArcControlHandle({
         stroke={BRAND}
         strokeWidth={1.5}
         draggable
+        onDragStart={refuseMiddleButtonDrag}
         onDragMove={e => handleDrag(1, e)}
       />
       <Circle
@@ -80,6 +83,7 @@ export function ArcControlHandle({
         stroke={WHITE}
         strokeWidth={1.5}
         draggable
+        onDragStart={refuseMiddleButtonDrag}
         onDragMove={e => handleDrag(2, e)}
       />
     </>

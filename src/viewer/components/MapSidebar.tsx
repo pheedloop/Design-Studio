@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import type { FloorPlanElement } from "@/types";
-import { useT } from "@/viewer/i18n";
+import { useLocale, useT } from "@/viewer/i18n";
+import { naturalCompare } from "@/utils/naturalSort";
 import type { Exhibitor, HoveredItem } from "@/viewer/types";
 import { Row } from "@/components/Row";
 import { Text } from "@/components/Text";
@@ -21,25 +22,26 @@ export function MapSidebar({
   onSelect,
 }: MapSidebarProps) {
   const t = useT();
+  const compare = naturalCompare(useLocale());
   const sessionElements = useMemo(
     () =>
       [...elements.filter(el => el.type === "session_area")].sort((a, b) =>
-        (a.properties.name || "").localeCompare(b.properties.name || ""),
+        compare(a.properties.name || "", b.properties.name || ""),
       ),
-    [elements],
+    [elements, compare],
   );
 
   const meetingRoomElements = useMemo(
     () =>
       [...elements.filter(el => el.type === "meeting_room")].sort((a, b) =>
-        (a.properties.name || "").localeCompare(b.properties.name || ""),
+        compare(a.properties.name || "", b.properties.name || ""),
       ),
-    [elements],
+    [elements, compare],
   );
 
   const sortedExhibitors = useMemo(
-    () => [...exhibitors].sort((a, b) => a.name.localeCompare(b.name)),
-    [exhibitors],
+    () => [...exhibitors].sort((a, b) => compare(a.name, b.name)),
+    [exhibitors, compare],
   );
 
   const boothBySlug = useMemo(() => {

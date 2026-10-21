@@ -57,32 +57,75 @@ export function getGeometryBounds(geo: Geometry): GeometryBounds {
   return { width: 0, height: 0 };
 }
 
+function boundsOf(
+  left: number,
+  top: number,
+  right: number,
+  bottom: number,
+): ElementBounds {
+  return {
+    left,
+    right,
+    top,
+    bottom,
+    centerX: (left + right) / 2,
+    centerY: (top + bottom) / 2,
+  };
+}
+
+// A box drawn from its top-left corner and rotated about it (degrees), as the
+// canvas draws rects and ellipses.
+function rotatedBoxBounds(
+  x: number,
+  y: number,
+  width: number,
+  height: number,
+  rotation = 0,
+): ElementBounds {
+  if (!rotation) return boundsOf(x, y, x + width, y + height);
+  const rad = (rotation * Math.PI) / 180;
+  const cos = Math.cos(rad);
+  const sin = Math.sin(rad);
+  const xs = [0, width * cos, width * cos - height * sin, -height * sin];
+  const ys = [0, width * sin, width * sin + height * cos, height * cos];
+  return boundsOf(
+    x + Math.min(...xs),
+    y + Math.min(...ys),
+    x + Math.max(...xs),
+    y + Math.max(...ys),
+  );
+}
+
 export function getElementBounds(element: FloorPlanElement): ElementBounds {
   const geo = element.geometry;
 
   if (geo.shape === "rect") {
-    return {
-      left: geo.x,
-      right: geo.x + geo.width,
-      top: geo.y,
-      bottom: geo.y + geo.height,
-      centerX: geo.x + geo.width / 2,
-      centerY: geo.y + geo.height / 2,
-    };
+    return rotatedBoxBounds(geo.x, geo.y, geo.width, geo.height, geo.rotation);
   }
 
   if (geo.shape === "ellipse") {
-    return {
-      left: geo.x,
-      right: geo.x + geo.radiusX * 2,
-      top: geo.y,
-      bottom: geo.y + geo.radiusY * 2,
-      centerX: geo.x + geo.radiusX,
-      centerY: geo.y + geo.radiusY,
-    };
+    const { radiusX: rx, radiusY: ry } = geo;
+    const rad = ((geo.rotation ?? 0) * Math.PI) / 180;
+    const cos = Math.cos(rad);
+    const sin = Math.sin(rad);
+    // Drawn from its box's top-left corner and rotated about it.
+    const cx = geo.x + rx * cos - ry * sin;
+    const cy = geo.y + rx * sin + ry * cos;
+    const halfW = Math.hypot(rx * cos, ry * sin);
+    const halfH = Math.hypot(rx * sin, ry * cos);
+    return boundsOf(cx - halfW, cy - halfH, cx + halfW, cy + halfH);
   }
 
-  if (geo.shape === "line") {
+  if (geo.shape === "circle") {
+    return boundsOf(
+      geo.x,
+      geo.y,
+      geo.x + geo.radius * 2,
+      geo.y + geo.radius * 2,
+    );
+  }
+
+  if (geo.shape === "line" || geo.shape === "arrow") {
     const [x1, y1, x2, y2] = geo.points;
     const absX1 = geo.x + x1;
     const absY1 = geo.y + y1;
@@ -122,33 +165,60 @@ export function getElementBounds(element: FloorPlanElement): ElementBounds {
     };
   }
 
-  if (geo.shape === "arc") {
-    const [x1, y1, cx, cy, x2, y2] = geo.points;
-    const absX1 = geo.x + x1;
-    const absY1 = geo.y + y1;
-    const absCx = geo.x + cx;
-    const absCy = geo.y + cy;
-    const absX2 = geo.x + x2;
-    const absY2 = geo.y + y2;
-    // Bounding box of the three control points covers the curve
-    const left = Math.min(absX1, absCx, absX2);
-    const right = Math.max(absX1, absCx, absX2);
-    const top = Math.min(absY1, absCy, absY2);
-    const bottom = Math.max(absY1, absCy, absY2);
+  // Arc: the bounding box of the three control points covers the curve.
+  const [x1, y1, cx, cy, x2, y2] = geo.points;
+  const absX1 = geo.x + x1;
+  const absY1 = geo.y + y1;
+  const absCx = geo.x + cx;
+  const absCy = geo.y + cy;
+  const absX2 = geo.x + x2;
+  const absY2 = geo.y + y2;
+  const left = Math.min(absX1, absCx, absX2);
+  const right = Math.max(absX1, absCx, absX2);
+  const top = Math.min(absY1, absCy, absY2);
+  const bottom = Math.max(absY1, absCy, absY2);
+  return {
+    left,
+    right,
+    top,
+    bottom,
+    centerX: (left + right) / 2,
+    centerY: (top + bottom) / 2,
+  };
+}
+
+// The box that hugs an element as drawn: rect and ellipse keep their rotation,
+// every other geometry falls back to its axis-aligned bounds.
+export function getElementOutline(element: FloorPlanElement): {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  rotation: number;
+} {
+  const geo = element.geometry;
+  if (geo.shape === "rect") {
+    const { x, y, width, height } = geo;
+    return { x, y, width, height, rotation: geo.rotation ?? 0 };
+  }
+  if (geo.shape === "ellipse") {
+    const { x, y, radiusX, radiusY } = geo;
     return {
-      left,
-      right,
-      top,
-      bottom,
-      centerX: (left + right) / 2,
-      centerY: (top + bottom) / 2,
+      x,
+      y,
+      width: radiusX * 2,
+      height: radiusY * 2,
+      rotation: geo.rotation ?? 0,
     };
   }
-
-  // Fallback
-  const x = "x" in geo ? geo.x : 0;
-  const y = "y" in geo ? geo.y : 0;
-  return { left: x, right: x, top: y, bottom: y, centerX: x, centerY: y };
+  const b = getElementBounds(element);
+  return {
+    x: b.left,
+    y: b.top,
+    width: b.right - b.left,
+    height: b.bottom - b.top,
+    rotation: 0,
+  };
 }
 
 /** Check if a line segment intersects an axis-aligned rectangle. */

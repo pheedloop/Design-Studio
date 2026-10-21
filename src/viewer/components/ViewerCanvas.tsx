@@ -134,6 +134,7 @@ export function ViewerCanvas({
             handleTouchMove(e);
           }}
           onTouchEnd={handleTouchEnd}
+          onTouchCancel={handleTouchEnd}
           onMouseDown={e => {
             if (isEmptySpaceClick(e)) onEmptySpaceClick?.();
           }}

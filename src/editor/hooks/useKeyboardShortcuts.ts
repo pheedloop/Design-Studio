@@ -104,7 +104,16 @@ export function useKeyboardShortcuts({
 
       const key = e.key.toLowerCase();
 
-      // Hardcoded shortcuts: hand, select, escape, delete
+      if (key === "delete" || key === "backspace") {
+        onDelete();
+        return;
+      }
+
+      // Pathing has its own tools; a content tool picked here would silently
+      // replace the one waiting for the return to content.
+      if (isPathingMode) return;
+
+      // Hardcoded shortcuts: hand, select, escape
       if (key === "h") {
         setActiveTool("hand");
         return;
@@ -116,10 +125,6 @@ export function useKeyboardShortcuts({
       if (key === "escape") {
         onDeselect();
         setActiveTool("select");
-        return;
-      }
-      if (key === "delete" || key === "backspace") {
-        onDelete();
         return;
       }
 

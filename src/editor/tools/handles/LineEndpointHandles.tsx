@@ -1,5 +1,6 @@
 import { Circle } from "react-konva";
 import type Konva from "konva";
+import { refuseMiddleButtonDrag } from "@/hooks/useLeftButtonDrag";
 import type { FloorPlanElement, Geometry, LineGeometry } from "@/types";
 import { snapToAngle } from "@/editor/utils/canvas";
 import { BRAND, WHITE } from "@/canvasColors";
@@ -57,6 +58,7 @@ export function LineEndpointHandles({
         stroke={BRAND}
         strokeWidth={1.5}
         draggable
+        onDragStart={refuseMiddleButtonDrag}
         onDragMove={e => handleDrag(0, e)}
       />
       <Circle
@@ -67,6 +69,7 @@ export function LineEndpointHandles({
         stroke={BRAND}
         strokeWidth={1.5}
         draggable
+        onDragStart={refuseMiddleButtonDrag}
         onDragMove={e => handleDrag(1, e)}
       />
     </>

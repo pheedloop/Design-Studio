@@ -31,6 +31,7 @@ export function SortablePicklist({
   const [dragIndex, setDragIndex] = useState<number | null>(null);
   const [overIndex, setOverIndex] = useState<number | null>(null);
   const [adding, setAdding] = useState(false);
+  const addRef = useRef<HTMLDivElement>(null);
 
   const codes = pickedValues(value, options);
   const picked = codes.map(code =>
@@ -118,7 +119,7 @@ export function SortablePicklist({
       )}
 
       {available.length > 0 && (
-        <div className="relative">
+        <div ref={addRef} className="relative">
           <button
             type="button"
             aria-haspopup="menu"
@@ -138,6 +139,7 @@ export function SortablePicklist({
                 onClick: () => onChange([...codes, option.value]),
               }))}
               onClose={() => setAdding(false)}
+              anchorRef={addRef}
             />
           )}
         </div>

@@ -152,34 +152,80 @@ export function arrangeAsGrid(
   cols: number,
   gapX: number,
   gapY: number,
+  compareNames?: (a: string, b: string) => number,
 ): AlignmentUpdate[] {
   const units = buildUnits(elements);
   if (units.length < 2) return [];
 
-  // Sort top-to-bottom, left-to-right so the order feels natural
-  units.sort((a, b) => {
+  // Top-to-bottom, left-to-right, so the order feels natural
+  const byPosition = (a: AlignUnit, b: AlignUnit) => {
     const dy = a.bounds.top - b.bounds.top;
     if (Math.abs(dy) > 10) return dy;
     return a.bounds.left - b.bounds.left;
-  });
+  };
+  const byName =
+    compareNames &&
+    ((a: AlignUnit, b: AlignUnit) => {
+      const an = unitName(a, compareNames);
+      const bn = unitName(b, compareNames);
+      if (an && bn) return compareNames(an, bn) || byPosition(a, b);
+      if (an || bn) return an ? -1 : 1;
+      return byPosition(a, b);
+    });
+  units.sort(byName || byPosition);
 
   const clampedCols = Math.max(1, Math.min(cols, units.length));
-  const maxW = Math.max(...units.map(u => u.bounds.right - u.bounds.left));
-  const maxH = Math.max(...units.map(u => u.bounds.bottom - u.bounds.top));
+  // Each column is as wide as its widest unit and each row as tall as its
+  // tallest, so mixed sizes stay on a grid without inflating every gap.
+  const colWidths: number[] = [];
+  const rowHeights: number[] = [];
+  units.forEach((u, i) => {
+    const col = i % clampedCols;
+    const row = Math.floor(i / clampedCols);
+    colWidths[col] = Math.max(
+      colWidths[col] ?? 0,
+      u.bounds.right - u.bounds.left,
+    );
+    rowHeights[row] = Math.max(
+      rowHeights[row] ?? 0,
+      u.bounds.bottom - u.bounds.top,
+    );
+  });
   const originX = Math.min(...units.map(u => u.bounds.left));
   const originY = Math.min(...units.map(u => u.bounds.top));
+  const colX = trackStarts(colWidths, originX, gapX);
+  const rowY = trackStarts(rowHeights, originY, gapY);
 
   const updates: AlignmentUpdate[] = [];
   units.forEach((unit, i) => {
-    const col = i % clampedCols;
-    const row = Math.floor(i / clampedCols);
-    const tx = originX + col * (maxW + gapX);
-    const ty = originY + row * (maxH + gapY);
+    const tx = colX[i % clampedCols];
+    const ty = rowY[Math.floor(i / clampedCols)];
     updates.push(
       ...applyDelta(unit, tx - unit.bounds.left, ty - unit.bounds.top),
     );
   });
   return updates;
+}
+
+// A group sorts by its lowest member name.
+function unitName(
+  unit: AlignUnit,
+  compare: (a: string, b: string) => number,
+): string | undefined {
+  return unit.elements
+    .map(el => el.properties.name)
+    .filter((name): name is string => Boolean(name))
+    .sort(compare)[0];
+}
+
+function trackStarts(sizes: number[], origin: number, gap: number): number[] {
+  const starts: number[] = [];
+  let cursor = origin;
+  for (const size of sizes) {
+    starts.push(cursor);
+    cursor += size + gap;
+  }
+  return starts;
 }
 
 export function distributeV(elements: FloorPlanElement[]): AlignmentUpdate[] {

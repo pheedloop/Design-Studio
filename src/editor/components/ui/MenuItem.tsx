@@ -14,6 +14,9 @@ export function MenuItem({
 
   return (
     <button
+      type="button"
+      role="menuitem"
+      tabIndex={-1}
       onClick={onClick}
       disabled={disabled}
       title={disabled && premium ? t("common.premiumFeature") : undefined}

@@ -5,6 +5,7 @@ import type { BadgeData } from "./badgeData";
 import { PPI, QR_BASE_PX, fieldSizePx } from "./canvasMetrics";
 import { FieldBody } from "./FieldBody";
 import { RED } from "@/canvasColors";
+import { useLeftButtonDrag } from "@/hooks/useLeftButtonDrag";
 
 interface FieldShapeProps {
   field: BadgeField;
@@ -36,14 +37,15 @@ export function FieldShape({
   const y = field.top * PPI;
 
   const handleMouseDown = (e: Konva.KonvaEventObject<MouseEvent>) => {
-    if (panMode) return; // let the event bubble so the stage pans
+    // Let the event bubble so the stage pans.
+    if (panMode || e.evt.button === 1) return;
     e.cancelBubble = true; // don't start a marquee
     onMouseDown(e.evt.shiftKey);
   };
-  const handleDragEnd = (e: Konva.KonvaEventObject<DragEvent>) => {
+  const drag = useLeftButtonDrag(onDragStart, e => {
     onChange({ left: e.target.x() / PPI, top: e.target.y() / PPI });
     onDragFinish();
-  };
+  });
 
   const { w, h } = fieldSizePx(field);
   const isQrField = field.kind === "qrCode";
@@ -58,9 +60,9 @@ export function FieldShape({
       height={h}
       draggable={!panMode}
       onMouseDown={handleMouseDown}
-      onDragStart={onDragStart}
+      onDragStart={drag.onDragStart}
       onDragMove={e => onDragMove(e.target)}
-      onDragEnd={handleDragEnd}
+      onDragEnd={drag.onDragEnd}
       onTransformEnd={e => {
         const node = e.target;
         if (isQrField) {

@@ -2,6 +2,7 @@ import { memo } from "react";
 import { Group } from "react-konva";
 import type { FloorPlanElement } from "@/types";
 import { useT } from "@/editor/i18n";
+import { useLeftButtonDrag } from "@/hooks/useLeftButtonDrag";
 import { BRAND, GRAY_400 } from "@/canvasColors";
 import { RectShape } from "./elements/RectShape";
 import { EllipseShape } from "./elements/EllipseShape";
@@ -22,7 +23,6 @@ interface ElementShapeProps {
   isSelectMode: boolean;
   isLinked: boolean;
   isHovered?: boolean;
-  isOverlapping?: boolean;
   onSelect: (id: string, shiftKey?: boolean) => void;
   onDragStart: (id: string) => void;
   onDragMove: (id: string, x: number, y: number) => void;
@@ -47,7 +47,6 @@ function ElementShapeImpl({
   isSelectMode,
   isLinked,
   isHovered = false,
-  isOverlapping = false,
   onSelect,
   onDragStart,
   onDragMove,
@@ -62,16 +61,18 @@ function ElementShapeImpl({
   const geo = element.geometry;
   const label = getLabel(element);
   const color = element.properties.color;
-  const strokeColor = isOverlapping
-    ? "#dc2626"
-    : isHovered
-      ? BRAND
-      : element.properties.strokeColor || GRAY_400;
-  const strokeWidth =
-    isOverlapping || isHovered
-      ? Math.max((element.properties.strokeWidth ?? 1) * 1.5, 2)
-      : (element.properties.strokeWidth ??
-        (geo.shape === "line" || geo.shape === "arrow" ? 2 : 1));
+  const strokeColor = isHovered
+    ? BRAND
+    : element.properties.strokeColor || GRAY_400;
+  const strokeWidth = isHovered
+    ? Math.max((element.properties.strokeWidth ?? 1) * 1.5, 2)
+    : (element.properties.strokeWidth ??
+      (geo.shape === "line" || geo.shape === "arrow" ? 2 : 1));
+
+  const drag = useLeftButtonDrag(
+    () => onDragStart(element.id),
+    e => onDragEnd(element.id, e.target.x(), e.target.y()),
+  );
 
   const x = "x" in geo ? geo.x : 0;
   const y = "y" in geo ? geo.y : 0;
@@ -96,15 +97,11 @@ function ElementShapeImpl({
         e.cancelBubble = true;
         onDoubleClick?.(element.id);
       }}
-      onDragStart={() => {
-        onDragStart(element.id);
-      }}
+      onDragStart={drag.onDragStart}
       onDragMove={e => {
         onDragMove(element.id, e.target.x(), e.target.y());
       }}
-      onDragEnd={e => {
-        onDragEnd(element.id, e.target.x(), e.target.y());
-      }}
+      onDragEnd={drag.onDragEnd}
       onContextMenu={e => {
         e.evt.preventDefault();
         e.cancelBubble = true;

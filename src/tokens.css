@@ -94,6 +94,18 @@
   --surface-primary-accent: var(--primary-100);
 }
 
+/* Attendee-facing surfaces live in Charmander, whose type scale runs one step
+   above the dashboard's; they take Charmander's sizes for the same utilities. */
+.pl-attendee-type {
+  --text-xs: 12px;
+  --text-sm: 14px;
+  --text-base: 16px;
+  --text-lg: 18px;
+  --text-xl: 20px;
+  --text-2xl: 24px;
+  --text-3xl: 30px;
+}
+
 @theme {
   --color-text-heading: rgb(var(--heading-text-color));
   --color-text-body: rgb(var(--body-text-color));

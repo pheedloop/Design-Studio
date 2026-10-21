@@ -2,22 +2,21 @@ import { useRef, useEffect, useCallback, useMemo } from "react";
 import { Rect, Transformer } from "react-konva";
 import type Konva from "konva";
 import type { FloorPlanElement, Geometry } from "@/types";
+import { scaleGeometry } from "@/editor/utils/scaleGeometry";
 import { getElementBounds } from "@/editor/utils/bounds";
 import { BRAND, WHITE } from "@/canvasColors";
 
-interface GroupTransformerProps {
-  groupId: string;
-  memberElements: FloorPlanElement[];
-  onGroupTransformEnd: (
+interface MultiSelectTransformerProps {
+  elements: FloorPlanElement[];
+  onTransformEnd: (
     updates: Array<{ id: string; geometry: Partial<Geometry> }>,
   ) => void;
 }
 
-export function GroupTransformer({
-  groupId,
-  memberElements,
-  onGroupTransformEnd,
-}: GroupTransformerProps) {
+export function MultiSelectTransformer({
+  elements,
+  onTransformEnd,
+}: MultiSelectTransformerProps) {
   const trRef = useRef<Konva.Transformer>(null);
   const rectRef = useRef<Konva.Rect>(null);
   const origDataRef = useRef<{
@@ -30,7 +29,7 @@ export function GroupTransformer({
       minY = Infinity,
       maxX = -Infinity,
       maxY = -Infinity;
-    for (const el of memberElements) {
+    for (const el of elements) {
       const b = getElementBounds(el);
       minX = Math.min(minX, b.left);
       minY = Math.min(minY, b.top);
@@ -39,16 +38,16 @@ export function GroupTransformer({
     }
     if (!isFinite(minX)) return { x: 0, y: 0, width: 0, height: 0 };
     return { x: minX, y: minY, width: maxX - minX, height: maxY - minY };
-  }, [memberElements]);
+  }, [elements]);
 
-  // Attach transformer to the virtual rect; re-attach when group changes
+  // Attach once: the parent remounts this for a new selection.
   useEffect(() => {
     const tr = trRef.current;
     const rect = rectRef.current;
     if (!tr || !rect) return;
     tr.nodes([rect]);
     tr.getLayer()?.batchDraw();
-  }, [groupId]);
+  }, []);
 
   // Keep transformer in sync when bounds change (e.g. after a move)
   useEffect(() => {
@@ -58,9 +57,9 @@ export function GroupTransformer({
   const handleTransformStart = useCallback(() => {
     origDataRef.current = {
       bounds: { ...bounds },
-      geometries: new Map(memberElements.map(el => [el.id, el.geometry])),
+      geometries: new Map(elements.map(el => [el.id, el.geometry])),
     };
-  }, [bounds, memberElements]);
+  }, [bounds, elements]);
 
   const handleTransformEnd = useCallback(() => {
     const rect = rectRef.current;
@@ -79,23 +78,14 @@ export function GroupTransformer({
     rect.height(newHeight);
 
     if (orig.width === 0 || orig.height === 0) return;
-    const scaleX = newWidth / orig.width;
-    const scaleY = newHeight / orig.height;
-
-    const updates = memberElements.map(el => ({
+    const to = { x: newX, y: newY, width: newWidth, height: newHeight };
+    const updates = elements.map(el => ({
       id: el.id,
-      geometry: scaleGeometry(
-        origGeoms.get(el.id)!,
-        orig,
-        newX,
-        newY,
-        scaleX,
-        scaleY,
-      ),
+      geometry: scaleGeometry(origGeoms.get(el.id)!, orig, to),
     }));
 
-    onGroupTransformEnd(updates);
-  }, [memberElements, onGroupTransformEnd]);
+    onTransformEnd(updates);
+  }, [elements, onTransformEnd]);
 
   return (
     <>
@@ -107,12 +97,15 @@ export function GroupTransformer({
         height={bounds.height}
         fill="rgba(0,0,0,0)"
         stroke="transparent"
+        // Presses fall through to the elements, which drag the selection.
+        listening={false}
         onTransformStart={handleTransformStart}
         onTransformEnd={handleTransformEnd}
       />
       <Transformer
         ref={trRef}
         rotateEnabled={false}
+        flipEnabled={false}
         borderStroke={BRAND}
         borderStrokeWidth={1.5}
         anchorFill={WHITE}
@@ -127,70 +120,4 @@ export function GroupTransformer({
       />
     </>
   );
-}
-
-function scaleGeometry(
-  geo: Geometry,
-  orig: { x: number; y: number; width: number; height: number },
-  newX: number,
-  newY: number,
-  scaleX: number,
-  scaleY: number,
-): Partial<Geometry> {
-  const gx = newX + (geo.x - orig.x) * scaleX;
-  const gy = newY + (geo.y - orig.y) * scaleY;
-
-  if (geo.shape === "rect") {
-    return {
-      x: gx,
-      y: gy,
-      width: geo.width * scaleX,
-      height: geo.height * scaleY,
-    };
-  }
-  if (geo.shape === "ellipse") {
-    return {
-      x: gx,
-      y: gy,
-      radiusX: geo.radiusX * scaleX,
-      radiusY: geo.radiusY * scaleY,
-    };
-  }
-  if (geo.shape === "circle") {
-    return { x: gx, y: gy, radius: geo.radius * Math.min(scaleX, scaleY) };
-  }
-  if (geo.shape === "line" || geo.shape === "arrow") {
-    return {
-      x: gx,
-      y: gy,
-      points: [
-        geo.points[0] * scaleX,
-        geo.points[1] * scaleY,
-        geo.points[2] * scaleX,
-        geo.points[3] * scaleY,
-      ] as [number, number, number, number],
-    };
-  }
-  if (geo.shape === "arc") {
-    return {
-      x: gx,
-      y: gy,
-      points: [
-        geo.points[0] * scaleX,
-        geo.points[1] * scaleY,
-        geo.points[2] * scaleX,
-        geo.points[3] * scaleY,
-        geo.points[4] * scaleX,
-        geo.points[5] * scaleY,
-      ] as [number, number, number, number, number, number],
-    };
-  }
-  if (geo.shape === "polygon") {
-    return {
-      x: gx,
-      y: gy,
-      points: geo.points.map((v, i) => (i % 2 === 0 ? v * scaleX : v * scaleY)),
-    };
-  }
-  return { x: gx, y: gy };
 }
