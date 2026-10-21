@@ -424,7 +424,7 @@ export function Canvas({
     if (dragSelectOrigin.current && dragSelectRect) {
       if (dragSelectRect.width > 5 && dragSelectRect.height > 5) {
         const rect = dragSelectRect;
-        const OVERLAP_THRESHOLD = 0.9;
+        const OVERLAP_THRESHOLD = 0.5;
         const enclosed = data.elements.filter(el => {
           const elLayer = el.layer ?? ELEMENT_TYPE_TO_LAYER[el.type];
           if (elLayer !== activeLayerId) return false;
@@ -515,7 +515,7 @@ export function Canvas({
           const overlapArea = overlapX * overlapY;
           const elArea = elWidth * elHeight;
 
-          return overlapArea / elArea >= OVERLAP_THRESHOLD;
+          return overlapArea / elArea > OVERLAP_THRESHOLD;
         });
         if (enclosed.length > 0) {
           // Expand selection to include all members of any partially captured group
